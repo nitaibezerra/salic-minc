@@ -5,7 +5,7 @@
                 <h1>Presta&ccedil;&atilde;o de Contas: Planilha or&ccedil;ament&aacute;ria comprovada</h1>
             </div>
             <div class="col s12 m3 l2 right-align">
-                <a href="javascript:voltar();" title="Página Anterior"title="Página Anterior" class="btn small grey lighten-3 grey-text z-depth-0 chat-toggle"><i class="material-icons">keyboard_return</i>
+                <a href="javascript:voltar();" title="PÃ¡gina Anterior"title="PÃ¡gina Anterior" class="btn small grey lighten-3 grey-text z-depth-0 chat-toggle"><i class="material-icons">keyboard_return</i>
                 </a>
             </div>
         </div>
@@ -41,7 +41,7 @@
                         }
                     });
                     $('.ui-dialog-titlebar-close').open();
-                } // fecha função logout()
+                } // fecha funÃ§Ã£o logout()
             </script>
             <style>
                 .editarIco {
@@ -53,7 +53,7 @@
                     background-repeat: no-repeat;
                 }
             </style>
-            <div id="enviar-confirm" class="sumir" title="Finalizar Análise"><p aling="Center">Deseja realmente finalizar a análise?</p></div>
+            <div id="enviar-confirm" class="sumir" title="Finalizar AnÃ¡lise"><p aling="Center">Deseja realmente finalizar a anÃ¡lise?</p></div>
             <script language="javascript">
                 function EnviarChefeDivisao() {
                     $("#enviar").dialog("destroy");
@@ -68,7 +68,7 @@
                         closeOnEscape: false,
                         title: "Envio de Projeto",
                         buttons: {
-                            'Não': function(){
+                            'NÃ£o': function(){
                                 $(this).dialog('close');
                             },
                             'Sim': function(){
@@ -77,12 +77,12 @@
                         }
                     });
                     $('.ui-dialog-titlebar-close').remove();
-                } // fecha função logout()
+                } // fecha funÃ§Ã£o logout()
             </script>
 
-            <div id="enviar-confirm" class="sumir" title="Finalizar Análise"><p>Deseja realmente finalizar a análise?</p></div>
+            <div id="enviar-confirm" class="sumir" title="Finalizar AnÃ¡lise"><p>Deseja realmente finalizar a anÃ¡lise?</p></div>
 
-            <!-- MODAL DA CHEFE DE DIVISÃO  -->
+            <!-- MODAL DA CHEFE DE DIVISÃƒO  -->
             <script language="javascript">
                 function chefedivisao() {
                     $("#analisar").dialog("destroy");
@@ -96,9 +96,9 @@
                         draggable: true,
                         resizable: false,
                         closeOnEscape: false,
-                        title: "Enviar Chefe de Divisão",
+                        title: "Enviar Chefe de DivisÃ£o",
                         buttons: {
-                            'Não': function(){
+                            'NÃ£o': function(){
                                 $(this).dialog('close');
                             },
                             'Sim': function(){
@@ -107,11 +107,11 @@
                         }
                     });
                     $('.ui-dialog-titlebar-close').open();
-                } // fecha função logout()
+                } // fecha funÃ§Ã£o logout()
             </script>
 
-            <div id="analisar-confirm" style="width:220px" class="sumir" title="Enviar Chefe de Divisão"></div>
-            <!-- FIM DA MODAL DO CHEFE DE DIVISÃO -->
+            <div id="analisar-confirm" style="width:220px" class="sumir" title="Enviar Chefe de DivisÃ£o"></div>
+            <!-- FIM DA MODAL DO CHEFE DE DIVISÃƒO -->
 
             <?php
                 $comprovacaoPagamentoHref   =   $this->url(array('controller' => 'comprovarexecucaofinanceira', 'action' => 'comprovacaopagamento'));
@@ -123,50 +123,53 @@
         </div -->
 
 
+<
+    <div id="btn_consolidacao">
     <div class="card">
         <div class="card-content">
-            <div class="col s12" id="pagina">
-                <table class="bordered responsive-table">
-                    <thead>
-                        <th>PRONAC</th>
-                        <th>NOME DO PROJETO</th>
-                        <?php if($this->itemAvaliadoFilter == 2 || $this->codGrupo == 132){ ?>
-                            <th>Valor Impugnado</th>
-                        <?php } ?>
-                        <th>RESUMO</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td align="center"><a class="btn waves-effect waves-light white black-text" href="<?php echo $this->baseUrl().'/consultardadosprojeto/index?idPronac='.$this->idPronac; ?>" target="_blank"><?php echo $this->pronac;?></a></td>
-                            <td align="center"><?php echo $this->nomeProjeto;?></td>
-                            <?php if($this->itemAvaliadoFilter == 2 || $this->codGrupo == 132): ?>
-                                <td align="center"><?php echo $this->formatarReal($this->vlComprovacaoImpugnado); ?></td>
-                            <?php endif ?>
-                            <td>
-                                <div id="btn_consolidacao">
-                                    <sl-btn-visualizar
-                                        idpronac="<?php echo $this->idPronac;?>"
-                                        pronac="Resumo: <?php echo $this->pronac; ?>"
-                                        nome="<?php echo $this->nomeProjeto; ?>"
-                                    ></sl-btn-visualizar>
-                                    <!-- Modal Structure -->
-                                    <div id="abrirModal" class="modal modal-fixed-footer">
-                                        <div class="modal-content">
-                                            <h3>Visualizar consolida&ccedil;&atilde;o</h3>
-                                           <sl-collapse-visualizar></sl-collapse-visualizar>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Fechar</a>
-                                        </div>
-                                    </div>
-                                    <!-- Modal Structure -->
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <span class="card-title"><?php echo $this->pronac;?> - <?php echo $this->nomeProjeto;?></span>
+            <div class="card-content">
+                <?php if ($this->existeDiligenciaAberta  == true): ?>
+                   <p>
+                   Existe Dilig&ecirc;ncia para esse projeto. Acesse <a href="<?php echo $this->url(
+                array(
+                    'module' => 'proposta',
+                    'controller' => 'diligenciar',
+                    'action' => 'listardiligenciaanalista',
+                    'idPronac' => $this->idPronac,
+                ),
+                null,
+                true
+            );
+                 ?>">aqui</a>.
+                   </p>
+                <?php else: ?>
+                        Sem Observa&ccedil;&otilde;es.
+
+                <?php endif ?>
+            </div>
+            <div class="card-action">
+                  <a class="btn-flat green waves-effect waves-dark white-text" href="<?php echo $this->baseUrl().'/consultardadosprojeto/index?idPronac='.$this->idPronac; ?>" target="_blank">Ver Projeto</a>
+                    <sl-btn-visualizar
+                        idpronac="<?php echo $this->idPronac;?>"
+                        pronac="Consolida&ccedil;&atilde;o"
+                        nome="<?php echo $this->nomeProjeto; ?>"
+                        class="btn-flat green white-text"
+                    ></sl-btn-visualizar>
+                    <!-- Modal Structure -->
+                    <div id="abrirModal" class="modal modal-fixed-footer">
+                        <div class="modal-content">
+                            <h3>Visualizar consolida&ccedil;&atilde;o</h3>
+                           <sl-collapse-visualizar></sl-collapse-visualizar>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Fechar</a>
+                        </div>
+                    </div>
+                    <!-- Modal Structure -->
             </div>
         </div>
+    </div>
     </div>
 
    <div class="card">
@@ -311,7 +314,7 @@
             </a>
           </li>
           <li class="waves-effect waves-light">
-            <a class=" tooltipped btn-floating green" data-position="left" data-tooltip="Finalizar Análise" target="_blank" href="#" id="lnkDespacho">
+            <a class=" tooltipped btn-floating green" data-position="left" data-tooltip="Finalizar AnÃ¡lise" target="_blank" href="#" id="lnkDespacho">
                 <i class="material-icons">done</i>
             </a>
           </li>
