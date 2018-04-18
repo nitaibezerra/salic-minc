@@ -485,24 +485,17 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
             $projeto = array_change_key_case($tblProjetos->findBy(array('idprojeto = ?' => $idPreProjeto)));
             $idPronac = $projeto['idpronac'];
 
-            // validar planodistribuicao
-            $planoDistribuicao = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
-            $verificaPlanoDistribuicao = $planoDistribuicao->validatePlanoDistribuicao($idPreProjeto);
-
-            if (!empty($verificaPlanoDistribuicao)) {
-                $arrResultado = array_merge($arrResultado, $verificaPlanoDistribuicao);
-            }
-
             if ($arrResultado->Observacao === true) {
-                    $listaValidacao = $arrResultado;
                     $this->view->acao = $this->_urlPadrao . "/proposta/manterpropostaincentivofiscal/encaminharprojetoaominc";
             }
 
+            $this->view->resultado = $arrResultado;
+
             if ($params['confirmarenvioaominc'] == true && $arrResultado->Observacao === true) {
                 if ($projeto['area'] == 2) {
-                    $orgaoUsuario = 171; # 171 - SAV/DAP
+                    $orgaoUsuario = Orgaos::ORGAO_SAV_DAP;
                 } else {
-                    $orgaoUsuario = 262; # 262 - SEFIC/DIAAPI
+                    $orgaoUsuario = Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI;
                 }
 
                 # verificar se o projeto já possui avaliador
@@ -520,8 +513,6 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
                 $tblProjetos->alterarSituacao($idPronac, '', $codigoSituacao, $providenciaTomada, $this->idUsuario);
 
                 parent::message("Projeto encaminhado com sucesso para an&aacute;lise no Minist&eacute;rio da Cultura.", "/listarprojetos/listarprojetos", "CONFIRM");
-            } else {
-                $this->view->resultado = $listaValidacao;
             }
         }
     }
@@ -575,14 +566,6 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
                 $arrResultado = $this->validarEnvioPropostaComSp($idPreProjeto);
             }
             
-            // validar planodistribuicao
-            $planoDistribuicao = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
-            $verificaPlanoDistribuicao = $planoDistribuicao->validatePlanoDistribuicao($idPreProjeto);
-            
-            if (!empty($verificaPlanoDistribuicao)) {
-                $arrResultado = array_merge($arrResultado, $verificaPlanoDistribuicao);
-            }
-            
             if ($params['confirmarenvioaominc'] == true && $arrResultado->Observacao === true) {
                 $proposta = $tbPreProjeto->findBy(array('idPreProjeto' => $idPreProjeto));
 
@@ -628,15 +611,23 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
 
             $validado = true;
 
+            // validar planodistribuicao
+            $planoDistribuicao = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+            $verificaPlanoDistribuicao = $planoDistribuicao->validatePlanoDistribuicao($idPreProjeto);
+
+            if (!empty($verificaPlanoDistribuicao)) {
+                $arrResultado = array_merge($arrResultado, $verificaPlanoDistribuicao);
+            }
+
             foreach ($arrResultado as &$item) {
                 if ($item->Observacao == 'PENDENTE') {
                     $validado = false;
-                }
 
-                $validacao->dsInconsistencia = $item->dsInconsistencia;
-                $validacao->Observacao = $item->Observacao;
-                $validacao->Url = $this->obterUrlDaPendencia($item->dsChamada);
-                $listaValidacao[] = clone($validacao);
+                    $validacao->dsInconsistencia = $item->dsInconsistencia;
+                    $validacao->Observacao = $item->Observacao;
+                    $validacao->Url = $this->obterUrlDaPendencia($item->dsChamada);
+                    $listaValidacao[] = clone($validacao);
+                }
             }
 
             if ($validado) {

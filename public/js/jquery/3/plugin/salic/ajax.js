@@ -21,7 +21,7 @@
             }
 
             if ($(this).attr('data-ajax-modal-full') !== '') {
-                objConfig.full = true;
+                objConfig.full = ($(this).attr('data-ajax-modal-full') === "true") ? true : false;
             }
             $.ajaxModal(objConfig);
         });
