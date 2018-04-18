@@ -42,7 +42,7 @@ class FiscalizarprojetoculturalController extends MinC_Controller_Action_Abstrac
         $auth = Zend_Auth::getInstance(); // instancia da autentica��o
         $idUsuario = $auth->getIdentity()->usu_codigo;
 
-        $usuarios = new Autenticacao_Model_Usuario();
+        $usuarios = new Autenticacao_Model_DbTable_Usuario();
         $agente = $usuarios->getIdUsuario($idUsuario);
 
         $idAgente = $agente['idAgente'];
@@ -316,7 +316,7 @@ class FiscalizarprojetoculturalController extends MinC_Controller_Action_Abstrac
         $FiscalizacaoDAO = new Fiscalizacao();
         $RelatorioFiscalizacaoDAO = new RelatorioFiscalizacao();
         $ArquivoFiscalizacaoDAO = new ArquivoFiscalizacao();
-        $usuarios = new Autenticacao_Model_Usuario();
+        $usuarios = new Autenticacao_Model_DbTable_Usuario();
         $projetosDAO = new Projetos();
 
 //        $Usuario = $usuarios->getIdUsuario($idUsuario);

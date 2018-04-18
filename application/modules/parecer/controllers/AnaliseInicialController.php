@@ -86,7 +86,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $idOrgao = $GrupoAtivo->codOrgao; //  ¿rg¿o ativo na sess¿o
 
-        $UsuarioDAO = new Autenticacao_Model_Usuario();
+        $UsuarioDAO = new Autenticacao_Model_DbTable_Usuario();
         $agente = $UsuarioDAO->getIdUsuario($idusuario);
         $idAgenteParecerista = $agente['idagente'];
         $this->view->idAgenteParecerista = $idAgenteParecerista;

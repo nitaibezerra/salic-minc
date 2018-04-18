@@ -82,7 +82,7 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
             $nome = $_POST['nome'];
             $senha = Gerarsenha::gerasenha(15, true, true, true, true);
             $senhaFinal = EncriptaSenhaDAO::encriptaSenha($cpf, $senha);
-            $usuarios = new Autenticacao_Model_Usuario();
+            $usuarios = new Autenticacao_Model_DbTable_Usuario();
             $usuariosBuscar = $usuarios->buscar(array('usu_identificacao = ?' => $cpf))->current();
 
             if ($usuariosBuscar) {
@@ -116,7 +116,7 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
             $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
             $cpf = $_POST['cpf'];
 
-            $usuario = new Autenticacao_Model_Usuario();
+            $usuario = new Autenticacao_Model_DbTable_Usuario();
 
             $usuariosBuscar = $usuario->pesquisarUsuarioOrgao(array('usu_identificacao = ?' => $cpf))->current();
 
@@ -166,104 +166,48 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
 
     public function cadastrarusuarioexternoAction()
     {
-        $auth = Zend_Auth::getInstance();// instancia da autenticação
-        $idusuario = $auth->getIdentity()->usu_codigo;
-        $idorgao = $auth->getIdentity()->usu_orgao;
-        $usu_identificacao = $auth->getIdentity()->usu_identificacao;
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessão com o grupo ativo
-        $codGrupo = $GrupoAtivo->codGrupo; //  Grupo ativo na sessão
-        $codOrgao = $GrupoAtivo->codOrgao; //  Órgão ativo na sessão
-        $this->view->codOrgao = $codOrgao;
-        $this->view->idUsuarioLogado = $idusuario;
+        try {
 
-        $usuariosExternos = new TabelasOrgaos();
-        $minc = "MinC";
-        $dadosUsuariosExternos = array(
-            'Tabelas.dbo.fnSiglaOrgaoTopo(o.org_codigo) = ?' => $minc,
-            'o.org_tipo >= ?' => 3,
-            'o.org_status <> ? ' => 0,
-            'p.pid_meta_dado = ?' => 1,
-            'p.pid_sequencia =  ?' => 1,
+            $auth = Zend_Auth::getInstance();
+            $idUsuarioLogado = $auth->getIdentity()->usu_codigo;
+            $idOrgaoUsuarioLogado = $auth->getIdentity()->usu_orgao;
 
+            if ($this->getRequest()->isPost()) {
 
+                $post = $this->getRequest()->getPost();
+                $cpf = Mascara::delMaskCPF($post['cpf']);
+                $idUnidade = $post['unidade'];
+                $nome = $post['nome'];
+                $nomeUsuario = $post['nomeusuario'];
 
-        );
+                $usuarios = new Autenticacao_Model_DbTable_Usuario();
+                $usuarios->salvarNovoUsuario($cpf, $nome, $nomeUsuario, $idUnidade, $idUsuarioLogado, $idOrgaoUsuarioLogado);
 
-
-
-        if ($_POST) {
-            $cpf = Mascara::delMaskCPF($_POST['cpf']);
-            $identificacao = $_POST['unidade'];
-            $nome = $_POST['nome'];
-            $nomeUsuario = $_POST['nomeusuario'];
-            $orgao = $_POST['unidade'];
-
-            $pessoasIdentificacoes = new Pessoaidentificacoes();
-            $pessoasIdentificacoesBuscar = $pessoasIdentificacoes->pesquisarPessoasDados(array('pdd_dado = ?' => $cpf))->current();
-
-            $usuarios = new Usuario();
-            $usuariosBuscar = $usuarios->buscar(array('usu_identificacao = ?' => $cpf))->current();
-
-            if (!empty($usuariosBuscar)) {
-                parent::message("CPF já cadastrado!", "/manterusuario/cadastrarusuarioexterno", "ALERT");
-            }
-
-            $pessoa = new Pessoas();
-            $pessoaBuscar = $pessoa->buscar(array(), array('pes_codigo desc'), array(1))->current();
-            $idPessoa = $pessoaBuscar->pes_codigo + 1;
-
-            if (empty($pessoasBuscar)) {
-                $dados = array(
-                    "pes_codigo" => $idPessoa,
-                    "pes_categoria" => 0,
-                    "pes_tipo" => 1,
-                    "pes_esfera" => 0,
-                    "pes_administracao" => 0,
-                    "pes_utilidade_publica" => 0,
-                    "pes_validade" => 0,
-                    "pes_orgao_cadastrador" => $idorgao,
-                    "pes_usuario_cadastrador" => $idusuario,
-                    "pes_data_cadastramento" => date("Y-m-d")
-                );
-                $pessoaSalvar = $pessoa->salvarDados($dados);
-
-                $dadosPessoa = array(
-                    "pdd_pessoa" => $pessoaSalvar,
-                    "pdd_meta_dado" => 2,
-                    "pdd_sequencia" => 1,
-                    "pdd_dado" => $cpf
-                );
-
-                $pessoaDados = new PessoaDados();
-                $pessoasDadosSalvar = $pessoaDados->salvarDados($dadosPessoa);
-
-                $dadosIdentificacao = array(
-                    "pid_pessoa" => $pessoasDadosSalvar['pdd_pessoa'],
-                    "pid_meta_dado" => 1,
-                    "pid_sequencia" => 1,
-                    "pid_identificacao" => $identificacao
-                );
-
-                $pessoaIdentificacao = new PessoaIdentificacoes();
-                $pessoasIdentificacaoSalvar = $pessoaIdentificacao->salvarDados($dadosIdentificacao);
-
-                $dadosAtualizaPessoa = array(
-                    "pes_codigo" => $pessoaSalvar,
-                    "pes_validade" => 2
-                );
-                $idPessoa = $pessoa->salvar($dadosAtualizaPessoa);
-
-                $formataCpf = substr($cpf, 0, 6);
-                $idPessoa = $pessoa->salvar($dadosAtualizaPessoa);
-                $formataCpf = substr($cpf, 0, 6);
-                $senha = EncriptaSenhaDAO::encriptaSenha($cpf, $formataCpf);
-
-                $senhaFinal = $senha[0]->senha;
-                $pessoaBuscar = $usuarios->buscar(array(), array('usu_codigo desc'), array(1))->current();
-                $idUsuario = $pessoaBuscar->usu_codigo + 1;
-                $cadastraUsuario = CadastraUsuariosDAO::cadastraUsuario($idUsuario, $idPessoa, $cpf, $nome, $nomeUsuario, $orgao, $senha);
                 parent::message("Cadastro realizado com sucesso", "/manterusuario/cadastrarusuarioexterno", "CONFIRM");
             }
+
+            $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
+            $this->view->codOrgao = $GrupoAtivo->codOrgao;
+            $this->view->idUsuarioLogado = $idUsuarioLogado;
+
+            $usuariosExternos = new TabelasOrgaos();
+            $minc = "MinC";
+            $dadosUsuariosExternos = array(
+                'Tabelas.dbo.fnSiglaOrgaoTopo(o.org_codigo) = ?' => $minc ,
+                'o.org_tipo >= ?' 		=> 3,
+                'o.org_status <> ? ' 	=> 0,
+                'p.pid_meta_dado = ?' 	=> 1,
+                'p.pid_sequencia =  ?' 	=> 1
+            );
+
+            $buscaOrgaosExternos = $usuariosExternos->pesquisarUsuariosExterno(
+                $dadosUsuariosExternos,
+                array(new Zend_Db_Expr('Tabelas.dbo.fnEstruturaOrgao(org_codigo, 0)'))
+            );
+
+            $this->view->orgaosExternos = $buscaOrgaosExternos;
+        } catch (Zend_Exception $e) {
+            parent::message($e->getMessage(), "/manterusuario/cadastrarusuarioexterno", "ERROR");
         }
     }
 
@@ -286,7 +230,7 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
                 $this->intTamPag = $get->tamPag;
             }
             $inicio = ($pag>1) ? ($pag-1)*$this->intTamPag : 0;
-            $pesquisaOrgaoUsuario = new Autenticacao_Model_Usuario();
+            $pesquisaOrgaoUsuario = new Autenticacao_Model_DbTable_Usuario();
             $total = $pesquisaOrgaoUsuario->pesquisarTotalUsuarioOrgao();
             $tamanho = (($inicio+$this->intTamPag)<=$total) ? $this->intTamPag : $total- ($inicio+$this->intTamPag) ;
             $fim = $inicio + $this->intTamPag;
@@ -430,7 +374,7 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
                 $this->intTamPag = $get->tamPag;
             }
             $inicio = ($pag>1) ? ($pag-1)*$this->intTamPag : 0;
-            $pesquisaOrgaoUsuario = new Autenticacao_Model_Usuario();
+            $pesquisaOrgaoUsuario = new Autenticacao_Model_DbTable_Usuario();
 
             if (!empty($dados)) {
                 $total = $usuariosOrgaosGrupos->buscarUsuariosOrgaosGruposSigla($dados, array( 'gru_nome ASC', 'usu_nome asc'), array(), array(), true);
@@ -527,7 +471,7 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
                 $this->intTamPag = $get->tamPag;
             }
             $inicio = ($pag>1) ? ($pag-1)*$this->intTamPag : 0;
-            $pesquisaOrgaoUsuario = new Autenticacao_Model_Usuario();
+            $pesquisaOrgaoUsuario = new Autenticacao_Model_DbTable_Usuario();
             $total = $pesquisaOrgaoUsuario->pesquisarTotalUsuarioOrgao();
             $tamanho = (($inicio+$this->intTamPag)<=$total) ? $this->intTamPag : $total- ($inicio+$this->intTamPag) ;
             $fim = $inicio + $this->intTamPag;
@@ -642,13 +586,13 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
         $this->view->idUsuarioLogado = $idusuario;
 
         $usuario = new Usuariosorgaosgrupos();
-        $listaUsuario = new Autenticacao_Model_Usuario();
+        $listaUsuario = new Autenticacao_Model_DbTable_Usuario();
         $resultadoUsuario = $listaUsuario->buscarUsuario();
         $resultadoUnidade = $usuario->buscarUsuariosOrgaosGruposUnidades(array('sis_codigo = ?' => 21), array('org_sigla ASC'));
         $resultadoGrupo   = $usuario->buscarUsuariosOrgaosGruposSistemas(array('sis_codigo = ?' => 21), array('gru_nome'));
         // $resultadoUnidade = $usuario->buscarUsuariosOrgaosGruposUnidades()->toArray(array('sis_codigo = ?' => 21));
 
-        $verificaCoordenadorGeral = new Autenticacao_Model_Usuario();
+        $verificaCoordenadorGeral = new Autenticacao_Model_DbTable_Usuario();
         $buscaCoordenadorGeral = $verificaCoordenadorGeral->ECoordenadorGeral($idusuario);
 
         $buscaCoordenador = $verificaCoordenadorGeral->ECoordenador($idusuario);
