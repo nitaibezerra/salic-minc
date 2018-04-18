@@ -7,7 +7,7 @@ class Proposta_Model_TbDetalhaPlanoDistribuicaoMapper extends MinC_Db_Mapper
         parent::setDbTable('Proposta_Model_DbTable_TbDetalhaPlanoDistribuicao');
     }
 
-    public function save(Proposta_Model_TbDetalhaPlanoDistribuicao $model)
+    public function save($model)
     {
         return parent::save($model);
     }
