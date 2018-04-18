@@ -2388,7 +2388,6 @@ class VerificarReadequacaoDeProjetoController extends MinC_Controller_Action_Abs
                             //$_idPlanilhaAprovacaoPai = empty($dadosP->idPlanilhaAprovacaoPai) ? ('idPlanilhaAprovacaoPai ? ' => new Zend_Db_Expr('IS NULL')) : ('idPlanilhaAprovacaoPai = ? ' => $dadosP->idPlanilhaAprovacaoPai);
                             $_dados = array('IdPRONAC = ?' => $idPronac
                                             , 'tpPlanilha = ?' => 'SR'
-                                            , 'IdPRONAC = ?' => $idPronac
                                             , 'idPedidoAlteracao = ? ' => $dadosP->idPedidoAlteracao);
 
                             $buscarTpAcaoSR = $planilha->buscar($_dados);

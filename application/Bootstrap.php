@@ -36,9 +36,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 //        if ( ($configObject = $this->_cache->load($cacheId)) === false ) {
             $configPath = APPLICATION_PATH . '/configs';
             $configFileExt = '.ini';
-            if ($handle = opendir($configPath)) {
+            $handle = opendir($configPath);
+            if ($handle) {
                 while (false !== ($file = readdir($handle))) {
-                    if ($configName = strstr($file, $configFileExt, true)) {
+                    $configName = strstr($file, $configFileExt, true);
+                    if ($configName) {
                         if ($configName == 'application' || $configName == 'exemplo-application') continue;
                         $config->{$configName} = new Zend_Config_Ini($configPath . '/' . $file, null, array(
                           'allowModifications' => true,

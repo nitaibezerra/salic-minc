@@ -218,7 +218,8 @@ class Edital extends MinC_Db_Table_Abstract
         $codFormDocumento = $nrFormDocumento;
 
         if ($preparedStatement->execute()) {
-            if ($edital = $preparedStatement->fetch()) {
+            $edital = $preparedStatement->fetch();
+            if ($edital) {
                 $idEdital = $edital[0];
             }
         }

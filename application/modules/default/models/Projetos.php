@@ -8160,8 +8160,8 @@ class Projetos extends MinC_Db_Table_Abstract
         $projetoRow = $this->fetchRow($this->select()->where('IdPRONAC = ?', $idPronac));
         if ($situacaoOrigem && $situacaoOrigem != $projetoRow->Situacao) {
             throw new BadFunctionCallException(
-                "A situa��o do projeto ({$projetoRow->Situacao}) n�o � a mesma "
-                . "da situa��o de origem ({$situacaoOrigem})"
+                "A situa&ccedil;&atilde;o do projeto ({$projetoRow->Situacao}) n&atilde;o &eacute; a mesma "
+                . "da situa&ccedil;&atilde;o de origem ({$situacaoOrigem})"
             );
         }
         $projetoRow->Situacao = $situacaoDestino;

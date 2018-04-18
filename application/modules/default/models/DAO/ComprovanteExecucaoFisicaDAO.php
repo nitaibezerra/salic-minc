@@ -279,7 +279,7 @@ class ComprovanteExecucaoFisicaDAO extends Zend_Db_Table
      * @access public
      * @param string $pronac
      * @param string $status
-     * @param date $dt_inicio
+     * @param $dt_inicio date
      * @param date $dt_fim
      * @return object || bool
      */

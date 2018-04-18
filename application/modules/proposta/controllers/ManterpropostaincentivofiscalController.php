@@ -320,7 +320,7 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
             }
             if ($acao != 'atualizacao_automatica') {
                 if (empty($url)) {
-                    $url = "/proposta/manterpropostaincentivofiscal/identificacaodaproposta/idPreProjeto/" . $idPreProjeto;
+                    $url = "/proposta/manterpropostaincentivofiscal/identificacaodaproposta/idPreProjeto/{$idPreProjeto}";
                 }
 
                 parent::message($mesagem, $url, "CONFIRM");

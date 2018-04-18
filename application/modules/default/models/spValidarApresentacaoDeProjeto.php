@@ -282,7 +282,7 @@ class spValidarApresentacaoDeProjeto extends MinC_Db_Table_Abstract
 
                 $quantidade = count($db->fetchAll($sql));
 
-                if ($quantidade = 0) {
+                if ($quantidade == 0) {
                     $validacao->Descricao = 'Não há produto principal selecionado na proposta.';
                     $validacao->Observacao = 'PENDENTE';
                     $listaValidacao[] =  clone($validacao);

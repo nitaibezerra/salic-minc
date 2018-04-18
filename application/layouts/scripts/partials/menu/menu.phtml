@@ -311,7 +311,7 @@ $arrMenu['administrativo'] = array(
     ],
 );
 $arrMenu['administrativo']['menu'][] = array('label' => 'Manter Agentes', 'title' => 'Ir para Manter Agentes',
-    'url' => $this->url(array('module' => 'agente', 'controller' => 'agentes', 'module' => 'agente', 'action' => 'agentes'), '', true),
+    'url' => $this->url(array('module' => 'agente', 'controller' => 'agentes', 'action' => 'agentes'), '', true),
     'grupo' => array(97, Autenticacao_Model_Grupos::COORDENADOR_CNIC, 121, 122, 123)
 );
 $arrMenu['administrativo']['menu'][] = array('label' => 'Gerenciar meus dados', 'title' => 'Ir para Gerenciar meus dados',

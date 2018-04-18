@@ -13,8 +13,9 @@ class Foo_Model_Too extends Zend_Db_Table_Abstract
     protected $_name = "Foo";
     protected $_primary = "idFoo";
 
-    public function __construct()
+    public function __construct($config = array())
     {
+        parent::__construct($config);
     }
 
     public function listar()

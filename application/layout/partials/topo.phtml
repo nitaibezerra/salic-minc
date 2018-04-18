@@ -233,7 +233,7 @@
                                 <div id="menu-administrativo" class="hidden">
                                     <ul>
                                         <?php if ($this->grupoAtivo == 97 || $this->grupoAtivo == 120 || $this->grupoAtivo == 121 || $this->grupoAtivo == 122 || $this->grupoAtivo == 123) : ?>
-                                            <li><a href="<?php echo $this->url(array('module'=>'agente', 'controller' => 'agentes', 'module'=>'agente', 'action' => 'agentes'), '', true); ?>" title="Ir para Manter Agentes">Manter Agentes</a></li>
+                                            <li><a href="<?php echo $this->url(array('module'=>'agente', 'controller' => 'agentes', 'action' => 'agentes'), '', true); ?>" title="Ir para Manter Agentes">Manter Agentes</a></li>
                                         <?php endif; ?>
 
                                         <?php if ($this->grupoAtivo == 94 || $this->grupoAtivo == 118) : ?>
@@ -362,7 +362,7 @@
                                         <?php } ?>
 
                                         <?php if(in_array($this->grupoAtivo, array(92,131))){ ?>
-                                            <li><a href='<?php echo $this->url(array('module' => 'proposta', 'module' => 'admissibilidade', 'controller' => 'admissibilidade', 'action' => 'desarquivarpropostas')); ?>'>Desarquivar Proposta</a></li>
+                                            <li><a href='<?php echo $this->url(array('module' => 'admissibilidade', 'controller' => 'admissibilidade', 'action' => 'desarquivarpropostas')); ?>'>Desarquivar Proposta</a></li>
                                         <?php } ?>
 
                                         <li><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'recurso-enquadramento'), '', true); ?>" title="Ir para Recurso">Recurso</a></li>

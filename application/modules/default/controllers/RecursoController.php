@@ -1877,7 +1877,6 @@ class RecursoController extends MinC_Controller_Action_Abstract
             try {
                 $dados = array(
                     'dtAvaliacao'       => new Zend_Db_Expr('GETDATE()'),
-                    'dsAvaliacao' 		=> Seguranca::tratarVarEditor($_POST['justificativa']),
                     'stAtendimento'   	=> $stAtendimento,
                     'dsAvaliacao'       => $justificativa,
                     'idAgenteAvaliador' => $idAgenteAvaliador);
@@ -1938,7 +1937,6 @@ class RecursoController extends MinC_Controller_Action_Abstract
                     'dtAvaliacao'       => new Zend_Db_Expr('GETDATE()'),
                     'dsAvaliacao' 		=> $justificativa,
                     'stAtendimento'   	=> $stAtendimento,
-                    'dsAvaliacao'       => $justificativa,
                     'idAgenteAvaliador' => $idAgenteAvaliador);
 
                 // dados enquadramento

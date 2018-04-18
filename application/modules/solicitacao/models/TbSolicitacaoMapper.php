@@ -101,7 +101,7 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
                 $mensagemSucesso = "Solicita&ccedil;&atilde;o enviada com sucesso!";
                 $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_ENCAMINHADA_AO_MINC);
 
-                # define se é para salvar ou enviar ao minc
+                # define se ï¿½ para salvar ou enviar ao minc
                 if ($arrData['siEncaminhamento'] == Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_RASCUNHO) {
                     $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_CADASTRADA);
                     $mensagemSucesso = "Rascunho salvo com sucesso!";
@@ -124,7 +124,8 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
                     $model->setIdDocumento($idDocumento);
                 }
 
-                if ($id = $this->save($model)) {
+                $id = $this->save($model);
+                if ($id) {
                     $booStatus = $id;
                     $this->setMessage($mensagemSucesso);
                 } else {
@@ -152,7 +153,8 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
                 $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_FINALIZADA_MINC);
                 $model->setStEstado(0);
 
-                if ($id = $this->save($model)) {
+                $id = $this->save($model);
+                if ($id) {
                     $booStatus = $id;
                     $this->setMessage('Solicita&ccedil;&atilde;o respondida com sucesso!');
                 } else {
@@ -173,7 +175,8 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
 
             try {
 
-                if ($id = $this->save($model)) {
+                $id = $this->save($model);
+                if ($id) {
                     $booStatus = $id;
                     $this->setMessage('Solicita&ccedil;&atilde;o atualizada com sucesso!');
                 } else {

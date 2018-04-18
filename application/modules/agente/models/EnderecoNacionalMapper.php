@@ -53,7 +53,7 @@ class Agente_Model_EnderecoNacionalMapper extends MinC_Db_Mapper
         return $arrId;
     }
 
-    public function save(Agente_Model_EnderecoNacional $model)
+    public function save($model)
     {
         return parent::save($model);
     }

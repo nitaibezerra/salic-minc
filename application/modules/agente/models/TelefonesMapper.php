@@ -41,7 +41,7 @@ class Agente_Model_TelefonesMapper extends MinC_Db_Mapper
         return $arrId;
     }
 
-    public function save(Agente_Model_Telefones $model)
+    public function save($model)
     {
         return parent::save($model);
     }

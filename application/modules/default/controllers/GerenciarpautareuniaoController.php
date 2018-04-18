@@ -847,7 +847,8 @@ class GerenciarPautaReuniaoController extends MinC_Controller_Action_Abstract
         $arrPronacs = array();
         $diretorio =  getcwd() . "/public/plenaria/";
         try {
-            if ($handle = opendir($diretorio)) {
+            $handle = opendir($diretorio);
+            if ($handle) {
                 while (false !== ($file = readdir($handle))) {
                     if ($file != "." && $file != "..") {
                         $arq = strstr($file, 'votacao_');

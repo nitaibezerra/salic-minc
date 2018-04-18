@@ -220,7 +220,7 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
         }
 
         //troca planilhas apenas se a decisao do componente for de aprovar a readequacao  //Se a planilha atual � SE significa que voltou da plenaria e nao entra na opcao de desativar a antiga e ativar a nova
-        if ($post->decisao = 'AC' && $this->view->tpPlanilha != 'SE') {
+        if ($post->decisao == 'AC' && $this->view->tpPlanilha != 'SE') {
             try {
                 //ATIVA PLANILHA CO READEQUADA
                 $tblPlanilhaAprovacao = new PlanilhaAprovacao();

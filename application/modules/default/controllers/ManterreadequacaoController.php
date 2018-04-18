@@ -691,7 +691,6 @@ class ManterreadequacaoController extends MinC_Controller_Action_Abstract
                         if (!empty($dadosP->idPedidoAlteracao)) {
                             $_dados = array('IdPRONAC = ?' => $idPronac
                                     , 'tpPlanilha = ?' => 'SR'
-                                    , 'IdPRONAC = ?' => $idPronac
                                     , 'idPedidoAlteracao = ? ' => $dadosP->idPedidoAlteracao);
 
                             $buscarTpAcaoSR = $planilha->buscar($_dados);

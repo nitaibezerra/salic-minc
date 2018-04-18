@@ -463,7 +463,7 @@ class Admissibilidade_GerenciarparecertecnicoController extends MinC_Controller_
 
             $parecer = new Admissibilidade_Model_DbTable_Gerenciarparecertecnico();
             $validapronac = $parecer->VerificaPronac($arrBusca);
-            if ($validapronac = 1) {
+            if ($validapronac == 1) {
                 $arrBusca = array( //busca para pegar os dados do projeto
                         'tbr.anoprojeto =?' => $ano,
                         'tbr.sequencial =?' => $sequencial,

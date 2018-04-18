@@ -1794,7 +1794,7 @@ class MovimentacaodecontaController extends MinC_Controller_Action_Abstract
                 if (!is_object($sp)) {
                     throw new Exception($sp);
                 }
-                if ($this->modal = "s") {
+                if ($this->modal == "s") {
                     $arrRetorno['error'] = false;
                     $arrRetorno['msg']   = 'Rotina executada com sucesso!';
                     $this->_helper->json($arrRetorno);
@@ -1802,7 +1802,7 @@ class MovimentacaodecontaController extends MinC_Controller_Action_Abstract
                     parent::message('Rotina executada com sucesso!', 'movimentacaodeconta/listar-inconsistencias', 'CONFIRM');
                 }
             } catch (Exception $e) {
-                if ($this->modal = "s") {
+                if ($this->modal == "s") {
                     $arrRetorno['error'] = true;
                     $arrRetorno['msg']   = $e->getMessage();
                     $this->_helper->json($arrRetorno);

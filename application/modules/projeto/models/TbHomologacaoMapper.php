@@ -60,7 +60,8 @@ class Projeto_Model_TbHomologacaoMapper extends MinC_Db_Mapper
                     $model->setDtHomologacao(date('Y-m-d h:i:s'));
                 }
                 $model->setIdUsuario($arrAuth['usu_codigo']);
-                if ($intId = parent::save($model)) {
+                $intId = parent::save($model);
+                if ($intId) {
                     $booStatus = 1;
                     $this->setMessage('Salvo com sucesso!');
                 } else {

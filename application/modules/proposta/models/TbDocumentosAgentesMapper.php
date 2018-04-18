@@ -118,7 +118,7 @@ class Proposta_Model_TbDocumentosAgentesMapper extends MinC_Db_Mapper
         return $booResult;
     }
 
-    public function save(Proposta_Model_TbDocumentosAgentes $model)
+    public function save($model)
     {
         return parent::save($model);
     }

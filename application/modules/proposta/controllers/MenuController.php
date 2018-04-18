@@ -304,14 +304,4 @@ class Proposta_MenuController extends Proposta_GenericController
         return $arrMenuProponente;
     }
 
-    public function contagemRegressivaSegundos($datainicial = null, $prazo = null)
-    {
-        $datafinal = "NOW";
-
-        $datainicial = strtotime($datainicial . "+ " . $prazo . " day");
-        $datafinal = strtotime($datafinal) + 24 * 3600;
-        $segundos = $datainicial - $datafinal;
-
-        return $segundos;
-    }
 }

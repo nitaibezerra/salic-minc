@@ -7,7 +7,7 @@ class Assinatura_Model_TbDocumentoAssinaturaMapper extends MinC_Db_Mapper
         parent::setDbTable('Assinatura_Model_DbTable_TbDocumentoAssinatura');
     }
 
-    public function save(Assinatura_Model_TbDocumentoAssinatura $model)
+    public function save($model)
     {
         return parent::save($model);
     }

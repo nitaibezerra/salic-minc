@@ -307,12 +307,12 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
     {
         $qtdcarecteres = strlen($dado);
         switch ($qtdcarecteres) {
-            case 11: {
+            case 11:
                 $retorno = Mascara::addMaskCPF($dado);
-            }
-            case 14: {
+                break;
+            case 14:
                 $retorno = Mascara::addMaskCNPJ($dado);
-            }
+                break;
         }
         return $retorno;
     }

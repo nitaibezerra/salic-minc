@@ -1,4 +1,4 @@
-<?php echo $this->partial('verificaralteracaotecnico/inc/menu.inc.php', $this)'; ?>
+<?php echo $this->partial('verificaralteracaotecnico/inc/menu.inc.php', $this); ?>
 
 <div id="breadcrumb">
     <ul>
@@ -9,22 +9,22 @@
 </div>
 
 <div id="mostra"></div>
-<!-- ========== INÍCIO TÍTULO ========== -->
+<!-- ========== INï¿½CIO Tï¿½TULO ========== -->
 <form name="formfinalizar" action="<?php echo $this->url(array('controller' => 'verificaralteracaotecnico', 'action' => 'finalizaprop')); ?>" method="post" >
 <div id="titulo">
-    <div>READEQUAÇÃO: NOME DO PROPONENTE
+    <div>READEQUAï¿½ï¿½O: NOME DO PROPONENTE
         <span class="voltar"><a href="#" onclick="voltar();">Voltar</a></span>
         <span style="vertical-align: middle;">
             <?php
             $nomeForm = "'solaltnomprp'";
             if ($this->dados->stAvaliacaoItemPedidoAlteracao == "AG") {
                 echo '<select name="status" id="status" style="float: right; width: 12em;" class="select_simples" onchange="stAnalise('.$this->stResult[0]->idAvaliacaoItemPedidoAlteracao . ','. $this->escape($this->idpedidoalteracao) . ',this , '.$nomeForm.' )">';
-                echo "<option value='0' selected='selected'>Aguardando Análise</option>
-                      <option value='1'>Em Análise</option>";
+                echo "<option value='0' selected='selected'>Aguardando Anï¿½lise</option>
+                      <option value='1'>Em Anï¿½lise</option>";
                 echo '</select>';
             } else if ($this->dados->stAvaliacaoItemPedidoAlteracao == "EA") {
                 echo '<select name="status" id="status" style="float: right; width: 12em;" class="select_simples" onchange="finalizar()">';
-                echo "<option value='1' selected='selected'>Em Análise</option>
+                echo "<option value='1' selected='selected'>Em Anï¿½lise</option>
                       <option value='2'>Aprovado</option>
                       <option value='3'>Indeferido</option>";
                 echo '</select>';
@@ -37,7 +37,7 @@
         {
             if( $("#editor1").val() == '' ){
                     $("#mostra").dialog("destroy");
-                    $('#mostra').html('Favor preencher a Análise da Proposta e Alteraç&atilde;o.');
+                    $('#mostra').html('Favor preencher a Anï¿½lise da Proposta e Alteraï¿½&atilde;o.');
                     $("#mostra").dialog
                     ({
                         height: 180,
@@ -58,7 +58,7 @@
                 } else {
 
                     $("#mostra").dialog("destroy");
-                    $('#mostra').html('O projeto será finalizado e encaminhado ao Coordenador de Acompanhamento.<br/><br/>Deseja continuar?');
+                    $('#mostra').html('O projeto serï¿½ finalizado e encaminhado ao Coordenador de Acompanhamento.<br/><br/>Deseja continuar?');
                     $("#mostra").dialog
                     ({
                         height: 250,
@@ -68,7 +68,7 @@
                         resizable: false,
                         closeOnEscape: false,
                         buttons: {
-                            'Não': function()
+                            'Nï¿½o': function()
                             {
                                 document.getElementById('status').options[0].selected = true;
                                 $(this).dialog('close');
@@ -86,7 +86,7 @@
     </script>
 
 </div>
-<!-- ========== FIM TÍTULO ========== -->
+<!-- ========== FIM Tï¿½TULO ========== -->
 
 <div id="conteudo">
     <script type='text/javascript' src='<?php echo $this->baseUrl(); ?>/public/js/projetosGerenciar.js'></script>
@@ -94,7 +94,7 @@
             <table class="tabela">
                     <thead>
                         <tr>
-                            <th align="center">Nº PRONAC:</th>
+                            <th align="center">Nï¿½ PRONAC:</th>
                             <th align="center">Nome do Projeto:</th>
                         </tr>
                     </thead>
@@ -131,7 +131,7 @@
                             <tr>
                                 <td align="center" class="destacar bold">PRONAC</td>
                                 <td align="center" class="destacar bold">NOME DO PROJETO</td>
-                                <td align="center" class="destacar bold">SITUAÇÃO</td>
+                                <td align="center" class="destacar bold">SITUAï¿½ï¿½O</td>
                             </tr>
                             <?php foreach ($this->resultProjeto as $projeto) { ?>
                                 <tr>
@@ -142,11 +142,11 @@
                             <?php } ?>
                         </table>
                     </div>
-                    <?php } else { echo '<span style="color: red;">Não existe projetos para este proponente.</span>'; } ?>
+                    <?php } else { echo '<span style="color: red;">Nï¿½o existe projetos para este proponente.</span>'; } ?>
                 </td>
             </tr>
             <tr>
-                <th>Solicitação de Alteração do nome do proponente</th>
+                <th>Solicitaï¿½ï¿½o de Alteraï¿½ï¿½o do nome do proponente</th>
             </tr>
             <tr>
                 <td><strong>CNPJ/CPF:</strong>&nbsp;<?php echo VerificarAlteracaoTecnicoController::VerificarCpfCnpj($this->resultAlteracaoNomeProponente['CgcCpf']); ?></td>
@@ -170,12 +170,12 @@
             <tr>
                 <td style="width: 25%; padding-left: 5%; text-decoration: underline;"><a href="<?php echo $this->url(array('controller' => 'upload', 'action' => 'abrir')); ?>?id=<?php echo $arquivo->idArquivo; ?>"><?php echo $arquivo->nmarquivo ?></a></td>
             </tr>
-            <?php } } else { echo '<tr><td><span style="color: red;">Não há arquivos anexados!</span></td></tr>'; } ?>
+            <?php } } else { echo '<tr><td><span style="color: red;">Nï¿½o hï¿½ arquivos anexados!</span></td></tr>'; } ?>
             
             <?php if ($this->dados->stAvaliacaoItemPedidoAlteracao != 'AG') { ?>
             <tr>
                 <th>
-                    ANÁLISE DA PROPOSTA E ALTERAÇÃO
+                    ANï¿½LISE DA PROPOSTA E ALTERAï¿½ï¿½O
                 </th>
             </tr>
             <tr>
@@ -206,7 +206,7 @@
 
 </div>
 </form>
-        <!-- ========== FIM CONTEÚDO ========== -->
+        <!-- ========== FIM CONTEï¿½DO ========== -->
 
 
 <!-- MODAL DILIGENCIAR -->
@@ -222,7 +222,7 @@
                 <td><?php echo $this->resultConsulta['NomeProjeto']; ?></td>
             </tr>
         </table>
-        <br /><label for="solicitacao">Solicitação:</label><br />
+        <br /><label for="solicitacao">Solicitaï¿½ï¿½o:</label><br />
         <textarea name="solicitacao" id="solicitacao" rows="6" class="input_simples" cols="170" style="width:100%;"></textarea>
         <input type="hidden" name="IdPronac" value="<?php echo $this->dados->IdPRONAC; ?>" />
         <p align="left" style="margin-top:1%;">
@@ -233,7 +233,7 @@
 <!-- FIM DO MODAL DILIGENCIAR -->
 
 
-<!-- ========== INÍCIO RODAPÉ DO CONTEÚDO ========== -->
+<!-- ========== INï¿½CIO RODAPï¿½ DO CONTEï¿½DO ========== -->
 <div id="rodapeConteudo"><span></span></div>
-<!-- ========== FIM RODAPÉ DO CONTEÚDO ========== -->
+<!-- ========== FIM RODAPï¿½ DO CONTEï¿½DO ========== -->
 <br clear="all" />

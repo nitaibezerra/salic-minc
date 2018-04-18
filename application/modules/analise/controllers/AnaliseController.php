@@ -77,16 +77,16 @@ class Analise_AnaliseController extends Analise_GenericController
         $recordsTotal = 0;
         $recordsFiltered = 0;
         $aux = array();
-        if (!empty($projetos)) {
-            foreach ($projetos as $key => $projetos) {
-                $projetos->NomeProjeto = utf8_encode($projetos->NomeProjeto);
-                $projetos->Tecnico = utf8_encode($projetos->Tecnico);
-                $projetos->Segmento = utf8_encode($projetos->Segmento);
-                $projetos->Proponente = utf8_encode($projetos->Proponente);
-                $projetos->Enquadramento = utf8_encode($projetos->Enquadramento);
-                $projetos->Area = utf8_encode($projetos->Area);
-                $projetos->VlSolicitado = number_format(($projetos->VlSolicitado), 2, ",", ".");
-                $aux[$key] = $projetos;
+        if (count($projetos) > 0) {
+            foreach ($projetos as $key => $projeto) {
+                $projeto->NomeProjeto = utf8_encode($projeto->NomeProjeto);
+                $projeto->Tecnico = utf8_encode($projeto->Tecnico);
+                $projeto->Segmento = utf8_encode($projeto->Segmento);
+                $projeto->Proponente = utf8_encode($projeto->Proponente);
+                $projeto->Enquadramento = utf8_encode($projeto->Enquadramento);
+                $projeto->Area = utf8_encode($projeto->Area);
+                $projeto->VlSolicitado = number_format(($projeto->VlSolicitado), 2, ",", ".");
+                $aux[$key] = $projeto;
             }
             $recordsTotal = $vwPainelAvaliar->projetosTotal($where);
             $recordsFiltered = $vwPainelAvaliar->projetosTotal($where, null, null, null, $search);

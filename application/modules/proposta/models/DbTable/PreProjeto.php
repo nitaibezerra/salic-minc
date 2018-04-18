@@ -2785,7 +2785,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
 
                 $quantidade = count($db->fetchAll($sql));
 
-                if ($quantidade = 0) {
+                if ($quantidade == 0) {
                     $validacao->dsInconsistencia = 'N&atilde;o h&aacute; produto principal selecionado na proposta.';
                     $validacao->Observacao = 'PENDENTE';
                     $validacao->Url = array('module' => 'proposta', 'controller' => 'plano-distribuicao', 'action' => 'index', 'idPreProjeto' => $idPreProjeto);

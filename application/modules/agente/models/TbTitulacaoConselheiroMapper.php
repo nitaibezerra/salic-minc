@@ -49,7 +49,7 @@ class Agente_Model_TbTitulacaoConselheiroMapper extends MinC_Db_Mapper
         return false;
     }
 
-    public function save(Agente_Model_TbTitulacaoConselheiro $model)
+    public function save($model)
     {
         return parent::save($model);
     }

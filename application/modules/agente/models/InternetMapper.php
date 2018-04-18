@@ -42,7 +42,7 @@ class Agente_Model_InternetMapper extends MinC_Db_Mapper
         return $arrId;
     }
 
-    public function save(Agente_Model_Internet $model)
+    public function save($model)
     {
         return parent::save($model);
     }

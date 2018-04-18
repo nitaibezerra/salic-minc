@@ -1810,8 +1810,8 @@ class AlterarprojetoController extends MinC_Controller_Action_Abstract
         $erro = "";
         $valor = 0;
         $situacao = 0;
-        foreach ($capitacao as $capitacao) {
-            $valor = $valor + $capitacao->CaptacaoReal;
+        foreach ($capitacao as $capitacao_unitaria) {
+            $valor = $valor + $capitacao_unitaria->CaptacaoReal;
         }
         $tbl2 = new Situacao();
         $situacao = $tbl2->listasituacao(array($post->Situacao));

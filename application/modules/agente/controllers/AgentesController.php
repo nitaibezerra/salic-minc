@@ -87,7 +87,7 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
      * Funcao para tratar data
      * @access private
      * @param Date
-     * @return Date
+     * @return string
      */
     private function formatadata($data)
     {
@@ -1718,7 +1718,7 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
 
 
             /* ********************************************************************************************** */
-            if ($impacto = 1) {
+            if ($impacto == 1) {
                 // Tem que pegar todos os produtos que estao como Parecerista e devolver para o Coord.
                 // Criar uma funcao para isso!
 

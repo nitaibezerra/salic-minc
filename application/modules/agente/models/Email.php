@@ -10,7 +10,7 @@
 class Agente_Model_Email extends MinC_Db_Table_Abstract
 {
     /**
-     * @var nome da tabela
+     * @var $_name nome da tabela
      */
     protected $_name = 'internet'; // nome da tabela
     protected $_schema = 'agentes'; // nome da tabela
@@ -21,7 +21,7 @@ class Agente_Model_Email extends MinC_Db_Table_Abstract
      * @param integer $idAgente
      * @return object $db->fetchAll($sql)
      */
-    public function buscar($idAgente)
+    public function buscarEmailsConselheiro($idAgente)
     {
         $sql = "SELECT * ";
         $sql.= "FROM AGENTES.dbo.Internet ";
@@ -67,7 +67,7 @@ class Agente_Model_Email extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      */
-    public function inserir($dados)
+    public function inserir($dados, $dbg = null)
     {
         $db = Zend_Db_Table::getDefaultAdapter();
 

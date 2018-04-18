@@ -6,7 +6,7 @@
  * @version 1.0
  * @package application
  * @subpackage application.views.scripts.readequacao
- * @copyright © 2012 - Ministério da Cultura - Todos os direitos reservados.
+ * @copyright ï¿½ 2012 - Ministï¿½rio da Cultura - Todos os direitos reservados.
  * @link http://salic.cultura.gov.br
  */
 
@@ -22,12 +22,12 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
 
 <script type="text/javascript">
 /**
- * Ações que serão executadas após o carregamento da página
+ * Aï¿½ï¿½es que serï¿½o executadas apï¿½s o carregamento da pï¿½gina
  */
     $(document).ready(function() {
-        // máscaras dos campos
+        // mï¿½scaras dos campos
         $('#qtd, #ocorrencia').keyup(function() {
-            mascara(this, format_num); // somente números
+            mascara(this, format_num); // somente nï¿½meros
         });
 	$('#vlUnitario').keyup(function() {
             mascara(this, format_moeda); // moeda
@@ -43,28 +43,28 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
 	// campos desabilitados
 	document.getElementById('total').disabled = true;
 
-	// cálculo do total (quantidade * ocorrencia * valor unitário)
+	// cï¿½lculo do total (quantidade * ocorrencia * valor unitï¿½rio)
 	$('#qtd, #ocorrencia, #vlUnitario').blur(function(){
             qtd = document.getElementById('qtd').value;
-            qtd = qtd.replace(/\D/g, ""); // retira os pontos e as vírgulas, deixando somente números
+            qtd = qtd.replace(/\D/g, ""); // retira os pontos e as vï¿½rgulas, deixando somente nï¿½meros
             qtd = qtd.replace(/(\d{0})(\d)/, "$1$2");
             qtd = parseInt(qtd); // converte para int
 
             ocorrencia = document.getElementById('ocorrencia').value;
-            ocorrencia = ocorrencia.replace(/\D/g, ""); // retira os pontos e as vírgulas, deixando somente números
+            ocorrencia = ocorrencia.replace(/\D/g, ""); // retira os pontos e as vï¿½rgulas, deixando somente nï¿½meros
             ocorrencia = ocorrencia.replace(/(\d{0})(\d)/, "$1$2");
             ocorrencia = parseInt(ocorrencia); // converte para int
 
             vlUnitario = document.getElementById('vlUnitario').value;
-            vlUnitario = vlUnitario.replace(/\D/g, ""); // retira os pontos e as vírgulas, deixando somente números
+            vlUnitario = vlUnitario.replace(/\D/g, ""); // retira os pontos e as vï¿½rgulas, deixando somente nï¿½meros
             vlUnitario = vlUnitario.replace(/(\d{0})(\d)/, "$1$2");
             vlUnitario = vlUnitario.replace(/(\d)(\d{2})$/, "$1.$2"); // adiciona o ponto na casa decimal
-            vlUnitario = parseFloat(vlUnitario).toFixed(2); // converte para float e adiciona precisão decimal
+            vlUnitario = parseFloat(vlUnitario).toFixed(2); // converte para float e adiciona precisï¿½o decimal
 
             total = parseFloat(qtd * ocorrencia * vlUnitario).toFixed(2); // armazena o resultado
 
-            // formata a saída do total
-            if (isNaN(total)){ // se não for número
+            // formata a saï¿½da do total
+            if (isNaN(total)){ // se nï¿½o for nï¿½mero
                 total = '';
             } else {
                 // formata para real
@@ -85,13 +85,13 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
             document.getElementById('total').value = total;
 	});
 
-	// controle de exibição da planilha aprovada
+	// controle de exibiï¿½ï¿½o da planilha aprovada
 	$(".icn_menos_AP").click(function(){
             abrir_planilha(this, '');
 	});
 	$(".icn_menos_AP").click();
 
-	// controle de exibição da planilha solicitada
+	// controle de exibiï¿½ï¿½o da planilha solicitada
 	$(".icn_menos_SR").click(function(){
             abrir_planilha(this, 'SR');
 	});
@@ -113,7 +113,7 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
             }
 	});
 
-	// exclusão do produto
+	// exclusï¿½o do produto
 	$('.btn_exclusao').click(function() {
             $('#tpAcao').attr('value', 'E');
             $('#btn_salvar').click();
@@ -121,7 +121,7 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
     });
 
     /**
-     * Função para expandir/recolher a planilha
+     * Funï¿½ï¿½o para expandir/recolher a planilha
      */
     function abrir_planilha(item, planilha) {
 	var tipo    = $(item).attr('tipo' + planilha);
@@ -166,10 +166,10 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
             cidade  = $(item).attr('cidade' + planilha);
             $(".cidade" + planilha + "[produto" + planilha + "='" + produto + "'][etapa" + planilha + "='" + etapa + "'][cidade" + planilha + "='" + cidade + "'][fonte" + planilha + "='" + fonte + "']").css('display', adisplay);
 	}
-    } // fecha função abrir_planilha()
+    } // fecha funï¿½ï¿½o abrir_planilha()
 
     /**
-     * Função para solicitar alteração do item
+     * Funï¿½ï¿½o para solicitar alteraï¿½ï¿½o do item
      */
     function alterar_item(idPlanilhaAprovacao) {
 	carregandoModal();
@@ -198,7 +198,7 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
                 $("#tpAlteracaoProjeto").val('10');
                 $("#tpAcao").val('A');
 
-                // popula o formulário
+                // popula o formulï¿½rio
                 $.ajax({
                     type: 'POST',
                     url: '<?php echo $this->url(array('controller' => 'readequacao', 'action' => 'pop-itens-custo')); ?>',
@@ -249,12 +249,12 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
             ,dataType: 'json'
 	});
 
-	$('#btn_exclusao').show(); // exibe o botão de exclusão
-    } // fecha função alterar_item()
+	$('#btn_exclusao').show(); // exibe o botï¿½o de exclusï¿½o
+    } // fecha funï¿½ï¿½o alterar_item()
 </script>
 <div id="msgAlerta" class="sumir"></div>
 
-<!-- ========== INÍCIO BREADCRUMB (LINKS TOPO) ========== -->
+<!-- ========== INï¿½CIO BREADCRUMB (LINKS TOPO) ========== -->
 <div id="breadcrumb">
     <ul>
         <li class="first"><a href="<?php echo $this->url(array('controller' => 'principalproponente', 'action' => ''), null, true); ?>" title="Ir para p&aacute;gina inicial" onclick="carregandoModal();">In&iacute;cio</a></li>
@@ -265,19 +265,19 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
 </div>
 <!-- ========== FIM BREADCRUMB (LINKS TOPO) ========== -->
 
-<!-- ========== INÍCIO TÍTULO ========== -->
+<!-- ========== INï¿½CIO Tï¿½TULO ========== -->
 <div id="titulo">
     <div>Readequa&ccedil;&atilde;o de custo - <?php echo $tpCusto ?> <span class="voltar"><a href="javascript:voltar();" title="Ir para p&aacute;gina anterior">Voltar</a></span></div>
 </div>
-<!-- ========== FIM TÍTULO ========== -->
+<!-- ========== FIM Tï¿½TULO ========== -->
 
-<!-- ========== INÍCIO CONTEÚDO ========== -->
+<!-- ========== INï¿½CIO CONTEï¿½DO ========== -->
 <div id="conteudo">
-    <!-- ========== INÍCIO TOPO PROJETO ========== -->
+    <!-- ========== INï¿½CIO TOPO PROJETO ========== -->
     <?php echo $this->partial('readequacao/inc/topo.inc.php', $this); ?>
     <!-- ========== FIM TOPO PROJETO ========== -->
 
-    <!-- ========== INÍCIO PLANILHA APROVADA ========== -->
+    <!-- ========== INï¿½CIO PLANILHA APROVADA ========== -->
         <table class="tabela">
             <tr>
                 <th>Planilha Aprovada</th>
@@ -402,7 +402,7 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
 
 
 
-	<!-- ========== INÍCIO FORMULÁRIO ========== -->
+	<!-- ========== INï¿½CIO FORMULï¿½RIO ========== -->
 	<a name="ancora" id="ancora"></a>
 	<form name="formReadequacao" id="formReadequacao" action="<?php echo $this->url(array('controller' => 'readequacao', 'action' => 'custo', 'idproduto' => $this->idProduto)); ?>" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="stPedidoAlteracao" id="stPedidoAlteracao" value="T" />
@@ -525,7 +525,7 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
                     <tr>
                         <td>
                             <textarea class="input_simples w99p preenchimentoObg" cols="" rows="7" id="justificativa" name="justificativa"></textarea>
-                            <span style="float: left; color: red;">Limite máximo de 600 caracteres</span>
+                            <span style="float: left; color: red;">Limite mï¿½ximo de 600 caracteres</span>
                         </td>
                     </tr>
 		</table>
@@ -540,10 +540,10 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
                     </tr>
 		</table>
 	</form>
-	<!-- ========== FIM FORMULÁRIO ========== -->
+	<!-- ========== FIM FORMULï¿½RIO ========== -->
 
 
-	<!-- ========== INÍCIO PLANILHA SOLICITADA ========== -->
+	<!-- ========== INï¿½CIO PLANILHA SOLICITADA ========== -->
 	<table class="tabela">
             <tr>
                 <th>Planilha Solicitada</th>
@@ -615,9 +615,9 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
                                                                 <!--<th>Avalia&ccedil;&atilde;o MinC</th>
                                                                 <th>Justificativa MinC</th>-->
                                                             </tr>
-                                                            <?php $totalUF=0; foreach ($planilha as $planilha) { $totalUF += $planilha['vlTotal']; ?>
-                                                            <?php
-                                                                switch ($planilha['tpAcao']) {
+                                                            <?php $totalUF=0; foreach ($planilha as $planilha_detalhada) {
+                                                                $totalUF += $planilha_detalhada['vlTotal'];
+                                                                switch ($planilha_detalhada['tpAcao']) {
                                                                     case 'I':
                                                                         $corLinha = 'style="color: blue; font-weight: bold;"';
                                                                         break;
@@ -632,16 +632,16 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
                                                                         break;
                                                                 }; ?>
                                                             <tr class="item" <?php echo $corLinha; ?>>
-                                                                <td><a href="javascript:alterar_item('<?php echo $planilha['idPlanilhaAprovacao']; ?>');" title="Clique para solicitar altera&ccedil;&atilde;o do item" class="linksModReadequacao"><?php echo $planilha['Item']; ?></a></td>
-                                                                <td><?php echo $planilha['Unidade']; ?></td>
-                                                                <td><?php echo $planilha['qtItem']; ?></td>
-                                                                <td><?php echo $planilha['nrOcorrencia']; ?></td>
-                                                                <td><?php echo $this->formatarReal($planilha['vlUnitario']); ?></td>
-                                                                <td><?php echo $this->formatarReal($planilha['vlTotal']); ?></td>
-                                                                <td><?php echo $planilha['qtDias']; ?></td>
-                                                                <td><?php echo $planilha['dsJustificativa']; ?></td>
+                                                                <td><a href="javascript:alterar_item('<?php echo $planilha_detalhada['idPlanilhaAprovacao']; ?>');" title="Clique para solicitar altera&ccedil;&atilde;o do item" class="linksModReadequacao"><?php echo $planilha_detalhada['Item']; ?></a></td>
+                                                                <td><?php echo $planilha_detalhada['Unidade']; ?></td>
+                                                                <td><?php echo $planilha_detalhada['qtItem']; ?></td>
+                                                                <td><?php echo $planilha_detalhada['nrOcorrencia']; ?></td>
+                                                                <td><?php echo $this->formatarReal($planilha_detalhada['vlUnitario']); ?></td>
+                                                                <td><?php echo $this->formatarReal($planilha_detalhada['vlTotal']); ?></td>
+                                                                <td><?php echo $planilha_detalhada['qtDias']; ?></td>
+                                                                <td><?php echo $planilha_detalhada['dsJustificativa']; ?></td>
                                                                 <td><?php
-                                                                    switch ($planilha['tpAcao']) {
+                                                                    switch ($planilha_detalhada['tpAcao']) {
                                                                         case 'I':
                                                                             echo 'INCLUIR';
                                                                             break;
@@ -656,8 +656,8 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
                                                                             break;
                                                                     }; ?>
                                                                 </td>
-                                                                <!--<td><?php echo $planilha['stAvaliacaoItem']; ?></td>
-                                                                <td><?php echo $planilha['dsAvaliacaoItem']; ?></td>-->
+                                                                <!--<td><?php echo $planilha_detalhada['stAvaliacaoItem']; ?></td>
+                                                                <td><?php echo $planilha_detalhada['dsAvaliacaoItem']; ?></td>-->
                                                             </tr>
                                                             <?php } ?>
                                                             <tr>
@@ -691,7 +691,7 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
         </table>
 	<!-- ========== FIM PLANILHA SOLICITADA ========== -->
 
-	<!-- ========== INÍCIO HISTÓRICO ========== -->
+	<!-- ========== INï¿½CIO HISTï¿½RICO ========== -->
 	<div id="historico"></div>
 	<script type="text/javascript">
 	<?php if (empty($this->idProduto)) : ?>
@@ -700,12 +700,12 @@ $idPronacCrip = Seguranca::encrypt($this->idPronac);
 	carregaDados('<?php echo $this->url(array('controller' => 'readequacao', 'action' => 'historico-custo-produtos')); ?>', 'historico');
 	<?php endif; ?>
 	</script>
-	<!-- ========== FIM HISTÓRICO ========== -->
+	<!-- ========== FIM HISTï¿½RICO ========== -->
 
 </div>
-<!-- ========== FIM CONTEÚDO ========== -->
+<!-- ========== FIM CONTEï¿½DO ========== -->
 
-<!-- ========== INÍCIO RODAPÉ DO CONTEÚDO ========== -->
+<!-- ========== INï¿½CIO RODAPï¿½ DO CONTEï¿½DO ========== -->
 <div id="rodapeConteudo"><span></span></div>
-<!-- ========== FIM RODAPÉ DO CONTEÚDO ========== -->
+<!-- ========== FIM RODAPï¿½ DO CONTEï¿½DO ========== -->
 <br clear="all" />

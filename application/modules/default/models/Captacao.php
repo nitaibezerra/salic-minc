@@ -498,7 +498,6 @@ class Captacao extends MinC_Db_Table_Abstract
                             array('vlAutorizado'=>new Zend_Db_Expr("SAC.dbo.fnTotalAprovadoProjeto(ca.AnoProjeto,ca.Sequencial)"),
                                   'DtRecibo',
                                   'CaptacaoReal',
-                                  'vlAutorizado'=>new Zend_Db_Expr("SAC.dbo.fnTotalAprovadoProjeto(ca.AnoProjeto,ca.Sequencial)"),
                                   'vlCaptado'=>new Zend_Db_Expr("SAC.dbo.fnTotalCaptadoProjeto(ca.AnoProjeto,ca.Sequencial)")
                                  )
                          );
@@ -570,7 +569,6 @@ class Captacao extends MinC_Db_Table_Abstract
                                      'DtRecibo',
                                   'CaptacaoReal',
                                   'vlAutorizado'=>new Zend_Db_Expr("SAC.dbo.fnTotalAprovadoProjeto(ca.AnoProjeto,ca.Sequencial)"),
-                                  'vlCaptado'=>new Zend_Db_Expr("SAC.dbo.fnTotalCaptadoProjeto(ca.AnoProjeto,ca.Sequencial)")
                              )
                          );
             $slctSC->joinInner(
