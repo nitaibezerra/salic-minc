@@ -579,6 +579,7 @@ class Proposta_ManterpropostaeditalController extends Proposta_GenericController
      *
      * @access public
      * @return void
+     * @deprecated  nao utilizado no salic atual
      */
     public function documentospendenteseditalAction()
     {

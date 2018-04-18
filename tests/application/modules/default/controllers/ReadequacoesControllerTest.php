@@ -70,7 +70,7 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
             $existeReadequacaoEmAndamento = $Readequacao_Model_tbReadequacao->existeReadequacaoEmAndamento($item->idPronac);
             $existeReadequacaoPlanilhaEmEdicao = $Readequacao_Model_tbReadequacao->existeReadequacaoPlanilhaEmEdicao($item->idPronac);
             $existeReadequacaoParcialEmEdicao = $Readequacao_Model_tbReadequacao->existeReadequacaoParcialEmEdicao($item->idPronac);
-            $possuiRelatorioDeCumprimento = $tbCumprimentoObjeto->possuiRelatorioDeCumprimento($idPronac);
+            $possuiRelatorioDeCumprimento = $tbCumprimentoObjeto->possuiRelatorioDeCumprimento($item->idPronac);
             
             $Readequacao = false;
             if (!$existeReadequacaoEmAndamento && !$existeReadequacaoEmAndamento) {
@@ -147,7 +147,7 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
         $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
         $possuiReadequacao = $Readequacao_Model_tbReadequacao->existeReadequacaoEmAndamento($this->idPronac);
         
-        $this->assertTrue($possuiReadequacao);
+        $this->assertFalse($possuiReadequacao);
 
     }
 

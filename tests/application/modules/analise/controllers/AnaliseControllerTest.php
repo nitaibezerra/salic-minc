@@ -5,7 +5,7 @@ class AnaliseControllerTest extends MinC_Test_ControllerActionTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->idPreProjeto = '204078';
+        $this->idPreProjeto = $this->getIdPreProjeto();
         $this->autenticar();
 
         $this->resetRequest()
@@ -16,7 +16,35 @@ class AnaliseControllerTest extends MinC_Test_ControllerActionTestCase
         $this->resetRequest()
             ->resetResponse();
     }
+    private function getIdPreProjeto()
+    {
+        $projetos = new Projetos();
+        $select = $projetos->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('p' => 'PreProjeto'),
+            'p.idPreProjeto AS idPreProjeto',
+            'sac.dbo'
+        );
 
+        $select->joinInner(
+            array('a' => 'Agentes'),
+            'a.idAgente = p.idAgente',
+            array(''),
+            'agentes.dbo'
+        );
+
+        $select->where('p.stEstado = ?', 1);
+        $select->limit(1);
+
+        $result = $projetos->fetchAll($select);
+        if (count($result) > 0)
+        {
+            return $result[0]['idPreProjeto'];
+        } else {
+            return false;
+        }
+    }
 
     public function testAnaliseListarprojetosAction()
     {

@@ -177,4 +177,10 @@ class ConsultardadosprojetoControllerTest extends MinC_Test_ControllerActionTest
         $this->dispatch('/consultardadosprojeto/plano-de-divulgacao?idPronac=' . $this->idPronac);
         $this->assertUrl('default','consultardadosprojeto', 'plano-de-divulgacao');
     }
+
+    public function testDadosBancariosAction()
+    {
+        $this->dispatch('/consultardadosprojeto/dados-bancarios?idPronac=' . $this->idPronac);
+        $this->assertUrl('default','consultardadosprojeto', 'dados-bancarios');
+    }
 }
