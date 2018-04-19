@@ -27,3 +27,5 @@ composer.lock
 .idea
 composer.phar
 .php_cs.cache
+package-lock.json
+node_modules/

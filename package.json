@@ -1,0 +1,31 @@
+{
+  "name": "salic-minc",
+  "version": "1.0.0",
+  "description": "Bem vindo/a à documentação do SALIC! Aqui você vai encontrar diversas documentações sobre o processo de desenvolvimento do SALIC, versionameno e publicação.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "pre-push-action": "sh git_hooks/pre-push.sh"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm pre-push-action"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/culturagovbr/salic-minc.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/culturagovbr/salic-minc/issues"
+  },
+  "homepage": "https://github.com/culturagovbr/salic-minc#readme",
+  "devDependencies": {
+    "husky": "^0.14.3"
+  }
+}
