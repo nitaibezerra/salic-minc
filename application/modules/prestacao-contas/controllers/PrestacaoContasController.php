@@ -69,11 +69,22 @@ class PrestacaoContas_PrestacaoContasController extends MinC_Controller_Action_A
         if (!$tipoAvaliacao) {
            throw new Exception('Não existe tipoAvaliacao');
         }
-        $idPronac = $this->_request->getParam("idPronac");
         $comprovantes = new PrestacaoContas_Model_spComprovantes();
         $comprovantes = $comprovantes->exec($idPronac, $tipoAvaliacao);
-        $this->view->idPronac = $this->_request->getParam("idPronac");
+        $this->view->idPronac = $idPronac;
         $this->view->comprovantes = $comprovantes;
+
+
+        $projeto = new Projetos();
+        $projeto = $projeto->buscarTodosDadosProjeto($idPronac);
+        $projeto = $projeto->current(); 
+
+        $this->view->nomeProjeto = $projeto->NomeProjeto; 
+        $this->view->pronac = $projeto->pronac; 
+        $this->view->idPronac = $projeto->IdPRONAC; 
+
+        $diligencia = new Diligencia();
+        $this->view->existeDiligenciaAberta = $diligencia->existeDiligenciaAberta($idPronac, null);
     }
 
     public function salvarAnaliseAction()
@@ -94,7 +105,5 @@ class PrestacaoContas_PrestacaoContasController extends MinC_Controller_Action_A
         $rsComprovantePag->stItemAvaliado = $situacao;
         $rsComprovantePag->save();
         $this->_helper->json(['idComprovantePagamento' => $idComprovantePagamento]);
-        /* $this->redirect('/prestacao-contas/prestacao-contas/amostragem/idPronac/' . $idPronac . '/tipoAvaliacao/90'); */
     }
-
 }
