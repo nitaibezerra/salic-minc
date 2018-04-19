@@ -311,7 +311,7 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
                 if ((int)$planoDistribuicao['PrecoUnitarioNormal'] > 225) {
                     $error = new StdClass();
                     $error->idPreProjeto = $idPreProjeto;
-                    $error->dsChamada = '';
+                    $error->dsChamada = 'plano_distribuicao';
                     $error->dsInconsistencia = "O pre&ccedil;o m&eacute;dio do produto '" . $planoDistribuicao['Produto'] . "' ultrapassou o limite de 225,00.";
                     $error->Observacao = 'PENDENTE';
 

@@ -26,30 +26,76 @@
 	</div>
     </div>
     <div class="content">
-	<div class="row">
-	    <div class="col s12 m12 l12">
-		<div  id="propostasCadastradas">
-		    <div class="card z-depth-2">
-			<div class="card-content">
-			    <table class="bordered striped conteudoImprimivel" id="tabelaSolicitacoesDesarquivamento">
-                    <thead>
-                        <tr>
-                            <th>Proposta</th>
-                            <th>Nome</th>
-                            <th>Data da Solicita&ccedil;&atilde;o</th>
-                            <th>Analisar</th>
-                        </tr>
-                    </thead>
-				<tbody>
-				</tbody>
-			    </table>
-			</div>
-		    </div>
-		</div>
+        <div class="row">
+            <div class="col s12 m12 l12">
+            <div  id="propostasCadastradas">
+                <div class="card z-depth-2">
+                    <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
+                        <li class="">
+                            <div class="collapsible-header active"><i class="material-icons">thumbs_up_down</i>Não avaliadas</div>
+                            <div class="collapsible-body">
+                                <span>
+                                    <table id="tabelaSolicitacoesDesarquivamentoAvaliacao" style="width: 100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Proposta</th>
+                                                <th>Nome</th>
+                                                <th>Data da Solicita&ccedil;&atilde;o</th>
+                                                <th>Analisar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="">
+                            <div class="collapsible-header"><i class="material-icons">thumb_up</i>Aprovadas</div>
+                            <div class="collapsible-body">
+                                <span>
+                                    <table id="tabelaSolicitacoesDesarquivamentoAprovadas" style="width: 100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Proposta</th>
+                                                <th>Nome</th>
+                                                <th>Data da Solicita&ccedil;&atilde;o</th>
+                                                <th>Visualizar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </span>
+                            </div>
+                        </li>
+                            <li class="">
+                                <div class="collapsible-header"><i class="material-icons">thumb_down</i>Reprovadas</div>
+                                <div class="collapsible-body">
+                                    <span>
+                                        <table id="tabelaSolicitacoesDesarquivamentoReprovadas" style="width: 100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Proposta</th>
+                                                    <th>Nome</th>
+                                                    <th>Data da Solicita&ccedil;&atilde;o</th>
+                                                    <th>Visualizar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 	    </div>
 	</div>
-    </div>
 </div>
+
 <div id="modal_solicitacao" class="modal bottom-sheet" style="max-height:95%; height:95%">
     <div class="modal-content">
       <div class="row">
@@ -116,6 +162,12 @@
                         <p class="solicitacao_consulta"></p>
                     </div>
                 </div>
+                <div class="card avaliacao">
+                    <div class="card-content">
+                        <span class="card-title">Avalia&ccedil;&atilde;o</span>
+                        <p class="avaliacao_consulta"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -138,7 +190,6 @@
              $("#contadorRicoMotivoDesarquivamento").show('slow');
 
          }else{
-             console.log('asdasd');
              $(".mce-tinymce").hide('slow');
              $("#contadorRicoMotivoDesarquivamento").hide('slow');
          }
@@ -170,14 +221,14 @@
      $(document).ready(function () {
          $3('.modal').modal();
 
-         var table =  $('#tabelaSolicitacoesDesarquivamento').DataTable(
+         var tableAvaliacao =  $('#tabelaSolicitacoesDesarquivamentoAvaliacao').DataTable(
              {
                  "language": {
                      "url": "https://cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
                  }
                  , "lengthChange": true
                  , "ajax": {
-                     url: "/proposta/pre-projeto-arquivado/listar-solicitacoes",
+                     url: "/proposta/pre-projeto-arquivado/listar-solicitacoes-aguardando-avaliacao",
                      data: {},
                      type: "POST"
                  },
@@ -219,36 +270,143 @@
                             solicitacao = solicitacao.replace(/\n/g,'<br/>');
                             solicitacao = solicitacao.replace(/\'/g,'&#39;'); // aspa simples
                             data.SolicitacaoDesarquivamento = solicitacao;
-                            console.log(data);
 
-                            if (data.stEstado == 0) {
-
-                                if (data.stDecisao == 1){
-                                    return '<button data-target="modal_dados" class="btnReprovado modal-trigger btn waves-effect waves-dark white black-text small"' +
-                                        'data-idpreprojeto="' + data.idpreprojeto + '"' +
-                                        'data-solicitacao="' + data.SolicitacaoDesarquivamento + '"' +
-                                        'data-motivoarquivamento="' + data.MotivoArquivamento + '"' +
-                                        'data-nome="' + data.nomeprojeto + '">' +
-                                        '<i class="material-icons right">remove_red_eye</i> Aprovado' +
-                                        '</button>'
-                                }
-
-                                return '<button data-target="modal_dados" class="btnReprovado modal-trigger btn waves-effect waves-dark white black-text small"' +
-                                    'data-idpreprojeto="' + data.idpreprojeto + '"' +
-                                    'data-solicitacao="' + data.SolicitacaoDesarquivamento + '"' +
-                                    'data-motivoarquivamento="' + data.MotivoArquivamento + '"' +
-                                    'data-nome="' + data.nomeprojeto + '">' +
-                                    '<i class="material-icons right">remove_red_eye</i> Reprovado' +
-                                    '</button>'
-                            }
                             return '<button data-target="modal_solicitacao" class="modal-trigger btn waves-effect waves-dark white black-text small"' +
                                     'data-idpreprojeto="' + data.idpreprojeto + '"' +
                                     'data-solicitacao="' + data.SolicitacaoDesarquivamento + '"' +
                                     'data-motivoarquivamento="' + data.MotivoArquivamento + '"' +
                                     'data-nome="' + data.nomeprojeto + '">' +
-                                    '<i class="material-icons right">gavel</i> Avaliar' +
+                                    '<i class="material-icons">gavel</i>' +
                                     '</button>'
                         }
+                     }
+                 ]
+             }
+         );
+
+         var tableAprovadas =  $('#tabelaSolicitacoesDesarquivamentoAprovadas').DataTable(
+             {
+                 "language": {
+                     "url": "https://cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+                 }
+                 , "lengthChange": true
+                 , "ajax": {
+                 url: "/proposta/pre-projeto-arquivado/listar-solicitacoes-aprovadas",
+                 data: {},
+                 type: "POST"
+             },
+                 "processing": true,
+                 "serverSide": true,
+                 "bFilter": false,
+                 "aoColumnDefs": [
+                     {'bSortable': false, 'aTargets': [1,3]}
+                 ],
+                 "order": [[ 2, 'desc' ]],
+                 "columns": [
+                     {
+                         data: null,
+                         "name": "idpreprojeto",
+                         render: function (data, type, row) {
+                             return '<a data-ajax-modal="/admissibilidade/admissibilidade/exibirpropostacultural-ajax/idPreProjeto/' + data.idpreprojeto + '" href="javascript:void(0);" data-position="top" data-delay="50" data-ajax-modal-height="96%" data-ajax-modal-width="98%" data-tooltip="Visualizar proposta" class="waves-effect waves-teal btn small white tooltipped black-text" >' + data.idpreprojeto + '</a>'
+                         }
+                     },
+                     {
+                         "name": "nomeprojeto",
+                         "data": "nomeprojeto"
+                     },
+                     {
+                         "name": "dtSolicitacaoDesarquivamento",
+                         "data": "dtSolicitacaoDesarquivamento"
+                     },
+                     {
+                         data: null,
+                         "name": "idpreprojeto",
+                         render: function (data, type, row) {
+                             var motivo = data.MotivoArquivamento;
+                             motivo = motivo.replace(/\"/g,'&#34;'); // aspa dupla
+                             motivo = motivo.replace(/\'/g,'&#39;'); // aspa simples
+                             motivo = motivo.replace(/\n/g,'<br/>');
+                             data.MotivoArquivamento = motivo;
+
+                             var solicitacao = data.SolicitacaoDesarquivamento;
+                             solicitacao = solicitacao.replace(/\"/g,'&#34;'); // aspa dupla
+                             solicitacao = solicitacao.replace(/\n/g,'<br/>');
+                             solicitacao = solicitacao.replace(/\'/g,'&#39;'); // aspa simples
+                             data.SolicitacaoDesarquivamento = solicitacao;
+
+                             return '<button data-target="modal_dados" class=" modal-trigger btn waves-effect waves-dark white black-text small"' +
+                                 'data-idpreprojeto="' + data.idpreprojeto + '"' +
+                                 'data-solicitacao="' + data.SolicitacaoDesarquivamento + '"' +
+                                 'data-motivoarquivamento="' + data.MotivoArquivamento + '"' +
+                                 'data-nome="' + data.nomeprojeto + '">' +
+                                 '<i class="material-icons">remove_red_eye</i>' +
+                                 '</button>'
+                         }
+                     }
+                 ]
+             }
+         );
+
+         var tableReprovadas =  $('#tabelaSolicitacoesDesarquivamentoReprovadas').DataTable(
+             {
+                 "language": {
+                     "url": "https://cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+                 }
+                 , "lengthChange": true
+                 , "ajax": {
+                 url: "/proposta/pre-projeto-arquivado/listar-solicitacoes-reprovadas",
+                 data: {},
+                 type: "POST"
+             },
+                 "processing": true,
+                 "serverSide": true,
+                 "bFilter": false,
+                 "aoColumnDefs": [
+                     {'bSortable': false, 'aTargets': [1,3]}
+                 ],
+                 "order": [[ 2, 'desc' ]],
+                 "columns": [
+                     {
+                         data: null,
+                         "name": "idpreprojeto",
+                         render: function (data, type, row) {
+                             return '<a data-ajax-modal="/admissibilidade/admissibilidade/exibirpropostacultural-ajax/idPreProjeto/' + data.idpreprojeto + '" href="javascript:void(0);" data-position="top" data-delay="50" data-ajax-modal-height="96%" data-ajax-modal-width="98%" data-tooltip="Visualizar proposta" class="waves-effect waves-teal btn small white tooltipped black-text" >' + data.idpreprojeto + '</a>'
+                         }
+                     },
+                     {
+                         "name": "nomeprojeto",
+                         "data": "nomeprojeto"
+                     },
+                     {
+                         "name": "dtSolicitacaoDesarquivamento",
+                         "data": "dtSolicitacaoDesarquivamento"
+                     },
+                     {
+                         data: null,
+                         "name": "idpreprojeto",
+                         render: function (data, type, row) {
+                             var motivo = data.MotivoArquivamento;
+                             motivo = motivo.replace(/\"/g,'&#34;'); // aspa dupla
+                             motivo = motivo.replace(/\'/g,'&#39;'); // aspa simples
+                             motivo = motivo.replace(/\n/g,'<br/>');
+                             data.MotivoArquivamento = motivo;
+
+                             var solicitacao = data.SolicitacaoDesarquivamento;
+                             solicitacao = solicitacao.replace(/\"/g,'&#34;'); // aspa dupla
+                             solicitacao = solicitacao.replace(/\n/g,'<br/>');
+                             solicitacao = solicitacao.replace(/\'/g,'&#39;'); // aspa simples
+                             data.SolicitacaoDesarquivamento = solicitacao;
+
+
+                             return '<button data-target="modal_dados" class=" modal-trigger btn waves-effect waves-dark white black-text small"' +
+                                 'data-idpreprojeto="' + data.idpreprojeto + '"' +
+                                 'data-solicitacao="' + data.SolicitacaoDesarquivamento + '"' +
+                                 'data-motivoarquivamento="' + data.MotivoArquivamento + '"' +
+                                 'data-avaliacao="' + data.Avaliacao + '"' +
+                                 'data-nome="' + data.nomeprojeto + '">' +
+                                 '<i class="material-icons">remove_red_eye</i>' +
+                                 '</button>'
+                         }
                      }
                  ]
              }
@@ -259,10 +417,18 @@
              let nome = $3(this).data('nome');
              let motivoarquivamento = $3(this).data('motivoarquivamento');
              let solicitacao = $3(this).data('solicitacao');
-             console.log(idpreprojeto);
+             let avaliacao = $3(this).data('avaliacao');
 
              $(".mce-tinymce").hide();
              $("#contadorRicoMotivoDesarquivamento").hide();
+
+             $3('.avaliacao').show();
+             if (avaliacao == null) {
+                 $3('.avaliacao').hide();
+             }
+
+             $('.switch_aprovacao').prop('checked', false);
+             tinyMCE.activeEditor.setContent('');
 
 
              $3('#idpreprojeto').val(idpreprojeto);
@@ -274,6 +440,7 @@
              $3('.titulo_proposta_consulta').text(idpreprojeto + ' ' + nome);
              $3('.motivoarquivamento_consulta').html(motivoarquivamento);
              $3('.solicitacao_consulta').html(solicitacao);
+             $3('.avaliacao_consulta').html(avaliacao);
          });
 
         $3("#analisar").on('click', function () {
@@ -292,15 +459,14 @@
                 }).done(function(data) {
                     let message_type = (data.success) ? 'green' : 'red';
                     Materialize.toast(data.message, 4000, message_type+' white-text');
-                    console.log(data);
-                    table.ajax.reload();
+                    tableAvaliacao.ajax.reload();
+                    tableAprovadas.ajax.reload();
+                    tableReprovadas.ajax.reload();
                     if(data.success){
                         $3('#modal_solicitacao').modal('close');
                     }
                 });
-
             } else {
-
                 $3.ajax({
                     url:'/proposta/pre-projeto-arquivado/avaliar-arquivamento',
                     data: {
@@ -314,7 +480,9 @@
                     let message_type = (data.success) ? 'green' : 'red';
 
                     Materialize.toast(data.message, 4000, message_type+' white-text');
-                    table.ajax.reload();
+                    tableAvaliacao.ajax.reload();
+                    tableAvaliados.ajax.reload();
+                    tableReprovadas.ajax.reload();
                     if(data.success){
                         $3('#modal_solicitacao').modal('close');
                         $3.ajax({
@@ -325,7 +493,6 @@
                             },
                             method:'POST'
                         }).done(function(data) {
-                            console.log(data);
                         });
                     }
                 });

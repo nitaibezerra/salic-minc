@@ -6,7 +6,7 @@ class AdmissibilidadeControllerTest extends MinC_Test_ControllerActionTestCase
     {
         parent::setUp();
 
-        $this->idPreProjeto = 276034;
+        $this->idPreProjeto = $this->getIdPreProjeto();
 
         $this->autenticar();
         $this->resetRequest()->resetResponse();
@@ -15,6 +15,40 @@ class AdmissibilidadeControllerTest extends MinC_Test_ControllerActionTestCase
             Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI
         );
         $this->resetRequest()->resetResponse();
+    }
+    private function getIdPreProjeto()
+    {
+        $config = new Zend_Config_Ini(
+            APPLICATION_PATH . '/configs/application.ini',
+            APPLICATION_ENV
+        );
+
+        $projetos = new Projetos();
+        $select = $projetos->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('p' => 'PreProjeto'),
+            'p.idPreProjeto AS idPreProjeto',
+            'sac.dbo'
+        );
+
+        $select->joinInner(
+            array('a' => 'Agentes'),
+            'a.idAgente = p.idAgente',
+            array(''),
+            'agentes.dbo'
+        );
+
+        $select->where('p.stEstado = ?', 1);
+        $select->limit(1);
+
+        $result = $projetos->fetchAll($select);
+        if (count($result) > 0)
+        {
+            return $result[0]['idPreProjeto'];
+        } else {
+            return false;
+        }
     }
 
     public function testAdmissibilidadeAvaliacaoAction()
@@ -34,9 +68,8 @@ class AdmissibilidadeControllerTest extends MinC_Test_ControllerActionTestCase
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('GET');
 
-        $idPreProjeto = '240094';
 
-        $this->dispatch('/admissibilidade/admissibilidade/exibirpropostacultural/?idPreProjeto=' . $idPreProjeto);
+        $this->dispatch('/admissibilidade/admissibilidade/exibirpropostacultural/?idPreProjeto=' . $this->idPreProjeto);
         $this->assertUrl(
             'admissibilidade',
             'admissibilidade',

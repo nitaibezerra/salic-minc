@@ -1,11 +1,8 @@
 <?php
-$edital = "";
-if(isset($_GET['edital']) && $_GET['edital']=="s"){
-    echo $this->partial('manterpropostaedital/inc/menu.inc.php', $this); // menu de manter proposta por edital
-    $edital = "&edital=s";
-}else {
-    echo $this->partial("manterpropostaincentivofiscal/inc/menu.inc.php", $this); // menu de manter proposta por incentivo fiscal
+if (isset($this->proposta['idpreprojeto'])) {
+    echo $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->idPreProjeto));  // menu
 }
+
 ?>
 <?php
     $links = array(

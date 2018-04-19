@@ -31,7 +31,9 @@
                                 <option disabled selected> - Selecione -</option>
                                 <?php foreach ($this->Item as $itens) : ?>
                                     <option
-                                        value="<?php echo $itens->idPlanilhaItens ?>" <?php echo $dados->idItem == $itens->idPlanilhaItens ? "selected" : ""; ?>><?php echo $itens->Descricao ?></option>
+                                        value="<?php echo $itens->idPlanilhaItens ?>"
+                                        <?php echo $dados->idItem == $itens->idPlanilhaItens ? "selected" : ""; ?>
+                                    ><?php echo $itens->Descricao ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <br>
