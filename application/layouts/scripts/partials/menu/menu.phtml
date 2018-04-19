@@ -644,10 +644,6 @@ $arrMenu['relatorios']['menu'][] = array(
     'title' => 'Ir para Listar Selecionados',
     'label' => 'Listar Selecionados'
 );
-
-
-
-
 $arrMenu['solicitacoes'] = array(
     'id' => 'solicitacoes',
     'label' => 'Solicita&ccedil;&otilde;es',
@@ -660,6 +656,8 @@ $arrMenu['solicitacoes']['menu'][] = [
     'url' => $this->url(['module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'index'], null, true),
     'grupo' => []
 ];
+
+include_once(APPLICATION_PATH . '/layouts/scripts/partials/menu/menu-atualizacao.phtml');
 
 // ========== INICIO MENU ASSINATURA ==========
 //$arrMenu['assinatura'] = array(
