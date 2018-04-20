@@ -69,12 +69,13 @@
                             <option value="">Selecione uma unidade</option>
 
                             <?php foreach ($this->orgaos as $resultadoUnidade): ?>
+                                <?php $sigla = strlen($resultadoUnidade['novaSigla']) > 1 ? $resultadoUnidade['novaSigla'] : $resultadoUnidade['Sigla']; ?>
                                 <?php if ($resultadoUnidade['Codigo'] == @$_GET['unidade']): ?>
                                     <option selected="selected"
-                                            value="<?php echo $resultadoUnidade['Codigo'] ?>"><?php echo $resultadoUnidade['Sigla'] ?></option>
+                                            value="<?php echo $resultadoUnidade['Codigo'] ?>"><?php echo $sigla; ?></option>
                                 <?php else: ?>
                                     <option
-                                        value="<?php echo $resultadoUnidade['Codigo'] ?>"><?php echo $resultadoUnidade['Sigla'] ?></option>
+                                        value="<?php echo $resultadoUnidade['Codigo'] ?>"><?php echo $sigla; ?></option>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </select>

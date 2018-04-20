@@ -708,16 +708,17 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
                     $this->view->perfil_nome = $perfilUsuario->gru_nome;
                 }
 
+                //============Trazer a Unidade para cadastrar o Perfil/Usuario externo, faz um tratamento para nao trazer órgao em branco=================
+                $orgaos = new Orgaos();
+                $this->view->orgaos = $orgaos->pesquisarUnidades(array('o.Sigla != ?' => ''));
             }
 
             $this->view->estado = $estado;
             $this->view->perfil = $perfil;
 
+
         }
 
-        //============Trazer a Unidade para cadastrar o Perfil/Usuario externo, faz um tratamento para nao trazer órgao em branco=================
-        $orgaos = new Orgaos();
-        $this->view->orgaos = $orgaos->buscar(array('Sigla != ?' => ''), array('Sigla'));
     }
 
     public function buscarUsuariosAtivosAjaxAction()
