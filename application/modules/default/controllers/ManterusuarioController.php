@@ -679,7 +679,7 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
             }
         }
 
-        if ($this->getRequest()->isGET()) {
+        if ($this->getRequest()->isGet()) {
             $params = $this->getRequest()->getParams();
             $codigo = $params['id'];
             $perfil = $params['perfil'];
@@ -707,16 +707,14 @@ class ManterusuarioController extends MinC_Controller_Action_Abstract
                     $perfilUsuario = $tbUsuariosOrgaosGrupos->buscarUsuariosOrgaosGrupos(array('usu_codigo = ?' => $codigo, "gru_codigo = ? " => $perfil))->current();
                     $this->view->perfil_nome = $perfilUsuario->gru_nome;
                 }
-
-                //============Trazer a Unidade para cadastrar o Perfil/Usuario externo, faz um tratamento para nao trazer órgao em branco=================
-                $orgaos = new Orgaos();
-                $this->view->orgaos = $orgaos->pesquisarUnidades(array('o.Sigla != ?' => ''));
             }
+
+            //============Trazer a Unidade para cadastrar o Perfil/Usuario externo, faz um tratamento para nao trazer órgao em branco=================
+            $orgaos = new Orgaos();
+            $this->view->orgaos = $orgaos->pesquisarUnidades(array('o.Sigla != ?' => ''));
 
             $this->view->estado = $estado;
             $this->view->perfil = $perfil;
-
-
         }
 
     }
