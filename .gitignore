@@ -1,32 +1,47 @@
+# configs do salic
 application/configs/bancos_*.ini
 application/configs/config.ini
 application.ini
-*.swp
-*.save
+application/configs/config_desenv.ini
+application/configs/config_treinamento.ini
+
+# arquivos e diretorios do salic
 data/proposta/model/tbdocumentoagentes/*
-
 nbproject
-
-index.php
-*~
-#*
-*#
-.#*
 index.php
 public/plenaria
 public/plenaria/log_exec_paEncerrarCNIC.txt
 public/txt
 .directory
-application/configs/config_desenv.ini
-application/configs/config_treinamento.ini
-.directory
 tags
 vendor
 tests/log/*
+
+# alias
+*~
+#*
+*#
+.#*
+
+# misc
 composer.lock
-.idea
 composer.phar
 .php_cs.cache
-package-lock.json
-node_modules/
+<<<<<<< Temporary merge branch 1
 .DS_Store
+=======
+package-lock.json
+
+# IDEs and editors
+.DS_Store
+*.swp
+*.save
+.idea
+
+# dependencias
+node_modules/
+
+# System Files
+.DS_Store
+Thumbs.db
+log/

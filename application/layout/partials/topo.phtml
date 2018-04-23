@@ -112,12 +112,12 @@
 
                                         <?php if(in_array($this->grupoAtivo, array(93, 94, 110))){ ?>
                                             <li><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos'), '', true); ?>" title="Avaliar Recursos">Avaliar Recursos</a></li>
-                                            <li><a href="<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'painel-readequacoes'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
+                                            <li><a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'painel-readequacoes'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
                                         <?php } ?>
 
                                         <?php if(in_array($this->grupoAtivo, array(118))){ ?>
                                             <li><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'analisar-recursos-cnic'), '', true); ?>" title="Avaliar Recursos">Avaliar Recursos</a></li>
-                                            <li><a href="<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'analisar-readequacoes-cnic'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
+                                            <li><a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'analisar-readequacoes-cnic'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
                                         <?php } ?>
 
                                         <?php if(in_array($this->grupoAtivo, array(128))){ ?>
@@ -207,11 +207,11 @@
                                         <?php } ?>
 
                                         <?php if(in_array($this->grupoAtivo, array(122, 123))){ ?>
-                                            <li><a href="<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'painel'), '', true); ?>" title="Readequa&ccedil;&otilde;es">Readequa&ccedil;&otilde;es</a></li>
+                                            <li><a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'painel'), '', true); ?>" title="Readequa&ccedil;&otilde;es">Readequa&ccedil;&otilde;es</a></li>
                                         <?php } ?>
 
                                         <?php if(in_array($this->grupoAtivo, array(93,121))){ ?>
-                                            <li><a href="<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'painel-readequacoes'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
+                                            <li><a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'painel-readequacoes'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
                                         <?php } ?>
                                     </ul>
                                 </div>

@@ -128,12 +128,12 @@ $arrMenu['analise']['menu'][] = array('label' => 'Avaliar Recursos', 'title' => 
     'grupo' => array( Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA, Autenticacao_Model_Grupos::PARECERISTA, Autenticacao_Model_Grupos::TECNICO_ANALISE)
 );
 $arrMenu['analise']['menu'][] = array('label' => 'Avaliar Readequa&ccedil;&otilde;es', 'title' => 'Ir para Avaliar Readequa&ccedil;&otilde;es',
-    'url' => $this->url(array('controller' => 'readequacoes', 'action' => 'painel-readequacoes'), '', true),
+    'url' => $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'painel-readequacoes'), '', true),
     'grupo' => array( Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA, Autenticacao_Model_Grupos::PARECERISTA, Autenticacao_Model_Grupos::TECNICO_ANALISE)
 );
 
 $arrMenu['analise']['menu'][] = array('label' => 'Avaliar Readequa&ccedil;&otilde;es', 'title' => 'Ir para Avaliar Readequa&ccedil;&otilde;es',
-    'url' => $this->url(array('controller' => 'readequacoes', 'action' => 'analisar-readequacoes-cnic'), '', true),
+    'url' => $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'analisar-readequacoes-cnic'), '', true),
     'grupo' => array(118)
 );
 $arrMenu['analise']['menu'][] = array('label' => 'Avaliar Recursos', 'title' => 'Ir para Avaliar Recursos',

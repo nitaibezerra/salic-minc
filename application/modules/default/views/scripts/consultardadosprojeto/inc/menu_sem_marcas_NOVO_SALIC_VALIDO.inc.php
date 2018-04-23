@@ -200,7 +200,7 @@
                 <?php if (in_array($this->intFaseProjeto, array('2'))):?>
                     <?php if ($this->blnProcurador || $this->vinculo || $this->blnProponente) {
             ?>
-                        <a class="no_seta" href="<?php echo $this->url(array('controller' => 'readequacao', 'action' => 'index', 'idpronac' => Seguranca::encrypt($this->idPronac))); ?>">Solicitar Readequa&ccedil;&atilde;o</a>
+                        <a class="no_seta" href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacao', 'action' => 'index', 'idpronac' => Seguranca::encrypt($this->idPronac))); ?>">Solicitar Readequa&ccedil;&atilde;o</a>
                     <?php
         } ?>
                 <?php endif; ?>
