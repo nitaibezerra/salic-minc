@@ -45,8 +45,32 @@ class Orgaos extends MinC_Db_Table_Abstract
         );
         $select->where('o.Status = ?', 0);
         $select->where(new Zend_Db_Expr('o.idSecretaria IS NOT NULL'));
-//        $select->order('o.Codigo ASC');
         $select->order('2');
+
+        return $this->fetchAll($select);
+    }
+
+    public function pesquisarUnidades($where = [])
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->distinct();
+        $select->from(
+            array('o'=>$this->_name),
+            array(
+                'o.Codigo',
+                'o.Sigla',
+                new Zend_Db_Expr('Tabelas.dbo.fnEstruturaOrgao(o.codigo, 0) as novaSigla'),
+            )
+        );
+        $select->where('o.Status = ?', 0);
+        $select->where(new Zend_Db_Expr('o.idSecretaria IS NOT NULL'));
+
+        //adiciona quantos filtros foram enviados
+        foreach ($where as $coluna => $valor) {
+            $select->where($coluna, $valor);
+        }
+        $select->order('3');
 
         return $this->fetchAll($select);
     }

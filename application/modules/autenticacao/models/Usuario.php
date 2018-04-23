@@ -31,7 +31,7 @@ class Autenticacao_Model_Usuario extends MinC_Db_Model
     public function setUsuIdentificacao($usu_identificacao)
     {
         if(!Validacao::validarCPF($usu_identificacao)) {
-            throw new Exception("O cpf informado é inválido");
+            throw new Exception("O cpf informado &eacute; inv&aacute;lido");
         }
 
         $this->_usu_identificacao = $usu_identificacao;
@@ -42,23 +42,31 @@ class Autenticacao_Model_Usuario extends MinC_Db_Model
         $this->_usu_senha = EncriptaSenhaDAO::encriptaSenha($cpf, substr($cpf, 0, 6));;
     }
 
-    public function criarNovoUsuario($idUsuario, $cpf, $nome, $nomeUsuario, $idPessoa, $idUnidade) {
+    public function setUsuNome($usu_nome)
+    {
+        if(strlen($usu_nome) > 20) {
+            throw new Exception("Nome completo n&atilde;o pode ultrapassar 20 caracteres");
+        }
+
+        $this->_usu_nome = $usu_nome;
+    }
+
+    public function criarNovoUsuario($idUsuario, $cpf, $nome, $idPessoa, $idUnidade) {
 
         $this->_usu_codigo = $idUsuario;
-        $this->_usu_nome = $nome;
         $this->_usu_pessoa = $idPessoa;
         $this->_usu_orgao = $idUnidade;
         $this->_usu_sala = 0;
         $this->_usu_ramal = 0;
         $this->_usu_nivel = 9;
         $this->_usu_exibicao = 'S';
-        $this->_usu_SQL_login = $nomeUsuario;
         $this->_usu_SQL_senha = 'B';
+        $this->_usu_SQL_login = $cpf;
         $this->_usu_duracao_senha = 40;
         $this->_usu_data_validade = date("Y-m-d");
         $this->_usu_limite_utilizacao = date("Y-m-d");
         $this->_usu_validacao = '~XqkT@';
-        $this->_usu_status = 0;
+        $this->_usu_status = 1;
         $this->_usu_seguranca = '~Xqkg';
         $this->_usu_data_atualizacao = date("Y-m-d") ;
         $this->_usu_conta_nt = 0;
@@ -69,14 +77,15 @@ class Autenticacao_Model_Usuario extends MinC_Db_Model
 
         $this->setUsuIdentificacao($cpf);
         $this->getSenhaPadrao($cpf);
+        $this->setUsuNome($nome);
 
         return $this;
     }
 
     /**
      * Metodo criado pq atualmente o sistema nao persiste no banco um objeto com os atributos no formato atual
-     * e esta tabela no banco de dados não possui auto incremento, para salvar diretamente o objeto devem ocorrer
-     * algumas refatorações na abstract.
+     * e esta tabela no banco de dados nao possui auto incremento, para salvar diretamente o objeto devem ocorrer
+     * algumas refatoracoes na abstract.
      */
     public function obterUsuarioEmArray() {
 

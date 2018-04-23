@@ -1,4 +1,5 @@
 <?php
+
 class Autenticacao_Model_DbTable_Usuario extends MinC_Db_Table_Abstract
 {
     protected $_banco = "tabelas";
@@ -149,16 +150,16 @@ class Autenticacao_Model_DbTable_Usuario extends MinC_Db_Table_Abstract
             ->from(
                 $this->_name,
                 array(
-                'usu_codigo',
-                'usu_nome',
-                'usu_identificacao',
-                'usu_senha',
-                'usu_orgao'),
+                    'usu_codigo',
+                    'usu_nome',
+                    'usu_identificacao',
+                    'usu_senha',
+                    'usu_orgao'),
                 $this->_schema
             )
             ->joinInner(
                 array(
-                'uog' => 'usuariosxorgaosxgrupos'),
+                    'uog' => 'usuariosxorgaosxgrupos'),
                 'uog.uog_usuario = usu_codigo AND uog_status = 1',
                 array(),
                 $this->_schema
@@ -365,8 +366,13 @@ class Autenticacao_Model_DbTable_Usuario extends MinC_Db_Table_Abstract
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
+        $select->from(
+            $this->_name,
+            array("usu_codigo", "usu_nome", "usu_identificacao")
+        );
+
         $select->order('usu_nome');
-        $select->from($this->_name);
+        $select->where('usu_status = ?', 1);
         return $this->fetchAll($select);
     }
 
@@ -983,11 +989,11 @@ class Autenticacao_Model_DbTable_Usuario extends MinC_Db_Table_Abstract
         }
     }
 
-    public function salvarNovoUsuario($cpf, $nome, $nomeUsuario, $idUnidade, $idUsuarioLogado, $idOrgaoUsuarioLogado)
+    public function salvarNovoUsuario($cpf, $nome, $idUnidade, $idUsuarioLogado, $idOrgaoUsuarioLogado)
     {
         try {
 
-            if(empty($cpf) || empty($nome) || empty($nomeUsuario) || empty($idUnidade)) {
+            if (empty($cpf) || empty($nome) || empty($idUnidade)) {
                 throw new Exception("Dados obrigat&oacute;rios n&atilde;o informados!");
             }
 
@@ -1006,6 +1012,13 @@ class Autenticacao_Model_DbTable_Usuario extends MinC_Db_Table_Abstract
             if (empty($ultimoCadastroPessoa)) { # se o banco tiver vazio essa logica quebra
                 throw new Exception("Erro ao criar novo usu&aacute;rio! Tabelas pessoas inv&aacute;lida");
             }
+
+            $pessoaBuscar = $usuarios->buscar(array(), array('usu_codigo desc'), array(1))->current();
+            $idUsuario = $pessoaBuscar->usu_codigo + 1;
+
+            $modelUsuario = new Autenticacao_Model_Usuario();
+            $novoUsuarioArray = $modelUsuario->criarNovoUsuario($idUsuario, $cpf, $nome, $idPessoa, $idUnidade)
+                ->obterUsuarioEmArray();
 
             $dados = array(
                 "pes_codigo" => $idPessoa,
@@ -1048,16 +1061,12 @@ class Autenticacao_Model_DbTable_Usuario extends MinC_Db_Table_Abstract
 
             $idPessoa = $pessoa->salvar($dadosAtualizaPessoa);
 
-            $pessoaBuscar = $usuarios->buscar(array(), array('usu_codigo desc'), array(1))->current();
-            $idUsuario = $pessoaBuscar->usu_codigo + 1;
-
-            $objUsuario = new Autenticacao_Model_Usuario();
-            $novoUsuarioArray = $objUsuario->criarNovoUsuario($idUsuario, $cpf, $nome, $nomeUsuario, $idPessoa, $idUnidade)
-                ->obterUsuarioEmArray();
-
             $this->_db->query("SET ANSI_NULLS ON;");
             $this->_db->query("SET ANSI_WARNINGS ON;");
-            return $this->insert($novoUsuarioArray);
+            $result = $this->insert($novoUsuarioArray);
+            $this->_db->query("SET ANSI_NULLS OFF;");
+            $this->_db->query("SET ANSI_WARNINGS OFF;");
+            return $result;
 
         } catch (Exception $e) {
             throw $e;

@@ -22,12 +22,15 @@
                 <div class="card">
                     <div class="card-content">
                         <?php if($this->ultimaVersaoLocal != $this->ultimaVersaoRemota):?>
-                        <p>Você está prestes a atualizar o sistema Salic da versão <?= $this->ultimaVersaoLocal;?> para a nova versão <?= $this->ultimaVersaoRemota;?>.</p>
+                        <p>Você está prestes a atualizar o sistema Salic da versão
+                            <a target="_blank" href="https://github.com/culturagovbr/salic-minc/commits/<?= $this->ultimaVersaoLocal;?>"><?= $this->ultimaVersaoLocal;?></a>
+                            para a nova versão
+                            <a target="_blank" href="https://github.com/culturagovbr/salic-minc/commits/<?= $this->ultimaVersaoRemota;?>"><?= $this->ultimaVersaoRemota;?></a>.</p>
                         <div class="card-action">
                             <button class="btn" href="#">Atualizar</button>
                         </div>
                         <?php else: ?>
-                        <p>O Salic já está na última versão <?php $this->ultimaVersaoLocal ?></p>
+                        <p>O Salic já está na última versão <?= $this->ultimaVersaoLocal ?></p>
                         <?php endif;?>
                     </div>
                 </div>
@@ -44,7 +47,13 @@
             data: {},
             dataType: 'json',
             success: function(response) {
-                console.log(response);
+                if (response.success) {
+                    Materialize.toast('Sistema atualizado com sucesso!', 3000, 'green');
+                } else{
+                    Materialize.toast('Não foi possível realizar a atualização!', 3000, 'red');
+                }
+
+                window.location.reload()
             }
         });
     });
