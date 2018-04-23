@@ -886,7 +886,7 @@ class GerenciarPautaReuniaoController extends MinC_Controller_Action_Abstract
         $area = new Area();
         $tc = new TitulacaoConselheiro();
         $usuariosorgao = new Usuariosorgaosgrupos();
-        $usuario = new Autenticacao_Model_Usuario();
+        $usuario = new Autenticacao_Model_DbTable_Usuario();
         $auth = Zend_Auth::getInstance(); // pega a autenticacao
         $Agente = $usuario->getIdUsuario($auth->getIdentity()->usu_codigo);
         $buscarReuniaoAberta = $reuniao->buscarReuniaoAberta();

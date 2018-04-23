@@ -1646,7 +1646,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         // caso o formulario seja enviado via post
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessao com o grupo ativo
         $auth               = Zend_Auth::getInstance();
-        $Usuario            = new Autenticacao_Model_Usuario();
+        $Usuario            = new Autenticacao_Model_DbTable_Usuario();
         $idagente           = $Usuario->getIdUsuario($auth->getIdentity()->usu_codigo);
         $idAgenteOrigem     = $idagente['idAgente'];
         $idPerfilDestino    = (null === $this->_request->getParam('idPerfilDestino')) ? 124 : $this->_request->getParam('idPerfilDestino'); // se nao receber idPerfilDestino, define como 124 por padrao (tecnico)
@@ -2612,7 +2612,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
     {
         $auth = Zend_Auth::getInstance();
 
-        $Usuario = new Autenticacao_Model_Usuario();
+        $Usuario = new Autenticacao_Model_DbTable_Usuario();
 
         $idagente       = $Usuario->getIdUsuario($auth->getIdentity()->usu_codigo);
         $idAgenteOrigem = $idagente['idAgente'];
@@ -2633,7 +2633,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $auth = Zend_Auth::getInstance();
         $auth->getIdentity();
 
-        $Usuario = new Autenticacao_Model_Usuario();
+        $Usuario = new Autenticacao_Model_DbTable_Usuario();
 
         $idagente       = $Usuario->getIdUsuario($auth->getIdentity()->usu_codigo);
         $idAgenteOrigem = $idagente['idAgente'];
@@ -2651,7 +2651,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
      */
     public function pareceristaprestacaocontasAction()
     {
-        $Usuario        = new Autenticacao_Model_Usuario();
+        $Usuario        = new Autenticacao_Model_DbTable_Usuario();
         $auth           = Zend_Auth::getInstance();
         $idagente       = $Usuario->getIdUsuario($auth->getIdentity()->usu_codigo);
         $idAgenteOrigem = $idagente['idAgente'];
@@ -2669,7 +2669,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
      */
     public function coordenadorpareceristaprestacaocontasAction()
     {
-        $Usuario        = new Autenticacao_Model_Usuario();
+        $Usuario        = new Autenticacao_Model_DbTable_Usuario();
         $auth           = Zend_Auth::getInstance();
         $idagente       = $Usuario->getIdUsuario($auth->getIdentity()->usu_codigo);
         $idAgenteOrigem = $idagente['idAgente'];

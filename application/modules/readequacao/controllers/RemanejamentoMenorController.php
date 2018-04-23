@@ -20,7 +20,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
         if (isset($auth->getIdentity()->usu_codigo)) {
             $this->view->usuarioInterno = true;
             
-            $Usuario = new Autenticacao_Model_Usuario();
+            $Usuario = new Autenticacao_Model_DbTable_Usuario();
             $grupos = $Usuario->buscarUnidades($auth->getIdentity()->usu_codigo, 21);
             foreach ($grupos as $grupo) {
                 $PermissoesGrupo[] = $grupo->gru_codigo;

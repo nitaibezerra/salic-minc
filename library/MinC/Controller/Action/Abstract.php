@@ -55,7 +55,7 @@ abstract class MinC_Controller_Action_Abstract extends Zend_Controller_Action
 
         $this->_urlPadrao = Zend_Controller_Front::getInstance()->getBaseUrl();
         if (isset($arrAuth['usu_codigo'])) {
-            $Usuario = new Autenticacao_Model_Usuario();
+            $Usuario = new Autenticacao_Model_DbTable_Usuario();
             $Agente = $Usuario->getIdUsuario($arrAuth['usu_codigo']);
             $idAgente = $Agente['idagente'];
             // manda os dados para a visao
@@ -71,7 +71,7 @@ abstract class MinC_Controller_Action_Abstract extends Zend_Controller_Action
             $acessos = $sgcAcesso->findBy(array('cpf' => $cpf));
 
             # Busca na Usuarios
-            $mdlusuario = new Autenticacao_Model_Usuario();
+            $mdlusuario = new Autenticacao_Model_DbTable_Usuario();
             $usuario = $mdlusuario->findBy(array('usu_identificacao' => $cpf));
 
             # Busca na Agentes
@@ -152,7 +152,7 @@ abstract class MinC_Controller_Action_Abstract extends Zend_Controller_Action
         $objIdentity = $auth->getIdentity();
         $arrAuth = array_change_key_case((array)$objIdentity);
 
-        $objModelUsuario = new Autenticacao_Model_Usuario(); // objeto usuario
+        $objModelUsuario = new Autenticacao_Model_DbTable_Usuario(); // objeto usuario
         $UsuarioAtivo = new Zend_Session_Namespace('UsuarioAtivo'); // cria a sessao com o usuario ativo
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessao com o grupo ativo
         // somente autenticacao zend

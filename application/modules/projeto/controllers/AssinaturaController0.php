@@ -47,7 +47,7 @@ class Projeto_AssinaturasssController extends Assinatura_GenericController
 
             // Busca na Usuarios
             //Excluir ProposteExcluir Proposto
-            $usuarioDAO   = new Autenticacao_Model_Usuario();
+            $usuarioDAO   = new Autenticacao_Model_DbTable_Usuario();
             $arrUsuario = $usuarioDAO->findBy(array('usu_identificacao' => $cpf));
 
             // Busca na Agentes

@@ -20,7 +20,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $PermissoesGrupo[] = 121; // T�cnico de Acompanhamento
         parent::perfil(1, $PermissoesGrupo);
 
-        $Usuario = new Autenticacao_Model_Usuario(); // objeto usu�rio
+        $Usuario = new Autenticacao_Model_DbTable_Usuario(); // objeto usu�rio
         $auth = Zend_Auth::getInstance(); // pega a autentica��o
         $idagente = $Usuario->getIdUsuario($auth->getIdentity()->usu_codigo);
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sess�o com o grupo ativo

@@ -79,7 +79,7 @@ class Proposta_DiligenciarController extends Proposta_GenericController
         $post               = Zend_Registry::get('post');
 
         $auth = Zend_Auth::getInstance(); // instancia da autenticacao
-        $Usuario = new Autenticacao_Model_Usuario();
+        $Usuario = new Autenticacao_Model_DbTable_Usuario();
         $idagente = $Usuario->getIdUsuario($auth->getIdentity()->usu_codigo);
         $usu_identificacao = trim($idagente['usu_identificacao']);
         $idagente = $idagente['idAgente'];
@@ -762,7 +762,7 @@ class Proposta_DiligenciarController extends Proposta_GenericController
                 $idProduto = new Zend_Db_Expr('null');
             }
 
-            $Usuario = new Autenticacao_Model_Usuario();
+            $Usuario = new Autenticacao_Model_DbTable_Usuario();
             $idagente = $auth->getIdentity()->usu_codigo;
 
             $stEnviado = 'N';
