@@ -227,7 +227,7 @@
 
                     <?php if ($this->fnLiberarLinks['Readequacao']) {
                 ?>
-                    <a href="<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Solicita&ccedil;&otilde;es Gerais">Solicita&ccedil;&otilde;es Gerais</a>
+                    <a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Solicita&ccedil;&otilde;es Gerais">Solicita&ccedil;&otilde;es Gerais</a>
                     <?php
             } ?>
                 </div>

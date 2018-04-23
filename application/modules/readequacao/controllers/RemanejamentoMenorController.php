@@ -253,9 +253,9 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                     'idReadequacao=?' => $idReadequacao
                 );
                 $tbPlanilhaAprovacao->update($dadosReadequacaoNova, $whereReadequacaoNova);
-                parent::message("O remanejamento foi finalizado com sucesso!", "consultardadosprojeto?idPronac=$id", "CONFIRM");
+                parent::message("O remanejamento foi finalizado com sucesso!", "default/consultardadosprojeto?idPronac=$id", "CONFIRM");
             } else {
-                parent::message("Ocorreu um erro durante o cadastro do remanejamento!", "consultardadosprojeto?idPronac=$id", "ERROR");
+                parent::message("Ocorreu um erro durante o cadastro do remanejamento!", "default/consultardadosprojeto?idPronac=$id", "ERROR");
             }
         }
     }
