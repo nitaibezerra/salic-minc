@@ -1,14 +1,14 @@
 <?php
-$arrMenu['atualizacao'] = array(
+$arrMenu['atualizacao'] = [
     'id' => 'atualiza&ccedil;&atilde;o',
     'label' => 'Atualiza&ccedil;&atilde;o',
     'title' => 'Ir para Atualiza&ccedil;&atilde;o',
-    'menu' => array(),
-    'grupo' => []
-);
-$arrMenu['atualizacao']['menu'][] = array(
-    'grupo' => array(Autenticacao_Model_Grupos::GESTOR_SALIC),
-    'url' => $this->url(array('module'=>'manutencao', 'controller' => 'atualizacao', 'action' => 'atualizacao-de-versao'), '', true),
+    'menu' => [],
+    'grupo' => [Autenticacao_Model_Grupos::GESTOR_SALIC]
+];
+$arrMenu['atualizacao']['menu'][] = [
+    'grupo' => [Autenticacao_Model_Grupos::GESTOR_SALIC],
+    'url' => $this->url(['module'=>'manutencao', 'controller' => 'atualizacao', 'action' => 'atualizacao-de-versao'], '', true),
     'title' => 'Atualizar Salic',
     'label' => 'Atualização Salic'
-);
+];
