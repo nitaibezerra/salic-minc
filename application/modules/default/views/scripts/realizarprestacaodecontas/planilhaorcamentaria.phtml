@@ -254,6 +254,12 @@
 
     <?php $analisarItemHref   =   $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'analisaritem'));?>
     <script type="text/javascript">
+        var bus = new Vue({});
+        var app = new Vue({
+            el: '#vue-container'
+        });
+    </script>
+    <script type="text/javascript">
         <?php if(isset($_GET['tipoMsg'])):?>
             $("#novas_mensagens", document).append("<div class='msg<?php echo $_GET['tipoMsg']; ?>'><div class='float_right'><input type='button' class='btn_close' title='Fechar mensagem' id='msg<?php echo $_GET['tipoMsg']; ?>' onclick='$(\".msg<?php echo $_GET['tipoMsg']; ?>\").hide();' onkeypress='$(\".msg<?php echo $_GET['tipoMsg']; ?>\").hide();'/></div><div><?php echo $_GET['msg'] ?></div></div>");
         <?php endif;?>
@@ -458,9 +464,3 @@
     </script>
 </div>
 
-<script type="text/javascript">
-    var bus = new Vue({});
-    var app = new Vue({
-        el: '#vue-container'
-    });
-</script>
