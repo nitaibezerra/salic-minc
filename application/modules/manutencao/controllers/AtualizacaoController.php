@@ -51,7 +51,12 @@ final class Manutencao_AtualizacaoController extends Manutencao_GenericControlle
         }
 
         foreach ($parametrosBuild as $param => $value) {
-            $build .= "&{$param}={$value}";
+            if($param == 'token'){
+                $build .= "{$param}={$value}";
+
+            }else{
+                $build .= "&{$param}={$value}";
+            }
         }
 
         $deployCommand = $curlCommand . $jenkinsUrl . $job . $tipoJob . $build;
