@@ -10,7 +10,6 @@ final class Manutencao_AtualizacaoController extends Manutencao_GenericControlle
 
         if (self::ambienteAtual() == 'staging') {
             $this->view->ultimaVersaoRemota = self::ultimaVersaoHashRemoto();
-//            xd($this->view->ultimaVersaoRemota);
             $this->view->ultimaVersaoLocal = self::ultimaVersaoHashLocal();
         }else{
             $this->view->ultimaVersaoRemota = self::ultimaVersaoTagRemota();
@@ -20,13 +19,44 @@ final class Manutencao_AtualizacaoController extends Manutencao_GenericControlle
 
     public function atualizarSistemaAction(){
         try{
-            $curl_command="curl -X POST jenkins.cultura.gov.br/view/Salic/job/SalicHomologacaoPipeline/buildWithParameters?token=790d6d8175da3e7a3ddce28344678696&containerApplicationEnviroment=development&branch=hmg";
-            exec($curl_command);
-
+            $jenkinsCommand = $this->gerarUrlBuildJenkins();
+            exec($jenkinsCommand);
             $this->_helper->json(['success' => true]);
         }catch(Exception $e){
             $this->_helper->json(['success' => false]);
         }
+    }
+
+    private function gerarUrlBuildJenkins(){
+        $configJenkins = self::obterConfiguracoesJenkins();
+        $curlCommand = "curl -X POST ";
+        $build = '';
+        $job = '';
+        $tipoJob = 'buildWithParameters?';
+        $jenkinsUrl = $configJenkins['url'];
+
+        $parametrosBuild = [
+            'token' => $configJenkins['token'],
+            'containerApplicationEnviroment' => 'development',
+            'branch' => 'hmg'
+        ];
+
+        $parametrosJob = [
+            'view' => 'Salic',
+            'job' => 'SalicHomologacaoPipeline'
+        ];
+
+        foreach ($parametrosJob as $param => $value) {
+            $job .= "{$param}/{$value}/";
+        }
+
+        foreach ($parametrosBuild as $param => $value) {
+            $build .= "&{$param}={$value}";
+        }
+
+        $deployCommand = $curlCommand . $jenkinsUrl . $job . $tipoJob . $build;
+
+        return $deployCommand;
     }
 
     private static function ultimaVersaoTagRemota(){
@@ -52,6 +82,10 @@ final class Manutencao_AtualizacaoController extends Manutencao_GenericControlle
     private static function ultimaVersaoHashLocal(){
         $command = "git rev-parse HEAD";
         return exec($command);
+    }
+
+    private static function obterConfiguracoesJenkins(){
+        return Zend_Controller_Front::getInstance()->getParam('bootstrap')->getOption('jenkins');
     }
 
 }
