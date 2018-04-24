@@ -2,7 +2,7 @@
 
 [![Junte-se ao nosso chat no https://gitter.im/salic-minc/Lobby](https://badges.gitter.im/salic-minc/Lobby.svg)](https://gitter.im/salic-minc/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Bem vindo/a à documentação do SALIC! Aqui você vai encontrar diversas documentações sobre o processo de desenvolvimento do SALIC, versionameno e publicação.
+Bem vindo/a à documentação do SALIC! Aqui você vai encontrar diversas documentações sobre o processo de desenvolvimento do SALIC, versionameno e publicação..
 
 
 ## Passos iniciais::
