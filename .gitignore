@@ -27,9 +27,7 @@ tests/log/*
 composer.lock
 composer.phar
 .php_cs.cache
-<<<<<<< Temporary merge branch 1
 .DS_Store
-=======
 package-lock.json
 
 # IDEs and editors
@@ -45,3 +43,9 @@ node_modules/
 .DS_Store
 Thumbs.db
 log/
+=======
+.DS_Store
+package-lock.json
+node_modules/
+log/
+>>>>>>> f/prestacao-contas

@@ -1990,7 +1990,8 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             }
 
             $dataEmissao = $comprovantePagamento->dtEmissao ? new DateTime(data::dataAmericana($comprovantePagamento->dtEmissao)) : new DateTime();
-            $dataPagamento = $comprovantePagamento->dtPagamento ? new DateTime($comprovantePagamento->dtPagamento) : new DateTime();
+            $dataPagamento = $comprovantePagamento->dtPagamento ? DateTime::createFromFormat('d/m/Y', $comprovantePagamento->dtPagamento) : new DateTime();
+
             $this->view->tpDocumento = $comprovantePagamento->tpDocumento;
             $this->view->nrComprovante = $comprovantePagamento->nrComprovante;
             $this->view->nrSerie = $comprovantePagamento->nrSerie;
@@ -2003,6 +2004,14 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             $this->view->nomeArquivo = $comprovantePagamento->nmArquivo;
             $this->view->JustificativaTecnico = $comprovantePagamento->JustificativaTecnico;
             $this->view->pagCompRecusado = true;
+
+            $tblProjetos = new Projetos();
+            $projeto = $tblProjetos->buscarTodosDadosProjeto($idpronac);
+            $this->view->projeto = $projeto->current();
+
+            $diligencia = new Diligencia();
+            $diligencia = $diligencia->aberta($idpronac);
+            $this->view->idTipoDiligencia = $diligencia->idTipoDiligencia;
 
             $this->render('comprovacaopagamento');
         } catch(Exception $e) {
