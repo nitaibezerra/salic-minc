@@ -2,13 +2,14 @@
   "name": "salic-minc",
   "version": "1.0.0",
   "description": "Bem vindo/a à documentação do SALIC! Aqui você vai encontrar diversas documentações sobre o processo de desenvolvimento do SALIC, versionameno e publicação.",
-  "main": "index.js",
+  "private": true,
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
   "scripts": {
-    "pre-push-action": "sh git_hooks/pre-push.sh"
+    "pre-push-action": "sh git_hooks/pre-push.sh",
+    "build": "webpack"
   },
   "husky": {
     "hooks": {
@@ -26,6 +27,15 @@
   },
   "homepage": "https://github.com/culturagovbr/salic-minc#readme",
   "devDependencies": {
-    "husky": "^0.14.3"
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^0.28.11",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^0.14.3",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.14"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5"
   }
 }
