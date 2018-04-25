@@ -128,7 +128,7 @@
                                     <input type='hidden' name='idpronac' id='idpronac'
                                            value='<?php echo $this->idpronac; ?>'/>
 
-                                    <?php if ($this->idComprovantePagamento): ?>
+                                    <?php if ($this->idComprovantePagamento && $this->idTipoDiligencia != 174): ?>
                                         <input type='hidden' name='paginaRedirecionar' id='paginaRedirecionar'
                                                value='comprovacaopagamento'/>
                                     <?php endif; ?>
