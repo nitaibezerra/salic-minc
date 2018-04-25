@@ -43,9 +43,10 @@ node_modules/
 .DS_Store
 Thumbs.db
 log/
-=======
 .DS_Store
 package-lock.json
 node_modules/
 log/
->>>>>>> f/prestacao-contas
+package-lock.json
+node_modules/
+log/

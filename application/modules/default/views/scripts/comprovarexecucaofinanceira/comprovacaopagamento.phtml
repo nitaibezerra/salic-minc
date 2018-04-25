@@ -515,10 +515,12 @@
                                                 <?php endif; ?>
                                             <?php else: ?>
                                                 <!--input type="submit" name="frComprovarPagamentoSubmit" id="frComprovarPagamentoSubmit" value="" class="btn_incluir" /-->
-                                                <button type="submit" name="frComprovarPagamentoSubmit"
-                                                        id="frComprovarPagamentoSubmit" value="" class="btn">
-                                                    <i class="material-icons left ">add</i>incluir
-                                                </button>
+                                                <?php if ($this->idTipoDiligencia != 174 || $this->idTipoDiligencia == null ) : ?>
+                                                    <button type="submit" name="frComprovarPagamentoSubmit"
+                                                            id="frComprovarPagamentoSubmit" value="" class="btn">
+                                                        <i class="material-icons left ">add</i>incluir
+                                                    </button>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         </div>
                                     </div>

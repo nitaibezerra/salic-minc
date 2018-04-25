@@ -55,6 +55,9 @@ class Diligencia_DiligenciaController extends Zend_Rest_Controller
 
         $rowDiligencia = $diligenciaDAO->inserir($dados);
 
+        $projeto = new Projetos();
+        $projeto->alterarSituacao($idPronac, null, 'E17', 'Diligência na prestação de contas');
+
         $this->view->assign('data',['message' => 'criado!']);
         $this->getResponse()->setHttpResponseCode(201);
     }
