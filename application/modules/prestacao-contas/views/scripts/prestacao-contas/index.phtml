@@ -1,76 +1,25 @@
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-<script src="https://unpkg.com/vuetable-2@1.6.0"></script>
-
-
 <div id="app" class="container-fluid">
-  <h1>Hello App!</h1>
-  <p>
-    <!-- use router-link component for navigation. -->
-    <!-- specify the link by passing the `to` prop. -->
-    <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
-    <router-link to="/index">index</router-link>
-    <router-link to="/bar">Go to Bar</router-link>
-  </p>
-  <!-- route outlet -->
+    <page-title></page-title>
   <!-- component matched by the route will render here -->
   <router-view></router-view>
 </div>
 
-<script>
-// 0. If using a module system (e.g. via vue-cli), import Vue and VueRouter
-// and then call `Vue.use(VueRouter)`.
+<!-- vendor -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="https://unpkg.com/vuetable-2@1.6.0"></script>
+<!-- vendor -->
 
-// 1. Define route components.
-// These can be imported from other files
-const Index = {
-template: `<div>
-    <vuetable  :css="{tableClass: ' bordered'}"
-          ref="vuetable"
-            api-url="https://vuetable.ratiw.net/api/users"
-            :fields="['name', 'email', 'birthdate']"
-            >
-            </vuetable>
-        </div>
-    `,
-    mounted: function () {
-        console.log('teste');
-    }
-}
-const Bar = { template: '<div>bar</div>' }
+<!-- componentes -->
+<script src="/public/scripts/prestacao-contas/components/page-title.vue.js"></script>
+<script src="/public/scripts/prestacao-contas/components/button-analisar.vue.js"></script>
+<!-- componentes -->
 
-Vue.component('button-counter', {
-  data: function () {
-    return {
-      count: 0
-    }
-  },
-  template: '<button>You clicked me {{ count }} times.</button>'
-})
 
-Vue.use(Vuetable);
-// 2. Define some routes
-// Each route should map to a component. The "component" can
-// either be an actual component constructor created via
-// `Vue.extend()`, or just a component options object.
-// We'll talk about nested routes later.
-const routes = [
-  { path: '/index', component: Index },
-  { path: '/bar', component: Bar }
-]
+<!-- views -->
+<script src="/public/scripts/prestacao-contas/views/index.vue.js"></script>
+<script src="/public/scripts/prestacao-contas/views/analisar.vue.js"></script>
+<!-- views -->
 
-// 3. Create the router instance and pass the `routes` option
-// You can pass in additional options here, but let's
-// keep it simple for now.
-const router = new VueRouter({
-routes // short for `routes: routes`
-})
-
-// 4. Create and mount the root instance.
-// Make sure to inject the router with the router option to make the
-// whole app router-aware.
-const app = new Vue({
-  router,
-  components: {Vuetable}
-}).$mount('#app')
-</script>
+<script src="/public/scripts/prestacao-contas/router.vue.js"></script>
+<script src="/public/scripts/prestacao-contas/app.vue.js"></script>
