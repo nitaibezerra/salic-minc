@@ -14,10 +14,6 @@ class Solicitacao_MensagemControllerTest extends MinC_Test_ControllerActionTestC
 
         $this->autenticar();
         $this->resetRequest()->resetResponse();
-        $this->alterarPerfil(
-            Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE,
-            Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI
-        );
 
         $this->alterarPerfil(
             Autenticacao_Model_Grupos::COMPONENTE_COMISSAO,
@@ -32,6 +28,13 @@ class Solicitacao_MensagemControllerTest extends MinC_Test_ControllerActionTestC
         $this->dispatch("/solicitacao/mensagem/index");
         $this->assertUrl('solicitacao', 'mensagem', 'index');
 
-        $this->assertQuery('div.container-fluid div');
-    }
+//        $this->assertQuery('div.container-fluid div');
+	}
+
+	public function testIndexAction()
+	{
+        $this->perfilParaProponente();
+        $this->dispatch("/solicitacao/mensagem/index");
+        $this->assertUrl("solicitacao", "mensagem", "index");
+	}
 }

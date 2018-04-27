@@ -7,6 +7,23 @@
  */
 class AgentesControllerTest extends MinC_Test_ControllerActionTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->idPronac = '209649';
+
+        $this->hashIdPronac = "501eac548e7d4fa987034573abc6e179MjAxNzEzZUA3NWVmUiEzNDUwb3RT";
+
+        $this->autenticar();
+
+        $this->resetRequest()
+            ->resetResponse();
+
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COMPONENTE_COMISSAO, Orgaos::ORGAO_SUPERIOR_SAV);
+
+        $this->resetRequest()
+            ->resetResponse();
+    }
 
     /**
      * TestIncluiragente Acesso a tela de incluir agente
@@ -32,23 +49,6 @@ class AgentesControllerTest extends MinC_Test_ControllerActionTestCase
         $this->assertModule('agente');
         $this->assertController('agentes');
         $this->assertAction('incluiragente');
-    }
-    public function setUp()
-    {
-        parent::setUp();
-        $this->idPronac = '209649';
-
-        $this->hashIdPronac = "501eac548e7d4fa987034573abc6e179MjAxNzEzZUA3NWVmUiEzNDUwb3RT";
-
-        $this->autenticar();
-
-        $this->resetRequest()
-            ->resetResponse();
-
-        $this->alterarPerfil(Autenticacao_Model_Grupos::COMPONENTE_COMISSAO, Orgaos::ORGAO_SUPERIOR_SAV);
-
-        $this->resetRequest()
-            ->resetResponse();
     }
 
     public function testagentesAction()
@@ -88,5 +88,38 @@ class AgentesControllerTest extends MinC_Test_ControllerActionTestCase
         $this->alterarPerfil(Autenticacao_Model_Grupos::GESTOR_SALIC, Orgaos::ORGAO_SUPERIOR_SEFIC);
         $this->dispatch('/agente/agentes/buscaragente');
         $this->assertUrl('agente', 'agentes', 'buscaragente');
+    }
+
+    public function testbuscaPessoaAction()
+    {
+        $this->perfilParaProponente();
+        $this->dispatch('/agente/agentes/busca-pessoa');
+        $this->assertUrl('agente', 'agentes', 'busca-pessoa');
+    }
+
+    public function testAgenteCadastradoAction()
+    {
+        $this->perfilParaProponente();
+        $this->dispatch('/agente/agentes/agentecadastrado');
+        $this->assertUrl('agente', 'agentes', 'agentecadastrado');
+    }
+
+    public function testAgenteNaoCadastrado()
+    {
+        $cpf = "06101517110";
+        $this->perfilParaProponente();
+        $this->request->setMethod('POST')->setPost([
+            'cpf' => $cpf
+        ]);
+        $this->dispatch('/agente/agentes/agentecadastrado');
+        $this->assertUrl('agente', 'agentes', 'agentecadastrado');
+        $data = $this->getResponse()->getBody();
+
+        $expected = "";
+        $this->assertEquals(
+            json_encode($expected),
+            $data
+        );
+
     }
 }

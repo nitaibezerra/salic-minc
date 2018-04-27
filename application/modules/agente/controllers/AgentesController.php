@@ -1245,7 +1245,7 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
                 );
 
             $dadosAI = "Insert into BDCORPORATIVO.scCorp.tbArquivoImagem
-				  (idArquivo, biArquivo) values (" . $idArquivo['idArquivo'] . ", " . $arquivoBinario . ") ";
+                  (idArquivo, biArquivo) values (" . $idArquivo['idArquivo'] . ", " . $arquivoBinario . ") ";
 
             $salvarArquivoImagem = $tbArquivoImagem->salvarDados($dadosAI);
 
@@ -1371,7 +1371,7 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
             );
 
             $dadosAI = "Insert into BDCORPORATIVO.scCorp.tbArquivoImagem
-				  (idArquivo, biArquivo) values (" . $idArquivo['idArquivo'] . ", " . $arquivoBinario . ") ";
+                  (idArquivo, biArquivo) values (" . $idArquivo['idArquivo'] . ", " . $arquivoBinario . ") ";
 
             $salvarArquivoImagem = $tbArquivoImagem->salvarDados($dadosAI);
 
@@ -1479,7 +1479,7 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
             $altera = $tbAusencia->alteraAusencia($dados, $ultimoRegistro[0]->id);
 
             parent::message("Suas f&eacute;rias foram agendas para " . $dtInicio . " &agrave; " . $dtFim . ". Aguarde Aprova&ccedil;&atilde;o do Coordenador.
-							<br /> Caso n&atilde;o tenha resposta favor entre em contato com o mesmo!", "agente/agentes/ferias/id/" . $idAgente, "CONFIRM");
+                            <br /> Caso n&atilde;o tenha resposta favor entre em contato com o mesmo!", "agente/agentes/ferias/id/" . $idAgente, "CONFIRM");
         } catch (Exception $e) {
             parent::message("Error! " . $e->getMessage(), "agente/agentes/ferias/id/" . $idAgente, "ERROR");
         }
@@ -1681,7 +1681,7 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
             );
 
             $dadosAI = "Insert into BDCORPORATIVO.scCorp.tbArquivoImagem
-				  (idArquivo, biArquivo) values (" . $idArquivo['idArquivo'] . ", " . $arquivoBinario . ") ";
+                  (idArquivo, biArquivo) values (" . $idArquivo['idArquivo'] . ", " . $arquivoBinario . ") ";
 
             $salvarArquivoImagem = $tbArquivoImagem->salvarDados($dadosAI);
 
@@ -1873,50 +1873,58 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
         $this->_helper->layout->disableLayout(); // desabilita o layout
         $this->_helper->viewRenderer->setNoRender(true);
         $cpf = preg_replace('/\.|-|\//', '', $_REQUEST['cpf']);
-
         $novos_valores = array();
-        $dados = Agente_Model_ManterAgentesDAO::buscarAgentes($cpf);
 
-        if ((strlen($cpf) == 11 && !Validacao::validarCPF($cpf)) || (strlen($cpf) == 14 && !Validacao::validarCNPJ($cpf))) {
-            $novos_valores[0]['msgCPF'] = utf8_encode('invalido');
-        } else {
-            if (count($dados) != 0) {
-                foreach ($dados as $dado) {
-                    $dado = ((array) $dado);
-                    array_walk($dado, function ($value, $key) use (&$dado) {
-                        $dado[$key] = utf8_encode($value);
-                    });
-                    $novos_valores[0]['msgCPF'] = utf8_encode('cadastrado');
-                    $novos_valores[0]['idAgente'] = utf8_encode($dado['idagente']);
-                    $novos_valores[0]['Nome'] = utf8_encode($dado['nome']);
-                    $novos_valores[0]['agente'] = $dado;
-                }
-            } else {
-                #Instancia a Classe de Servico do WebService da Receita Federal
-                $wsServico = new ServicosReceitaFederal();
-                if (11 == strlen($cpf)) {
-                    $arrResultado = $wsServico->consultarPessoaFisicaReceitaFederal($cpf);
-                    if (count($arrResultado) > 0) {
-                        $novos_valores[0]['msgCPF'] = utf8_encode('novo');
-                        $novos_valores[0]['idAgente'] = $arrResultado['idPessoaFisica'];
-                        $novos_valores[0]['Nome'] = utf8_encode($arrResultado['nmPessoaFisica']);
-                        $novos_valores[0]['Cep'] = isset($arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep']) && $arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep'] ? $arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep'] : '';
-                    }
-                } elseif (14 == strlen($cpf)) {
-                    $arrResultado = $wsServico->consultarPessoaJuridicaReceitaFederal($cpf);
-                    if (count($arrResultado) > 0) {
-                        $novos_valores[0]['msgCPF'] = utf8_encode('novo');
-                        $novos_valores[0]['idAgente'] = $arrResultado['idPessoaJuridica'];
-                        $novos_valores[0]['Nome'] = utf8_encode($arrResultado['nmRazaoSocial']);
-                        $novos_valores[0]['Cep'] = isset($arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep']) && $arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep'] ? $arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep'] : '';
-                        ;
-                    }
-                }
-            }
+        try {
+           $novos_valores[0] = $this->buscarAgente($cpf); 
+        } catch(Exception $exception) {
+            $novos_valores[0]['msgCPF'] = utf8_encode($exception->getMessage());
         }
 
         $this->_helper->json($novos_valores);
         die;
+    }
+
+    private function buscarAgente($CPFCNPJ) 
+    {
+        $dados = Agente_Model_ManterAgentesDAO::buscarAgentes($cpf);
+
+        
+        if ((strlen($cpf) == 11 && !Validacao::validarCPF($cpf)) || (strlen($cpf) == 14 && !Validacao::validarCNPJ($cpf))) {
+            throw new Exception('CPF/CNPJ inv&aacute;lido.');
+        }
+        if (count($dados) != 0) {
+            $dado = reset($dados);
+            array_walk($dado, function ($value, $key) use (&$dado) {
+                $dado[$key] = utf8_encode($value);
+            });
+            $novos_valores['msgCPF'] = utf8_encode('cadastrado');
+            $novos_valores['idAgente'] = utf8_encode($dado['idagente']);
+            $novos_valores['Nome'] = utf8_encode($dado['nome']);
+            $novos_valores['agente'] = $dado;
+        } else {
+            #Instancia a Classe de Servico do WebService da Receita Federal
+            $wsServico = new ServicosReceitaFederal();
+            if (11 == strlen($cpf)) {
+                $arrResultado = $wsServico->consultarPessoaFisicaReceitaFederal($cpf);
+                if (count($arrResultado) > 0) {
+                    $novos_valores['msgCPF'] = utf8_encode('novo');
+                    $novos_valores['idAgente'] = $arrResultado['idPessoaFisica'];
+                    $novos_valores['Nome'] = utf8_encode($arrResultado['nmPessoaFisica']);
+                    $novos_valores['Cep'] = isset($arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep']) && $arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep'] ? $arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep'] : '';
+                }
+            } elseif (14 == strlen($cpf)) {
+                $arrResultado = $wsServico->consultarPessoaJuridicaReceitaFederal($cpf);
+                if (count($arrResultado) > 0) {
+                    $novos_valores['msgCPF'] = utf8_encode('novo');
+                    $novos_valores['idAgente'] = $arrResultado['idPessoaJuridica'];
+                    $novos_valores['Nome'] = utf8_encode($arrResultado['nmRazaoSocial']);
+                    $novos_valores['Cep'] = isset($arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep']) && $arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep'] ? $arrResultado['pessoa']['enderecos'][0]['logradouro']['nrCep'] : '';
+                    ;
+                }
+            }
+        }
+        return $novos_valores; 
     }
 
     /**
