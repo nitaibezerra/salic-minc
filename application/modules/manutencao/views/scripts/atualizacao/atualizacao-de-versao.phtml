@@ -27,7 +27,19 @@
                             para a nova versão
                             <a target="_blank" href="https://github.com/culturagovbr/salic-minc/commits/<?= $this->ultimaVersaoRemota;?>"><?= $this->ultimaVersaoRemota;?></a>.</p>
                         <div class="card-action">
-                            <button class="btn" href="#">Atualizar</button>
+                            <button id="botaoAtualizar"class="btn" href="#">Atualizar</button>
+
+                            <div id="load" class="preloader-wrapper small active hide">
+                                <div class="spinner-layer spinner-green-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <?php else: ?>
                         <p>O Salic já está na última versão <?= $this->ultimaVersaoLocal ?></p>
@@ -41,21 +53,39 @@
 
 <script>
     $3(".btn").on("click", function(){
-        $.ajax({
-            type: "POST",
-            url: "/manutencao/atualizacao/atualizar-sistema",
-            data: {},
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    Materialize.toast('Sistema atualizado com sucesso!', 3000, 'green');
-                } else{
-                    Materialize.toast('Não foi possível realizar a atualização!', 3000, 'red');
+        atualizando = true;
+        var check = function(){
+            $.ajax({
+                type: "POST",
+                url: "/manutencao/atualizacao/jenkins-build-status",
+                data: {},
+                dataType: 'json',
+                success: function(data) {
+                    if(data.response.result != "SUCCESS"){
+                        if(atualizando){
+                            atualizando = false;
+                            Materialize.toast('Atualizando sistema!', 3000, 'yellow');
+                        }
+                        check();
+                    }else{
+                        $.ajax({
+                            type: "POST",
+                            url: "/manutencao/atualizacao/atualizar-sistema",
+                            data: {},
+                            dataType: 'json',
+                            success: function(data) {
+                                Materialize.toast('Sistema atualizado com sucesso!', 3000, 'green');
+                                window.location.reload()
+                            }
+                        });
+                    }
                 }
+            });
+        };
 
-                window.location.reload()
-            }
-        });
+        $3('#botaoAtualizar').addClass('hide');
+        $3('#load').removeClass('hide');
+        check();
     });
 
 </script>

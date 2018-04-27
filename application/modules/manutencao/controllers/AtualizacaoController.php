@@ -15,16 +15,32 @@ final class Manutencao_AtualizacaoController extends Manutencao_GenericControlle
             $this->view->ultimaVersaoRemota = self::ultimaVersaoTagRemota();
             $this->view->ultimaVersaoLocal = self::ultimaVersaoTagLocal();
         }
+
     }
 
     public function atualizarSistemaAction(){
         try{
             $jenkinsCommand = $this->gerarUrlBuildJenkins();
             exec($jenkinsCommand);
-            $this->_helper->json(['success' => true]);
+
+            $this->_helper->json([
+                'success' => true
+            ]);
         }catch(Exception $e){
-            $this->_helper->json(['success' => false]);
+            $this->_helper->json([
+                'success' => false
+            ]);
         }
+    }
+
+    public function jenkinsBuildStatusAction(){
+        $client = new GuzzleHttp\Client();
+
+        $response = $client->request('GET', 'http://jenkins.cultura.gov.br/job/SalicHomologacaoPipeline/lastBuild/api/json');
+
+        $this->_helper->json([
+            'response' => json_decode($response->getBody()->getContents(), true)
+        ]);
     }
 
     private function gerarUrlBuildJenkins(){
