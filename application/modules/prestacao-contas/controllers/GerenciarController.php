@@ -141,6 +141,10 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
             }
         }
 
+        $tblProjetos = new Projetos();
+        $projeto = $tblProjetos->buscarTodosDadosProjeto($idPronac);
+        $this->view->situacao = $projeto->current()->Situacao;
+
         $this->view->idpronac = $this->getRequest()->getParam('idpronac');
         $this->view->tipoDocumentoConteudo = $this->tipoDocumento;
     }

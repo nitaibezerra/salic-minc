@@ -702,9 +702,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
     public function cadastrarcomprovacaopagamentoAction()
     {
         $dtPagamento = $this->getRequest()->getParam('dtPagamento') ? new DateTime(data::dataAmericana($this->getRequest()->getParam('dtPagamento'))) : null;
+        $this->verificarPermissaoAcesso(false, true, false);
 
         try {
-            $this->verificarPermissaoAcesso(false, true, false);
             $request = $this->getRequest();
 
             $pais = $this->getRequest()->getParam('pais');
@@ -1796,6 +1796,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $idPronac = $this->getRequest()->getParam('idpronac');
         $idComprovantePagamento = $this->getRequest()->getParam('idComprovantePagamento');
 
+        $tblProjetos = new Projetos();
+        $projeto = $tblProjetos->buscarTodosDadosProjeto($idPronac);
+
         $planilhaItemModel = new PlanilhaItem();
         $produtoModel = new Produto();
         $etapaModel = new PlanilhaEtapa();
@@ -1921,6 +1924,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             }
         }
 
+        $this->view->situacao = $projeto->current()->Situacao;
         $this->view->idpronac = $this->getRequest()->getParam('idpronac');
         $this->view->tipoDocumentoConteudo = $this->tipoDocumento;
     }
