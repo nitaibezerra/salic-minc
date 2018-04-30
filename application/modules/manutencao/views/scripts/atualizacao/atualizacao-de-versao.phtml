@@ -55,7 +55,10 @@
     $3(".btn").on("click", function(){
         $3('#botaoAtualizar').addClass('hide');
         $3('#load').removeClass('hide');
-        sleep(5000);
+        setTimeout(function(){
+
+            console.log('Aguardando comunicação com o jenkins..');
+        }, 5000);
         atualizando = true;
         var check = function(){
             $.ajax({
