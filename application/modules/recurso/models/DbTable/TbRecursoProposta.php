@@ -50,7 +50,6 @@ class Recurso_Model_DbTable_TbRecursoProposta extends MinC_Db_Table_Abstract
 
         $this->inativarRecursos($idPreProjeto);
         $this->inserir($dados);
-
         $this->enviarEmailAberturaDePrazoRecursal($idPreProjeto);
     }
 

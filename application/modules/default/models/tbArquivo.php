@@ -203,6 +203,10 @@ class tbArquivo extends MinC_Db_Table_Abstract
             if ($arquivoTamanho > $tamanhoMaximoUpload) {
                 throw new Exception("O arquivo n&atilde;o pode ser maior do que 10MB!");
             }
+            
+            if(strtolower(trim($arquivoExtensao)) != 'pdf') {
+                throw new Exception("O arquivo deve possuir o formato PDF.");
+            }
 
             $tbArquivoDbTable = new tbArquivo();
             $dadosArquivo = [];
@@ -213,6 +217,7 @@ class tbArquivo extends MinC_Db_Table_Abstract
             $dadosArquivo['stAtivo'] = 'A';
             $dadosArquivo['dsHash'] = $arquivoHash;
             $dadosArquivo['idUsuario'] = $idUsuario;
+
             $idArquivo = $tbArquivoDbTable->insert($dadosArquivo);
 
             $tbArquivoImagemDAO = new tbArquivoImagem();

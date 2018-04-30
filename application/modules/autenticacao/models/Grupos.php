@@ -75,7 +75,6 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
         switch ($id_perfil) {
             case Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE:
                 $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE;
-                $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO;
                 break;
             case Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE:
                 $perfis[] = Autenticacao_Model_Grupos::COMPONENTE_COMISSAO;
