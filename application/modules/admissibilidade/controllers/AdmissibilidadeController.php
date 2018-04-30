@@ -1965,19 +1965,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-propostas"
         );
 
-//        if ($this->codGrupo == Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE
-//            || $this->codGrupo == Autenticacao_Model_Grupos::COORDENADOR_ABMISSIBILIDADE
-//            || $this->codGrupo == Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO
-//            || $this->codGrupo == Autenticacao_Model_Grupos::COMPONENTE_COMISSAO
-//        ) {
-//            $arrDados['liberarEncaminhamento'] = true;
-//        }
-//
-//        if ($this->codGrupo) {
-//            $gruposDbTable = new Autenticacao_Model_Grupos();
-//            $this->view->perfis = $gruposDbTable->obterPerfisEncaminhamentoAvaliacaoProposta($this->codGrupo);
-//        }
-
         $this->montaTela("admissibilidade/listarpropostas.phtml", $arrDados);
     }
 
@@ -2895,6 +2882,8 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $proposta->DtMovimentacao = $zDate->toString('dd/MM/y h:m');
                 $proposta->descricao_segmento = utf8_encode($proposta->descricao_segmento);
                 $proposta->descricao_area = utf8_encode($proposta->descricao_area);
+                $proposta->descricao_segmento_inicial = utf8_encode($proposta->descricao_segmento_inicial);
+                $proposta->descricao_area_inicial = utf8_encode($proposta->descricao_area_inicial);
                 $sugestaoEnquadramento->setIdPreprojeto($proposta->idProjeto);
                 $sugestaoEnquadramento->setIdOrgao($this->grupoAtivo->codOrgao);
                 $sugestaoEnquadramento->setIdPerfilUsuario($this->grupoAtivo->codGrupo);

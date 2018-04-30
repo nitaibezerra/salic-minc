@@ -52,42 +52,41 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
 //        $condicaoJoinTbRecursoProposta .= "'" . Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_SEM_AVALIACAO . "'" ;
 //        $condicaoJoinTbRecursoProposta .= ", '" . Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO . "')";
         $tableSelect->joinInner(
-            'tbRecursoProposta'
-            , $condicaoJoinTbRecursoProposta
-            , [
+            'tbRecursoProposta',
+            $condicaoJoinTbRecursoProposta,
+            [
 //                '*',
-            'idPreProjeto',
-            'idRecursoProposta',
-            'dtRecursoProponente',
-            'dsRecursoProponente',
-            'idProponente',
-            'dtAvaliacaoTecnica',
-            'idAvaliadorTecnico',
-            'dsAvaliacaoTecnica',
-            'tpRecurso',
-            'idArquivo',
-            'stAtendimento',
-            'stRascunho',
-            'tpSolicitacao',
-            'diasDesdeAberturaRecurso' => new Zend_Db_Expr('DATEDIFF(DAY, dtRecursoProponente, GETDATE())')
-        ],
+                'idPreProjeto',
+                'idRecursoProposta',
+                'dtRecursoProponente',
+                'dsRecursoProponente',
+                'idProponente',
+                'dtAvaliacaoTecnica',
+                'idAvaliadorTecnico',
+                'dsAvaliacaoTecnica',
+                'tpRecurso',
+                'idArquivo',
+                'stAtendimento',
+                'stRascunho',
+                'tpSolicitacao',
+                'diasDesdeAberturaRecurso' => new Zend_Db_Expr('DATEDIFF(DAY, dtRecursoProponente, GETDATE())')
+            ],
             $this->getSchema('sac')
         );
         $tableSelect->joinLeft(
-            ['distribuicao_avaliacao_proposta']
-            , "distribuicao_avaliacao_proposta.id_preprojeto = sugestao_enquadramento.id_preprojeto
+            ['distribuicao_avaliacao_proposta'],
+            "distribuicao_avaliacao_proposta.id_preprojeto = sugestao_enquadramento.id_preprojeto
                     and distribuicao_avaliacao_proposta.id_orgao_superior = sugestao_enquadramento.id_orgao_superior
                     and distribuicao_avaliacao_proposta.id_perfil = " . Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
-            . " and distribuicao_avaliacao_proposta.avaliacao_atual = " . Admissibilidade_Model_DistribuicaoAvaliacaoProposta::AVALIACAO_ATUAL_ATIVA
-            ,
+                . " and distribuicao_avaliacao_proposta.avaliacao_atual = " . Admissibilidade_Model_DistribuicaoAvaliacaoProposta::AVALIACAO_ATUAL_ATIVA,
             [
                 'id_distribuicao_avaliacao_proposta',
                 'id_orgao_superior',
                 'id_perfil',
                 'data_distribuicao',
                 'avaliacao_atual',
-            ]
-            , $this->getSchema('sac')
+            ],
+            $this->getSchema('sac')
         );
 
         $resultado = $this->fetchRow($tableSelect);
@@ -136,7 +135,7 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
                 'segmento' => 'Descricao',
                 'enquadramento' => new Zend_Db_Expr(
                     "CASE WHEN Segmento.tp_enquadramento = 1 THEN 'Artigo 26' "
-                    . " WHEN Segmento.tp_enquadramento = 2 THEN 'Artigo 18' END"
+                        . " WHEN Segmento.tp_enquadramento = 2 THEN 'Artigo 18' END"
                 ),
                 'tp_enquadramento'
             ],
@@ -256,12 +255,8 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
             'id_perfil' => $dadosSugestaoEnquadramento['id_perfil']
         ]);
 
-        if (!$distribuicaoAvaliacaoProposta &&
-            (
-                $dadosSugestaoEnquadramento['id_perfil'] != Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE
-                && $dadosSugestaoEnquadramento['id_perfil'] != Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE
-            )
-        ) {
+        if (!$distribuicaoAvaliacaoProposta && ($dadosSugestaoEnquadramento['id_perfil'] != Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE
+            && $dadosSugestaoEnquadramento['id_perfil'] != Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE)) {
             throw new Exception("Distribui&ccedil;&atilde;o n&atilde;o localizada para o perfil atual.");
         }
 
@@ -297,17 +292,15 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
             $sugestaoEnquadramentoDbTable->inserir($dadosNovaSugestaoEnquadramento);
 
             $distribuicaoAtiva = $distribuicaoAvaliacaoPropostaDbTable->obterDistribuicaoAtiva();
-            if (/*$distribuicaoAtiva['id_perfil'] == Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
-            &&*/
-            $this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])) {
-                $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
-                $tbRecursoPropostaDbTable->cadastrarRecurso($dadosSugestaoEnquadramento['id_preprojeto']);
-            }
         } else {
             $dadosBuscaPorSugestao['id_distribuicao_avaliacao_proposta'] = $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop'];
             $sugestaoEnquadramentoDbTable->update($dadosNovaSugestaoEnquadramento, [
                 'id_sugestao_enquadramento = ?' => $dadosBuscaPorSugestao['id_sugestao_enquadramento']
             ]);
+        }
+        if ($this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])) {
+            $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
+            $tbRecursoPropostaDbTable->cadastrarRecurso($dadosSugestaoEnquadramento['id_preprojeto']);
         }
 
     }
