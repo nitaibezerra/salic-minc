@@ -9,7 +9,8 @@
         "opauth/opauth": ">=0.2.0",
         "aferrandini/phpqrcode": "1.0.1",
         "zendframework/zendframework1": "1.*",
-        "sentry/sentry": "^1.8"
+        "sentry/sentry": "^1.8",
+        "guzzlehttp/guzzle": "6.*"
     },
     "autoload" : {
         "psr-0" : {
