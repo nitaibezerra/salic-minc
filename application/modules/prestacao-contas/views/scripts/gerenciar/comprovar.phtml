@@ -107,8 +107,10 @@
                             <input type='hidden' name='idpronac' id='idpronac' value='<?php echo $this->idpronac; ?>'/>
 
                             <?php if ($this->idComprovantePagamento): ?>
+                                <!--input type='hidden' name='paginaRedirecionar' id='paginaRedirecionar'
+                                       value='comprovacaopagamento'/-->
                                 <input type='hidden' name='paginaRedirecionar' id='paginaRedirecionar'
-                                       value='comprovacaopagamento'/>
+                                       value='gerenciar'/>
                             <?php endif; ?>
                             <input type='hidden' name='valorAprovado' id='valorAprovado'
                                    value='<?php echo $this->itemPlanilhaAprovacao->valorAprovado; ?>'/>
