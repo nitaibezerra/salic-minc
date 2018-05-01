@@ -222,7 +222,7 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         );
     }
 
-    public function salvarSugestaoEnquadramento(array $dadosSugestaoEnquadramento)
+    public function salvarSugestaoEnquadramento(array $dadosSugestaoEnquadramento, $isCadastrarRecurso = true)
     {
         $sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento([
             'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil']
@@ -298,7 +298,9 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
                 'id_sugestao_enquadramento = ?' => $dadosBuscaPorSugestao['id_sugestao_enquadramento']
             ]);
         }
-        if ($this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])) {
+        if ($isCadastrarRecurso 
+            && $distribuicaoAvaliacaoProposta
+            && $this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])) {
             $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
             $tbRecursoPropostaDbTable->cadastrarRecurso($dadosSugestaoEnquadramento['id_preprojeto']);
         }
@@ -307,7 +309,12 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
 
     private function isPermitidoCadastrarRecurso($id_perfil)
     {
-        return ($id_perfil == Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
-            || $id_perfil == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE);
+        return ((int)$id_perfil == (int)Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
+            || (int)$id_perfil == (int)Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE);
+    }
+
+    private function isPropostaDistribuidaParaCoordenadorGeral($id_perfil_distribuicao) 
+    {
+        return ((int)$id_perfil_distribuicao == (int)Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE);
     }
 }

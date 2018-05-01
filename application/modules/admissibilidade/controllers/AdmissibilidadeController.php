@@ -819,13 +819,13 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $recursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
             $recursoAtual = $recursoPropostaDbTable->obterRecursoAtual($this->idPreProjeto);
             $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-            if ($recursoAtual['stAtendimento'] == Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
+            if ((string)$recursoAtual['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
                 $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
                 $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($this->idPreProjeto);
 
                 $tpEnquadramento = $enquadramentoInicialProponente['tp_enquadramento'];
                 $observacao = $recursoAtual['dsAvaliacaoTecnica'];
-            } elseif ($recursoAtual['tpSolicitacao'] == Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL) {
+            } elseif ((string)$recursoAtual['tpSolicitacao'] == (string)Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL) {
                 $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($this->idPreProjeto);
                 $ultimaSugestaoEnquadramento = $sugestaoEnquadramentoDbTable->obterUltimaSugestaoEnquadramentoProposta();
                 $tpEnquadramento = $ultimaSugestaoEnquadramento['tp_enquadramento'];
