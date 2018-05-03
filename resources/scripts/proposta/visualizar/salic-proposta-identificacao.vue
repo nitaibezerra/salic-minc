@@ -1,5 +1,4 @@
-Vue.component('salic-proposta-identificacao', {
-    template: `
+<template>
     <div class="dados-basicos" v-if="proposta">
         <div class="card">
             <div class="card-content">
@@ -83,87 +82,92 @@ Vue.component('salic-proposta-identificacao', {
             </div>
         </div>
     </div>
-    `,
-    props: {
-        idpreprojeto: null,
-        proposta: {
-            type: Object,
-            default: function () {
-                return {}
-            }
-        }
-    },
-    mounted: function () {
-    },
-    methods: {
-        label_sim_ou_nao: function (valor) {
-            if (valor == 1)
-                return 'Sim';
-            else
-                return 'Não';
-        },
-        label_mecanismo: function (valor) {
-            switch (valor) {
-                case '1':
-                    return 'Mecenato';
-                    break;
-                default:
-                    return 'Inválido';
-                    break;
+</template>
+
+<script>
+    export default {
+        name: 'salic-proposta-identificacao',
+        props: {
+            idpreprojeto: null,
+            proposta: {
+                type: Object,
+                default: function () {
+                    return {}
+                }
             }
         },
-        formatar_data: function (date) {
-
-            date = moment(date).format('DD/MM/YYYY');
-
-            return date;
+        mounted: function () {
         },
-        label_esfera: function (esfera) {
+        methods: {
+            label_sim_ou_nao: function (valor) {
+                if (valor == 1)
+                    return 'Sim';
+                else
+                    return 'Não';
+            },
+            label_mecanismo: function (valor) {
+                switch (valor) {
+                    case '1':
+                        return 'Mecenato';
+                        break;
+                    default:
+                        return 'Inválido';
+                        break;
+                }
+            },
+            formatar_data: function (date) {
 
-            let string;
+                date = moment(date).format('DD/MM/YYYY');
 
-            switch (esfera) {
-                case '1':
-                    string = 'Municipal';
-                    break;
-                case '2':
-                    string = 'Estadual';
-                    break;
-                case '3':
-                    string = 'Federal';
-                    break;
-                default:
-                    string = 'Não informada';
-                    break;
+                return date;
+            },
+            label_esfera: function (esfera) {
+
+                let string;
+
+                switch (esfera) {
+                    case '1':
+                        string = 'Municipal';
+                        break;
+                    case '2':
+                        string = 'Estadual';
+                        break;
+                    case '3':
+                        string = 'Federal';
+                        break;
+                    default:
+                        string = 'Não informada';
+                        break;
+                }
+
+                return string;
             }
-
-            return string;
+        },
+        computed: {
+            stDataFixa: function () {
+                return this.label_sim_ou_nao(this.proposta.stDataFixa);
+            },
+            AreaAbrangencia: function () {
+                return this.label_sim_ou_nao(this.proposta.AreaAbrangencia);
+            },
+            tpProrrogacao: function () {
+                return this.label_sim_ou_nao(this.proposta.tpProrrogacao);
+            },
+            Mecanismo: function () {
+                return this.label_mecanismo(this.proposta.Mecanismo);
+            },
+            DtInicioDeExecucao: function () {
+                return this.formatar_data(this.proposta.DtInicioDeExecucao);
+            },
+            DtFinalDeExecucao: function () {
+                return this.formatar_data(this.proposta.DtFinalDeExecucao);
+            },
+            DtAtoTombamento: function () {
+                return this.formatar_data(this.proposta.DtAtoTombamento);
+            },
+            EsferaTombamento: function () {
+                return this.label_esfera(this.proposta.EsferaTombamento);
+            }
         }
-    },
-    computed: {
-        stDataFixa: function () {
-            return this.label_sim_ou_nao(this.proposta.stDataFixa);
-        },
-        AreaAbrangencia: function () {
-            return this.label_sim_ou_nao(this.proposta.AreaAbrangencia);
-        },
-        tpProrrogacao: function () {
-            return this.label_sim_ou_nao(this.proposta.tpProrrogacao);
-        },
-        Mecanismo: function () {
-            return this.label_mecanismo(this.proposta.Mecanismo);
-        },
-        DtInicioDeExecucao: function () {
-            return this.formatar_data(this.proposta.DtInicioDeExecucao);
-        },
-        DtFinalDeExecucao: function () {
-            return this.formatar_data(this.proposta.DtFinalDeExecucao);
-        },
-        DtAtoTombamento: function () {
-            return this.formatar_data(this.proposta.DtAtoTombamento);
-        },
-        EsferaTombamento: function () {
-            return this.label_esfera(this.proposta.EsferaTombamento);
-        }
-    }
-});
+    };
+</script>
