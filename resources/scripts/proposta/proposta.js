@@ -1,8 +1,7 @@
 import Vue from 'vue';
 
-import TableEasy from '../../../public/js/componentes/salic-table-easy.js';
-import TextoSimples from '../../../public/js/componentes/salic-texto-simples.vue.js';
-
+import TableEasy from '../components/salic-table-easy.vue';
+import TextoSimples from '../components/salic-texto-simples.vue';
 import Proposta from './visualizar/salic-proposta.vue';
 import PropostaCustosVinculados from './visualizar/salic-proposta-custos-vinculados.vue';
 import PropostaDetalhamentoPlanoDistribuicao from './visualizar/salic-proposta-detalhamento-plano-distribuicao.vue';
@@ -43,6 +42,3 @@ Vue.component('salic-proposta-plano-distribuicao', PropostaPlanoDistribuicao);
 Vue.component('salic-agente-proponente', AgenteProponente);
 Vue.component('salic-autenticacao-usuario', AutenticacaoUsuario);
 
-new Vue({
-    el: '#container-vue'
-});
