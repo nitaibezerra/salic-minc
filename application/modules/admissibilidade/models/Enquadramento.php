@@ -6,6 +6,9 @@ class Admissibilidade_Model_Enquadramento extends MinC_Db_Table_Abstract
     protected $_schema = "sac";
     protected $_primary = "IdEnquadramento";
 
+    const ARTIGO_18 = 2;
+    const ARTIGO_26 = 1;
+
     public function alterarEnquadramento($dados)
     {
         $id = null;

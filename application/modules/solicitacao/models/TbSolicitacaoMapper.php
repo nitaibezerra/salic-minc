@@ -118,7 +118,7 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
                         $arrDoc['dsDocumento'] = 'Anexo solicita&ccedil;&atilde;o';
 
                         $mapperArquivo = new Arquivo_Model_TbDocumentoMapper();
-                        $idDocumento = $mapperArquivo->saveCustom($arrDoc, $file);
+                        $idDocumento = $mapperArquivo->saveCustom($arrDoc, $file); 
 
                     }
                     $model->setIdDocumento($idDocumento);

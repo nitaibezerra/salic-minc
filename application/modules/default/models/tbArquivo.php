@@ -32,6 +32,9 @@ class tbArquivo extends MinC_Db_Table_Abstract
 
         $select->where("a.idArquivo = ?", $idArquivo);
 
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->setFetchMode(Zend_DB::FETCH_OBJ);
+        $db->fetchAll("SET TEXTSIZE 10485760");
         return $this->fetchRow($select);
     }
 
@@ -179,7 +182,7 @@ class tbArquivo extends MinC_Db_Table_Abstract
      * @return int|null $idArquivo
      */
     public function uploadAnexoSqlServer(
-        $idUsuario,
+        $idUsuario, 
         $nomeArquivoUpload = 'arquivo',
         $tamanhoMaximoUpload = 10485760
     )
@@ -188,12 +191,12 @@ class tbArquivo extends MinC_Db_Table_Abstract
         $file = new Zend_File_Transfer();
         if ($file->isUploaded() && !empty($file->getFileInfo())) {
             $fileInformation = $file->getFileInfo();
-
+            
             $arquivoNome = $fileInformation[$nomeArquivoUpload]['name'];
             $arquivoTemp = $fileInformation[$nomeArquivoUpload]['tmp_name'];
             $arquivoTamanho = $fileInformation[$nomeArquivoUpload]['size'];
             $arquivoHash = '';
-
+ 
             if (!empty($arquivoNome) && !empty($arquivoTemp)) {
                 $arquivoExtensao = Upload::getExtensao($arquivoNome);
                 $arquivoBinario = Upload::setBinario($arquivoTemp);
