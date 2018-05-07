@@ -175,7 +175,6 @@ function validaAgenteNovo()
 
 
     // valida&ccedil;&atilde;o para endere&ccedil;os
-
     else if ((cep == 0 || cep == null || cep == ' ' || cep == '' ))
     {
         alertar("Dados obrigat&oacute;rios n&atilde;o informados:\nPor favor, informe um CEP!", "cep");
@@ -208,12 +207,14 @@ function validaAgenteNovo()
     }
 
     // valida&ccedil;&atilde;o para telefones
-    else if ($3('#tipoFone').val() == "" && $3('#exibirTelefone').val() == 's')
+    if ($3('#tipoFone').val() == "" && $3('#exibirTelefone').val() == 's')
     {
         alertar("Dados obrigat&oacute;rios n&atilde;o informados:\nPor favor, selecione o Tipo de Telefone!", "tipoFone");
         exibirMsgErro('tipoFone','erroTipoFone');
+        return;
     }
-    else if ($3('#ufFone') == 0 && $3('#exibirTelefone').val() == 's')
+
+    if ($3('#ufFone') == 0 && $3('#exibirTelefone').val() == 's')
     {
         alertar("Dados obrigat&oacute;rios n&atilde;o informados:\nPor favor, selecione a UF!", "ufFone");
         exibirMsgErro('ufFone','erroUfFone');
@@ -228,33 +229,58 @@ function validaAgenteNovo()
         alertar("Dados obrigat&oacute;rios n&atilde;o informados:\nPor favor, informe o Telefone!", "fone");
         exibirMsgErro('fone','erroFone');
     }
-    else if (($3('#fone').val().length < 9 || !(/\d{4}\-\d{4}/.test($3('#fone').val())) || $3('#fone').val() == "0000-0000" ||
-        $3('#fone').val() == "1111-1111" || $3('#fone').val() == "2222-2222" || $3('#fone').val() == "3333-3333" ||
-        $3('#fone').val() == "4444-4444" || $3('#fone').val() == "5555-5555" || $3('#fone').val() == "6666-6666" ||
-        $3('#fone').val() == "7777-7777" || $3('#fone').val() == "8888-8888" || $3('#fone').val() == "9999-9999") 
-        && $3('#exibirTelefone').val() == 's')
-        {
+    debugger;
+
+    if (
+        $3('#exibirTelefone').val() == 's'
+        && (
+            $3('#fone').val().length < 9
+            || !(/\d{4}\-\d{4}/.test($3('#fone').val()))
+            || $3('#fone').val() == "0000-0000"
+            || $3('#fone').val() == "1111-1111"
+            || $3('#fone').val() == "2222-2222"
+            || $3('#fone').val() == "3333-3333"
+            || $3('#fone').val() == "4444-4444"
+            || $3('#fone').val() == "5555-5555"
+            || $3('#fone').val() == "6666-6666"
+            || $3('#fone').val() == "7777-7777"
+            || $3('#fone').val() == "8888-8888"
+            || $3('#fone').val() == "9999-9999"
+        )
+    ) {
         alertar("O n&uacute;mero do Telefone &eacute; inv&aacute;lido!", "fone");
         exibirMsgErro('fone','erroFone');
+        return;
     }
+    debugger;
 
     // valida&ccedil;&atilde;o para emails
-    else if ($3('#tipoEmail').val() == 0 && $3('#exibirEmail').val() == 's')
-    {
+    if (
+        $3('#tipoEmail').val() == 0
+        && $3('#exibirEmail').val() == 's'
+    ) {
         alertar("Dados obrigat&oacute;rios n&atilde;o informados:\nPor favor, selecione o Tipo de E-mail!", "tipoEmail");
         exibirMsgErro('tipoEmail','erroTipoEmail');
+        return;
     }
     else if ($3('#email').val() == "" && $3('#exibirEmail').val() == 's')
     {
         alertar("Dados obrigat&oacute;rios n&atilde;o informados:\nPor favor, informe o E-mail!", "email");
         exibirMsgErro('email','erroEmail');
+        return;
     }
-    else if ((($3('#email').val().indexOf("@") < 1) || 
-        ($3('#email').val().lastIndexOf(".") <= $3('#email').val().indexOf("@")) 
-        || ($3('#email').val().indexOf("@") == $3('#email').val().length) || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($3('#email').val()))) && $3('#exibirEmail').val() == 's')
-    {
+    if (
+        $3('#exibirEmail').val() == 's'
+        && (
+            ($3('#email').val().indexOf("@") < 1)
+            || ($3('#email').val().lastIndexOf(".") <= $3('#email').val().indexOf("@"))
+            || ($3('#email').val().indexOf("@") == $3('#email').val().length)
+            || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{3,3})+$/.test($3('#email').val()))
+        )
+    ) {
         alertar("E-mail inv&aacute;lido!", "email");
         exibirMsgErro('email','erroEmail');
+        return;
     }
     else
     {

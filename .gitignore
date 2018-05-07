@@ -27,7 +27,6 @@ tests/log/*
 composer.lock
 composer.phar
 .php_cs.cache
-.DS_Store
 package-lock.json
 
 # IDEs and editors
@@ -37,16 +36,5 @@ package-lock.json
 .idea
 
 # dependencias
-node_modules/
-
-# System Files
-.DS_Store
-Thumbs.db
-log/
-.DS_Store
-package-lock.json
-node_modules/
-log/
-package-lock.json
 node_modules/
 log/

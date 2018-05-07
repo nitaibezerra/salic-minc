@@ -1924,10 +1924,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             }
         }
 
-        $diligencia = new Diligencia();
-        $diligencia = $diligencia->aberta($idPronac);
-        $this->view->idTipoDiligencia = $diligencia->idTipoDiligencia;
-
         $this->view->situacao = $projeto->current()->Situacao;
         $this->view->idpronac = $this->getRequest()->getParam('idpronac');
         $this->view->tipoDocumentoConteudo = $this->tipoDocumento;
