@@ -294,15 +294,22 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->view->perfisEncaminhamentoAvaliacaoProposta = $gruposDbTable->obterPerfisEncaminhamentoAvaliacaoProposta($this->codGrupo);
             $this->view->ultimaSugestaoEnquadramento = $sugestaoEnquadramentoDbTable->obterUltimaSugestaoEnquadramentoProposta();
             $this->view->isPermitidoAvaliarProposta = $distribuicaoAvaliacaoProposta->isPermitidoAvaliarProposta();
-
-            $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+            
             $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($this->idPreProjeto);
             $recursoEnquadramento = $sugestaoEnquadramentoDbTable->obterRecursoEnquadramentoProposta();
+            
             $this->view->isRecursoAvaliado = false;
+            
             $perfisAutorizadosTransformarPropostaEmProjeto = [
                 (int)Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE,
                 (int)Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
             ];
+
+            if(is_array($this->view->ultimaSugestaoEnquadramento) 
+                && $this->isPropostaEnquadradoArtigo18($this->view->ultimaSugestaoEnquadramento)) {
+                $this->view->isRecursoAvaliado = true;
+            }
+
             if($recursoEnquadramento) {
                 if ($this->isRecursoEnviadoPorProponente($recursoEnquadramento) ||
                     $this->isRecursoPossuiAvaliacaoAvaliador($recursoEnquadramento)) {
@@ -325,6 +332,11 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
             $this->montaTela("admissibilidade/proposta-por-incentivo-fiscal.phtml");
         }
+    }
+
+    private function isPropostaEnquadradoArtigo18(array $sugestaoEnquadramento) 
+    {
+        return ((int)$sugestaoEnquadramento['tp_enquadramento'] == Admissibilidade_Model_Enquadramento::ARTIGO_18);
     }
 
     public function isRecursoExpirou10dias(array $recursoEnquadramento)
