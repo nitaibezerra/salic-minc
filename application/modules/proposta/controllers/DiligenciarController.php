@@ -468,8 +468,14 @@ class Proposta_DiligenciarController extends Proposta_GenericController
         }
     }
 
-    private $situacaoProjetoResposta = array('C30' => 'anterior', 'E62' => 'anterior', 'E61' => 'anterior', 'E60' => 'anterior', 'E59' => 'anterior', 'E17' => 'E30', 'G18' => 'G54', 'D25' => 'anterior','D33'=>'anterior', 'B14' => 'anterior', 'E12' => 'anterior', 'E13' => 'anterior', 'E50' => 'anterior');
-    private $situacaoProjetoNaoResposta = array('C30' => 'anterior', 'E62' => 'E66', 'E61' => 'E71', 'E60' => 'E69', 'E59' => 'anterior', 'E17' => 'E20', 'G18' => 'G20', 'D25' => 'mantem', 'B14' => 'anterior', 'E12' => 'anterior', 'E13' => 'anterior', 'E50' => 'anterior');
+    private $situacaoProjetoResposta = array('C30' => 'anterior', 'E62' => 'anterior', 
+        'E61' => 'anterior', 'E60' => 'anterior', 'E59' => 'anterior', 'E17' => 'E30', 'G18' => 'G54', 
+        'D25' => 'anterior','D33'=>'anterior', 
+        'B14' => 'anterior', 'E12' => 'anterior', 'E13' => 'anterior', 'E50' => 'anterior');
+    private $situacaoProjetoNaoResposta = array('C30' => 'anterior', 'E62' => 'E66', 'E61' => 'E71', 
+        'E60' => 'E69', 'E59' => 'anterior', 'E17' => 'E20', 
+        'G18' => 'G20', 'D25' => 'mantem', 'B14' => 'anterior', 'E12' => 'anterior', 
+        'E13' => 'anterior', 'E50' => 'anterior');
 
     /**
      * situacaoProjeto
@@ -487,6 +493,7 @@ class Proposta_DiligenciarController extends Proposta_GenericController
         $HistoricoSituacaoDAO   = new HistoricoSituacao();
         $projeto                = $ProjetoDAO->buscar(array(' IdPRONAC = ?' => $idPronac));
         $situacao               = false;
+        /* var_dump($situacoes[$projeto[0]->Situacao]);die; */
         if (array_key_exists($projeto[0]->Situacao, $situacoes)) {
             switch ($situacoes[$projeto[0]->Situacao]) {
                 case 'anterior':
@@ -516,6 +523,9 @@ class Proposta_DiligenciarController extends Proposta_GenericController
                     'DtSituacao' => new Zend_Db_Expr('GETDATE()'),
                     'ProvidenciaTomada' => $texto
                 );
+
+                $projeto = new Projetos();
+                $projeto->alterarSituacao($idPronac, null, 'E30', 'An&aacute;lise de resposta de dilig&ecirc;ncia');
             }
         }
     }
@@ -598,7 +608,11 @@ class Proposta_DiligenciarController extends Proposta_GenericController
             $resp = $diligenciaDAO->update($dados, $where);
 
             if ($post->verificaEnviado == 'S') {
-                $this->situacaoProjeto($this->situacaoProjetoResposta, $this->idPronac, 'Diligência respondida pelo proponente, esperando decisão.');
+                $this->situacaoProjeto(
+                    $this->situacaoProjetoResposta, 
+                    $this->idPronac, 
+                    'Dilig&ecirc;ncia respondida pelo proponente, esperando decis&atilde;o.'
+                );
             }
             $aux = "?idPronac={$this->idPronac}&idDiligencia={$this->idDiligencia}&idProduto={$this->idProduto}{$paramEdital}";
         }
