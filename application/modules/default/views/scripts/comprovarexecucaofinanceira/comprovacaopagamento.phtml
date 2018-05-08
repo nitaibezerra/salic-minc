@@ -101,8 +101,14 @@
                                         <td><?php echo $this->produto->Sintese; ?></td>
                                         <td><?php echo $this->etapa->Descricao; ?></td>
                                         <td><?php echo $this->item->Descricao; ?></td>
-                                        <td><?php echo $this->currency($this->itemPlanilhaAprovacao->valorAprovado); ?></td>
-                                        <td><?php echo $this->currency($this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'); ?></td>
+                                        <td>
+                                            <?php echo $this->currency($this->itemPlanilhaAprovacao->valorAprovado); ?>
+                                            - (<?php echo $this->currency($this->valores->vlAprovado); ?>)
+                                        </td>
+                                        <td>
+                                            <?php echo $this->currency($this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'); ?>
+                                            (<?php echo $this->currency($this->valores->vlComprovado ? $this->valores->vlComprovado : '0'); ?>)
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>

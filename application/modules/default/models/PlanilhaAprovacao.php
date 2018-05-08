@@ -2367,9 +2367,10 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             $select->where('idPlanilhaItens = ?', $idPlanilhaItem);
         }
 
-        if ($codigoProduto || $codigoProduto == 0) {
+        if ($codigoProduto || ($codigoProduto == 0 && !is_null($codigoProduto) )) {
             $select->where('cdProduto = ?', $codigoProduto);
         }
+
 
         $select->order('tpCusto desc');
         $select->order('Produto');
@@ -2495,9 +2496,10 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
     public function vwComprovacaoFinanceiraProjetoPorItemOrcamentario
     (
         $idpronac, 
-        $idPlanilhaItem, 
+        $idPlanilhaItem = null , 
         $stItemAvaliado = null,
-        $codigoProduto = null
+        $codigoProduto = null,
+        $idComprovantePagamento = null
     ) {
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -2517,12 +2519,19 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             $select->where('stItemAvaliado = ?', $stItemAvaliado);
         }
 
-        if ($codigoProduto || $codigoProduto == 0) {
+        if ($codigoProduto || ($codigoProduto == 0&& !is_null($codigoProduto))) {
             $select->where('cdProduto = ?', $codigoProduto);
         }
 
+        if ($idComprovantePagamento) {
+            $select->where('idComprovantePagamento = ?', $idComprovantePagamento);
+        }
+
+        if ($idPlanilhaItem) {
+            $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
+        }
+
         $select->where('IdPRONAC = ?', $idpronac);
-        $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
         /* echo $select;die; */
 
         return $this->fetchAll($select);
