@@ -2697,11 +2697,25 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
                 $idPronac,
                 $uf,
                 null,
-                $codigoProduto != 0 ? $codigoProduto :  null,
+                /* $codigoProduto != 0 ? $codigoProduto :  null, */
+                $codigoProduto,
                 $municipio,
                 null,
                 $idPlanilhaItem
             );
+        /* var_dump( */
+        /*         $idPronac, */
+        /*         $uf, */
+        /*         null, */
+        /*         $codigoProduto, */
+        /*         $municipio, */
+        /*         null, */
+        /*         $idPlanilhaItem */
+        /* ); */
+        /* var_dump( */
+        /*         $codigoProduto */
+        /*     ); */
+        /* die; */
 
 
         if (!$projeto) {
@@ -2712,8 +2726,12 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->view->tipoComprovante = $this->tipoDocumento;
 
             $comprovantes = $planilhaAprovacaoModel
-                ->vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idPronac, $idPlanilhaItem, $stItemAvaliado)
-                ;
+                ->vwComprovacaoFinanceiraProjetoPorItemOrcamentario(
+                    $idPronac, 
+                    $idPlanilhaItem, 
+                    $stItemAvaliado,
+                    $codigoProduto
+                );
         }
 
         $this->view->idPronac = $idPronac;
