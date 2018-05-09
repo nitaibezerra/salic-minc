@@ -102,7 +102,7 @@
                                         <td><?php echo $this->etapa->Descricao; ?></td>
                                         <td><?php echo $this->item->Descricao; ?></td>
                                         <td>
-                                            <?php echo $this->currency($this->valores->vlAprovado); ?>
+                                            <?php echo $this->currency($this->valores->vlAprovado ? $this->valores->vlAprovado : '0'); ?>
                                         </td>
                                         <td>
                                             <?php echo $this->currency($this->valores->vlComprovado ? $this->valores->vlComprovado : '0'); ?>

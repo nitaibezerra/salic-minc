@@ -1805,11 +1805,36 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $itemModel = new PlanilhaItem();
 
         $itemPlanilhaAprovacao = $planilhaItemModel->buscarItemDaAprovacao($idPlanilhaAprovacao);
-/* vwComprovacaoFinanceiraProjeto */
 
         $produto = $produtoModel->find($itemPlanilhaAprovacao->idProduto)->current();
         $etapa = $etapaModel->find($itemPlanilhaAprovacao->idEtapa)->current();
         $item = $itemModel->find($itemPlanilhaAprovacao->idPlanilhaItem)->current();
+
+        /*todo*/
+        $planilhaAprovacao = new PlanilhaAprovacao();
+        $planilhaAprovacaoItem = $planilhaAprovacao->vwComprovacaoFinanceiraProjetoPorItemOrcamentario(
+            $idPronac,
+            null,
+            null,
+            null,
+            $idComprovantePagamento
+        );
+        /* var_dump($planilhaAprovacaoItem[0]); */
+        /* die; */
+        $valoresItem = $planilhaAprovacao->vwComprovacaoFinanceiraProjeto(
+            $idPronac,
+            null, //$planilhaAprovacaoItem->current()->cdUF,
+            $planilhaAprovacaoItem->current()->cdEtapa,
+            $planilhaAprovacaoItem->current()->cdProduto,
+            $planilhaAprovacaoItem->current()->cdCidade,
+
+            /* $planilhaAprovacaoItem->current()->idComprovantePagamento, */
+            null,
+            $planilhaAprovacaoItem->current()->idPlanilhaItem
+        );
+
+        $this->view->valores = $valoresItem->current();
+        /*todo*/
 
         $fornecedorModel = new FornecedorModel();
         $fornecedor = $fornecedorModel->pesquisarFornecedorItem($idPlanilhaAprovacao);
