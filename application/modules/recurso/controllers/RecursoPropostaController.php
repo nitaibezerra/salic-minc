@@ -154,88 +154,95 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
 
     public function visaoAvaliadorSalvarAction()
     {
-        $post = $this->getRequest()->getPost();
-        $id_preprojeto = trim($post['id_preprojeto']);
-        if (empty($id_preprojeto) || is_null($id_preprojeto)) {
-            throw new Exception("Identificador da Proposta n&atilde;o foi localizado.");
-        }
+        try {
+            $post = $this->getRequest()->getPost();
+            $id_preprojeto = trim($post['id_preprojeto']);
+            if (empty($id_preprojeto) || is_null($id_preprojeto)) {
+                throw new Exception("Identificador da Proposta n&atilde;o foi localizado.");
+            }
 
-        $stAtendimento = trim($post['stAtendimento']);
-        if (empty($stAtendimento) || is_null($stAtendimento)) {
-            throw new Exception("O campo 'Tipo de Avalia&ccedil;&atilde;o' &eacute; de preenchimento obrigat&oacute;rio.");
-        }
+            $stAtendimento = trim($post['stAtendimento']);
+            if (empty($stAtendimento) || is_null($stAtendimento)) {
+                throw new Exception("O campo 'Tipo de Avalia&ccedil;&atilde;o' &eacute; de preenchimento obrigat&oacute;rio.");
+            }
 
-        $dsAvaliacaoTecnica = trim($post['dsAvaliacaoTecnica']);
-        if (empty($dsAvaliacaoTecnica) || is_null($dsAvaliacaoTecnica)) {
-            throw new Exception("O campo 'Motiva&ccedil;&atilde;o' &eacute; de preenchimento obrigat&oacute;rio.");
-        }
+            $dsAvaliacaoTecnica = trim($post['dsAvaliacaoTecnica']);
+            if (empty($dsAvaliacaoTecnica) || is_null($dsAvaliacaoTecnica)) {
+                throw new Exception("O campo 'Motiva&ccedil;&atilde;o' &eacute; de preenchimento obrigat&oacute;rio.");
+            }
 
-        $acao_salvar = trim($post['acao_salvar']);
-        if (empty($acao_salvar) || is_null($acao_salvar)) {
-            throw new Exception("Bot&atilde;o de a&ccedil;&atilde;o n&atilde;o informado.");
-        }
-        $stRascunho = Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO;
-        if ($acao_salvar == 'rascunho') {
-            $stRascunho = Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_SALVO;
-        }
+            $acao_salvar = trim($post['acao_salvar']);
+            if (empty($acao_salvar) || is_null($acao_salvar)) {
+                throw new Exception("Bot&atilde;o de a&ccedil;&atilde;o n&atilde;o informado.");
+            }
+            $stRascunho = Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO;
+            if ($acao_salvar == 'rascunho') {
+                $stRascunho = Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_SALVO;
+            }
 
-        $idAvaliadorTecnico = $this->authIdentity['usu_codigo'];
-        $recursoEnquadramentoDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
-        $recursoEnquadramento = $recursoEnquadramentoDbTable->obterRecursoAtual($id_preprojeto);
+            $idAvaliadorTecnico = $this->authIdentity['usu_codigo'];
+            $recursoEnquadramentoDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
+            $recursoEnquadramento = $recursoEnquadramentoDbTable->obterRecursoAtual($id_preprojeto);
 
-        if (!$recursoEnquadramento['idRecursoProposta']) {
-            throw new Exception("Identificador do Recurso da Proposta n&atilde;o localizado.");
-        }
+            if (!$recursoEnquadramento['idRecursoProposta']) {
+                throw new Exception("Identificador do Recurso da Proposta n&atilde;o localizado.");
+            }
 
-        $stAtivo = Recurso_Model_TbRecursoProposta::SITUACAO_RECURSO_ATIVO;
-        if ($recursoEnquadramento['stAtendimento'] == Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
-            && $recursoEnquadramento['tpRecurso'] == Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
-            $stAtivo = Recurso_Model_TbRecursoProposta::SITUACAO_RECURSO_INATIVO;
-        }
+            $stAtivo = Recurso_Model_TbRecursoProposta::SITUACAO_RECURSO_ATIVO;
+            if ($recursoEnquadramento['stAtendimento'] == Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
+                && $recursoEnquadramento['tpRecurso'] == Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
+                $stAtivo = Recurso_Model_TbRecursoProposta::SITUACAO_RECURSO_INATIVO;
+            }
 
-        $tbRecursoModel = new Recurso_Model_TbRecursoProposta([
-            'idRecursoProposta' => $recursoEnquadramento['idRecursoProposta'],
-            'dtAvaliacaoTecnica' => $recursoEnquadramentoDbTable->getExpressionDate(),
-            'dsAvaliacaoTecnica' => $dsAvaliacaoTecnica,
-            'stAtendimento' => $stAtendimento,
-            'idAvaliadorTecnico' => $idAvaliadorTecnico,
-            'stRascunho' => $stRascunho,
-            'stAtivo' => $stAtivo
-        ]);
-        $tbRecursoMapper = new Recurso_Model_TbRecursoPropostaMapper();
-        $tbRecursoMapper->save($tbRecursoModel);
+            $tbRecursoModel = new Recurso_Model_TbRecursoProposta([
+                'idRecursoProposta' => $recursoEnquadramento['idRecursoProposta'],
+                'dtAvaliacaoTecnica' => $recursoEnquadramentoDbTable->getExpressionDate(),
+                'dsAvaliacaoTecnica' => $dsAvaliacaoTecnica,
+                'stAtendimento' => $stAtendimento,
+                'idAvaliadorTecnico' => $idAvaliadorTecnico,
+                'stRascunho' => $stRascunho,
+                'stAtivo' => $stAtivo
+            ]);
+            $tbRecursoMapper = new Recurso_Model_TbRecursoPropostaMapper();
+            $tbRecursoMapper->save($tbRecursoModel);
 
-        if ((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
-            && (int)$recursoEnquadramento['tpRecurso'] == (int)Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
-            $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
-            $tbRecursoPropostaDbTable->cadastrarRecurso(
-                $id_preprojeto,
-                Recurso_Model_TbRecursoProposta::TIPO_RECURSO_RECURSO
+            if ((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
+                && (int)$recursoEnquadramento['tpRecurso'] == (int)Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
+                $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
+                $tbRecursoPropostaDbTable->cadastrarRecurso(
+                    $id_preprojeto,
+                    Recurso_Model_TbRecursoProposta::TIPO_RECURSO_RECURSO
+                );
+            }
+
+            if((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
+                $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+                $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($this->idPreProjeto);
+        
+                $dadosSugestaoEnquadramento = [];
+                $dadosSugestaoEnquadramento['id_orgao'] = $this->grupoAtivo->codOrgao;
+                $dadosSugestaoEnquadramento['id_perfil'] = $this->grupoAtivo->codGrupo;
+                $dadosSugestaoEnquadramento['id_usuario_avaliador'] = $this->auth->getIdentity()->usu_codigo;
+                $dadosSugestaoEnquadramento['id_preprojeto'] = $id_preprojeto;
+                $dadosSugestaoEnquadramento['descricao_motivacao'] = $dsAvaliacaoTecnica;
+                $dadosSugestaoEnquadramento['id_area'] = $enquadramentoInicialProponente['id_area'];
+                $dadosSugestaoEnquadramento['id_segmento'] = $enquadramentoInicialProponente['id_segmento'];
+        
+                $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+                $sugestaoEnquadramentoDbTable->salvarSugestaoEnquadramento($dadosSugestaoEnquadramento, false);
+            }
+
+            parent::message(
+                'Dados armazenados com sucesso.',
+                "/recurso/recurso-proposta/visao-avaliador/idPreProjeto/{$id_preprojeto}",
+                'CONFIRM'
             );
+        } catch(Exception $exception) {
+            if($id_preprojeto) {
+                parent::message($exception->getMessage(), "/recurso/recurso-proposta/visao-avaliador/idPreProjeto/{$id_preprojeto}");
+            }
+            parent::message($exception->getMessage(), "/admissibilidade/admissibilidade/listar-propostas");
         }
-
-        if((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
-            $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
-            $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($this->idPreProjeto);
-    
-            $dadosSugestaoEnquadramento = [];
-            $dadosSugestaoEnquadramento['id_orgao'] = $this->grupoAtivo->codOrgao;
-            $dadosSugestaoEnquadramento['id_perfil'] = $this->grupoAtivo->codGrupo;
-            $dadosSugestaoEnquadramento['id_usuario_avaliador'] = $this->auth->getIdentity()->usu_codigo;
-            $dadosSugestaoEnquadramento['id_preprojeto'] = $id_preprojeto;
-            $dadosSugestaoEnquadramento['descricao_motivacao'] = $dsAvaliacaoTecnica;
-            $dadosSugestaoEnquadramento['id_area'] = $enquadramentoInicialProponente['id_area'];
-            $dadosSugestaoEnquadramento['id_segmento'] = $enquadramentoInicialProponente['id_segmento'];
-    
-            $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-            $sugestaoEnquadramentoDbTable->salvarSugestaoEnquadramento($dadosSugestaoEnquadramento, false);
-        }
-
-        parent::message(
-            'Dados armazenados com sucesso.',
-            "/recurso/recurso-proposta/visao-avaliador/idPreProjeto/{$id_preprojeto}",
-            'CONFIRM'
-        );
     }
 
     /**

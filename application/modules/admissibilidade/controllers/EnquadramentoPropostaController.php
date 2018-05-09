@@ -66,10 +66,7 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
         }
 
         $this->view->id_perfil_usuario = $this->grupoAtivo->codGrupo;
-
-
         $ultimaSugestaoPerfil = $this->_recuperarUltimaSugestaoPerfil($preprojeto['idPreProjeto'], $this->view->id_perfil_usuario);
-
         if(!empty($ultimaSugestaoPerfil['id_area'])){
             $Segmento = new Segmento();
             $combosegmentos = $Segmento->combo(array("a.codigo = ?" => $ultimaSugestaoPerfil['id_area']), array('s.segmento ASC'));
@@ -183,8 +180,7 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
         if($this->view->id_perfil_usuario){
             $sugestaoEnquadramento->sugestaoEnquadramento->setIdPreprojeto($idPreProjeto);
             $sugestaoEnquadramento->sugestaoEnquadramento->setIdPerfilUsuario($idPerfilUsuario);
-            $ultimaSugestaoPerfil = $sugestaoEnquadramento->obterHistoricoEnquadramento();
-            $ultimaSugestaoPerfil = count($ultimaSugestaoPerfil) >= 1 ? current($ultimaSugestaoPerfil) : $ultimaSugestaoPerfil;
+            $ultimaSugestaoPerfil = $sugestaoEnquadramento->obterSugestaoAtiva($idPreProjeto);
 
             if(empty($ultimaSugestaoPerfil['id_area'])){
                 $planoDistribuicao = (new Proposta_Model_DbTable_PlanoDistribuicaoProduto())->buscar(['stPrincipal = ?'=>1, 'idProjeto = ?' => $idPreProjeto]);
@@ -195,5 +191,4 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
 
         return $sugestaoEnquadramento->createRow($ultimaSugestaoPerfil)->toArray();
     }
-
 }

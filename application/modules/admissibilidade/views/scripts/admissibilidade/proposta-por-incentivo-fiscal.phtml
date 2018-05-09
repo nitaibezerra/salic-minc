@@ -225,7 +225,7 @@
                             <?php 
                         } ?>
 
-                            <?php if (count($this->recursoEnquadramento) > 0) { ?>
+                            <?php if (count($this->recursoEnquadramento) > 0 && $this->isRecursoDesistidoDePrazoRecursal == false) { ?>
                                 <a href="<?php echo $this->url([
                                             'module' => 'recurso',
                                             'controller' => 'recurso-proposta',
@@ -275,8 +275,7 @@
                                     type="button" name="action">
                                 <i class="material-icons ">print</i>
                             </button>
-                            <?php if ($this->isPropostaEnquadrada
-                                && Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE != $this->codGrupo) { ?>
+                            <?php if ($this->view->isPermitidoEncaminharAvaliacao) { ?>
                                 <a class="btn waves-effect waves-light btn modal-trigger pulse cyan valign-wrapper"
                                    data-id_preprojeto="<?php echo $this->idPreProjeto; ?>"
                                    href="#dialogoEncaminharProposta">
