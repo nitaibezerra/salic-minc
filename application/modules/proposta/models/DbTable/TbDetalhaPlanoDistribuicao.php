@@ -1,9 +1,5 @@
 <?php
 
-/**
- *
- *
- */
 class Proposta_Model_DbTable_TbDetalhaPlanoDistribuicao extends MinC_Db_Table_Abstract
 {
 
@@ -58,5 +54,33 @@ class Proposta_Model_DbTable_TbDetalhaPlanoDistribuicao extends MinC_Db_Table_Ab
         $slct->order($order);
 
         $this->delete(new Zend_Db_Expr('idDetalhaPlanoDistribuicao IN (' . $slct .')'));
+    }
+
+    public function obterDetalhamentosDaProposta($idPreProjeto, $where = array(), $order = null)
+    {
+        $slct = $this->select();
+        $slct->setIntegrityCheck(false);
+        $slct->from(array("d" => $this->_name), $this->_getCols(), $this->_schema);
+
+        $slct->joinInner(
+            array("p" => 'PlanoDistribuicaoProduto'),
+            "p.idPlanoDistribuicao = d.idPlanoDistribuicao",
+            'p.idProjeto',
+            $this->_schema
+        );
+
+        $slct->where('p.idProjeto = ?', $idPreProjeto);
+
+        foreach ($where as $coluna => $valor) {
+            $slct->where($coluna, $valor);
+        }
+
+        $slct->order($order);
+
+        try {
+            return $this->fetchAll($slct)->toArray();
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }

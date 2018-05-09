@@ -7,7 +7,7 @@
  * @link http://www.cultura.gov.br
  */
 
-class tbReadequacaoXtbTipoReadequacao extends MinC_Db_Table_Abstract
+class Readequacao_Model_DbTable_TbReadequacaoXtbTipoReadequacao extends MinC_Db_Table_Abstract
 {
     protected $_banco  = "SAC";
     protected $_schema = "SAC";

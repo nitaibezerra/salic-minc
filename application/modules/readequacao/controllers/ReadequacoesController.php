@@ -1,66 +1,13 @@
 <?php
 
-class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
+class Readequacao_ReadequacoesController extends Readequacao_GenericController
 {
     private $intTamPag = 10;
-    private $idAgente = 0;
-    private $idUsuario = 0;
-    private $idOrgao = 0;
-    private $idPerfil = 0;
+
 
     public function init()
     {
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessão com o grupo ativo
-        $this->idOrgao = $GrupoAtivo->codOrgao;
-        $this->idPerfil = $GrupoAtivo->codGrupo;
-
-        // verifica as permissoes
-        $PermissoesGrupo = array();
-        $PermissoesGrupo[] = Autenticacao_Model_Grupos::PROPONENTE;
-        $PermissoesGrupo[] = Autenticacao_Model_Grupos::PRESIDENTE_VINCULADA_SUBSTITUTO;
-        $PermissoesGrupo[] = Autenticacao_Model_Grupos::DIRETOR_DEPARTAMENTO;
-
-        // pega o idAgente do usuário logado
-        $auth = Zend_Auth::getInstance(); // pega a autenticação
-        $this->view->usuarioInterno = false;
-
-        if (isset($auth->getIdentity()->usu_codigo)) { // autenticacao novo salic
-            $this->view->usuarioInterno = true;
-            $this->idUsuario = $auth->getIdentity()->usu_codigo;
-
-            //Recupera todos os grupos do Usuario
-            $Usuario = new Autenticacao_Model_DbTable_Usuario(); // objeto usuário
-            $grupos = $Usuario->buscarUnidades($auth->getIdentity()->usu_codigo, 21);
-            foreach ($grupos as $grupo) {
-                $PermissoesGrupo[] = $grupo->gru_codigo;
-            }
-
-            parent::perfil(1, $PermissoesGrupo);
-            $this->idAgente = UsuarioDAO::getIdUsuario($auth->getIdentity()->usu_codigo);
-            $this->idAgente = ($this->idAgente) ? $this->idAgente["idAgente"] : 0;
-        } else { // autenticacao scriptcase
-            parent::perfil(4, $PermissoesGrupo);
-            $this->idUsuario = (isset($_GET["idusuario"])) ? $_GET["idusuario"] : 0;
-
-            /* =============================================================================== */
-            /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE AO PROJETO ====== */
-            /* =============================================================================== */
-            $this->verificarPermissaoAcesso(false, true, false);
-        }
         parent::init();
-
-        //SE CAIU A SECAO REDIRECIONA
-        if (!$auth->hasIdentity()) {
-            $url = Zend_Controller_Front::getInstance()->getBaseUrl();
-            JS::redirecionarURL($url);
-        }
-
-        //SE NENHUM PRONAC FOI ENVIADO, REDIRECIONA
-        $idPronac = $this->_request->getParam("idPronac"); // pega o id do pronac via get
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-        $this->view->idPronac = $idPronac;
     }
 
     /**
@@ -69,7 +16,6 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
      */
     public function indexAction()
     {
-
         $this->view->idPerfil = $this->idPerfil;
         if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
             parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
@@ -108,8 +54,8 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
             $buscarEstado = $uf->buscar();
             $this->view->UFs = $buscarEstado;
 
-            $PlanoDistribuicaoProduto = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
-            $this->view->Produtos = $PlanoDistribuicaoProduto->comboProdutosParaInclusaoReadequacao($idPronac);
+//            $PlanoDistribuicaoProduto = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+//            $this->view->Produtos = $PlanoDistribuicaoProduto->comboProdutosParaInclusaoReadequacao($idPronac);
 
             $tbPlanilhaEtapa = new Proposta_Model_DbTable_TbPlanilhaEtapa();
             $this->view->Etapas = $tbPlanilhaEtapa->buscar(array('stEstado = ?'=>1));
@@ -118,7 +64,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
             $buscarUnidade = $TbPlanilhaUnidade->buscarUnidade();
             $this->view->Unidade = $buscarUnidade;
 
-            $tbTipoReadequacao = new tbTipoReadequacao();
+            $tbTipoReadequacao = new Readequacao_Model_DbTable_TbTipoReadequacao();
             $this->view->TiposReadequacao = $tbTipoReadequacao->buscarTiposReadequacoesPermitidos($idPronac);
 
             $tbReadequacao = new Readequacao_Model_tbReadequacao();
@@ -558,7 +504,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
-        $tbAbrangencia = new tbAbrangencia();
+        $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
         $editarItem = $tbAbrangencia->buscar(array('idAbrangencia=?'=>$_POST['idAbrangencia']))->current();
 
         if ($this->idPerfil == Autenticacao_Model_Grupos::PARECERISTA || $this->idPerfil == Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO) {
@@ -622,7 +568,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
-        $tbPlanoDistribuicao = new tbPlanoDistribuicao();
+        $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
         $editarItem = $tbPlanoDistribuicao->buscar(array('idPlanoDistribuicao=?'=>$_POST['idPlanoDistribuicao']))->current();
 
         if ($this->idPerfil == Autenticacao_Model_Grupos::PARECERISTA || $this->idPerfil == Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO) {
@@ -889,244 +835,6 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
     }
 
     /*
-     * Criada em 19/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Essa função é usada para carregar os dados do locais de realização do projeto.
-     */
-    public function carregarLocaisDeRealizacaoAction()
-    {
-        $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessão com o grupo ativo
-        $this->view->idPerfil = $GrupoAtivo->codGrupo;
-
-        if (isset($_POST['iduf'])) {
-            $iduf = $_POST['iduf'];
-
-            $mun = new Agente_Model_DbTable_Municipios();
-            $cidade = $mun->listar($iduf);
-            $a = 0;
-            $cidadeArray = array();
-            foreach ($cidade as $DadosCidade) {
-                $cidadeArray[$a]['idCidade'] = $DadosCidade->id;
-                $cidadeArray[$a]['nomeCidade'] = utf8_encode($DadosCidade->Descricao);
-                $a++;
-            }
-            $this->_helper->json($cidadeArray);
-            die;
-        }
-
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-        $tbAbrangencia = new tbAbrangencia();
-        $locais = $tbAbrangencia->buscarLocaisParaReadequacao($idPronac, 'tbAbrangencia');
-        if (count($locais)==0) {
-            $locais = $tbAbrangencia->buscarLocaisParaReadequacao($idPronac, 'Abrangencia');
-        }
-
-        $tbPais = new Pais();
-        $this->view->Paises = $tbPais->buscar(array(), array(3));
-
-//        $buscarEstado = EstadoDAO::buscar();
-        $uf = new Agente_Model_DbTable_UF();
-        $buscarEstado = $uf->buscar();
-        $this->view->UFs = $buscarEstado;
-
-        $get = Zend_Registry::get('get');
-        $link = isset($get->link) ? true : false;
-
-        $this->montaTela(
-            'readequacoes/carregar-locais-de-realizacao.phtml',
-            array(
-                'idPronac' => $idPronac,
-                'locaisDeRealizacao' => $locais,
-                'link' => $link
-            )
-        );
-    }
-
-    /*
-     * Criada em 27/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Essa função é usada para carregar os dados do locais de realização do projeto.
-     */
-    public function carregarLocaisDeRealizacaoReadequacoesAction()
-    {
-        $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessão com o grupo ativo
-        $this->view->idPerfil = $GrupoAtivo->codGrupo;
-
-        $idPronac = $this->_request->getParam("idPronac");
-        $idReadequacao = $this->_request->getParam("idReadequacao");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        $tbAbrangencia = new tbAbrangencia();
-        $locais = $tbAbrangencia->buscarLocaisConsolidadoReadequacao($idReadequacao);
-
-        $tbReadequacao = new Readequacao_Model_tbReadequacao();
-        $dadosReadequacao = $tbReadequacao->buscar(array('idReadequacao=?'=>$idReadequacao))->current();
-        $siEncaminhamento = $dadosReadequacao->siEncaminhamento;
-
-        $tbPais = new Pais();
-        $this->view->Paises = $tbPais->buscar(array(), array(3));
-
-
-        $uf = new Agente_Model_DbTable_UF();
-        $this->view->UFs = $uf->buscar();
-        $get = Zend_Registry::get('get');
-        $link = isset($get->link) ? true : false;
-
-        $this->montaTela(
-            'readequacoes/carregar-locais-de-realizacao.phtml',
-            array(
-                'idPronac' => $idPronac,
-                'locaisDeRealizacao' => $locais,
-                'link' => $link,
-                'idReadequacao' => $idReadequacao,
-                'siEncaminhamento' => $siEncaminhamento
-            )
-        );
-    }
-
-    /*
-     * Criada em 10/03/14
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     */
-    public function incluirLocalDeRealizacaoAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        //VERIFICA SE JA POSSUI AS ABRANGENCIAS NA TABELA tbAbrangencia (READEQUACAO), SE NÃO TIVER, COPIA DA ORIGINAL, E DEPOIS INCLUI O ITEM DESEJADO.
-        $tbAbrangencia = new tbAbrangencia();
-        $readequacaoLR = $tbAbrangencia->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S'));
-        $locaisAtivos = $tbAbrangencia->buscarLocaisParaReadequacao($idPronac);
-
-        if (count($readequacaoLR)==0) {
-            $locaisCopiados = array();
-            foreach ($locaisAtivos as $value) {
-                $locaisCopiados['idReadequacao'] = null;
-                $locaisCopiados['idPais'] = $value->idPais;
-                $locaisCopiados['idUF'] = $value->idUF;
-                $locaisCopiados['idMunicipioIBGE'] = $value->idCidade;
-                $locaisCopiados['tpSolicitacao'] = 'N';
-                $locaisCopiados['stAtivo'] = 'S';
-                $locaisCopiados['idPronac'] = $idPronac;
-                $tbAbrangencia->inserir($locaisCopiados);
-            }
-        }
-
-        if ($_POST['newPaisLR'] == 31) {
-            if (empty($_POST['newUFLR']) && empty($_POST['newMunicipioLR'])) {
-                $msg = utf8_encode('Ao escolher o Brasil, os campos de UF e Município se tornam obrigatórios no cadastro!');
-                $this->_helper->json(array('resposta'=>false, 'msg'=>$msg));
-                $this->_helper->viewRenderer->setNoRender(true);
-            }
-            $verificaLocalRepetido = $tbAbrangencia->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S', 'idPais=?'=>$_POST['newPaisLR'], 'idUF=?'=>$_POST['newUFLR'], 'idMunicipioIBGE=?'=>$_POST['newMunicipioLR']));
-        } else {
-            $verificaLocalRepetido = $tbAbrangencia->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S', 'idPais=?'=>$_POST['newPaisLR']));
-        }
-
-        if (count($verificaLocalRepetido)==0) {
-            /* DADOS DO ITEM PARA INCLUSÃO DA READEQUAÇÃO */
-            $dadosInclusao = array();
-            $dadosInclusao['idReadequacao'] = null;
-            $dadosInclusao['idPais'] = $_POST['newPaisLR'];
-            $dadosInclusao['idUF'] = isset($_POST['newUFLR']) ? $_POST['newUFLR'] : 0;
-            $dadosInclusao['idMunicipioIBGE'] = isset($_POST['newMunicipioLR']) ? $_POST['newMunicipioLR'] : 0;
-            $dadosInclusao['tpSolicitacao'] = 'I';
-            $dadosInclusao['stAtivo'] = 'S';
-            $dadosInclusao['idPronac'] = $idPronac;
-            $insert = $tbAbrangencia->inserir($dadosInclusao);
-            if ($insert) {
-                //$jsonEncode = json_encode($dadosPlanilha);
-                $this->_helper->json(array('resposta'=>true));
-            } else {
-                $this->_helper->json(array('resposta'=>false));
-            }
-        } else {
-            $msg = utf8_encode('Esse local de realização já foi cadastrado!');
-            $this->_helper->json(array('resposta'=>false, 'msg'=>$msg));
-        }
-        $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /*
-     * Criada em 25/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Esse função é usada pelo proponente para solicitar a exclusão de um local de realização.
-     */
-    public function excluirLocalDeRealizacaoAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $idAbrangencia = $this->_request->getParam("idAbrangencia");
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        $tbAbrangencia = new tbAbrangencia();
-        $readequacaoLR = $tbAbrangencia->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S'));
-
-        //VERIFICA SE JA POSSUI AS ABRANGENCIAS NA TABELA tbAbrangencia (READEQUACAO), SE NÃO TIVER, COPIA DA ORIGINAL, E DEPOIS INCLUI O ITEM DESEJADO.
-        $locaisAtivos = $tbAbrangencia->buscarLocaisParaReadequacao($idPronac);
-        if (count($readequacaoLR)==0) {
-            $locaisCopiados = array();
-            foreach ($locaisAtivos as $value) {
-                $locaisCopiados['idReadequacao'] = null;
-                $locaisCopiados['idPais'] = $value->idPais;
-                $locaisCopiados['idUF'] = $value->idUF;
-                $locaisCopiados['idMunicipioIBGE'] = $value->idCidade;
-                $locaisCopiados['tpSolicitacao'] = 'N';
-                $locaisCopiados['stAtivo'] = 'S';
-                $locaisCopiados['idPronac'] = $idPronac;
-                $tbAbrangencia->inserir($locaisCopiados);
-            }
-        }
-
-        /* DADOS DO ITEM PARA EXCLUSAO LÓGICA DO ITEM DA READEQUACAO */
-        $dados = array();
-        $dados['tpSolicitacao'] = 'E';
-
-        $itemLR = $tbAbrangencia->buscar(array('idAbrangencia=?'=>$idAbrangencia))->current();
-        if ($itemLR) {
-            if ($itemLR->tpSolicitacao == 'I') {
-                $exclusaoLogica = $tbAbrangencia->delete(array('idAbrangencia = ?'=>$idAbrangencia));
-            } else {
-                $where = "stAtivo = 'S' AND idAbrangencia = $idAbrangencia";
-                $exclusaoLogica = $tbAbrangencia->update($dados, $where);
-            }
-        } else {
-            $Abrangencia = new Proposta_Model_DbTable_Abrangencia();
-            $itemLR = $Abrangencia->find(array('idAbrangencia=?'=>$idAbrangencia))->current();
-            $dadosArray = array(
-                'idPais =?' => $itemLR->idPais,
-                'idUF =?' => $itemLR->idUF,
-                'idMunicipioIBGE =?' => $itemLR->idMunicipioIBGE,
-                'idPronac =?' => $idPronac,
-                'stAtivo =?' => 'S',
-            );
-            $itemLR = $tbAbrangencia->buscar($dadosArray)->current();
-            $where = "stAtivo = 'S' AND idAbrangencia = $itemLR->idAbrangencia";
-            $exclusaoLogica = $tbAbrangencia->update($dados, $where);
-        }
-
-        if ($exclusaoLogica) {
-            //$jsonEncode = json_encode($dadosPlanilha);
-            $this->_helper->json(array('resposta'=>true));
-        } else {
-            $this->_helper->json(array('resposta'=>false));
-        }
-        $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /*
      * Criada em 28/03/2014
      * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
      * Essa função é usada para carregar os dados do planos de divulgação do projeto.
@@ -1168,421 +876,6 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
     }
 
     /*
-     * Criada em 27/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Essa função é usada para carregar os dados dos planos de divulgação do projeto.
-     */
-    public function carregarPlanosDeDivulgacaoReadequacoesAction()
-    {
-        $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessão com o grupo ativo
-        $this->view->idPerfil = $GrupoAtivo->codGrupo;
-
-        $idPronac = $this->_request->getParam("idPronac");
-        $idReadequacao = $this->_request->getParam("idReadequacao");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        $tbPlanoDivulgacao = new tbPlanoDivulgacao();
-        $planosDivulgacao = $tbPlanoDivulgacao->buscarPlanosDivulgacaoConsolidadoReadequacao($idReadequacao);
-
-        $tbReadequacao = new Readequacao_Model_tbReadequacao();
-        $dadosReadequacao = $tbReadequacao->buscar(array('idReadequacao=?'=>$idReadequacao))->current();
-        $siEncaminhamento = $dadosReadequacao->siEncaminhamento;
-
-        $Verificacao = new Verificacao();
-        $pecas = $Verificacao->buscar(array('idTipo=?'=>1), array('Descricao'));
-        $veiculos = $Verificacao->buscar(array('idTipo=?'=>2), array('Descricao'));
-
-        $get = Zend_Registry::get('get');
-        $link = isset($get->link) ? true : false;
-
-        $this->montaTela(
-            'readequacoes/carregar-planos-de-divulgacao.phtml',
-            array(
-                'idPronac' => $idPronac,
-                'planosDeDivulgacao' => $planosDivulgacao,
-                'pecas' => $pecas,
-                'veiculos' => $veiculos,
-                'link' => $link,
-                'idReadequacao' => $idReadequacao,
-                'siEncaminhamento' => $siEncaminhamento
-            )
-        );
-    }
-
-    /*
-     * Criada em 28/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Essa função é usada para que o proponente faça uma solicitação de inclusão de plano de divulgação
-     */
-    public function incluirPlanosDeDivulgacaoAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        //VERIFICA SE JA POSSUI OS PLANOS DE DIVULGAÇAO NA TABELA tPlanoDivulgacao (READEQUACAO), SE NÃO TIVER, COPIA DA ORIGINAL, E DEPOIS INCLUI O ITEM DESEJADO.
-        $tbPlanoDivulgacao = new tbPlanoDivulgacao();
-        $readequacaoPDD = $tbPlanoDivulgacao->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S'));
-        $planosAtivos = $tbPlanoDivulgacao->buscarPlanosDivulgacaoReadequacao($idPronac);
-
-        if (count($readequacaoPDD)==0) {
-            $planosCopiados = array();
-            foreach ($planosAtivos as $value) {
-                $planosCopiados['idReadequacao'] = null;
-                $planosCopiados['idPeca'] = $value->idPeca;
-                $planosCopiados['idVeiculo'] = $value->idVeiculo;
-                $planosCopiados['tpSolicitacao'] = 'N';
-                $planosCopiados['stAtivo'] = 'S';
-                $planosCopiados['idPronac'] = $idPronac;
-                $tbPlanoDivulgacao->inserir($planosCopiados);
-            }
-        }
-
-        $verificaPlanoRepetido = $tbPlanoDivulgacao->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S', 'idPeca=?'=>$_POST['newPeca'], 'idVeiculo=?'=>$_POST['newVeiculo']));
-        if (count($verificaPlanoRepetido)==0) {
-            /* DADOS DO PLANO PARA INCLUSÃO DA READEQUAÇÃO */
-            $dadosInclusao = array();
-            $dadosInclusao['idReadequacao'] = null;
-            $dadosInclusao['idPeca'] = $_POST['newPeca'];
-            $dadosInclusao['idVeiculo'] = $_POST['newVeiculo'];
-            $dadosInclusao['tpSolicitacao'] = 'I';
-            $dadosInclusao['stAtivo'] = 'S';
-            $dadosInclusao['idPronac'] = $idPronac;
-            $insert = $tbPlanoDivulgacao->inserir($dadosInclusao);
-            if ($insert) {
-                //$jsonEncode = json_encode($dadosPlanilha);
-                $this->_helper->json(array('resposta'=>true));
-            } else {
-                $this->_helper->json(array('resposta'=>false));
-            }
-        } else {
-            $msg = utf8_encode('Esse plano de divulgação já foi cadastrado!');
-            $this->_helper->json(array('resposta'=>false, 'msg'=>$msg));
-        }
-        $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /*
-     * Criada em 28/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Esse função é usada pelo proponente para solicitar a exclusão de um plano de divulgação.
-     */
-    public function excluirPlanoDeDivulgacaoAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $idPlanoDivulgacao = $this->_request->getParam("idPlanoDivulgacao");
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        //VERIFICA SE JA POSSUI OS PLANOS DE DIVULGAÇÃO NA TABELA tPlanoDivulgacao (READEQUACAO), SE NÃO TIVER, COPIA DA ORIGINAL, E DEPOIS INCLUI O ITEM DESEJADO.
-        $tbPlanoDivulgacao = new tbPlanoDivulgacao();
-        $readequacaoPDD = $tbPlanoDivulgacao->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S'));
-        $planosAtivos = $tbPlanoDivulgacao->buscarPlanosDivulgacaoReadequacao($idPronac);
-
-        if (count($readequacaoPDD)==0) {
-            $planosCopiados = array();
-            foreach ($planosAtivos as $value) {
-                $planosCopiados['idReadequacao'] = null;
-                $planosCopiados['idPeca'] = $value->idPeca;
-                $planosCopiados['idVeiculo'] = $value->idVeiculo;
-                $planosCopiados['tpSolicitacao'] = 'N';
-                $planosCopiados['stAtivo'] = 'S';
-                $planosCopiados['idPronac'] = $idPronac;
-                $tbPlanoDivulgacao->inserir($planosCopiados);
-            }
-        }
-
-        /* DADOS DO ITEM PARA EXCLUSAO LÓGICA DO ITEM DA READEQUACAO */
-        $dados = array();
-        $dados['tpSolicitacao'] = 'E';
-
-        $itemPDD = $tbPlanoDivulgacao->buscar(array('idPlanoDivulgacao=?'=>$idPlanoDivulgacao))->current();
-        if ($itemPDD) {
-            if ($itemPDD->tpSolicitacao == 'I') {
-                $exclusaoLogica = $tbPlanoDivulgacao->delete(array('idPlanoDivulgacao = ?'=>$idPlanoDivulgacao));
-            } else {
-                $where = "stAtivo = 'S' AND idPlanoDivulgacao = $idPlanoDivulgacao";
-                $exclusaoLogica = $tbPlanoDivulgacao->update($dados, $where);
-            }
-        } else {
-            $PlanoDivulgacao = new PlanoDeDivulgacao();
-            $itemPDD = $PlanoDivulgacao->find(array('idPlanoDivulgacao=?'=>$idPlanoDivulgacao))->current();
-            $dadosArray = array(
-                'idPeca =?' => $itemPDD->idPeca,
-                'idVeiculo =?' => $itemPDD->idVeiculo,
-                'idPronac =?' => $idPronac,
-                'stAtivo =?' => 'S',
-            );
-            $itemPDD = $tbPlanoDivulgacao->buscar($dadosArray)->current();
-            $where = "stAtivo = 'S' AND idPlanoDivulgacao = $itemPDD->idPlanoDivulgacao";
-            $exclusaoLogica = $tbPlanoDivulgacao->update($dados, $where);
-        }
-
-        if ($exclusaoLogica) {
-            //$jsonEncode = json_encode($dadosPlanilha);
-            $this->_helper->json(array('resposta'=>true));
-        } else {
-            $this->_helper->json(array('resposta'=>false));
-        }
-        $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /*
-     * Criada em 31/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Essa função é usada para carregar os dados do planos de distribuição do projeto.
-     */
-    public function carregarPlanosDeDistribuicaoAction()
-    {
-        $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessão com o grupo ativo
-        $this->view->idPerfil = $GrupoAtivo->codGrupo;
-
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        $tbPlanoDistribuicao = new tbPlanoDistribuicao();
-        $planosDistribuicao = $tbPlanoDistribuicao->buscarPlanosDistribuicaoReadequacao($idPronac, 'tbPlanoDistribuicao');
-
-        if (count($planosDistribuicao)==0) {
-            $planosDistribuicao = $tbPlanoDistribuicao->buscarPlanosDistribuicaoReadequacao($idPronac, 'PlanoDistribuicaoProduto');
-        }
-
-        $Produtos = new Produto();
-        $produtos = $Produtos->buscar(array('stEstado=?'=>0), array('Descricao'));
-
-        $Verificacao = new Verificacao();
-        $posicoesLogomarca = $Verificacao->buscar(array('idTipo=?'=>3), array('Descricao'));
-
-        $Area = new Area();
-        $areas = $Area->buscar(array('Codigo != ?'=>7), array('Descricao'));
-
-        $get = Zend_Registry::get('get');
-        $link = isset($get->link) ? true : false;
-
-        $this->montaTela(
-            'readequacoes/carregar-planos-de-distribuicao.phtml',
-            array(
-                'idPronac' => $idPronac,
-                'planosDistribuicao' => $planosDistribuicao,
-                'produtos' => $produtos,
-                'posicoesLogomarca' => $posicoesLogomarca,
-                'areas' => $areas,
-                'link' => $link
-            )
-        );
-    }
-
-    /*
-     * Criada em 27/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Essa função é usada para carregar os dados dos planos de divulgação do projeto.
-     */
-    public function carregarPlanosDeDistribuicaoReadequacoesAction()
-    {
-        $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessão com o grupo ativo
-        $this->view->idPerfil = $GrupoAtivo->codGrupo;
-
-        $idPronac = $this->_request->getParam("idPronac");
-        $idReadequacao = $this->_request->getParam("idReadequacao");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        $tbPlanoDistribuicao = new tbPlanoDistribuicao();
-        $planosDistribuicao = $tbPlanoDistribuicao->buscarPlanosDistribuicaoConsolidadoReadequacao($idReadequacao);
-
-        $tbReadequacao = new Readequacao_Model_tbReadequacao();
-        $dadosReadequacao = $tbReadequacao->buscar(array('idReadequacao=?'=>$idReadequacao))->current();
-        $siEncaminhamento = $dadosReadequacao->siEncaminhamento;
-
-        $get = Zend_Registry::get('get');
-        $link = isset($get->link) ? true : false;
-
-        $this->montaTela(
-            'readequacoes/carregar-planos-de-distribuicao.phtml',
-            array(
-                'idPronac' => $idPronac,
-                'planosDeDistribuicao' => $planosDistribuicao,
-                'link' => $link,
-                'idReadequacao' => $idReadequacao,
-                'siEncaminhamento' => $siEncaminhamento
-            )
-        );
-    }
-
-    /*
-     * Criada em 31/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Essa função é usada para que o proponente faça uma solicitação de inclusão de plano de distribuição
-     */
-    public function incluirPlanosDeDistribuicaoAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        //VERIFICA SE JA POSSUI OS PLANOS DE DISTRIBUIÇÃO NA TABELA tbPlanoDistribuicao (READEQUACAO), SE NÃO TIVER, COPIA DA ORIGINAL, E DEPOIS INCLUI O ITEM DESEJADO.
-        $tbPlanoDistribuicao = new tbPlanoDistribuicao();
-        $readequacaoPDDist = $tbPlanoDistribuicao->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S'));
-
-        $planosAtivos = $tbPlanoDistribuicao->buscarPlanosDistribuicaoReadequacao($idPronac);
-
-        if (count($readequacaoPDDist)==0) {
-            $planosCopiados = array();
-            foreach ($planosAtivos as $value) {
-                $planosCopiados['idReadequacao'] = null;
-                $planosCopiados['idProduto'] = $value->idProduto;
-                $planosCopiados['cdArea'] = $value->idArea;
-                $planosCopiados['cdSegmento'] = $value->idSegmento;
-                $planosCopiados['idPosicaoLogo'] = $value->idPosicaoDaLogo;
-                $planosCopiados['qtProduzida'] = $value->QtdeProduzida;
-                $planosCopiados['qtPatrocinador'] = $value->QtdePatrocinador;
-                $planosCopiados['qtOutros'] = $value->QtdeOutros;
-                $planosCopiados['qtProponente'] = $value->QtdeProponente;
-                $planosCopiados['qtVendaNormal'] = $value->QtdeVendaNormal;
-                $planosCopiados['qtVendaPromocional'] = $value->QtdeVendaPromocional;
-                $planosCopiados['vlUnitarioNormal'] = $value->PrecoUnitarioNormal;
-                $planosCopiados['vlUnitarioPromocional'] = $value->PrecoUnitarioPromocional;
-                $planosCopiados['stPrincipal'] = $value->stPrincipal;
-                $planosCopiados['tpSolicitacao'] = 'N'; # N - nenhuma, I - inclusao, A - alteracao
-                $planosCopiados['stAtivo'] = 'S';
-                $planosCopiados['idPronac'] = $idPronac;
-                $tbPlanoDistribuicao->inserir($planosCopiados);
-            }
-        }
-
-        $verificaPlanoRepetido = $tbPlanoDistribuicao->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S', 'idProduto=?'=>$_POST['newPlanoDistribuicao'], 'idReadequacao IS NULL' => ''));
-        if (count($verificaPlanoRepetido)==1) {
-            $QtdeProduzida = $_POST['newQntdNormal']+$_POST['newQntdPromocional']+$_POST['newQntdPatrocinador']+$_POST['newQntdPopulacaoBaixaRenda']+$_POST['newQntdDivulgacao'];
-            $preconormal = str_replace(",", ".", str_replace(".", "", $_POST['newVlNormal']));
-            $precopromocional = str_replace(",", ".", str_replace(".", "", $_POST['newVlPromocional']));
-
-            /* DADOS PARA ATUALIZACAO */
-            $dadosInclusao = array();
-//            $dadosInclusao['idReadequacao'] = NULL;
-//            $dadosInclusao['idProduto'] = $_POST['newPlanoDistribuicao'];
-//            $dadosInclusao['cdArea'] = $_POST['newArea'];
-//            $dadosInclusao['cdSegmento'] = $_POST['newSegmento'];
-//            $dadosInclusao['idPosicaoLogo'] = $_POST['newPosicaoLogomarca'];
-            $dadosInclusao['qtProduzida'] = $QtdeProduzida;
-            $dadosInclusao['qtPatrocinador'] = $_POST['newQntdPatrocinador'];
-            $dadosInclusao['qtProponente'] = $_POST['newQntdDivulgacao'];
-            $dadosInclusao['qtOutros'] = $_POST['newQntdPopulacaoBaixaRenda'];
-            $dadosInclusao['qtVendaNormal'] = $_POST['newQntdNormal'];
-            $dadosInclusao['qtVendaPromocional'] = $_POST['newQntdPromocional'];
-            $dadosInclusao['vlUnitarioNormal'] = $preconormal;
-            $dadosInclusao['vlUnitarioPromocional'] = $precopromocional;
-//            $dadosInclusao['stPrincipal'] = 0;
-            $dadosInclusao['tpSolicitacao'] = 'A'; # N - nenhuma, I - inclusao, A - alteracao
-            $dadosInclusao['stAtivo'] = 'S';
-//            $dadosInclusao['idPronac'] = $idPronac;
-            $where = ['idPronac = ?' => $idPronac, 'idProduto = ?' => $_POST['newPlanoDistribuicao']];
-            $update = $tbPlanoDistribuicao->update($dadosInclusao, $where);
-
-            if ($update) {
-                //$jsonEncode = json_encode($dadosPlanilha);
-                $this->_helper->json(array('resposta'=>true));
-            } else {
-                $this->_helper->json(array('resposta'=>false, 'msg' => "Erro ao salvar!"));
-            }
-        } else {
-            $msg = utf8_encode('N&atilde;o foi poss&iacute;vel salvar sua solicita&ccedil;&atilde;o, delete a readequa&ccedil;&atilde;o antes de alterar!');
-            $this->_helper->json(array('resposta'=>false, 'msg'=>$msg));
-        }
-        $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /*
-     * Criada em 28/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     * Esse função é usada pelo proponente para solicitar a exclusão de um plano de distribuição.
-     */
-    public function excluirPlanoDeDistribuicaoAction()
-    {
-        $this->_helper->layout->disableLayout();
-        $idPlanoDistribuicao = $this->_request->getParam("idPlanoDistribuicao");
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        //VERIFICA SE JA POSSUI OS PLANOS DE DISTRIBUIÇÃO NA TABELA tbPlanoDistribuicao (READEQUACAO), SE NÃO TIVER, COPIA DA ORIGINAL, E DEPOIS INCLUI O ITEM DESEJADO.
-        $tbPlanoDistribuicao = new tbPlanoDistribuicao();
-        $readequacaoPDDist = $tbPlanoDistribuicao->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S'));
-        $planosAtivos = $tbPlanoDistribuicao->buscarPlanosDistribuicaoReadequacao($idPronac);
-
-        if (count($readequacaoPDDist)==0) {
-            $planosCopiados = array();
-            foreach ($planosAtivos as $value) {
-                $planosCopiados['idReadequacao'] = null;
-                $planosCopiados['idProduto'] = $value->idProduto;
-                $planosCopiados['cdArea'] = $value->idArea;
-                $planosCopiados['cdSegmento'] = $value->idSegmento;
-                $planosCopiados['idPosicaoLogo'] = $value->idPosicaoDaLogo;
-                $planosCopiados['qtProduzida'] = $value->QtdeProduzida;
-                $planosCopiados['qtPatrocinador'] = $value->QtdePatrocinador;
-                $planosCopiados['qtOutros'] = $value->QtdeOutros;
-                $planosCopiados['qtProponente'] = $value->QtdeProponente;
-                $planosCopiados['qtVendaNormal'] = $value->QtdeVendaNormal;
-                $planosCopiados['qtVendaPromocional'] = $value->QtdeVendaPromocional;
-                $planosCopiados['vlUnitarioNormal'] = $value->PrecoUnitarioNormal;
-                $planosCopiados['vlUnitarioPromocional'] = $value->PrecoUnitarioPromocional;
-                $planosCopiados['stPrincipal'] = $value->stPrincipal;
-                $planosCopiados['tpSolicitacao'] = 'N';
-                $planosCopiados['stAtivo'] = 'S';
-                $planosCopiados['idPronac'] = $idPronac;
-                $tbPlanoDistribuicao->inserir($planosCopiados);
-            }
-        }
-
-        /* DADOS DO ITEM PARA EXCLUSAO LÓGICA DO ITEM DA READEQUACAO */
-        $dados = array();
-        $dados['tpSolicitacao'] = 'E';
-
-        $itemPDDist = $tbPlanoDistribuicao->buscar(array('idPlanoDistribuicao=?'=>$idPlanoDistribuicao))->current();
-        if ($itemPDDist) {
-            if ($itemPDDist->tpSolicitacao == 'I') {
-                $exclusaoLogica = $tbPlanoDistribuicao->delete(array('idPlanoDistribuicao = ?'=>$idPlanoDistribuicao));
-            } else {
-                $where = "stAtivo = 'S' AND idPlanoDistribuicao = $idPlanoDistribuicao";
-                $exclusaoLogica = $tbPlanoDistribuicao->update($dados, $where);
-            }
-        } else {
-            $PlanoDistribuicao = new PlanoDistribuicao();
-            $itemPDDist = $PlanoDistribuicao->find(array('idPlanoDistribuicao=?'=>$idPlanoDistribuicao))->current();
-            $dadosArray = array(
-                'idProduto =?' => $itemPDDist->idProduto,
-                'idPronac =?' => $idPronac,
-                'stAtivo =?' => 'S',
-            );
-            $itemPDDist = $tbPlanoDistribuicao->buscar($dadosArray)->current();
-            $where = "stAtivo = 'S' AND idPlanoDistribuicao = $itemPDDist->idPlanoDistribuicao";
-            $exclusaoLogica = $tbPlanoDistribuicao->update($dados, $where);
-        }
-
-        if ($exclusaoLogica) {
-            //$jsonEncode = json_encode($dadosPlanilha);
-            $this->_helper->json(array('resposta'=>true));
-        } else {
-            $this->_helper->json(array('resposta'=>false));
-        }
-        $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /*
      * Criada em 14/03/2014
      * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
      * Essa função para incluir uma solicitação de readequação.
@@ -1596,6 +889,15 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
         }
 
         $idPronac = $this->_request->getParam("idPronac");
+        if (empty($idPronac)) {
+            parent::message("PRONAC &eacute; obrigat&oacute;rio", "principalproponente", "ALERT");
+        }
+
+        $descJustificativa = $this->_request->getParam('descJustificativa');
+        if (empty($descJustificativa)) {
+            parent::message('Justificativa &eacute; obrigat&oacute;ria!', "readequacao/readequacoes/index?idPronac=".Seguranca::encrypt($idPronac), "ALERT");
+        }
+
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
@@ -1613,14 +915,19 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
                 parent::message('N&atilde;o houve nenhuma altera&ccedil;&atilde;o na planilha or&ccedil;ament&aacute;ria do projeto!', "readequacao/readequacoes/planilha-orcamentaria?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
             }
         } elseif ($idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_LOCAL_REALIZACAO) {
-            $tbAbrangencia = new tbAbrangencia();
+            $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
             $locaisReadequados = $tbAbrangencia->buscar(array('idPronac = ?'=>$idPronac, 'idReadequacao is null'=>''));
             if (count($locaisReadequados)==0) {
                 parent::message('N&atilde;o houve nenhuma altera&ccedil;&atilde;o nos locais de realiza&ccedil;&atilde;o do projeto!', "readequacao/readequacoes/index?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
             }
         } elseif ($idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) {
-            $tbPlanoDistribuicao = new tbPlanoDistribuicao();
-            $planosReadequados = $tbPlanoDistribuicao->buscar(array('idPronac = ?'=>$idPronac, 'idReadequacao is null'=>''));
+            $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
+            $planosReadequados = $tbPlanoDistribuicao->buscar(array(
+                'idPronac = ?'=>$idPronac,
+                'tpSolicitacao <> ?' => 'N',
+                'idReadequacao is null'=>''
+            ));
+
             if (count($planosReadequados)==0) {
                 parent::message('N&atilde;o houve nenhuma altera&ccedil;&atilde;o nos planos de distribui&ccedil;&atilde;o do projeto!', "readequacao/readequacoes/index?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
             }
@@ -1726,9 +1033,11 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
                 $tbPlanilhaAprovacao->update($dadosPlanilha, $wherePlanilha);
 
                 if (!empty($idReadequacao) && $idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) {
-                    $tbPlanoDistribuicao = new tbPlanoDistribuicao();
-                    $whereDistribuicao = "idPronac = {$idPronac} AND tpSolicitacao = 'A' AND idReadequacao IS NULL";
-                    $tbPlanoDistribuicao->update(['idReadequacao' => $idReadequacao], $whereDistribuicao);
+                    $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
+                    $tbPlanoDistribuicaoMapper->incluirIdReadequacaoNasSolicitacoesAtivas($idPronac, $idReadequacao);
+
+                    $tbDistribuicaoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
+                    $tbDistribuicaoMapper->incluirIdReadequacaoNasSolicitacoesAtivas($idPronac, $idReadequacao);
                 }
             }
 
@@ -1798,13 +1107,16 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
             }
 
             if ($dados->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_LOCAL_REALIZACAO) {
-                $tbAbrangencia = new tbAbrangencia();
+                $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
                 $tbAbrangencia->delete(array('idPronac = ?'=>$idPronac, 'stAtivo = ?'=>'S'));
             }
 
             if ($dados->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) {
-                $tbPlanoDistribuicao = new tbPlanoDistribuicao();
+                $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
                 $tbPlanoDistribuicao->delete(array('idPronac = ?'=>$idPronac, 'stAtivo = ?'=>'S'));
+
+                $tbDetalhaPlanoDistribuicao = new Readequacao_Model_DbTable_TbDetalhaPlanoDistribuicaoReadequacao();
+                $tbDetalhaPlanoDistribuicao->delete(array('idPronac = ?'=>$idPronac, 'stAtivo = ?'=>'S'));
             }
 
             if ($dados->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANO_DIVULGACAO) {
@@ -1868,13 +1180,13 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
 
             foreach ($readequacoes as $r) {
                 if ($r->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_LOCAL_REALIZACAO) {
-                    $tbAbrangencia = new tbAbrangencia();
+                    $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
                     $dadosAb = array();
                     $dadosAb['idReadequacao'] = $r->idReadequacao;
                     $whereAb = "idPronac = $idPronac AND stAtivo = 'S' AND idReadequacao is null";
                     $tbAbrangencia->update($dadosAb, $whereAb);
                 } elseif ($r->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) {
-                    $tbPlanoDistribuicao = new tbPlanoDistribuicao();
+                    $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
                     $dadosPDDist = array();
                     $dadosPDDist['idReadequacao'] = $r->idReadequacao;
                     $wherePDDist = "idPronac = $idPronac AND stAtivo = 'S' AND idReadequacao is null";
@@ -2445,7 +1757,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
         $p = $Projetos->buscarProjetoXProponente(array('idPronac = ?' => $d->idPronac))->current();
         $this->view->projeto = $p;
 
-        $tbReadequacaoXParecer = new tbReadequacaoXParecer();
+        $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
         $this->view->Parecer = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao = ?'=>$id, 'idTipoAgente =?'=>1))->current();
     }
 
@@ -2543,7 +1855,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
         $buscarUnidade = $TbPlanilhaUnidade->buscarUnidade();
         $this->view->Unidade = $buscarUnidade;
 
-        $tbReadequacaoXParecer = new tbReadequacaoXParecer();
+        $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
         $this->view->Parecer = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao = ?'=>$idReadequacao, 'b.idTipoAgente = ?'=>1))->current();
 
         //DADOS DO PROJETO
@@ -2641,7 +1953,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
                     $alteraParecer = $parecerDAO->alterar($parecerAntigo, $whereUpdateParecer);
                 }
 
-                $tbReadequacaoXParecer = new tbReadequacaoXParecer();
+                $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
                 $buscarParecer = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao = ?'=>$idReadequacao))->current();
 
                 if ($buscarParecer) {
@@ -2652,7 +1964,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
                     $idParecer = $parecerDAO->inserir($dadosParecer);
                 }
 
-                $tbReadequacaoXParecer = new tbReadequacaoXParecer();
+                $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
                 $parecerReadequacao = $tbReadequacaoXParecer->buscar(array('idReadequacao = ?'=>$idReadequacao, 'idParecer =?'=>$idParecer));
                 if (count($parecerReadequacao) == 0) {
                     $dadosInclusao = array(
@@ -3016,7 +2328,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
                     $alteraParecer = $parecerDAO->alterar($parecerAntigo, $whereUpdateParecer);
                 }
 
-                $tbReadequacaoXParecer = new tbReadequacaoXParecer();
+                $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
                 $buscarParecer = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao = ?'=>$idReadequacao, 'b.idTipoAgente =?'=>6))->current();
                 if ($buscarParecer) {
                     $whereUpdateParecer = 'IdParecer = '.$buscarParecer->IdParecer;
@@ -3026,7 +2338,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
                     $idParecer = $parecerDAO->inserir($dadosParecer);
                 }
 
-                $tbReadequacaoXParecer = new tbReadequacaoXParecer();
+                $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
                 $parecerReadequacao = $tbReadequacaoXParecer->buscar(array('idReadequacao = ?'=>$idReadequacao, 'idParecer =?'=>$idParecer));
                 if (count($parecerReadequacao) == 0) {
                     $dadosInclusao = array(
@@ -3213,7 +2525,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
                                 // READEQUAÇÃO DE LOCAL DE REALIZAÇÃO
                             } elseif ($read->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_LOCAL_REALIZACAO) { //Se for readequação de local de realização, atualiza os dados na SAC.dbo.Abrangencia.
                                 $Abrangencia = new Proposta_Model_DbTable_Abrangencia();
-                                $tbAbrangencia = new tbAbrangencia();
+                                $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
                                 $abrangencias = $tbAbrangencia->buscar(array('idReadequacao=?'=>$idReadequacao));
                                 foreach ($abrangencias as $abg) {
                                     $Projetos = new Projetos();
@@ -3267,7 +2579,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
 
                             } elseif ($read->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) { //Se for readequação de plano de distribuição, atualiza os dados na SAC.dbo.PlanoDistribuicaoProduto.
                                 $PlanoDistribuicaoProduto = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
-                                $tbPlanoDistribuicao = new tbPlanoDistribuicao();
+                                $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
                                 $planosDistribuicao = $tbPlanoDistribuicao->buscar(array('idReadequacao=?'=>$idReadequacao));
 
                                 foreach ($planosDistribuicao as $plano) {
@@ -3501,7 +2813,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
         $raberta = $reuniao->buscarReuniaoAberta();
         $idNrReuniao = ($raberta['stPlenaria'] == 'A') ? $raberta['idNrReuniao']+1 : $raberta['idNrReuniao'];
 
-        $tbReadequacaoXParecer = new tbReadequacaoXParecer();
+        $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
         $dadosParecer = $tbReadequacaoXParecer->buscar(array('idReadequacao=?'=>$idReadequacao));
         foreach ($dadosParecer as $key => $dp) {
             $pareceres = array();
@@ -3645,7 +2957,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
             } elseif ($read->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_LOCAL_REALIZACAO) { //Se for readequação de local de realização, atualiza os dados na SAC.dbo.Abrangencia.
                 $Abrangencia = new Proposta_Model_DbTable_Abrangencia();
 
-                $tbAbrangencia = new tbAbrangencia();
+                $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
                 $abrangencias = $tbAbrangencia->buscar(array('idReadequacao=?'=>$idReadequacao));
                 foreach ($abrangencias as $abg) {
                     $Projetos = new Projetos();
@@ -3699,7 +3011,7 @@ class Readequacao_ReadequacoesController extends MinC_Controller_Action_Abstract
 
             } elseif ($read->idTipoReadequacao == Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) { //Se for readequação de plano de distribuição, atualiza os dados na SAC.dbo.PlanoDistribuicaoProduto.
                 $PlanoDistribuicaoProduto = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
-                $tbPlanoDistribuicao = new tbPlanoDistribuicao();
+                $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
                 $planosDistribuicaoReadequados = $tbPlanoDistribuicao->buscar(array('idReadequacao=?'=>$idReadequacao));
 
                 $Projetos = new Projetos();

@@ -1,23 +1,16 @@
 <?php
+
 /**
  * DAO tbReadequacaoXParecer
- * @author jeffersonassilva@gmail.com - XTI
  * @since 13/03/2014
- * @version 1.0
- * @link http://www.cultura.gov.br
  */
-
-class tbReadequacaoXParecer extends MinC_Db_Table_Abstract
+class Readequacao_Model_DbTable_TbReadequacaoXParecer extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
+    protected $_banco = "SAC";
     protected $_schema = "SAC";
-    protected $_name   = "tbReadequacaoXParecer";
+    protected $_name = "tbReadequacaoXParecer";
 
-    /*
-     * Criada em 13/03/2014
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
-     */
-    public function buscarPareceresReadequacao($where=array(), $order=array())
+    public function buscarPareceresReadequacao($where = array(), $order = array())
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -55,7 +48,6 @@ class tbReadequacaoXParecer extends MinC_Db_Table_Abstract
         //adicionando linha order ao select
         $select->order($order);
 
-        
         return $this->fetchAll($select);
     }
 }

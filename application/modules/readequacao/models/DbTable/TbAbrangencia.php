@@ -4,16 +4,10 @@
  * OBS:
  * 	-> A tabela SAC.dbo.Abrangencia armazena os locais de realizacao do projeto originais (aprovados)
  *  -> A tabela SAC.dbo.tbAbrangencia armazena os locais de realizacao do projeto que foram solicitados na readequacao
- * @author emanuel.sampaio <emanuelonline@gmail.com>
  * @since 18/04/2012
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright  2012 - Ministerio da Cultura - Todos os direitos reservados.
- * @link http://salic.cultura.gov.br
  */
 
-class tbAbrangencia extends MinC_Db_Table_Abstract
+class Readequacao_Model_DbTable_TbAbrangencia extends MinC_Db_Table_Abstract
 {
     protected $_schema  = "sac";
     protected $_name    = "tbAbrangencia";
@@ -128,42 +122,49 @@ class tbAbrangencia extends MinC_Db_Table_Abstract
         $select->from(
             array('a' => 'Projetos'),
             array(
-                new Zend_Db_Expr('b.idAbrangencia, b.idPais, c.Descricao as Pais, b.idUF, d.Descricao as UF, b.idMunicipioIBGE as idCidade, e.Descricao as Cidade')
+                new Zend_Db_Expr(
+                'b.idAbrangencia,
+                b.idPais,
+                c.Descricao as pais,
+                b.idUF,
+                d.Descricao as uf,
+                b.idMunicipioIBGE as idMunicipio,
+                e.Descricao as municipio')
             ),
-            'SAC.dbo'
+            $this->_schema
         );
         if ($tabela == 'Abrangencia') {
             $select->joinInner(
                 array('b' => 'Abrangencia'),
             "a.idProjeto = b.idProjeto AND b.stAbrangencia = 1",
                 array(new Zend_Db_Expr("'N' AS tpSolicitacao")),
-            'SAC.dbo'
-        );
+            $this->_schema
+            );
         } else {
             $select->joinInner(
                 array('b' => 'tbAbrangencia'),
             "a.idPronac = b.idPronac AND stAtivo='S'",
                 array('b.tpSolicitacao'),
-            'SAC.dbo'
+            $this->_schema
         );
         }
         $select->joinInner(
             array('c' => 'Pais'),
             "b.idPais = c.idPais",
             array(),
-            'AGENTES.dbo'
+            $this->getSchema('agentes')
         );
         $select->joinLeft(
             array('d' => 'Uf'),
             'b.idUF = d.idUF',
             array(),
-            'AGENTES.dbo'
+            $this->getSchema('agentes')
         );
         $select->joinLeft(
             array('e' => 'Municipios'),
             "b.idMunicipioIBGE = e.idMunicipioIBGE",
             array(),
-            'AGENTES.dbo'
+            $this->getSchema('agentes')
         );
         
         $select->where('a.IdPRONAC = ?', $idPronac);

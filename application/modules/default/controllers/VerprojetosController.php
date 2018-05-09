@@ -798,7 +798,7 @@ class VerProjetosController extends MinC_Controller_Action_Abstract
         // objetos
         $Projetos      = new Projetos();
         $PreProjeto    = new Proposta_Model_DbTable_PreProjeto();
-        $tbAbrangencia = new tbAbrangencia();
+        $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
 
         // busca os dados aprovados do proponente e do nome do projeto
         $buscarProponente = $Projetos->buscarProjetoXProponente(array('p.IdPRONAC = ?' => $idPronac))->current();
@@ -948,7 +948,7 @@ class VerProjetosController extends MinC_Controller_Action_Abstract
             $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
             $dadosReadequacoes = $Readequacao_Model_tbReadequacao->buscarDadosReadequacoes(array('a.idPronac = ?'=>$idPronac, 'a.siEncaminhamento <> ?'=>12))->toArray();
 
-            $tbReadequacaoXParecer = new tbReadequacaoXParecer();
+            $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
             foreach ($dadosReadequacoes as &$dr) {
                 $dr['pareceres'] = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao = ?'=>$dr['idReadequacao']))->toArray();
             }

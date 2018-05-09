@@ -1,0 +1,196 @@
+<div class="container-fluid" id="vue-container">
+    <div class="row">
+        <div class="page-title">
+            <div class="row">
+                <div class="col s12 m9 l10">
+                    <h1>Transfer&ecirc;ncia de recursos</h1>
+		    
+                    <?php
+                    gerarNovoBreadCrumb(array(
+                    array('Readequa&ccedil;&atilde;o' => [
+                    'module' => 'readequacao',
+                    'controller' => 'transferencia-recursos',
+                    'action', 'index']
+                    ),
+                    array('Transfer&ecirc;ncia de recursos' => '')
+                    ));
+                    ?>
+                </div>
+                <div class="col s12 m3 l2 right-align">
+                    <a href="javascript:voltar();" title="P&aacute;gina Anterior" title="P&aacute;gina Anterior"
+                       class="btn small grey lighten-3 grey-text z-depth-0 chat-toggle"><i class="material-icons">arrow_back</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <b>Pronac: </b>{{ readequacao.pronac }}<br>
+                        </div>
+                        <div class="col s12">
+                            <b>Projeto: </b>{{ readequacao.nomeProjeto }}
+                        </div>
+                        <div class="col s12">
+                            <b>Vl. a Comprovar: </b>{{ readequacao.valorComprovar }}
+                        </div>
+                        <div class="col s12">
+                            <b>Saldo dispon&iacute;vel: </b>{{ saldoDisponivel }}
+                        </div>
+                    </div>
+		</div>
+            </div>
+	    
+	    <div class="card">
+		<div class="card-content">
+		    <table>
+			<thead>
+			    <th>Pronac</th>
+			    <th>Nome do projeto</th>
+			    <th>Tipo da transfer&ecirc;ncia</th>
+			    <th>Vl. transfer&ecirc;ncia</th>
+			</thead>
+			<tbody>
+			    <tr v-for="(projeto, index) in projetosRecebedores">
+				<td>{{ projeto.idPronac }}</td>
+				<td>{{ projeto.nomeProjeto}}</td>
+				<td>{{ projeto.tipoTransferencia}}</td>
+				<td>R$ {{ projeto.valorRecebido}}</td>
+				<td>
+				    <a href="javascript:void(0)"
+				       v-on:click="excluirRecebedor(index)"
+				       class="btn small">
+					<i class="material-icons">delete</i>					
+				    </a>
+				</td>
+			    </tr>
+			</tbody>
+			<tfoot>
+			    <tr>
+				<td colspan="4">R$ {{ totalRecebido }} </td>
+			    </tr>
+			</tfoot>
+		    </table>
+		    
+		    <form class="row">
+			<div class="col s3">
+			    <label>Projeto recebedor</label>
+			    <select class="browser-default" v-model="projetoRecebedor.idPronac">
+				<option value="" disabled selected>Selecione o projeto</option>
+				<option value="173321">173321 - Projeto abc</option>
+				<option value="163321">163321 - Projeto def</option>
+				<option value="153321">153321 - Projeto gehehe</option>
+			    </select>
+			</div>
+			<div class="col s3">
+			    <label>Tipo da transfer&ecirc;ncia</label>
+			    <select class="browser-default" v-model="projetoRecebedor.tipoTransferencia">
+				<option value="" disabled selected>Selecione o tipo da transfer&ecirc;ncia</option>
+				<option value="1">N&atilde;o homologados</option>
+				<option value="2">Homologados</option>
+				<option value="3">Recursos remanescentes</option>
+			    </select>
+			</div>
+ 			<div class="input-field col s3">
+			    <input placeholder="Valor recebido"
+						id="valor_recebido"
+						type="text"
+						class="validate"
+						v-model="projetoRecebedor.valorRecebido">
+			    <label for="valor_recebido">Valor recebido</label>
+			</div>		
+			<div class="center-align padding20 col s3">
+			    <a href="javascript:void(0)"
+			       v-on:click="incluirRecebedor"
+			       class="btn">Adicionar recebedor</a>
+			</div>
+		    </form>
+		</div>
+	    </div>
+        </div>
+    </div>
+</div>
+<script src="/public/js/vue.js" type="text/javascript"></script>
+
+<script>
+ new Vue({
+     /* template: `
+	<tr v-for="projeto in projetosRecebedores">
+      * <td>{{ projeto.idPronac }}</td>
+      * <td></td>
+	<td></td>
+	<td></td>
+	</tr>
+      * `,*/
+     el: '#vue-container',
+     data: {
+	 readequacao: {
+	     pronac: 164783,
+	     idPronac: 289999,
+	     idReadequacao: 1234,
+	     nomeProjeto: 'Expedição gastronimica',
+	     valorComprovar: 1234,
+	     saldoDisponivel: 1234
+	 },
+	 projetoRecebedor: {
+	     idPronac: null,
+	     nomeProjeto: '',
+	     tipoTransferencia: '',
+	     valorRecebido: 0.00
+	 },
+	 projetosRecebedores: [
+	     {
+		 idPronac: 171234,
+		 nomeProjeto: 'Projeto abc',
+		 tipoTransferencia: 'não homologado',
+		 valorRecebido: 100.00
+	     },
+	     {
+		 idPronac: 155234,
+		 nomeProjeto: 'Projeto def',
+		 tipoTransferencia: 'não homologado',
+		 valorRecebido: 100.00
+	     },
+	     {
+		 idPronac: 161236,
+		 nomeProjeto: 'Projeto gegeg',
+		 tipoTransferencia: 'não homologado',
+		 valorRecebido: 100.00
+	     }
+	 ],
+     },
+     mounted: function() {
+     },
+     methods: {
+	 incluirRecebedor: function() {
+	     this.projetosRecebedores.push(
+		 this.projetoRecebedor
+	     );
+	     this.projetoRecebedor = {
+		 idPronac: null,
+		 nomeProjeto: '',
+		 tipoTransferencia: '',
+		 valorRecebido: 0.00
+	     };
+	     // persistir dado ajax
+	 },
+	 excluirRecebedor: function(id) {
+	     Vue.delete(this.projetosRecebedores, id);
+	     // remover dado ajax
+	 }
+     },
+     computed: {
+	 totalRecebido: function() {
+	     return this.projetosRecebedores.reduce(function (total, projeto) {
+                 return total + parseFloat(projeto.valorRecebido);
+             }, 0);
+	 },
+	 saldoDisponivel: function() {
+	     return this.readequacao.valorComprovar - this.totalRecebido;
+	 },
+	 
+     }
+ })
+</script>

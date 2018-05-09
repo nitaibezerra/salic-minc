@@ -30,7 +30,7 @@
                 $('.planosDeDivulgacao').addClass('sumir');
                 $('#campoAdicionadoPorTipoReadequacao').addClass('sumir');
                 $('#campoCriadoTipoReadequacao').html('');
-                atualizarDadosPlanosDeDistribuicao();
+//                atualizarDadosPlanosDeDistribuicao();
             } else if(valor == 14){
                 $('.planosDeDivulgacao').removeClass('sumir');
                 $('.localRealizacao').addClass('sumir');
@@ -99,11 +99,11 @@
             });
             $('.ui-dialog-titlebar-close').remove();
         });
-        
+
         $('#btn_cancelar').click(function(){
             window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>";
         });
-        
+
         $('#IncluirReadequacao').click(function(){
             var descJustificativa = CKEDITOR.instances['descJustificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,''),
                 texto = CKEDITOR.instances['descJustificativa'].getData(),
@@ -113,25 +113,25 @@
                 solicitacoesSimples = new Array(3,4,5,6,7,8,10,11,12,13,15,16,17,18,19,20,21),
                 solicitacoesSimplesCKEditor = new Array(5,6,7,8,16,17,18,19,20,21),
 		naoPedeConfirmacao = new Array(2, 11);
-                
+
             if (descJustificativa == ''){
                 erro++;
             }
-            
+
             if(texto.length > 6000){
                 erro++;
                 msg = 'O campo s\u00F3 permite 5.000 caracteres!';
             }
-	    
+
             if(in_array(tipoRead, solicitacoesSimples)){
-                
+
                 if(tipoRead == 3 || tipoRead == 13){
                     var campoRead = $('#descSolicitacao').val();
                     if(campoRead == ''){
                         erro++;
                     }
                 }
-                
+
                 if(tipoRead == 4){
                     var campoRead = $('#descSolicitacao').val();
                     if(campoRead == ''){
@@ -141,7 +141,7 @@
                         msg = 'Ag\u00EAncia banc\u00E1ria incorreta.';
                     }
                 }
-                
+
                 if(tipoRead == 10){
                     var campoRead = $('#descSolicitacao').val();
                     if(campoRead == ''){
@@ -154,7 +154,7 @@
                         msg = 'CPF ou CNPJ inv\u00E1lido.';
                     }
                 }
-                
+
                 if(tipoRead == 12){
                     var campoRead = $('#descSolicitacao').val();
                     if(campoRead == ''){
@@ -164,7 +164,7 @@
                         msg = 'O campo de altera\u00E7\u00E3o de nome do projeto s\u00F3 permite 300 caracteres.';
                     }
                 }
-                
+
                 if(tipoRead == 15){
                     var campoRead = CKEDITOR.instances['descSolicitacao'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,''),
                         textoSolicitacao = CKEDITOR.instances['descSolicitacao'].getData();
@@ -175,7 +175,7 @@
                         msg = 'O campo s\u00F3 permite 1.000 caracteres!';
                     }
                 }
-                
+
                 if(in_array(tipoRead, solicitacoesSimplesCKEditor)){
                     var campoRead = CKEDITOR.instances['descSolicitacao'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,''),
                         textoSolicitacao = CKEDITOR.instances['descSolicitacao'].getData();
@@ -187,7 +187,7 @@
                     }
                 }
             }
-            
+
             if (erro > 0) {
                 $("#msgAlerta").dialog("destroy");
                 $("#msgAlerta").html(msg);
@@ -240,8 +240,8 @@
 		}
 	    }
         });
-	
-        $('.btn_exclusao').click(function(){
+
+        $('.btn-excluir').click(function(){
             var idReadequacao = $(this).attr('readequacao');
             $("#msgAlerta").dialog("destroy");
             $("#msgAlerta").html('Deseja excluir a solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o?');
@@ -271,7 +271,7 @@
             });
             $('.ui-dialog-titlebar-close').remove();
         });
-        
+
         $('#newUF').change(function(){
             $("#newMunicipio").html('<option value=""> - Carregando - </option>');
             if($(this).val() == 0){
@@ -296,11 +296,11 @@
                 });
             }
         });
-        
+
         $('#newEtapa').change(function(){
             $('#newProduto').change();
         });
-        
+
         $('#newProduto').change(function(){
             $("#newItem").html('<option value=""> - Carregando - </option>');
             if($(this).val() == 0){
@@ -325,7 +325,7 @@
                 });
             }
         });
-        
+
         $('.btn_finalizar').click(function(){
             $("#msgAlerta").dialog("destroy");
             $("#msgAlerta").html('Deseja realmente finalizar as solicita&ccedil;&otilde;es de readequa&ccedil;&atilde;o cadastradas?<br /><br />Ao finalizar, todas as solicita&ccedil;&otilde;es ser&atilde;o encaminhadas ao MinC.');
@@ -355,7 +355,7 @@
             });
             $('.ui-dialog-titlebar-close').remove();
         });
-        
+
         $(".icn_menos").click(function(){
             var tipo = $(this).attr('tipo');
             var aberto = $(this).attr('aberto');
@@ -407,11 +407,11 @@
                 $(this).addClass('fundo_linha4');
             }
         });
-        
+
         $('.editarItem').live('click', function(){
             var idPlanilhaAprovacao = $(this).attr('idPlanilhaAprovacao'),
                 itemClicado = $(this);
-                
+
             //AO ABRIR A MODAL, LIMPA TODOS OS CAMPOS EDIT�VEIS
             $('.modalObrigatorios').each(function(){
                 $(this).css('border-color', '#CCCCCC');
@@ -430,7 +430,7 @@
                     idPlanilha: idPlanilhaAprovacao
                 },
                 success: function(data){
-                    
+
                     if(data.resposta){
                         $('#campoPronac').html(data.dadosProjeto.PRONAC);
                         $('#campoNomeProjeto').html(data.dadosProjeto.NomeProjeto);
@@ -445,7 +445,7 @@
                         $('#campoVlUnitarioSolicitado').html(data.dadosPlanilhaAtiva.ValorUnitario);
                         $('#campoDiasSolicitado').html(data.dadosPlanilhaAtiva.QtdeDias);
                         $('#campoTotalSolicitado').html(data.dadosPlanilhaAtiva.TotalSolicitado);
-                        
+
                         $('#campoValorComprovado').html(data.valoresDoItem.vlComprovadoDoItem);
 
                         $('#modalUnidade').val(data.dadosPlanilhaEditavel.idUnidade);
@@ -455,13 +455,13 @@
                         $('#modalDias').val(data.dadosPlanilhaEditavel.QtdeDias);
                         $('#modalJustificativa').val(data.dadosPlanilhaEditavel.Justificativa);
                         $('#TotalCalculado').html(data.dadosPlanilhaEditavel.TotalSolicitado);
-                        
+
                         $('#campoIdPlanilha').attr('idPlanilha', idPlanilhaAprovacao);
 
                         var vlComprovadoDoItemValidacao = data.valoresDoItem.vlComprovadoDoItemValidacao,
                             valorParaMsgErro = data.dadosPlanilhaAtiva.TotalSolicitado,
                             mensagem = '';
-                    
+
                         //MOSTRA OS DADOS NA MODAL AP�S ABRI-LA
                         $("#modalItem").dialog("destroy");
                         $("#modalItem").dialog({
@@ -494,7 +494,7 @@
                                             $(this).css('border-color', '#CCCCCC');
                                         }
                                     });
-                                    
+
                                     if(obrigatorios > 0){
                                         mensagem += '- Favor preencher os dados obrigat�rios.<br/>';
                                     }
@@ -505,7 +505,7 @@
                                         mensagem += '- O valor total do item n�o pode ser menor do que o valor comprovado de '+data.valoresDoItem.vlComprovadoDoItem+'.<br/>';
                                         erros++;
                                     }
-                                    
+
                                     //SE HOUVER ALGO DE ERRADO, EXIBE MENSAGEM DE ALERTA.
                                     if(erros > 0){
                                         $('#TotalCalculado').css('color','red');
@@ -525,7 +525,7 @@
                                         erros = 0;
                                         mensagem = '';
                                         return false;
-                                        
+
                                     //SE NENHUM CAMPO ESTIVER EM BRANCO, SALVA OS DADOS
                                     } else {
                                         $.ajax({
@@ -558,11 +558,11 @@
 
             return false;
         });
-        
+
         $('.excluirItemPlanilha').live('click', function(){
             var idPlanilhaAprovacao = $(this).attr('idPlanilhaAprovacao'),
                 itemClicado = $(this);
-                
+
             //ABRE O MODAL DE CONFIRMA��O DA A��O REALIZADA
             $("#msgAlerta").dialog("destroy");
             $("#msgAlerta").html('Tem certeza que deseja excluir o item da planilha?');
@@ -596,7 +596,7 @@
             });
             $('.ui-dialog-titlebar-close').remove();
         });
-        
+
         $('.multiplicarValores').keyup(function(){
             // recebe os valores do formul�rio
             var qtd = $('#modalQuantidade').val(),
@@ -643,7 +643,7 @@
 
             $('#TotalCalculado').html(resultado);
         });
-        
+
         $('.newMultiplicarValores').keyup(function(){
             // recebe os valores do formul�rio
             var qtd = $('#newQuantidade').val(),
@@ -693,10 +693,10 @@
 
         $("#modalValorUnitario").priceFormat();
         $("#newValorUnitario").priceFormat();
-        
+
         CKEDITOR.replace( 'descJustificativa', { toolbar: [] } );
-        
-        
+
+
         <?php if($this->idPerfil == 1111){ ?>
             $('.restaurarItem').live('click', function(){
                 var idPlanilha = $(this).attr('idPlanilha'),
@@ -735,417 +735,573 @@
             });
         <?php } ?>
     });
-    
+
     function enviarformulario(){
         $('#formReadequacao').submit();
     }
-    
+
     function finalizarformulario(){
         window.location = "<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'finalizar-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>";
     }
-    
+
     function excluirReadequacao(idReadequacao){
         window.location = "<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'excluir-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao="+idReadequacao;
     }
 
     function atualizarDadosLocaisRealizacao(){
-        jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-locais-de-realizacao'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'locaisParaRealizacao');
+        jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'local-realizacao', 'action' => 'carregar-locais-de-realizacao'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'locaisParaRealizacao');
    }
-    
+
     function atualizarDadosPlanosDeDivulgacao(){
         jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-planos-de-divulgacao'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'planosDeDivulgacao');
     }
-    
-    function atualizarDadosPlanosDeDistribuicao(){
-        jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-planos-de-distribuicao'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'planosDeDistribuicao');
-	// adicionar verificao da readequacao
-        $.ajax({
-            url : '<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'consultar-readequacao'), '', true); ?>',
-            type: "POST",
-	    data: {
-		idPronac: <?php echo $this->idPronac; ?>,
-		idTipoReadequacao: 11,
-		idReadequacao: ''
-	    },
-	    success: function(data) {
-		var readequacoes = JSON.parse(data).readequacoes;
 
-		// @todo remove
-		// se houver mais de uma readequacao pega a primeira
-		var readequacao = (typeof readequacoes.length != 'undefined') ? readequacoes[0] : readequacoes;
-		
-		if (typeof readequacao !== 'undefined') {
-		    $('#idReadequacao').val(readequacao.idReadequacao);
-		    CKEDITOR.instances['descJustificativa'].setData(readequacao.dsJustificativa);
-		}
-	    }
-	});
+    function atualizarDadosPlanosDeDistribuicao() {
+        jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'plano-distribuicao', 'action' => 'carregar-planos-de-distribuicao'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'planosDeDistribuicao');
+        // adicionar verificao da readequacao
+        $.ajax({
+            url: '<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'consultar-readequacao'), '', true); ?>',
+            type: "POST",
+            data: {
+                idPronac: <?php echo $this->idPronac; ?>,
+                idTipoReadequacao: 11,
+                idReadequacao: ''
+            },
+            success: function (data) {
+                console.log(data);
+                var readequacoes = data.readequacoes;
+
+                // @todo remove
+                // se houver mais de uma readequacao pega a primeira
+                var readequacao = (typeof readequacoes.length != 'undefined') ? readequacoes[0] : readequacoes;
+
+                if (typeof readequacao !== 'undefined') {
+                    $('#idReadequacao').val(readequacao.idReadequacao);
+                    CKEDITOR.instances['descJustificativa'].setData(readequacao.dsJustificativa);
+                }
+            }
+        });
     }
-    
+
     function criarCampoTipoReadequacao(tpReadequacao){
         jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'criar-campo-tipo-readequacao'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>&tpReadequacao='+tpReadequacao, '', 'campoCriadoTipoReadequacao');
     }
 </script>
 
-<!-- ========== IN�CIO BREADCRUMB (LINKS TOPO) ========== -->
-<div id="breadcrumb">
-    <ul>
-        <li class="first"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'principalproponente', 'action' => ''), null, true); ?>" title="Ir para p&aacute;gina inicial" onclick="carregandoModal();">In&iacute;cio</a></li>
-        <li class="second"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index'), null, true); ?><?php echo '?idPronac='. Seguranca::encrypt($this->idPronac); ?>" title="Ir para In&iacute;cio">Consultar dados do Projeto</a></li>
-        <li class="last">Solicitar Readequa&ccedil;&atilde;o</li>
-    </ul>
-</div>
-<!-- ========== FIM BREADCRUMB (LINKS TOPO) ========== -->
-
-
-<!-- ========== IN�CIO T�TULO ========== -->
-<div id="titulo">
-    <div>Solicitar Readequa&ccedil;&atilde;o<span class="voltar"><a href="javascript:voltar();" title="Ir para p&aacute;gina anterior">Voltar</a></span></div>
-</div>
-<!-- ========== FIM T�TULO ========== -->
 
 
 <!-- ========== IN�CIO CONTE�DO ========== -->
 <div id="msgAlerta" class="sumir"></div>
 
-<div id="conteudo">
+<div class="container-fluid">
+    <div class="row">
+        <div class="page-title">
+            <div class="row">
+                <div class="col s12 m9 l10">
+                    <h1>
+                        Solicitar Readequa&ccedil;&atilde;o
+                    </h1>
 
-    <!-- ========== IN�CIO FORMUL�RIO ========== -->
-    <form name="formReadequacao" id="formReadequacao" action="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'incluir-solicitacao-readequacao'), null, true); ?><?php echo '?idPronac='. Seguranca::encrypt($this->idPronac); ?>" method="post" enctype="multipart/form-data">
-	<input type="hidden" id="idReadequacao" name="idReadequacao" value="<?php echo ''; ?>">
-        <table class="tabela">
-            <tr>
-                <th style="width: 30%">PRONAC</th>
-                <th>Nome do Projeto</th>
-            </tr>
-            <tr class="centro">
-                <td><?php echo $this->projeto->AnoProjeto.$this->projeto->Sequencial; ?></td>
-                <td><?php echo $this->projeto->NomeProjeto; ?></td>
-            </tr>
-        </table>
-        
-        <table class="tabela">
-            <tr>
-                <td class="destacar bold" style="font-size: 13px;">Tipo de Readequa&ccedil;&atilde;o</td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="select_simples comboReadequacoes" style="width: 200px;" name="tipoReadequacao" id="tipoReadequacao">
-                        <option value="0"> - Selecione - </option>
-                        <?php foreach ($this->TiposReadequacao as $tipos){ ?>
-                        <?php if($tipos->idTipoReadequacao != 1 && $tipos->idTipoReadequacao != 2){ //Retirando o Tipo de Readequacao de Remanejamento 20% ?>
-                        <option value="<?php echo $tipos->idTipoReadequacao; ?>"><?php echo $tipos->dsReadequacao; ?></option>
-                        <?php } ?>
-                        <?php } ?>
-                    </select>
-                </td>
-            </tr>
-        </table>
-        
-        <table class="tabela localRealizacao sumir">
-            <tr>
-                <td class="destacar bold" style="font-size: 13px;">Local de Realiza&ccedil;&atilde;o</td>
-            </tr>
-            <tr>
-                <td id="locaisParaRealizacao"></td>
-            </tr>
-        </table>
-        
-        <table class="tabela planosDeDivulgacao sumir">
-            <tr>
-                <td class="destacar bold" style="font-size: 13px;">Plano de Divulga&ccedil;&atilde;o</td>
-            </tr>
-            <tr>
-                <td id="planosDeDivulgacao"></td>
-            </tr>
-        </table>
-        
-        <table class="tabela planosDeDistribuicao sumir">
-            <tr>
-                <td class="destacar bold" style="font-size: 13px;">Plano de Distribui&ccedil;&atilde;o</td>
-            </tr>
-            <tr>
-                <td id="planosDeDistribuicao"></td>
-            </tr>
-        </table>
-        
-        <table class="tabela sumir" id="campoAdicionadoPorTipoReadequacao">
-            <tr>
-                <td class="destacar">
-                    <p class="bold" style="font-size: 13px;">Apresente abaixo <span id="txAuxilio"></span> que ir&aacute; substituir a informa&ccedil;&atilde;o atual. <span class="red-text">*</span></p>
-                    <p class="red-text">Aten&ccedil;&atilde;o: O texto apresentado deve estar completo, inclusive com as partes que n&atilde;o ser&atilde;o alteradas, uma vez que as informa&ccedil;&otilde;es apresentadas ir&atilde;o substituir integralmente as aprovadas contidas no SALIC.</p>
-                </td>
-            </tr>
-            <tr>
-                <td id="campoCriadoTipoReadequacao"></td>
-            </tr>
-        </table>
-        
-        
-        <table class="tabela solicitacoesSimples sumir">
-            <tr>
-                <td class="destacar bold" style="font-size: 13px;">Justificativa da Solicita&ccedil;&atilde;o <span class="red-text">*</span></td>
-            </tr>
-            <tr>
-                <td><textarea cols="80" id="descJustificativa" name="descJustificativa" rows="10"></textarea></td>
-            </tr>
-            <tr>
-                <td><span class="red-text">* Campo obrigat&oacute;rio e permite o m&aacute;ximo de 5.000 caracteres</span></td>
-            </tr>
-        </table>
-        
-        <table class="tabela solicitacoesSimples sumir">
-            <tr>
-                <td class="destacar bold" style="font-size: 13px;">Anexo</td>
-            </tr>
-            <tr>
-                <td><input type="file" name="arquivo" class="input_simples"> <span style="margin-left: 10px;" class="red-text">Somente arquivos .pdf</span></td>
-            </tr>
-        </table>
-        
-        <table class="tabela btnIncluir sumir">
-            <tr>
-                <td class="centro">
-                    <input type="button" class="btn_salvar" id="IncluirReadequacao" />
-                </td>
-            </tr>
-        </table>
-        
-        <?php if(count($this->readequacoesCadastradas)>0){ ?>
-        <fieldset>
-            <legend>Readequa&ccedil;&otilde;es cadastradas</legend>
-            <table class="tabela">
-                <tr>
-                    <th>Tipo Readequa&ccedil;&atilde;o</th>
-                    <th>Dt. Solicita&ccedil;&atilde;o</th>
-                    <th>Descri&ccedil;&atilde;o</th>
-                    <th>Justificativa</th>
-                    <th>Arquivo</th>
-                    <th>A&ccedil;&atilde;o</th>
-                </tr>
-                <?php foreach ($this->readequacoesCadastradas as $rc){ ?>
-                <tr>
-                    <td><?php echo $rc->dsReadequacao; ?></td>
-                    <td class="centro"><?php echo Data::tratarDataZend($rc->dtSolicitacao, 'Brasileira', true); ?></td>
-                    <td class="centro">
-                        <?php if(!empty($rc->dsSolicitacao)){ ?>
-                        <img src="<?php echo $this->baseUrl(); ?>/public/img/table_multiple.png" style="cursor: pointer;" class="detalharTextos" texto="<?php echo htmlentities($rc->dsSolicitacao); ?>" />
-                        <?php } else { echo '-'; } ?>
-                    </td>
-                    <td class="centro">
-                        <?php if(!empty($rc->dsJustificativa)){ ?>
-                        <img src="<?php echo $this->baseUrl(); ?>/public/img/table_multiple.png" style="cursor: pointer;" class="detalharTextos" texto="<?php echo htmlentities($rc->dsJustificativa); ?>" />
-                        <?php } else { echo '-'; } ?>
-                    </td>
-                    <?php if(!empty($rc->idArquivo)){ ?>
-                        <td><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'upload', 'action' => 'abrir')); ?>?id=<?php echo $rc->idArquivo; ?>"><?php echo $rc->nmArquivo; ?></a></td>
-                    <?php } else { ?>
-                        <td class="centro">-</td>
-                    <?php } ?>
-                    <td class="centro" style="width: 150px;"><input type="button" class="btn_exclusao" readequacao="<?php echo $rc->idReadequacao; ?>"></td>
-                </tr>
-                <?php } ?>
-            </table>
-        </fieldset>
-        
-        <table class="tabela">
-            <tr>
-                <td class="centro">
-                    <input type="button" class="btn_finalizar" id="btn_finalizar" title="Finalizar" />
-                    <input type="button" class="btn_cancelar" id="btn_cancelar" title="Cancelar" />
-                </td>
-            </tr>
-        </table>
-        <?php } ?>
-    </form>
-    <!-- ========== FIM FORMUL�RIO ========== -->
+                    <?php
+                    gerarNovoBreadCrumb(
+                        [
+                            ['Dados do projeto' => '/default/consultardadosprojeto/index' . '?idPronac=' . Seguranca::encrypt($this->idPronac)],
+                            ['Solicitar Readequa&ccedil;&atilde;o' => '']
+                        ]
+                    );
+                    ?>
+                </div>
+                <div class="col s12 m3 l2 right-align">
+                    <a href="javascript:voltar();" title="P&aacute;gina Anterior" title="P&aacute;gina Anterior"
+                       class="btn small grey lighten-3 grey-text z-depth-0 chat-toggle"><i class="material-icons">arrow_back</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-panel">
+            <div id="conteudo">
+                <form name="formReadequacao" id="formReadequacao"
+                      action="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'incluir-solicitacao-readequacao'), null, true); ?><?php echo '?idPronac=' . Seguranca::encrypt($this->idPronac); ?>"
+                      method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="idReadequacao" name="idReadequacao" value="<?php echo ''; ?>">
+                    <input type="hidden" id="pertenceIn2017" name="pertenceIn2017" value="<?php echo $this->in2017; ?>">
+                    <table class="tabela">
+                        <tr>
+                            <th style="width: 30%">PRONAC</th>
+                            <th>Nome do Projeto</th>
+                        </tr>
+                        <tr class="centro">
+                            <td><?php echo $this->projeto->AnoProjeto . $this->projeto->Sequencial; ?></td>
+                            <td><?php echo $this->projeto->NomeProjeto; ?></td>
+                        </tr>
+                    </table>
+                    <table class="tabela">
+                        <tr>
+                            <td class="destacar bold" style="font-size: 13px;">Tipo de Readequa&ccedil;&atilde;o</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="select_simples comboReadequacoes" style="width: 200px;"
+                                        name="tipoReadequacao" id="tipoReadequacao">
+                                    <option value="0"> - Selecione -</option>
+                                    <?php foreach ($this->TiposReadequacao as $tipos) { ?>
+                                        <?php if ($tipos->idTipoReadequacao != 1 && $tipos->idTipoReadequacao != 2) { //Retirando o Tipo de Readequacao de Remanejamento 20% ?>
+                                            <option
+                                                value="<?php echo $tipos->idTipoReadequacao; ?>"><?php echo $tipos->dsReadequacao; ?></option>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="tabela localRealizacao sumir">
+                        <tr>
+                            <td class="destacar bold" style="font-size: 13px;">Local de Realiza&ccedil;&atilde;o</td>
+                        </tr>
+                        <tr>
+                            <td id="locaisParaRealizacao"></td>
+                        </tr>
+                    </table>
 
-    <?php //MODAL DE AVALIA��O DO ITEM ?>
-    <div id="modalItem" class="sumir">
-        <table class="tabela">
-            <tr>
-                <td class="destacar bold">Produto</td>
-                <td class="destacar bold">Etapa</td>
-                <td class="destacar bold">Item</td>
-                <td class="destacar bold">Vl. Comprovado</td>
-            </tr>
-            <tr>
-                <td id="campoProduto" class="camposModal">&nbsp;</td>
-                <td id="campoEtapa" class="camposModal">&nbsp;</td>
-                <td id="campoItem" class="camposModal">&nbsp;</td>
-                <td class="camposModal green bold direita"><span id="campoValorComprovado">&nbsp;</span></td>
-            </tr>
-        </table>
-        
-        <table class="tabela">
-            <tr>
-                <th colspan="6">Valores Solicitados</th>
-            </tr>
-            <tr class="centro">
-                <td class="destacar bold">Unidade</td>
-                <td class="destacar bold">Qtd</td>
-                <td class="destacar bold">Ocorr&ecirc;ncia</td>
-                <td class="destacar bold">Vl. Unit&aacute;rio</td>
-                <td class="destacar bold">Dias</td>
-                <td class="destacar bold">Total</td>
-                <!--<td class="destacar bold" style="width: 1px;">Reintegrar</td>-->
-            </tr>
-            <tr>
-                <td id="campoUnidadeSolicitado" class="camposModal">&nbsp;</td>
-                <td id="campoQtdSolicitado" class="direita camposModal">&nbsp;</td>
-                <td id="campoOcorrenciaSolicitado" class="direita camposModal">&nbsp;</td>
-                <td id="campoVlUnitarioSolicitado" class="direita camposModal">&nbsp;</td>
-                <td id="campoDiasSolicitado" class="direita camposModal">&nbsp;</td>
-                <td id="campoTotalSolicitado" class="direita camposModal">&nbsp;</td>
-<!--                <td class="centro">
-                    <img idPlanilha="" src="<?php //echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Item" class="reintegrar" id="campoIdPlanilha" style="cursor: pointer">
-                </td>-->
-            </tr>
-        </table>
-        
-        <table class="tabela">
-            <tr>
-                <th colspan="6">Dados para a readequa&ccedil;&atilde;o</th>
-            </tr>
-            <tr class="centro">
-                <td class="destacar bold">Unidade</td>
-                <td class="destacar bold">Qtd</td>
-                <td class="destacar bold">Ocorr&ecirc;ncia</td>
-                <td class="destacar bold">Vl. Unit&aacute;rio</td>
-                <td class="destacar bold">Dias</td>
-                <td class="destacar bold">Total</td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="select_simples w150 modalObrigatorios" name="modalUnidade" id="modalUnidade">
-                        <option value=""> - Selecione - </option>
-                        <?php foreach ($this->Unidade as $unit){ ?>
-                        <option value="<?php echo $unit->idUnidade; ?>"><?php echo $unit->Descricao; ?></option>
-                        <?php } ?>
-                    </select>
-                </td>
-                <td class="centro"><input class="input_simples w50 multiplicarValores modalObrigatorios" id="modalQuantidade" type="text" maxlength="5" name="Quantidade" onkeyup="mascara(this, format_num);"></td>
-                <td class="centro"><input class="input_simples w50 multiplicarValores modalObrigatorios" id="modalOcorrencia" type="text" maxlength="4" name="Ocorrencia" onkeyup="mascara(this, format_num);"></td>
-                <td class="centro"><input class="input_simples w100 multiplicarValores modalValorUnitario modalObrigatorios" id="modalValorUnitario" type="text" maxlength="11" name="ValorUnitario"></td>
-                <td class="centro"><input class="input_simples w50 modalObrigatorios" id="modalDias" type="text" maxlength="4" name="Dias" onkeyup="mascara(this, format_num);"></td>
-                <td id="TotalCalculado" class="direita" style="width: 125px;"></td>
-            </tr>
-            <tr>
-                <td colspan="6" class="destacar bold centro">Justificativa da Readequa&ccedil;&atilde;o <span class="red-text">*</span> <span id="textoErroValores" style="float:right; color: red;"></span></td>
-            </tr>
-            <tr>
-                <td colspan="6" class="centro">
-                    <textarea id="modalJustificativa" class="textarea_simples modalObrigatorios" rows="3" style="width:98%" name="Justificativa"></textarea>
-                </td>
-            </tr>
-        </table>
+                    <table class="tabela planosDeDivulgacao sumir">
+                        <tr>
+                            <td class="destacar bold" style="font-size: 13px;">Plano de Divulga&ccedil;&atilde;o</td>
+                        </tr>
+                        <tr>
+                            <td id="planosDeDivulgacao"></td>
+                        </tr>
+                    </table>
+                    <table class="tabela planosDeDistribuicao sumir">
+                        <tr>
+                            <td class="destacar bold" style="font-size: 13px;">Plano de Distribui&ccedil;&atilde;o</td>
+                        </tr>
+                        <tr>
+                            <td id="planosDeDistribuicao">
+                                <div id="dynamic-component">
+                                    <component
+                                        v-bind:is="currentComponent"
+                                        :id-pronac="idPronac"
+                                    ></component>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="tabela sumir" id="campoAdicionadoPorTipoReadequacao">
+                        <tr>
+                            <td class="destacar">
+                                <p class="bold" style="font-size: 13px;">Apresente abaixo <span id="txAuxilio"></span>
+                                    que ir&aacute; substituir a informa&ccedil;&atilde;o atual. <span
+                                        class="red-text">*</span></p>
+                                <p class="red-text">Aten&ccedil;&atilde;o: O texto apresentado deve estar completo,
+                                    inclusive com as partes que n&atilde;o ser&atilde;o alteradas, uma vez que as
+                                    informa&ccedil;&otilde;es apresentadas ir&atilde;o substituir integralmente as
+                                    aprovadas contidas no SALIC.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="campoCriadoTipoReadequacao"></td>
+                        </tr>
+                    </table>
+                    <table class="tabela solicitacoesSimples sumir">
+                        <tr>
+                            <td class="destacar bold" style="font-size: 13px;">Justificativa da Solicita&ccedil;&atilde;o
+                                <span class="red-text">*</span></td>
+                        </tr>
+                        <tr>
+                            <td><textarea cols="80" id="descJustificativa" name="descJustificativa"
+                                          rows="10"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><span class="red-text">* Campo obrigat&oacute;rio e permite o m&aacute;ximo de 5.000 caracteres</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="tabela solicitacoesSimples sumir">
+                        <tr>
+                            <td class="destacar bold" style="font-size: 13px;">Anexo</td>
+                        </tr>
+                        <tr>
+                            <td><input type="file" name="arquivo" class="input_simples"> <span
+                                    style="margin-left: 10px;" class="red-text">Somente arquivos .pdf</span></td>
+                        </tr>
+                    </table>
+
+                    <table class="tabela btnIncluir sumir">
+                        <tr>
+                            <td class="centro">
+                                <a
+                                    id="IncluirReadequacao"
+                                    class="waves-effect waves-light btn btn-default">
+                                    <i class="material-icons right">send</i>Salvar
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <?php if (count($this->readequacoesCadastradas) > 0) : ?>
+                        <fieldset style="margin: 0">
+                            <legend>Readequa&ccedil;&otilde;es cadastradas</legend>
+                            <table class="tabela">
+                                <tr>
+                                    <th>Tipo Readequa&ccedil;&atilde;o</th>
+                                    <th>Dt. Solicita&ccedil;&atilde;o</th>
+                                    <th>Descri&ccedil;&atilde;o</th>
+                                    <th>Justificativa</th>
+                                    <th>Arquivo</th>
+                                    <th>A&ccedil;&atilde;o</th>
+                                </tr>
+                                <?php foreach ($this->readequacoesCadastradas as $rc) : ?>
+                                    <tr>
+                                        <td><?php echo $rc->dsReadequacao; ?></td>
+                                        <td class="centro"><?php echo Data::tratarDataZend($rc->dtSolicitacao, 'Brasileira', true); ?></td>
+                                        <td class="centro">
+                                            <?php if (!empty($rc->dsSolicitacao)) : ?>
+                                                <img src="<?php echo $this->baseUrl(); ?>/public/img/table_multiple.png"
+                                                     style="cursor: pointer;" class="detalharTextos"
+                                                     texto="<?php echo htmlentities($rc->dsSolicitacao); ?>"/>
+                                            <?php else :
+                                                echo '-';
+                                            endif; ?>
+                                        </td>
+                                        <td class="centro">
+                                            <?php if (!empty($rc->dsJustificativa)) : ?>
+                                                <img src="<?php echo $this->baseUrl(); ?>/public/img/table_multiple.png"
+                                                     style="cursor: pointer;" class="detalharTextos"
+                                                     texto="<?php echo htmlentities($rc->dsJustificativa); ?>"/>
+                                            <?php else :
+                                                echo '-';
+                                            endif; ?>
+                                        </td>
+                                        <?php if (!empty($rc->idArquivo)) : ?>
+                                            <td>
+                                                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'upload', 'action' => 'abrir')); ?>?id=<?php echo $rc->idArquivo; ?>"><?php echo $rc->nmArquivo; ?></a>
+                                            </td>
+                                        <?php else :?>
+                                            <td class="centro">-</td>
+                                        <?php endif; ?>
+                                        <td class="centro" style="width: 150px;">
+                                            <a
+                                                href="javascript:void(0)"
+                                                class="btn small waves-effect waves-light btn-danger btn-excluir"
+                                                title="Excluir readequa&ccedil;&atilde;o"
+                                                readequacao="<?php echo $rc->idReadequacao; ?>"
+                                            >
+                                                <i class="material-icons">delete</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        </fieldset>
+
+                        <div class="center-align padding20">
+                            <button
+                                id="btn_finalizar"
+                                class="waves-effect waves-light btn btn-default">
+                                <i class="material-icons right">send</i>Finalizar
+                            </button>
+                            <a
+                                id="btn_cancelar"
+                                class="waves-effect waves-light btn btn-info white-text">
+                                <i class="material-icons right">cancel</i>Cancelar
+                            </a>
+                        <div>
+                    <?php endif; ?>
+                </form>
+
+                <div id="modalItem" class="sumir">
+                    <table class="tabela">
+                        <tr>
+                            <td class="destacar bold">Produto</td>
+                            <td class="destacar bold">Etapa</td>
+                            <td class="destacar bold">Item</td>
+                            <td class="destacar bold">Vl. Comprovado</td>
+                        </tr>
+                        <tr>
+                            <td id="campoProduto" class="camposModal">&nbsp;</td>
+                            <td id="campoEtapa" class="camposModal">&nbsp;</td>
+                            <td id="campoItem" class="camposModal">&nbsp;</td>
+                            <td class="camposModal green bold direita"><span id="campoValorComprovado">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="tabela">
+                        <tr>
+                            <th colspan="6">Valores Solicitados</th>
+                        </tr>
+                        <tr class="centro">
+                            <td class="destacar bold">Unidade</td>
+                            <td class="destacar bold">Qtd</td>
+                            <td class="destacar bold">Ocorr&ecirc;ncia</td>
+                            <td class="destacar bold">Vl. Unit&aacute;rio</td>
+                            <td class="destacar bold">Dias</td>
+                            <td class="destacar bold">Total</td>
+                        </tr>
+                        <tr>
+                            <td id="campoUnidadeSolicitado" class="camposModal">&nbsp;</td>
+                            <td id="campoQtdSolicitado" class="direita camposModal">&nbsp;</td>
+                            <td id="campoOcorrenciaSolicitado" class="direita camposModal">&nbsp;</td>
+                            <td id="campoVlUnitarioSolicitado" class="direita camposModal">&nbsp;</td>
+                            <td id="campoDiasSolicitado" class="direita camposModal">&nbsp;</td>
+                            <td id="campoTotalSolicitado" class="direita camposModal">&nbsp;</td>
+                        </tr>
+                    </table>
+
+                    <table class="tabela">
+                        <tr>
+                            <th colspan="6">Dados para a readequa&ccedil;&atilde;o</th>
+                        </tr>
+                        <tr class="centro">
+                            <td class="destacar bold">Unidade</td>
+                            <td class="destacar bold">Qtd</td>
+                            <td class="destacar bold">Ocorr&ecirc;ncia</td>
+                            <td class="destacar bold">Vl. Unit&aacute;rio</td>
+                            <td class="destacar bold">Dias</td>
+                            <td class="destacar bold">Total</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="select_simples w150 modalObrigatorios" name="modalUnidade"
+                                        id="modalUnidade">
+                                    <option value=""> - Selecione -</option>
+                                    <?php foreach ($this->Unidade as $unit) { ?>
+                                        <option
+                                            value="<?php echo $unit->idUnidade; ?>"><?php echo $unit->Descricao; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td class="centro"><input class="input_simples w50 multiplicarValores modalObrigatorios"
+                                                      id="modalQuantidade" type="text" maxlength="5" name="Quantidade"
+                                                      onkeyup="mascara(this, format_num);"></td>
+                            <td class="centro"><input class="input_simples w50 multiplicarValores modalObrigatorios"
+                                                      id="modalOcorrencia" type="text" maxlength="4" name="Ocorrencia"
+                                                      onkeyup="mascara(this, format_num);"></td>
+                            <td class="centro"><input
+                                    class="input_simples w100 multiplicarValores modalValorUnitario modalObrigatorios"
+                                    id="modalValorUnitario" type="text" maxlength="11" name="ValorUnitario"></td>
+                            <td class="centro"><input class="input_simples w50 modalObrigatorios" id="modalDias"
+                                                      type="text" maxlength="4" name="Dias"
+                                                      onkeyup="mascara(this, format_num);"></td>
+                            <td id="TotalCalculado" class="direita" style="width: 125px;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="destacar bold centro">Justificativa da Readequa&ccedil;&atilde;o
+                                <span class="red-text">*</span> <span id="textoErroValores"
+                                                                      style="float:right; color: red;"></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="centro">
+                                <textarea id="modalJustificativa" class="textarea_simples modalObrigatorios" rows="3"
+                                          style="width:98%" name="Justificativa"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="modalInclusaoItem" class="sumir">
+                    <table class="tabela">
+                        <tr>
+                            <td class="destacar bold" style="width: 33%">Recursos</td>
+                            <td class="destacar bold" style="width: 33%">UF</td>
+                            <td class="destacar bold" style="width: 33%">Munic&iacute;pio</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="select_simples w200 camposObrigatoriosInclusao" name="newRecursos"
+                                        id="newRecursos">
+                                    <option value=""> - Selecione -</option>
+                                    <?php foreach ($this->Recursos as $rec) { ?>
+                                        <option
+                                            value="<?php echo $rec->idVerificacao; ?>"><?php echo $rec->VerificacaoDescricao; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="select_simples w200 newUF camposObrigatoriosInclusao" name="newUF"
+                                        id="newUF">
+                                    <option value=""> - Selecione -</option>
+                                    <?php foreach ($this->UFs as $ufs) { ?>
+                                        <option value="<?php echo $ufs->id; ?>"><?php echo $ufs->descricao; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="select_simples w200 camposObrigatoriosInclusao" name="newMunicipio"
+                                        id="newMunicipio">
+                                    <option value=""> - Selecione -</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="destacar bold" style="width: 33%">Etapa</td>
+                            <td class="destacar bold" style="width: 33%">Produto</td>
+                            <td class="destacar bold" style="width: 33%">Item</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="select_simples w200 camposObrigatoriosInclusao" name="newEtapa"
+                                        id="newEtapa">
+                                    <option value=""> - Selecione -</option>
+                                    <?php foreach ($this->Etapas as $etapas) { ?>
+                                        <option
+                                            value="<?php echo $etapas->idPlanilhaEtapa; ?>"><?php echo $etapas->Descricao; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="select_simples w200 camposObrigatoriosInclusao" name="newProduto"
+                                        id="newProduto">
+                                    <option value=""> - Selecione -</option>
+                                    <?php foreach ($this->Produtos as $prod) { ?>
+                                        <option
+                                            value="<?php echo $prod->idProduto; ?>"><?php echo $prod->Produto; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="select_simples w200 camposObrigatoriosInclusao" name="newItem"
+                                        id="newItem">
+                                    <option value=""> - Selecione -</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="tabela">
+                        <tr>
+                            <th colspan="6">Dados do Item</th>
+                        </tr>
+                        <tr class="centro">
+                            <td class="destacar bold w150">Unidade</td>
+                            <td class="destacar bold">Qtd</td>
+                            <td class="destacar bold">Ocorr&ecirc;ncia</td>
+                            <td class="destacar bold">Vl. Unit&aacute;rio</td>
+                            <td class="destacar bold">Dias</td>
+                            <td class="destacar bold">Total</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="select_simples w150 camposObrigatoriosInclusao" name="newUnidade"
+                                        id="newUnidade">
+                                    <option value=""> - Selecione -</option>
+                                    <?php foreach ($this->Unidade as $unit) { ?>
+                                        <option
+                                            value="<?php echo $unit->idUnidade; ?>"><?php echo $unit->Descricao; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td class="centro"><input
+                                    class="input_simples w50 newMultiplicarValores camposObrigatoriosInclusao"
+                                    type="text" maxlength="5" name="newQuantidade" id="newQuantidade"
+                                    onkeyup="mascara(this, format_num_float);"></td>
+                            <td class="centro"><input
+                                    class="input_simples w50 newMultiplicarValores camposObrigatoriosInclusao"
+                                    type="text" maxlength="4" name="newOcorrencia" id="newOcorrencia"
+                                    onkeyup="mascara(this, format_num_float);"></td>
+                            <td class="centro"><input
+                                    class="input_simples w100 newMultiplicarValores camposObrigatoriosInclusao"
+                                    type="text" maxlength="11" name="newValorUnitario" id="newValorUnitario"></td>
+                            <td class="centro"><input class="input_simples w50 camposObrigatoriosInclusao" type="text"
+                                                      maxlength="4" name="newDias" id="newDias"
+                                                      onkeyup="mascara(this, format_num);"></td>
+                            <td id="newTotalCalculado" class="direita" style="width: 125px;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="destacar bold centro">Justificativa <span class="red-text">*</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="centro">
+                                <textarea class="textarea_simples camposObrigatoriosInclusao" rows="3" style="width:98%"
+                                          name="newJustificativa" id="newJustificativa"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    <?php //FIM MODAL DE AVALIA��O DO ITEM ?>
-
-    <?php //MODAL DE INCLUS�O DE ITEM ?>
-    <div id="modalInclusaoItem" class="sumir">
-        <table class="tabela">
-            <tr>
-                <td class="destacar bold" style="width: 33%">Recursos</td>
-                <td class="destacar bold" style="width: 33%">UF</td>
-                <td class="destacar bold" style="width: 33%">Munic&iacute;pio</td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="select_simples w200 camposObrigatoriosInclusao" name="newRecursos" id="newRecursos">
-                        <option value=""> - Selecione - </option>
-                        <?php foreach ($this->Recursos as $rec){ ?>
-                        <option value="<?php echo $rec->idVerificacao; ?>"><?php echo $rec->VerificacaoDescricao; ?></option>
-                        <?php } ?>
-                    </select>
-                </td>
-                <td>
-                    <select class="select_simples w200 newUF camposObrigatoriosInclusao" name="newUF" id="newUF">
-                        <option value=""> - Selecione - </option>
-                        <?php foreach ($this->UFs as $ufs){ ?>
-                        <option value="<?php echo $ufs->id; ?>"><?php echo $ufs->descricao; ?></option>
-                        <?php } ?>
-                    </select>
-                </td>
-                <td>
-                    <select class="select_simples w200 camposObrigatoriosInclusao" name="newMunicipio" id="newMunicipio">
-                        <option value=""> - Selecione - </option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="destacar bold" style="width: 33%">Etapa</td>
-                <td class="destacar bold" style="width: 33%">Produto</td>
-                <td class="destacar bold" style="width: 33%">Item</td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="select_simples w200 camposObrigatoriosInclusao" name="newEtapa" id="newEtapa">
-                        <option value=""> - Selecione - </option>
-                        <?php foreach ($this->Etapas as $etapas){ ?>
-                        <option value="<?php echo $etapas->idPlanilhaEtapa; ?>"><?php echo $etapas->Descricao; ?></option>
-                        <?php } ?>
-                    </select>
-                </td>
-                <td>
-                    <select class="select_simples w200 camposObrigatoriosInclusao" name="newProduto" id="newProduto">
-                        <option value=""> - Selecione - </option>
-                        <?php foreach ($this->Produtos as $prod){ ?>
-                        <option value="<?php echo $prod->idProduto; ?>"><?php echo $prod->Produto; ?></option>
-                        <?php } ?>
-                    </select>
-                </td>
-                <td>
-                    <select class="select_simples w200 camposObrigatoriosInclusao" name="newItem" id="newItem">
-                        <option value=""> - Selecione - </option>
-                    </select>
-                </td>
-            </tr>
-        </table>
-
-        <table class="tabela">
-            <tr>
-                <th colspan="6">Dados do Item</th>
-            </tr>
-            <tr class="centro">
-                <td class="destacar bold w150">Unidade</td>
-                <td class="destacar bold">Qtd</td>
-                <td class="destacar bold">Ocorr&ecirc;ncia</td>
-                <td class="destacar bold">Vl. Unit&aacute;rio</td>
-                <td class="destacar bold">Dias</td>
-                <td class="destacar bold">Total</td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="select_simples w150 camposObrigatoriosInclusao" name="newUnidade" id="newUnidade">
-                        <option value=""> - Selecione - </option>
-                        <?php foreach ($this->Unidade as $unit){ ?>
-                        <option value="<?php echo $unit->idUnidade; ?>"><?php echo $unit->Descricao; ?></option>
-                        <?php } ?>
-                    </select>
-                </td>
-                <td class="centro"><input class="input_simples w50 newMultiplicarValores camposObrigatoriosInclusao" type="text" maxlength="5" name="newQuantidade" id="newQuantidade" onkeyup="mascara(this, format_num_float);"></td>
-                <td class="centro"><input class="input_simples w50 newMultiplicarValores camposObrigatoriosInclusao" type="text" maxlength="4" name="newOcorrencia" id="newOcorrencia" onkeyup="mascara(this, format_num_float);"></td>
-                <td class="centro"><input class="input_simples w100 newMultiplicarValores camposObrigatoriosInclusao" type="text" maxlength="11" name="newValorUnitario" id="newValorUnitario"></td>
-                <td class="centro"><input class="input_simples w50 camposObrigatoriosInclusao" type="text" maxlength="4" name="newDias" id="newDias" onkeyup="mascara(this, format_num);"></td>
-                <td id="newTotalCalculado" class="direita" style="width: 125px;"></td>
-            </tr>
-            <tr>
-                <td colspan="6" class="destacar bold centro">Justificativa <span class="red-text">*</span></td>
-            </tr>
-            <tr>
-                <td colspan="6" class="centro">
-                    <textarea class="textarea_simples camposObrigatoriosInclusao" rows="3" style="width:98%" name="newJustificativa" id="newJustificativa"></textarea>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <?php //MODAL DE INCLUS�O DE ITEM ?>
-
 </div>
-<!-- ========== FIM CONTE�DO ========== -->
 
-<!-- ========== IN�CIO RODAP� DO CONTE�DO ========== -->
-<div id="rodapeConteudo"><span></span></div>
-<!-- ========== FIM RODAP� DO CONTE�DO ========== -->
-<br clear="all" />
+
+<script src="/public/js/vue.js" type="text/javascript"></script>
+<script src="/public/scripts/plugins/moment-with-locales.js"></script>
+<script src="/public/scripts/plugins/numeral.min.js" type="text/javascript"></script>
+
+<script src="/public/js/componentes/salic-table-easy.js" type="text/javascript"></script>
+<script src="/public/js/componentes/salic-texto-simples.vue.js" type="text/javascript"></script>
+
+<script src="/public/scripts/plugins/numeral.js" type="text/javascript"></script>
+<script src="/public/scripts/mixins/utils.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/components/input-money.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/components/select-percent.vue.js" type="text/javascript"></script>
+
+<script src="/public/scripts/plano-distribuicao/plano-distribuicao-listagem.vue.js" type="text/javascript"></script>
+
+<script src="/public/scripts/readequacao/readequacao-plano-distribuicao.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/readequacao/readequacao-plano-distribuicao-detalhamentos.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/plano-distribuicao/plano-distribuicao-detalhamentos-formulario.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/plano-distribuicao/plano-distribuicao-detalhamentos-listagem.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/plano-distribuicao/plano-distribuicao-visualizar-produto-cabecalho.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/plano-distribuicao/plano-distribuicao-detalhamentos-consolidacao.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/plano-distribuicao/plano-distribuicao-visualizar-produto-resumido.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/proposta/visualizar/salic-proposta-detalhamento-plano-distribuicao.vue.js" type="text/javascript"></script>
+
+<script>
+    new Vue({
+        el: '#dynamic-component',
+        data: {
+            currentComponent: '',
+            idPronac: <?= $this->projeto->IdPRONAC;?>,
+        },
+        mounted: function() {
+            this.carregarComponenteSelecionado();
+        },
+        methods: {
+            carregarComponenteSelecionado: function() {
+                let self = this;
+                let componente = false;
+                $('.comboReadequacoes').change(function(){
+                    let componente = '';
+                    let tipoReadequacao = $(this).val();
+                    switch(tipoReadequacao) {
+                        case "11": // plano distribuicao
+                            if (self.projetoPertenceIN2017()) {
+                                componente = "readequacao-plano-distribuicao";
+                            } else {
+                                self.carregarPlanoDistribuicaoAntigaIN();
+                            }
+                            break;
+                        default:
+                            componente = '';
+                    }
+                    self.currentComponent = componente;
+                });
+            },
+            projetoPertenceIN2017: function() {
+                return $("#pertenceIn2017").val();
+            },
+            carregarPlanoDistribuicaoAntigaIN: function() {
+                atualizarDadosPlanosDeDistribuicao();
+            }
+        }
+    })
+</script>
+
+<style>
+    #conteudo table tr.linha-excluida {
+        text-decoration: line-through;
+    }
+
+    #conteudo table tr.linha-excluida td {
+        background-color: #dcdcdc;
+        color: #777
+    }
+
+    #conteudo table tr.linha-atualizada td,
+    #conteudo table tr.linha-incluida td {
+        background-color: #d0e8d6
+    }
+
+</style>

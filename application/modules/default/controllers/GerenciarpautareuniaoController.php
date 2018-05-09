@@ -1410,7 +1410,7 @@ class GerenciarPautaReuniaoController extends MinC_Controller_Action_Abstract
             $dados = $Readequacao_Model_tbReadequacao->buscarDadosReadequacoes(array('idReadequacao = ?'=>$dadosReadequacao->idReadequacao))->current();
             $this->view->dados = $dados;
 
-            $Readequacao_Model_tbReadequacaoXParecer = new tbReadequacaoXParecer();
+            $Readequacao_Model_tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
             $pareceres = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao =?'=>$dados->idReadequacao), array('1'));
             $this->view->Pareceres = $pareceres;
         } else {

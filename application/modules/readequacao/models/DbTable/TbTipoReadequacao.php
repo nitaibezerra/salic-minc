@@ -1,13 +1,10 @@
 <?php
 /**
  * DAO tbTipoReadequacao
- * @author jeffersonassilva@gmail.com - XTI
  * @since 28/02/2014
- * @version 1.0
- * @link http://www.cultura.gov.br
  */
 
-class tbTipoReadequacao extends MinC_Db_Table_Abstract
+class Readequacao_Model_DbTable_TbTipoReadequacao extends MinC_Db_Table_Abstract
 {
     protected $_banco  = "SAC";
     protected $_schema = "SAC";
