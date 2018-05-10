@@ -280,7 +280,7 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
                 'id_orgao_superior' => $orgaoSuperior,
                 'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil'],
                 'id_usuario_avaliador' => $dadosSugestaoEnquadramento['id_usuario_avaliador']
-            ]
+            ] 
         );
 
         if ($distribuicaoAvaliacaoProposta && $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop']) {
@@ -298,10 +298,27 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
                 'id_sugestao_enquadramento = ?' => $dadosBuscaPorSugestao['id_sugestao_enquadramento']
             ]);
         }
+
+        /**
+         * @todo Mover bloco abaixo para o método "Cadastrar Recurso de proposta"
+         */
+        $planoDistribuicao = (new Proposta_Model_DbTable_PlanoDistribuicaoProduto())->buscar(
+            [
+                'stPrincipal = ?' => 1, 
+                'idProjeto = ?' => $dadosSugestaoEnquadramento['id_preprojeto']
+            ]
+        );
+        $id_area_proponente = $planoDistribuicao[0]['Area'];
+        $id_segmento_proponente = $planoDistribuicao[0]['Segmento'];
+
         if ($isCadastrarRecurso 
             && $distribuicaoAvaliacaoProposta
             && $this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])
             && $this->isPropostaDistribuidaParaCoordenadorGeral($distribuicaoAvaliacaoProposta['id_perfil'])
+            (
+                $dadosSugestaoEnquadramento['id_area'] != $id_area_proponente
+                || $dadosSugestaoEnquadramento['id_segmento'] != $id_segmento_proponente
+            )
             ) {
             $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
             $tbRecursoPropostaDbTable->cadastrarRecurso($dadosSugestaoEnquadramento['id_preprojeto']);
