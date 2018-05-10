@@ -262,7 +262,12 @@
                                     <i class="material-icons right ">transform</i> Transformar em Projeto
                                 </button>
                                 <?php if (Autenticacao_Model_Grupos::COMPONENTE_COMISSAO != $this->codGrupo) { ?>
-                                    <a class="btn black white-text" title="Arquivar Proposta" alt="Arquivar Proposta"
+                                    <a class="btn black white-text" 
+                                    title="Arquivar Proposta" 
+                                    <?php if ($this->isPermitidoTransformarPropostaEmProjeto === false) { ?>
+                                        disabled="disabled"
+                                    <?php } ?>
+                                    alt="Arquivar Proposta"
                                        href="/admissibilidade/admissibilidade/confirmararquivarproposta?idPreProjeto=<?php echo $this->itensGeral[0]->idPreProjeto ?>">
                                         <i class="material-icons right">archive</i>Arquivar
                                     </a>
