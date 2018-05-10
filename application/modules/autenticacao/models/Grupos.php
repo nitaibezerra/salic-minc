@@ -85,7 +85,6 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
                 break;
             case Autenticacao_Model_Grupos::COMPONENTE_COMISSAO:
                 $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE;
-                $perfis[] = Autenticacao_Model_Grupos::COMPONENTE_COMISSAO;
                 break;
             default:
                 break;

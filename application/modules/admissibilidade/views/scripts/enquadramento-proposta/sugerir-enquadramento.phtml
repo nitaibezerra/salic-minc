@@ -40,8 +40,19 @@
                     ?>
                     <div class="row">
                         <div class="input-field col s12 m6">
-                            <select id="id_area"
+                            <select 
+                                    id="id_area"
+                                    <?php 
+                                    if($this->id_perfil_usuario == Autenticacao_Model_Grupos::COMPONENTE_COMISSAO) {
+                                        ?>
+                                    disabled="disabled"
+                                    <?php 
+                                    } else {
+                                        ?>
                                     name="id_area"
+                                    <?php
+                                    }
+                                    ?>
                                     style="width: 160px;">
                                 <option value=""> - Selecione -</option>
                                 <?php foreach ($this->comboareasculturais as $key => $value) { ?>
@@ -51,6 +62,13 @@
                             <label>&Aacute;rea Cultural</label>
                             &nbsp; <span id="erroAreaCultural" class="spanError"></span>
                         </div>
+                            <?php 
+                            if($this->id_perfil_usuario == Autenticacao_Model_Grupos::COMPONENTE_COMISSAO) {
+                                ?>
+                            <input type="hidden" name="id_area" value="<?php echo $this->ultimaSugestaoPerfil['id_area'] ?>" />
+                            <?php 
+                            }
+                            ?>
                         <div class="input-field col s12 m6">
                             <select name="id_segmento" id="id_segmento">
                                 <option value=""> - Selecione uma &Aacute;rea Cultural -</option>
