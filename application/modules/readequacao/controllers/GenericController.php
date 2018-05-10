@@ -9,6 +9,7 @@ abstract class Readequacao_GenericController extends MinC_Controller_Action_Abst
 
     protected $idPronac;
     protected $projeto;
+    protected $in2017;
 
     public function init()
     {
@@ -64,7 +65,9 @@ abstract class Readequacao_GenericController extends MinC_Controller_Action_Abst
             $this->projeto = (new Projeto_Model_TbProjetos($tbProjetos->findBy(['idPronac' => $idPronac])));
 
             $fnIN2017 = new fnVerificarProjetoAprovadoIN2017();
-            $this->view->in2017 = $fnIN2017->verificar($idPronac);
+
+            $this->in2017 = $fnIN2017->verificar($idPronac);
+            $this->view->in2017 = $this->in2017;
         }
     }
 }

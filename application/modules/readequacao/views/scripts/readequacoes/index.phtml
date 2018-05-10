@@ -1,4 +1,4 @@
-<script type="text/javascript">
+]<script type="text/javascript">
     $(document).ready(function(){
         $('.comboReadequacoes').change(function(){
             var valor = $(this).val(),
@@ -1261,13 +1261,12 @@
         methods: {
             carregarComponenteSelecionado: function() {
                 let self = this;
-                let componente = false;
                 $('.comboReadequacoes').change(function(){
                     let componente = '';
                     let tipoReadequacao = $(this).val();
                     switch(tipoReadequacao) {
                         case "11": // plano distribuicao
-                            if (self.projetoPertenceIN2017()) {
+                            if (self.projetoPertenceIN2017() == 1) {
                                 componente = "readequacao-plano-distribuicao";
                             } else {
                                 self.carregarPlanoDistribuicaoAntigaIN();

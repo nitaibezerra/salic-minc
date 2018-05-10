@@ -77,6 +77,10 @@ x - Menu lateral (legado)
     padding-top: 5px;
 }
 
+#qm0.qmmc #pronacProjeto {
+    font-size: 12px;
+}
+
 .container-fluid #qm0.qmmc {
     left: -42px;
     top: -31px;

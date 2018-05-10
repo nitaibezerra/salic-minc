@@ -328,7 +328,7 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
             $mdlDetalhaReadequacao = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao();
             $detalhamentoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
             $dados = $detalhamentoMapper->alterarSituacaoDetalhamento(
-                $dados['idDetalhaPlanoDistribuicao'],
+                $dados,
                 $mdlDetalhaReadequacao::TP_SOLICITACAO_NAO_ALTERADO,
                 $this->projeto
             );
