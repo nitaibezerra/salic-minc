@@ -893,13 +893,13 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             parent::message("PRONAC &eacute; obrigat&oacute;rio", "principalproponente", "ALERT");
         }
 
+        if (strlen($idPronac) > 7) {
+            $idPronac = Seguranca::dencrypt($idPronac);
+        }
+
         $descJustificativa = $this->_request->getParam('descJustificativa');
         if (empty($descJustificativa)) {
             parent::message('Justificativa &eacute; obrigat&oacute;ria!', "readequacao/readequacoes/index?idPronac=".Seguranca::encrypt($idPronac), "ALERT");
-        }
-
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
         }
 
         $idReadequacao = filter_var($this->_request->getParam("idReadequacao"), FILTER_SANITIZE_NUMBER_INT);

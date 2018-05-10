@@ -1,6 +1,6 @@
 Vue.component('plano-distribuicao-detalhamentos-visualizar', {
     template: `
-    <div  class="detalhamento-plano-distribuicao">
+    <div  class="plano-distribuicao-detalhamentos-visualizar">
         <ul class="collapsible" data-collapsible="expandable">
             <li v-for="( detalhamento, index ) in detalhamentos">
                 <div class="collapsible-header">
