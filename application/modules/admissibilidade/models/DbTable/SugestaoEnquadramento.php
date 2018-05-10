@@ -300,7 +300,9 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         }
         if ($isCadastrarRecurso 
             && $distribuicaoAvaliacaoProposta
-            && $this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])) {
+            && $this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])
+            && $this->isPropostaDistribuidaParaCoordenadorGeral($distribuicaoAvaliacaoProposta['id_perfil'])
+            ) {
             $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
             $tbRecursoPropostaDbTable->cadastrarRecurso($dadosSugestaoEnquadramento['id_preprojeto']);
         }
