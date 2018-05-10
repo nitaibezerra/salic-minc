@@ -300,11 +300,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $recursoEnquadramento = $sugestaoEnquadramentoDbTable->obterRecursoEnquadramentoProposta();
 
             $this->view->isRecursoAvaliado = false;
-            if (is_array($this->view->ultimaSugestaoEnquadramento)
-                && $this->isPropostaEnquadradoArtigo18($this->view->ultimaSugestaoEnquadramento)) {
-                $this->view->isRecursoAvaliado = true;
-            }
-
             
             $this->view->isRecursoDesistidoDePrazoRecursal = false;
             if ($recursoEnquadramento) {
@@ -323,6 +318,8 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             }
 
             $this->view->isPermitidoTransformarPropostaEmProjeto = $this->_isPermitidoTransformarPropostaEmProjeto(
+                $distribuicaoAvaliacaoPropostaAtual,
+                $this->view->ultimaSugestaoEnquadramento,
                 $recursoEnquadramento,
                 $this->codGrupo,
                 $this->view->isRecursoAvaliado
@@ -352,6 +349,8 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     }
 
     private function _isPermitidoTransformarPropostaEmProjeto(
+        $distribuicaoAvaliacaoPropostaAtual,
+        $ultimaSugestaoEnquadramento,
         $recursoEnquadramento,
         $id_perfil,
         $isRecursoAvaliado
@@ -375,6 +374,29 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         ) {
             return true;
         }
+
+        $planoDistribuicao = (new Proposta_Model_DbTable_PlanoDistribuicaoProduto())->buscar(
+            [
+                'stPrincipal = ?' => 1, 
+                'idProjeto = ?' => $ultimaSugestaoEnquadramento['id_preprojeto']
+            ]
+        );
+        $id_area_proponente = $planoDistribuicao[0]['Area'];
+        $id_segmento_proponente = $planoDistribuicao[0]['Segmento'];
+        $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+
+        $isEnquadramentoProponenteIgualEndramentoAvaliador = $sugestaoEnquadramentoDbTable->isEnquadramentoProponenteIgualEndramentoAvaliador(
+            $ultimaSugestaoEnquadramento, 
+            $id_area_proponente, 
+            $id_segmento_proponente
+        );
+
+        if($isEnquadramentoProponenteIgualEndramentoAvaliador 
+            && count($distribuicaoAvaliacaoPropostaAtual) > 0
+            && $distribuicaoAvaliacaoPropostaAtual['id_perfil'] != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE) {
+            return true;
+        }
+        
         return false;
     }
 

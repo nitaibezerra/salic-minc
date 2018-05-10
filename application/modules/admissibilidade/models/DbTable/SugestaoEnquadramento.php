@@ -315,15 +315,28 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
             && $distribuicaoAvaliacaoProposta
             && $this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])
             && $this->isPropostaDistribuidaParaCoordenadorGeral($distribuicaoAvaliacaoProposta['id_perfil'])
-            && (
-                $dadosSugestaoEnquadramento['id_area'] != $id_area_proponente
-                || $dadosSugestaoEnquadramento['id_segmento'] != $id_segmento_proponente
+            && $this->isEnquadramentoProponenteIgualEndramentoAvaliador(
+                $dadosSugestaoEnquadramento, 
+                $id_area_proponente, 
+                $id_segmento_proponente
             )
             ) {
             $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
             $tbRecursoPropostaDbTable->cadastrarRecurso($dadosSugestaoEnquadramento['id_preprojeto']);
         }
 
+    }
+
+    public function isEnquadramentoProponenteIgualEndramentoAvaliador(
+        array $dadosSugestaoEnquadramento, 
+        $id_area_proponente, 
+        $id_segmento_proponente
+    ) 
+    {
+        return (
+            $dadosSugestaoEnquadramento['id_area'] != $id_area_proponente
+            || $dadosSugestaoEnquadramento['id_segmento'] != $id_segmento_proponente
+        );
     }
 
     private function isPermitidoCadastrarRecurso($id_perfil)
