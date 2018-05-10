@@ -1924,6 +1924,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $totalPag = (int)(($total % $this->intTamPag == 0)?($total/$this->intTamPag):(($total/$this->intTamPag)+1));
         $tamanho = ($fim > $total) ? $total - $inicio : $this->intTamPag;
         $busca = $Projetos->buscarPainelTecPrestacaoDeContas($where, $order, $tamanho, $inicio, false);
+        /* var_dump($busca);die; */
 
         $paginacao = array(
             "pag"=>$pag,

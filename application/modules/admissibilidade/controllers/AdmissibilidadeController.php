@@ -345,6 +345,8 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             && $distribuicaoAvaliacaoPropostaAtual['id_perfil'] != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
             && $isPropostaEnquadrada) {
             return true;
+        } else if($isPropostaEnquadrada) {
+            return true;
         }
         return false;
     }

@@ -78,39 +78,6 @@ class Zend_View_Helper_PrazoRespostaDiligencia
     public function prazoPadrao($idTipoDiligencia = null, $stProrrogacao = null)
     {
         return 40;
-//            switch ($idTipoDiligencia)
-//            {
-//                case(124): //Diligência do parecerista
-//                {
-//                    if($stProrrogacao == 'N')
-//                        return 20;
-//                    else
-//                        return 40;
-//                }
-//                case(126): //Diligência do Componente da comissão (CNIC)
-//                {
-//                    if($stProrrogacao == 'N')
-//                        return 20;
-//                    else
-//                        return 40;
-//                }
-//                case(181): //Diligência no Checklist (Analise Inicial)
-//                {
-//                    if($stProrrogacao == 'N')
-//                        return 20;
-//                    else
-//                        return 40;
-//                }
-//                case(182): //Diligência no Checklist (Readequacao)
-//                {
-//                    if($stProrrogacao == 'N')
-//                        return 20;
-//                    else
-//                        return 40;
-//                }
-//                default: //Diligência em outros modulos
-//                    return 30;
-//            }
     }
 
     //retorna o prazo que o proponente tem para responder a diligencia
@@ -140,7 +107,8 @@ class Zend_View_Helper_PrazoRespostaDiligencia
         $arrIcones = array();
 
         //diligenciado
-        if ($rsDiligencia->DtSolicitacao && $rsDiligencia->DtResposta == null && $prazoResposta <= $prazoPadrao && $rsDiligencia->stEnviado == 'S') {
+        if ($rsDiligencia->DtSolicitacao && $rsDiligencia->DtResposta == null 
+            && $prazoResposta <= $prazoPadrao && $rsDiligencia->stEnviado == 'S') {
             $arrIcones['icone'] = "notice.png";
             $arrIcones['title'] = "Diligenciado";
         }
