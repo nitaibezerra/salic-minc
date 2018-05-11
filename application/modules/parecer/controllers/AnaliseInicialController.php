@@ -93,6 +93,10 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
         $situacao = $this->_request->getParam('situacao');
 
+        if(empty($idAgenteParecerista)) {
+            parent::message("Agente n&atilde;o cadastrado", "/default/principal/index", 'ERROR');
+        }
+
         $projeto = new Projetos();
         $resp = $projeto->buscaProjetosProdutosParaAnalise(
             array(
