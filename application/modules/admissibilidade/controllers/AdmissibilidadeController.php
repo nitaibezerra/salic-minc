@@ -378,18 +378,21 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $planoDistribuicao = (new Proposta_Model_DbTable_PlanoDistribuicaoProduto())->buscar(
             [
                 'stPrincipal = ?' => 1, 
-                'idProjeto = ?' => $ultimaSugestaoEnquadramento['id_preprojeto']
+                'idProjeto = ?' => $this->idPreProjeto
             ]
         );
         $id_area_proponente = $planoDistribuicao[0]['Area'];
         $id_segmento_proponente = $planoDistribuicao[0]['Segmento'];
         $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-
-        $isEnquadramentoProponenteIgualEndramentoAvaliador = $sugestaoEnquadramentoDbTable->isEnquadramentoProponenteIgualEndramentoAvaliador(
-            $ultimaSugestaoEnquadramento, 
-            $id_area_proponente, 
-            $id_segmento_proponente
-        );
+        
+        $isEnquadramentoProponenteIgualEndramentoAvaliador = false;
+        if(is_array($ultimaSugestaoEnquadramento) && count($ultimaSugestaoEnquadramento) > 0) {
+            $isEnquadramentoProponenteIgualEndramentoAvaliador = $sugestaoEnquadramentoDbTable->isEnquadramentoProponenteIgualEndramentoAvaliador(
+                $ultimaSugestaoEnquadramento, 
+                $id_area_proponente, 
+                $id_segmento_proponente
+            );
+        }
 
         if($isEnquadramentoProponenteIgualEndramentoAvaliador 
             && count($distribuicaoAvaliacaoPropostaAtual) > 0

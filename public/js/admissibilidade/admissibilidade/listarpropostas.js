@@ -139,9 +139,10 @@ function obterColunasListagem () {
         data: null,
         render: function (data, type, row) {
             console.log(data.tipo_recurso);
-            if(data.tipo_recurso && data.tipo_recurso != "-") {
+            if(data.tipo_recurso != null && data.tipo_recurso != "-") {
                 return '<i class="material-icons">done</i>';
             }
+            return '';
         }
     })
     colunas.push({
