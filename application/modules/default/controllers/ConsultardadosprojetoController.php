@@ -65,7 +65,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
             $this->view->usuarioInterno = true;
 
             //Recupera todos os grupos do Usuario
-            $Usuario = new Autenticacao_Model_Usuario(); // objeto usuario
+            $Usuario = new Autenticacao_Model_DbTable_Usuario(); // objeto usuario
             $grupos = $Usuario->buscarUnidades($auth->getIdentity()->usu_codigo, 21);
             foreach ($grupos as $grupo) {
                 $PermissoesGrupo[] = $grupo->gru_codigo;

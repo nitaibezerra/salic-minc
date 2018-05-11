@@ -40,7 +40,7 @@ class Autenticacao_PerfilController extends MinC_Controller_Action_Abstract
             parent::message("Seu perfil foi alterado no sistema. Voc&ecirc; ter&aacute; acesso a outras funcionalidades!", "principalproponente", "INFO");
         } else {
             //Reescreve a sessao com o novo orgao superior
-            $tblUsuario = new Autenticacao_Model_Usuario();
+            $tblUsuario = new Autenticacao_Model_DbTable_Usuario();
             $codOrgaoMaxSuperior = $tblUsuario->recuperarOrgaoMaxSuperior($codOrgao);
             $_SESSION['Zend_Auth']['storage']->usu_org_max_superior = $codOrgaoMaxSuperior;
 

@@ -107,8 +107,10 @@
                             <input type='hidden' name='idpronac' id='idpronac' value='<?php echo $this->idpronac; ?>'/>
 
                             <?php if ($this->idComprovantePagamento): ?>
+                                <!--input type='hidden' name='paginaRedirecionar' id='paginaRedirecionar'
+                                       value='comprovacaopagamento'/-->
                                 <input type='hidden' name='paginaRedirecionar' id='paginaRedirecionar'
-                                       value='comprovacaopagamento'/>
+                                       value='gerenciar'/>
                             <?php endif; ?>
                             <input type='hidden' name='valorAprovado' id='valorAprovado'
                                    value='<?php echo $this->itemPlanilhaAprovacao->valorAprovado; ?>'/>
@@ -143,7 +145,7 @@
                     <div class="row">
                         <div class="col s12">
                             <?php if (!$this->vrSituacao) : ?>
-                                <?php echo $this->partial('partials/tabelaItens.phtml', 'prestacao-contas', $this)?>
+                                <?php echo $this->partial('partials/tabelaItens.phtml', 'prestacao-contas', $this) ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -298,9 +300,11 @@
                                             </div>
                                             <div class="row">
                                                 <div class="input-field col s3">
+                                                    <input type="hidden" name="vlComprovadoAntigo" size="10" id="vlComprovadoAntigo"
+                                                           value="<?php echo $this->vlComprovacao; ?>"/>
                                                     <input type="text" name="vlComprovado" size="10" id="vlComprovado"
                                                            value="<?php echo $this->vlComprovacao; ?>"/>
-                                                    <label>Valor do Item <span style='color:red'>*</span></label>
+                                                    <label>Valor do Item <?php echo $this->vlComprovacao ? '(' . $this->vlComprovacao . ')' : ''; ?><span style='color:red'>*</span></label>
                                                 </div>
                                                 <div class="file-field input-field col s4">
                                                     <!-- input type="file" name="arquivo" id="arquivo" value=""/>
@@ -848,9 +852,10 @@
             if (isInvoice()) {
                 msg = validarParametrosDeComprovacaoDePagamentoInvoice();
             } else {
+                console.log('invoice');
                 msg = validarParametrosDeComprovacaoDePagamento();
             }
-
+            valorComprovado = 0;
             if (isInvoice()) {
                 valorComprovado = $('#vlComprovadoInternacional').val();
             } else {
@@ -860,14 +865,18 @@
             var valorItem = parseFloat(valorComprovado.replace(".", "").replace(".", "").replace(",", "."));
             var valorAprovado = parseFloat($("#valorAprovado").val());
             var valorComprovado = parseFloat($("#totalComprovado").val());
+            var valorComprovadoAntigo = parseFloat($('#vlComprovadoAntigo').val());
+            var valorAtualComprovado = (valorItem + valorComprovado).toFixed(2) - valorComprovadoAntigo ;
+            console.log('total:', valorItem + valorComprovado);
 
-            if (
-                (!$("#idComprovantePagamento").val() && (valorComprovado && (valorItem + valorComprovado).toFixed(2) > valorAprovado))
-                ||
-                ($("#idComprovantePagamento").val() && (valorComprovado && valorItem > valorAprovado))
-            ) {
+            if (!$("#idComprovantePagamento").val()) {
+                msg += 'Sem Valor comprovado.<br />';
+            } else if (valorAtualComprovado > valorAprovado) {
+                msg += 'O valor comprovado total com esse item ('+ valorAtualComprovado +') maior que o valor aprovado('+valorAprovado+') passando em: ' + (valorAtualComprovado-valorAprovado).toFixed(2) + '<br />';
+            } else if (valorItem > valorAprovado) {
                 msg += 'Valor comprovado maior que o valor aprovado.<br />';
             }
+
             if ('' != msg) {
                 $("#msgAlerta").dialog("destroy");
                 $("#msgAlerta").html('<center><p>' + msg + '</p></center>');

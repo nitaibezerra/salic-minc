@@ -2367,6 +2367,11 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             $select->where('idPlanilhaItens = ?', $idPlanilhaItem);
         }
 
+        if ($codigoProduto || ($codigoProduto == 0 && !is_null($codigoProduto) )) {
+            $select->where('cdProduto = ?', $codigoProduto);
+        }
+
+
         $select->order('tpCusto desc');
         $select->order('Produto');
         $select->order('cdEtapa');
@@ -2488,8 +2493,14 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    public function vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idpronac, $idPlanilhaItem, $stItemAvaliado = null)
-    {
+    public function vwComprovacaoFinanceiraProjetoPorItemOrcamentario
+    (
+        $idpronac, 
+        $idPlanilhaItem = null , 
+        $stItemAvaliado = null,
+        $codigoProduto = null,
+        $idComprovantePagamento = null
+    ) {
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
@@ -2508,8 +2519,20 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             $select->where('stItemAvaliado = ?', $stItemAvaliado);
         }
 
+        if ($codigoProduto || ($codigoProduto == 0&& !is_null($codigoProduto))) {
+            $select->where('cdProduto = ?', $codigoProduto);
+        }
+
+        if ($idComprovantePagamento) {
+            $select->where('idComprovantePagamento = ?', $idComprovantePagamento);
+        }
+
+        if ($idPlanilhaItem) {
+            $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
+        }
+
         $select->where('IdPRONAC = ?', $idpronac);
-        $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
+        /* echo $select;die; */
 
         return $this->fetchAll($select);
     }

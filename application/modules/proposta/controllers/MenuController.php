@@ -14,7 +14,7 @@ class Proposta_MenuController extends Proposta_GenericController
 
     public function menuAction()
     {
-        $this->view->arrMenuProponente = self::gerarArrayMenu($this->idPreProjeto);
+        $this->view->arrMenuProponente = $this->gerarArrayMenu($this->idPreProjeto);
 
     }
 
@@ -238,8 +238,24 @@ class Proposta_MenuController extends Proposta_GenericController
             'grupo' => array()
         );
 
+        if(count($this->view->recursoEnquadramentoVisaoProponente) > 0 ) {
+            $arrMenuProponente['enquadramento'] = [
+                'id' => 'menu_enquadramento',
+                'label' => 'Enquadramento',
+                'title' => 'Recurso de Enquadramento',
+                'icon' => 'build',
+                'menuClass' => ' light-green lighten-4',
+                'link' =>
+                    [
+                        'module' => 'recurso',
+                        'controller' => 'recurso-proposta',
+                        'action' => 'visao-proponente',
+                        'idPreProjeto' => $idPreProjeto
+                    ],
+                'grupo' => []
+            ];
+        }
         if ($this->isEditavel) {
-
             if (!$this->isEditarProjeto) {
 
                 $arrMenuProponente['excluirproposta'] = array(

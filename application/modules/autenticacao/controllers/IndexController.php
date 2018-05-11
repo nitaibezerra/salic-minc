@@ -47,7 +47,7 @@ class Autenticacao_IndexController extends MinC_Controller_Action_Abstract
             } elseif (strlen($username) == 14 && !Validacao::validarCNPJ($username)) {
                 throw new Exception("O CPF informado &eacute; inv&aacute;lido!");
             } else {
-                $Usuario = new Autenticacao_Model_Usuario();
+                $Usuario = new Autenticacao_Model_DbTable_Usuario();
                 $buscar = $Usuario->login($username, $password);
                 if ($buscar) {
                     $auth = array_change_key_case((array)Zend_Auth::getInstance()->getIdentity());
@@ -354,7 +354,7 @@ class Autenticacao_IndexController extends MinC_Controller_Action_Abstract
 
         /* ========== INICIO ID DO USUARIO LOGADO ========== */
         $auth = (array)Zend_Auth::getInstance()->getIdentity();
-        $Usuario = new Autenticacao_Model_Usuario();
+        $Usuario = new Autenticacao_Model_DbTable_Usuario();
 
         // verifica se o usuario logado e agente
         $idUsuario = $Usuario->getIdUsuario(null, $auth['Cpf']);
@@ -409,7 +409,7 @@ class Autenticacao_IndexController extends MinC_Controller_Action_Abstract
             }
 
             // busca a senha do banco TABELAS
-            $mdlUsuario = new Autenticacao_Model_Usuario();
+            $mdlUsuario = new Autenticacao_Model_DbTable_Usuario();
 
             $buscarCPF = $mdlUsuario->findBy(array('usu_identificacao' => $cpf));
 
@@ -483,7 +483,7 @@ class Autenticacao_IndexController extends MinC_Controller_Action_Abstract
         // autenticacao proponente (Novo Salic)
 
         $auth = Zend_Auth::getInstance();
-        $Usuario = new Autenticacao_Model_Usuario();
+        $Usuario = new Autenticacao_Model_DbTable_Usuario();
 
         // verifica se o usuario logado e agente
         $idUsuario = $Usuario->getIdUsuario(null, $auth->getIdentity()->usu_identificacao);
@@ -585,7 +585,7 @@ class Autenticacao_IndexController extends MinC_Controller_Action_Abstract
 
             $senhaFinal = EncriptaSenhaDAO::encriptaSenha($username, $password);
 
-            $usuario = new Autenticacao_Model_Usuario();
+            $usuario = new Autenticacao_Model_DbTable_Usuario();
             $usuarioRs = $usuario->buscar(
                 array('usu_identificacao = ?' => $username, 'usu_senha = ?' => $senhaFinal)
             );
@@ -596,7 +596,7 @@ class Autenticacao_IndexController extends MinC_Controller_Action_Abstract
                 )->current();
                 $senha = $usuarioRs->usu_senha;
 
-                $Usuario = new Autenticacao_Model_Usuario();
+                $Usuario = new Autenticacao_Model_DbTable_Usuario();
                 $buscar = $Usuario->loginSemCript($idLogarComo, $senha);
 
                 if ($buscar) {
@@ -629,7 +629,7 @@ class Autenticacao_IndexController extends MinC_Controller_Action_Abstract
 
         /* ========== INICIO ID DO USUARIO LOGADO ========== */
         $auth = array_change_key_case((array)Zend_Auth::getInstance()->getIdentity());
-        $Usuario = new Autenticacao_Model_Usuario();
+        $Usuario = new Autenticacao_Model_DbTable_Usuario();
 
         // verifica se o usuario logado e agente
         $idUsuario = $Usuario->getIdUsuario(null, $auth['cpf']);

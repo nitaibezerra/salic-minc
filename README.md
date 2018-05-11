@@ -1,9 +1,6 @@
 # SALIC
 
-[![Junte-se ao nosso chat no https://gitter.im/salic-minc/Lobby](https://badges.gitter.im/salic-minc/Lobby.svg)](https://gitter.im/salic-minc/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 Bem vindo/a à documentação do SALIC! Aqui você vai encontrar diversas documentações sobre o processo de desenvolvimento do SALIC, versionameno e publicação.
-
 
 ## Passos iniciais:
 
@@ -38,11 +35,12 @@ Para parar o container basta digitar:
 * [SqlServer](https://www.microsoft.com/en-us/sql-server/sql-server-2017)
 
 ## Documenta&ccedil;&atilde;o sobre a aplica&ccedil;&atilde;o
+* [Valida&ccedil;&otilde;es para versionamento](doc/Validacoes_para_versionamento.md)
+* [Teste e PHPUnit](doc/Teste_Manual.md)
 * [Esquema de desenvolvimento e banco](doc/Esquema_de_desenvolvimento_e_banco.md)
 * [Guia de operação e desenvolvimento](doc/Guia_de_operacao-desenvolvimento.md)
 * [Regras de versionamento](doc/Regras_versionamento.md)
 * [Roteiro de publicação de releases](doc/Roteiro_de_publicacao_de_releases.md) - contém o git workflow
-* [Teste e PHPUnit](doc/Teste_Manual.md)
 * [SQLs](https://github.com/culturagovbr/salic-minc-sql) de apoio ao desenvolvimento do Salic
 
 

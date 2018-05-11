@@ -9,23 +9,24 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     private $codGrupo = null;
     private $codOrgao = null;
     private $COD_CLASSIFICACAO_DOCUMENTO = 23;
+    protected $auth;
 
     public function init()
     {
-        $auth = Zend_Auth::getInstance(); // instancia da autenticacao
+        $this->auth = Zend_Auth::getInstance(); // instancia da autenticacao
         $this->grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
 
         // verifica as permissoes
         $PermissoesGrupo = array();
-        $PermissoesGrupo[] = 90;  // Protocolo - Documento
-        $PermissoesGrupo[] = 91;  // Protocolo - Recebimento
-        $PermissoesGrupo[] = 92;  // Tecnico de Admissibilidade
-        $PermissoesGrupo[] = 93;  // Coordenador de Parecerista
-        $PermissoesGrupo[] = 94;  // Parecerista
-        $PermissoesGrupo[] = 95;  // Consulta
-        $PermissoesGrupo[] = 96;  // Consulta Gerencial
-        $PermissoesGrupo[] = 97;  // Gestor do SALIC
-        $PermissoesGrupo[] = 99;  // Acompanhamento
+        $PermissoesGrupo[] = 90; // Protocolo - Documento
+        $PermissoesGrupo[] = 91; // Protocolo - Recebimento
+        $PermissoesGrupo[] = 92; // Tecnico de Admissibilidade
+        $PermissoesGrupo[] = 93; // Coordenador de Parecerista
+        $PermissoesGrupo[] = 94; // Parecerista
+        $PermissoesGrupo[] = 95; // Consulta
+        $PermissoesGrupo[] = 96; // Consulta Gerencial
+        $PermissoesGrupo[] = 97; // Gestor do SALIC
+        $PermissoesGrupo[] = 99; // Acompanhamento
         $PermissoesGrupo[] = 100; // Prestacao de Contas
         $PermissoesGrupo[] = 103; // Coordenador de Analise
         $PermissoesGrupo[] = 104; // Protocolo - Envio / Recebimento
@@ -56,8 +57,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE;
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::TECNICO_DE_ATENDIMENTO;
 
-        //parent::perfil(1, $PermissoesGrupo);
-        isset($auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
+        isset($this->auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
         parent::init();
 
         $idPreProjeto = $this->getRequest()->getParam('idPreProjeto');
@@ -66,13 +66,13 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->idPreProjeto = $idPreProjeto;
         }
 
-        isset($auth->getIdentity()->usu_codigo) ? $this->idUsuario = $auth->getIdentity()->usu_codigo : $this->idUsuario = $auth->getIdentity()->IdUsuario;
-        //$this->idUsuario = $auth->getIdentity()->usu_codigo;
+        isset($this->auth->getIdentity()->usu_codigo) ? $this->idUsuario = $this->auth->getIdentity()->usu_codigo : $this->idUsuario = $this->auth->getIdentity()->IdUsuario;
+        //$this->idUsuario = $this->auth->getIdentity()->usu_codigo;
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
-        if (isset($auth->getIdentity()->usu_codigo)) {
+        if (isset($this->auth->getIdentity()->usu_codigo)) {
             $this->codGrupo = $GrupoAtivo->codGrupo;
             $this->codOrgao = $GrupoAtivo->codOrgao;
-            $this->codOrgaoSuperior = (!empty($auth->getIdentity()->usu_org_max_superior)) ? $auth->getIdentity()->usu_org_max_superior : null;
+            $this->codOrgaoSuperior = (!empty($this->auth->getIdentity()->usu_org_max_superior)) ? $this->auth->getIdentity()->usu_org_max_superior : null;
         }
     }
 
@@ -155,13 +155,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $propostaPorEdital = true;
         }
 
-//        $tblPlanoDistribuicao = new PlanoDistribuicao();
-//
-//        $this->view->itensPlanosDistribuicao = $tblPlanoDistribuicao->buscar(
-//            array("a.idprojeto = ?" => $idPreProjeto, "a.stplanodistribuicaoproduto = ?" => 1),
-//            array("idplanodistribuicao DESC")
-//        );
-
         $this->view->isEdital = $propostaPorEdital;
         $this->view->itensTelefone = Proposta_Model_AnalisarPropostaDAO::buscarTelefone($this->view->itensGeral[0]->idAgente);
         //$this->view->itensPlanosDistribuicao = Proposta_Model_AnalisarPropostaDAO::buscarPlanoDeDistribucaoProduto($idPreProjeto);
@@ -204,21 +197,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         }
         $this->view->documentosExigidos = $arrDocumentosExigidos;
         $this->view->itensHistorico = Proposta_Model_AnalisarPropostaDAO::buscarHistorico($idPreProjeto);
-
-//        $this->view->itensPlanilhaOrcamentaria = Proposta_Model_AnalisarPropostaDAO::buscarPlanilhaOrcamentaria($idPreProjeto);
-//        $buscarProduto = ManterorcamentoDAO::buscarProdutos($this->idPreProjeto);
-//        $this->view->Produtos = $buscarProduto;
-//
-//        $tbPlanilhaEtapa = new Proposta_Model_DbTable_TbPlanilhaEtapa();
-//        $buscarEtapa = $tbPlanilhaEtapa->listarEtapasProdutos($this->idPreProjeto);
-//
-//        $this->view->Etapa = $buscarEtapa;
-
-        $preProjeto = new Proposta_Model_DbTable_PreProjeto();
-
-//        $buscarItem = $preProjeto->listarItensProdutos($this->idPreProjeto);
         $this->view->AnaliseCustos = Proposta_Model_DbTable_PreProjeto::analiseDeCustos($this->idPreProjeto);
-
         $this->view->idPreProjeto = $this->idPreProjeto;
         $pesquisaView = $this->_getParam('pesquisa');
         if ($pesquisaView == 'proposta') {
@@ -226,6 +205,11 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->view->tituloTopo = 'Consultar dados da proposta';
         }
         $this->view->grupo = $this->codGrupo;
+
+        // Recuperando o Histórico de Sugestão de Enquadramento
+        $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+        $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($idPreProjeto);
+        $this->view->sugestao_enquadramento = $sugestaoEnquadramentoDbTable->obterHistoricoEnquadramento();
 
         if ($propostaPorEdital) {
             $tbFormDocumentoDAO = new tbFormDocumento();
@@ -247,12 +231,12 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 if (is_object($questoes) and count($questoes) > 0) {
                     foreach ($questoes as $questao) {
                         $resposta = '';
-                        $where = array(
+                        $where = [
                             'nrFormDocumento = ?' => $registro["nrFormDocumento"]
-                        , 'nrVersaoDocumento = ?' => $registro["nrVersaoDocumento"]
-                        , 'nrPergunta = ?' => $questao->nrPergunta
-                        , 'idProjeto = ?' => $this->idPreProjeto
-                        );
+                            , 'nrVersaoDocumento = ?' => $registro["nrVersaoDocumento"]
+                            , 'nrPergunta = ?' => $questao->nrPergunta
+                            , 'idProjeto = ?' => $this->idPreProjeto,
+                        ];
                         $resposta = $tbRespostaDAO->buscar($where);
                         $arrPerguntas[$registro["nrFormDocumento"]]["titulo"] = $registro["nmFormDocumento"];
                         $arrPerguntas[$registro["nrFormDocumento"]]["pergunta"][] = $questao->toArray();
@@ -273,7 +257,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $orgaoDbTable = new Orgaos();
             $orgao = $orgaoDbTable->codigoOrgaoSuperior($this->codOrgao);
 
-            if(count($orgao) < 1 || !$orgao[0]['Superior']) {
+            if (count($orgao) < 1 || !$orgao[0]['Superior']) {
                 throw new Exception('N&atilde;o foi poss&iacute;vel obter o &Oacute;rg&atilde;o Superior');
             }
 
@@ -283,25 +267,197 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 [
                     'id_preprojeto' => $this->idPreProjeto,
                     'id_orgao_superior' => $orgaoSuperior,
-                    'id_perfil' => $this->codGrupo,
-                    'avaliacao_atual' => Admissibilidade_Model_DbTable_DistribuicaoAvaliacaoProposta::AVALIACAO_ATUAL_ATIVA
+                    'avaliacao_atual' => Admissibilidade_Model_DistribuicaoAvaliacaoProposta::AVALIACAO_ATUAL_ATIVA,
                 ]
             );
+
             $this->view->possuiAvaliacaoCnic = $distribuicaoAvaliacaoPropostaDbTable->propostaPossuiAvaliacao(
                 $this->idPreProjeto,
                 Autenticacao_Model_Grupos::COMPONENTE_COMISSAO,
                 $orgaoSuperior
             );
 
-            $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
             $sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento(
-                ['id_distribuicao_avaliacao_proposta' => $distribuicaoAvaliacaoPropostaAtual['id_distribuicao_avaliacao_prop']]
+                [
+                    'id_preprojeto' => $this->idPreProjeto,
+                    'id_orgao' => $this->codOrgao,
+                    'id_orgao_superior' => $orgaoSuperior,
+                    'id_perfil_usuario' => $this->codGrupo,
+                    'ultima_sugestao' => Admissibilidade_Model_DbTable_SugestaoEnquadramento::ULTIMA_SUGESTAO_ATIVA,
+                ]
             );
 
+            $distribuicaoAvaliacaoProposta = new Admissibilidade_Model_DistribuicaoAvaliacaoProposta(['id_perfil' => $this->codGrupo]);
+            $gruposDbTable = new Autenticacao_Model_Grupos();
             $this->view->isPropostaEnquadrada = $sugestaoEnquadramentoDbTable->isPropostaEnquadrada($sugestaoEnquadramento);
+            $this->view->distribuicaoAvaliacaoProposta = $distribuicaoAvaliacaoPropostaAtual;
+            $this->view->isPermitidoSugerirEnquadramento = $sugestaoEnquadramento->isPermitidoSugerirEnquadramento();
+            $this->view->perfisEncaminhamentoAvaliacaoProposta = $gruposDbTable->obterPerfisEncaminhamentoAvaliacaoProposta($this->codGrupo);
+            $this->view->ultimaSugestaoEnquadramento = $sugestaoEnquadramentoDbTable->obterUltimaSugestaoEnquadramentoProposta();
+            $this->view->isPermitidoAvaliarProposta = $distribuicaoAvaliacaoProposta->isPermitidoAvaliarProposta();
 
+            $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($this->idPreProjeto);
+            $recursoEnquadramento = $sugestaoEnquadramentoDbTable->obterRecursoEnquadramentoProposta();
+
+            $this->view->isRecursoAvaliado = false;
+            
+            $this->view->isRecursoDesistidoDePrazoRecursal = false;
+            if ($recursoEnquadramento) {
+                $this->view->isRecursoDesistidoDePrazoRecursal = $this->isRecursoDesistidoDePrazoRecursal($recursoEnquadramento);
+                if ($this->isRecursoEnviadoPorProponente($recursoEnquadramento) ||
+                    $this->isRecursoPossuiAvaliacaoAvaliador($recursoEnquadramento)) {
+                    $this->view->recursoEnquadramento = $recursoEnquadramento;
+                }
+
+                if ($this->isRecursoDeferidoAvaliado($recursoEnquadramento)
+                    || $this->isRecursoDuplamenteIndeferido($recursoEnquadramento)
+                    || $this->isRecursoDesistidoDePrazoRecursal($recursoEnquadramento)
+                    || $this->isRecursoExpirou10dias($recursoEnquadramento)) {
+                    $this->view->isRecursoAvaliado = true;
+                }
+            }
+
+            $this->view->isPermitidoTransformarPropostaEmProjeto = $this->_isPermitidoTransformarPropostaEmProjeto(
+                $distribuicaoAvaliacaoPropostaAtual,
+                $this->view->ultimaSugestaoEnquadramento,
+                $recursoEnquadramento,
+                $this->codGrupo,
+                $this->view->isRecursoAvaliado
+            );
+
+            $this->view->isPermitidoEncaminharAvaliacao = $this->_isPermitidoEncaminharAvaliacao(
+                $distribuicaoAvaliacaoPropostaAtual,
+                $this->view->isPropostaEnquadrada
+            );
             $this->montaTela("admissibilidade/proposta-por-incentivo-fiscal.phtml");
         }
+    }
+
+    private function _isPermitidoEncaminharAvaliacao(
+        array $distribuicaoAvaliacaoPropostaAtual,
+        $isPropostaEnquadrada
+    )
+    {
+        if (count($distribuicaoAvaliacaoPropostaAtual) > 0
+            && $distribuicaoAvaliacaoPropostaAtual['id_perfil'] != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
+            && $isPropostaEnquadrada) {
+            return true;
+        } else if($isPropostaEnquadrada && $distribuicaoAvaliacaoPropostaAtual['id_perfil'] == Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
+            return true;
+        }
+        return false;
+    }
+
+    private function _isPermitidoTransformarPropostaEmProjeto(
+        $distribuicaoAvaliacaoPropostaAtual,
+        $ultimaSugestaoEnquadramento,
+        $recursoEnquadramento,
+        $id_perfil,
+        $isRecursoAvaliado
+    ) {
+        $perfisAutorizadosTransformarPropostaEmProjeto = [
+            (int) Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE,
+            (int) Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE,
+        ];
+        if ($this->isAutorizado(
+            $perfisAutorizadosTransformarPropostaEmProjeto,
+            (int) $id_perfil
+        )
+            && $isRecursoAvaliado
+        ) {
+            return true;
+        }
+
+        if (count($recursoEnquadramento) > 0
+            && (string) $recursoEnquadramento['tpSolicitacao'] == (string) Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL
+            && !empty($recursoEnquadramento['dsRecursoProponente'])
+        ) {
+            return true;
+        }
+
+        $planoDistribuicao = (new Proposta_Model_DbTable_PlanoDistribuicaoProduto())->buscar(
+            [
+                'stPrincipal = ?' => 1, 
+                'idProjeto = ?' => $this->idPreProjeto
+            ]
+        );
+        $id_area_proponente = $planoDistribuicao[0]['Area'];
+        $id_segmento_proponente = $planoDistribuicao[0]['Segmento'];
+        $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+        
+        $isEnquadramentoProponenteIgualEndramentoAvaliador = false;
+        if(is_array($ultimaSugestaoEnquadramento) && count($ultimaSugestaoEnquadramento) > 0) {
+            $isEnquadramentoProponenteIgualEndramentoAvaliador = $sugestaoEnquadramentoDbTable->isEnquadramentoProponenteIgualEndramentoAvaliador(
+                $ultimaSugestaoEnquadramento, 
+                $id_area_proponente, 
+                $id_segmento_proponente
+            );
+        }
+
+        if($isEnquadramentoProponenteIgualEndramentoAvaliador 
+            && count($distribuicaoAvaliacaoPropostaAtual) > 0
+            && $distribuicaoAvaliacaoPropostaAtual['id_perfil'] != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    private function isPropostaEnquadradoArtigo18(array $sugestaoEnquadramento)
+    {
+        return ((int) $sugestaoEnquadramento['tp_enquadramento'] == Admissibilidade_Model_Enquadramento::ARTIGO_18);
+    }
+
+    public function isRecursoExpirou10dias(array $recursoEnquadramento)
+    {
+
+        return (
+            (is_null($recursoEnquadramento['stRascunho'])
+                || empty($recursoEnquadramento['stRascunho'])
+                || $recursoEnquadramento['stRascunho'] == Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_SALVO
+            )
+            && is_null($recursoEnquadramento['dsRecursoProponente'])
+            && empty(trim($recursoEnquadramento['dsRecursoProponente']))
+            && is_null($recursoEnquadramento['dsAvaliacaoTecnica'])
+            && empty(trim($recursoEnquadramento['dsAvaliacaoTecnica']))
+            && $recursoEnquadramento['diasDesdeAberturaRecurso'] > 10
+            && $recursoEnquadramento['tpSolicitacao'] == Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL);
+    }
+
+    public function isRecursoDesistidoDePrazoRecursal(array $recursoEnquadramento)
+    {
+        return ((int) $recursoEnquadramento['stRascunho'] == (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+            && $recursoEnquadramento['tpSolicitacao'] == Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL);
+    }
+
+    public function isRecursoDuplamenteIndeferido(array $recursoEnquadramento)
+    {
+        return ((int) $recursoEnquadramento['stRascunho'] == (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+            && (int) $recursoEnquadramento['tpRecurso'] == (int) Recurso_Model_TbRecursoProposta::TIPO_RECURSO_RECURSO
+            && $recursoEnquadramento['stAtendimento'] == Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO);
+    }
+
+    public function isRecursoDeferidoAvaliado(array $recursoEnquadramento)
+    {
+        return ((int) $recursoEnquadramento['stRascunho'] == (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+            && $recursoEnquadramento['stAtendimento'] == Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO);
+    }
+
+    public function isAutorizado(array $perfisAutorizados, $id_perfil)
+    {
+        return in_array($id_perfil, $perfisAutorizados);
+    }
+
+    private function isRecursoEnviadoPorProponente(array $recursoEnquadramento)
+    {
+        return ($recursoEnquadramento['dsRecursoProponente']
+            && !is_null($recursoEnquadramento['stRascunho'])
+            && (int) $recursoEnquadramento['stRascunho'] == (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO);
+    }
+
+    private function isRecursoPossuiAvaliacaoAvaliador(array $recursoEnquadramento)
+    {
+        return (!is_null($recursoEnquadramento['dtAvaliacaoTecnica']) && !empty($recursoEnquadramento['dtAvaliacaoTecnica']));
     }
 
     public function abrirDocumentosAnexadosAction()
@@ -384,14 +540,13 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         }
     }
 
-
     public function incluiravaliacaoAction()
     {
         $this->validarAcessoAdmissibilidade();
         $tblProposta = new Proposta_Model_DbTable_PreProjeto();
         $rsProposta = $tblProposta->buscar(
             array(
-                "idPreProjeto=?" => $this->idPreProjeto
+                "idPreProjeto = ?" => $this->idPreProjeto,
             )
         )->current();
 
@@ -406,7 +561,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $avaliacoesAnteriores = $tbAvaliacaoProposta->buscar(
                 array(
                     "idProjeto = ?" => $this->idPreProjeto,
-                    "ConformidadeOK !=?" => 9
+                    "ConformidadeOK !=?" => 9,
                 )
             );
             $this->view->avaliacoesAnteriores = $avaliacoesAnteriores;
@@ -442,9 +597,27 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $avaliacaoProposta = new tbAvaliacaoProposta();
         $avaliacaoProposta->inserir($dados);
 
-        if ($dados['ConformidadeOK'] == 1) {
+        if ($dados['ConformidadeOK'] == AvaliacaoProposta::CONFORMIDADE_OK_APROVADO) {
             $objTbMovimentacao = new Proposta_Model_DbTable_TbMovimentacao();
-            $objTbMovimentacao->alterarConformidadeProposta($post->idPreProjeto, $this->idUsuario, Agente_Model_DbTable_Verificacao::PROPOSTA_EM_ANALISE_FINAL);
+            $objTbMovimentacao->alterarConformidadeProposta(
+                $post->idPreProjeto,
+                $this->idUsuario,
+                Agente_Model_DbTable_Verificacao::PROPOSTA_EM_ANALISE_FINAL
+            );
+
+//            if ($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
+            //                $dadosSugestaoEnquadramento = [
+            //                    'descricao_motivacao' => $dados['avaliacao'],
+            //                    'id_orgao' => $this->grupoAtivo->codOrgao,
+            //                    'id_perfil' => $this->grupoAtivo->codGrupo,
+            //                    'id_usuario_avaliador' => $this->auth->getIdentity()->usu_codigo,
+            //
+            //                ];
+            //
+            //                $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+            //                $sugestaoEnquadramentoDbTable->salvarSugestaoEnquadramento($dadosSugestaoEnquadramento, $post->idPreProjeto);
+            //            }
+
         } else {
 
             $tbPreProjetoMetaMapper = new Proposta_Model_TbPreProjetoMetaMapper();
@@ -452,7 +625,11 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
         }
 
-        parent::message("Conformidade visual finalizada com sucesso!", "/admissibilidade/admissibilidade/exibirpropostacultural?idPreProjeto=" . $post->idPreProjeto . "&gravado=sim", "CONFIRM");
+        parent::message(
+            "Conformidade visual finalizada com sucesso!",
+            "/admissibilidade/admissibilidade/exibirpropostacultural?idPreProjeto=" . $post->idPreProjeto . "&gravado=sim",
+            "CONFIRM"
+        );
     }
 
     private function eviarEmail($idProjeto, $Mensagem, $pronac = null)
@@ -463,7 +640,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $dadosProjeto = $preProjetosDAO->dadosProjetoDiligencia($idProjeto);
         $tbHistoricoEmailDAO = new tbHistoricoEmail();
 
-        foreach ($dadosProjeto as $d) :
+        foreach ($dadosProjeto as $d):
             //para Produ�?o comentar linha abaixo e para teste descomente ela
             //$email  =   'jailton.landim@cultura.gov.br';
             //para Produ�?o descomentar linha abaixo e para teste comente ela
@@ -562,7 +739,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $where = array(
                 'CONVERT(VARCHAR,DtEnvio,103) = ?' => new Zend_Db_Expr('CONVERT(VARCHAR,GETDATE(),103)'),
                 'idProjeto = ?' => $this->idPreProjeto,
-                'idCodigoDocumentosExigidos is not null' => ''
+                'idCodigoDocumentosExigidos is not null' => '',
             );
             $docs = $tblAvaliacao->buscar($where);
 
@@ -573,29 +750,28 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $this->eviarEmail($this->idPreProjeto, $msg->msg);
             }
 
-
             parent::message("Opera&ccedil;&atilde;o realizada com sucesso!", "/admissibilidade/admissibilidade/analisedocumental?idPreProjeto=" . $this->idPreProjeto, "CONFIRM");
 
 //            // Retornando proposta para movimentacao 95
-//            $dadosMovimentacao['idProjeto'] = $this->idPreProjeto;
-//            $dadosMovimentacao['Movimentacao'] = 95;
-//            $dadosMovimentacao['DtMovimentacao'] = date("Y-m-d");
-//            $dadosMovimentacao['stEstado'] = 0;
-//            $dadosMovimentacao['Usuario'] = $this->idUsuario;
-//
-//            $tblMovimentacao = new Proposta_Model_DbTable_TbMovimentacao();
-//            //Mudando as movimentacoes anteriores para o stEstado = 1
-//
-//            $rsRetorno = $tblMovimentacao->update(array("stEstado"=>1), "idProjeto = {$this->idPreProjeto}");
-//
-//            $rsMovimentacao = $tblMovimentacao->inserir($dadosMovimentacao);
+            //            $dadosMovimentacao['idProjeto'] = $this->idPreProjeto;
+            //            $dadosMovimentacao['Movimentacao'] = 95;
+            //            $dadosMovimentacao['DtMovimentacao'] = date("Y-m-d");
+            //            $dadosMovimentacao['stEstado'] = 0;
+            //            $dadosMovimentacao['Usuario'] = $this->idUsuario;
+            //
+            //            $tblMovimentacao = new Proposta_Model_DbTable_TbMovimentacao();
+            //            //Mudando as movimentacoes anteriores para o stEstado = 1
+            //
+            //            $rsRetorno = $tblMovimentacao->update(array("stEstado"=>1), "idProjeto = {$this->idPreProjeto}");
+            //
+            //            $rsMovimentacao = $tblMovimentacao->inserir($dadosMovimentacao);
 
             // Verificando se movimentacao ja existe
-//            $rsBuscaMovimentacao = $tblMovimentacao->buscar(array("Movimentacao = ?"=>97, "idProjeto = ?"=>$dadosMovimentacao['idProjeto']));
-//            if($rsBuscaMovimentacao->count() < 1){
-//                // Salvando movimentacao
-//                $rsMovimentacao = $tblMovimentacao->salvar($dadosMovimentacao);
-//            }
+            //            $rsBuscaMovimentacao = $tblMovimentacao->buscar(array("Movimentacao = ?"=>97, "idProjeto = ?"=>$dadosMovimentacao['idProjeto']));
+            //            if($rsBuscaMovimentacao->count() < 1){
+            //                // Salvando movimentacao
+            //                $rsMovimentacao = $tblMovimentacao->salvar($dadosMovimentacao);
+            //            }
         } catch (Exception $e) {
             parent::message("Erro ao realizar opera&ccedil;&atilde;o", "/admissibilidade/admissibilidade/analisedocumental?idPreProjeto=" . $this->idPreProjeto, "ERROR");
         }
@@ -625,7 +801,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     {
         $dao = new Proposta_Model_AnalisarPropostaDAO();
         $get = Zend_Registry::get('get');
-
 
         if ($get->tipoDocumento == 1) {
             Proposta_Model_AnalisarPropostaDAO::deleteDocumentoProponente($get->idDocumento);
@@ -668,34 +843,28 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $rsPlanoDistribuicao = $tblPlanoDistribuicao->buscar(array("idProjeto = ?" => $this->idPreProjeto, "stPrincipal = ?" => 1))->current();
 
             $tblOrgaos = new Orgaos();
+            $idOrgao = $this->codOrgao;
             if ($rsProposta->idEdital == 0 || empty($rsProposta->idEdital)) {
                 if (!$rsPlanoDistribuicao) {
                     throw new Exception("Erro ao tentar transformar proposta em projeto, n&atilde;o existe produto principal cadastrado.");
                 }
-
                 //Se existe plano de distribuicao, entao pega-se o orgao baseado no produto principal
                 $rsOrgaos = $tblOrgaos->buscarOrgaoPorSegmento($rsPlanoDistribuicao->Segmento)->current();
-                //$idOrgao = $rsOrgaos->Codigo;
-                $idOrgao = $this->codOrgao;
             } else {
                 //Se nao existe plano de distribuicao, entao esta e uma proposta por edital,
                 //entao pega-se o orgao do edital
                 $tblEdital = new Edital();
                 $rsEdital = $tblEdital->buscar(array("idEdital = ?" => $rsProposta->idEdital))->current();
-
                 $rsOrgaos = $tblOrgaos->buscar(array("Codigo = ?" => $rsEdital->idOrgao))->current();
                 //$idOrgao = $rsOrgaos->Codigo;
-                $idOrgao = $this->codOrgao;
             }
 
             $tblAgente = new Agente_Model_DbTable_Agentes();
             $rsAgente = $tblAgente->buscarAgenteENome(array("a.idAgente = ?" => $rsProposta->idAgente))->current();
-
             $cnpjcpf = $rsAgente->CNPJCPF;
-
             $wsWebServiceSEI = new ServicosSEI();
-
             $arrRetornoGerarProcedimento = $wsWebServiceSEI->wsGerarProcedimento();
+
             $chars = array(".", "/", "-");
             $nrProcessoSemFormatacao = str_replace($chars, "", $arrRetornoGerarProcedimento->ProcedimentoFormatado);
             $nrProcesso = $nrProcessoSemFormatacao;
@@ -703,15 +872,70 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->incluirProjeto($this->idPreProjeto, $cnpjcpf, $idOrgao, $this->idUsuario, $nrProcesso, $rsProposta->stProposta);
             $tblProjeto = new Projetos();
             $rsProjeto = $tblProjeto->buscar(array("idProjeto = ?" => $this->idPreProjeto), "IdPRONAC DESC")->current();
+
             if (!empty($rsProjeto)) {
                 $nrPronac = $rsProjeto->AnoProjeto . $rsProjeto->Sequencial;
-                $retorno['sucesso'] = "A Proposta " . $this->idPreProjeto . " foi transformada no Projeto No. " . $nrPronac;
+                $retorno['sucesso'] = "A Proposta {$this->idPreProjeto} foi transformada no Projeto No {$nrPronac}";
+
+                $authIdentity = array_change_key_case((array) $auth->getIdentity());
+                $this->enquadrarProjetoComRecursoProposta(
+                    $rsProjeto,
+                    $authIdentity['usu_codigo']
+                );
             }
         } catch (Exception $objException) {
             $retorno['erro'] = $objException->getMessage();
         }
         header('Content-Type: application/json');
         $this->_helper->json($retorno);
+    }
+
+    private function enquadrarProjetoComRecursoProposta($rsProjeto, $idUsuario)
+    {
+        try {
+
+            $recursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
+            $recursoAtual = $recursoPropostaDbTable->obterRecursoAtual($this->idPreProjeto);
+            $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+            if ((string) $recursoAtual['stAtendimento'] == (string) Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
+                $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+                $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($this->idPreProjeto);
+
+                $tpEnquadramento = $enquadramentoInicialProponente['tp_enquadramento'];
+                $observacao = $recursoAtual['dsAvaliacaoTecnica'];
+            } elseif ((string) $recursoAtual['tpSolicitacao'] == (string) Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL) {
+                $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($this->idPreProjeto);
+                $ultimaSugestaoEnquadramento = $sugestaoEnquadramentoDbTable->obterUltimaSugestaoEnquadramentoProposta();
+                $tpEnquadramento = $ultimaSugestaoEnquadramento['tp_enquadramento'];
+                $observacao = $ultimaSugestaoEnquadramento['descricao_motivacao'];
+            }
+
+            $arrayArmazenamentoEnquadramento = [
+                'AnoProjeto' => $rsProjeto->AnoProjeto,
+                'Sequencial' => $rsProjeto->Sequencial,
+                'Enquadramento' => $tpEnquadramento,
+                'DtEnquadramento' => $sugestaoEnquadramentoDbTable->getExpressionDate(),
+                'Observacao' => $observacao,
+                'Logon' => $idUsuario,
+                'IdPRONAC' => $rsProjeto->IdPRONAC,
+            ];
+            $enquadramentoDbTable = new Admissibilidade_Model_Enquadramento();
+            $enquadramentoDbTable->salvar($arrayArmazenamentoEnquadramento);
+
+            $objProjeto = new Projetos();
+            $dadosProjeto = $objProjeto->findBy([
+                'IdPRONAC' => $rsProjeto->IdPRONAC,
+            ]);
+
+            $projetos = new Projeto_Model_DbTable_Projetos();
+            $projetos->atualizarProjetoEnquadrado(
+                $dadosProjeto,
+                $idUsuario
+            );
+            return true;
+        } catch (Exception $exception) {
+            throw $exception;
+        }
     }
 
     public function encaminharpropostaAction()
@@ -867,12 +1091,12 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 //        $this->view->itensPlanilhaOrcamentaria = Proposta_Model_AnalisarPropostaDAO::buscarPlanilhaOrcamentaria($idPreProjeto);
 
 //        $buscarProduto = ManterorcamentoDAO::buscarProdutos($this->idPreProjeto);
-//        $this->view->Produtos = $buscarProduto;
-//
-//        $tbPlanilhaEtapa = new Proposta_Model_DbTable_TbPlanilhaEtapa();
-//        $buscarEtapa = $tbPlanilhaEtapa->listarEtapasProdutos($this->idPreProjeto);
-//
-//        $this->view->Etapa = $buscarEtapa;
+        //        $this->view->Produtos = $buscarProduto;
+        //
+        //        $tbPlanilhaEtapa = new Proposta_Model_DbTable_TbPlanilhaEtapa();
+        //        $buscarEtapa = $tbPlanilhaEtapa->listarEtapasProdutos($this->idPreProjeto);
+        //
+        //        $this->view->Etapa = $buscarEtapa;
 
         $preProjeto = new Proposta_Model_DbTable_PreProjeto();
 
@@ -880,7 +1104,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $this->view->AnaliseCustos = Proposta_Model_DbTable_PreProjeto::analiseDeCustos($this->idPreProjeto);
 
         $this->view->idPreProjeto = $this->idPreProjeto;
-
 
         if ($propostaPorEdital) {
             $tbFormDocumentoDAO = new tbFormDocumento();
@@ -897,9 +1120,9 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                         $resposta = '';
                         $where = array(
                             'nrFormDocumento = ?' => $registro["nrFormDocumento"]
-                        , 'nrVersaoDocumento = ?' => $registro["nrVersaoDocumento"]
-                        , 'nrPergunta = ?' => $questao->nrPergunta
-                        , 'idProjeto = ?' => $this->idPreProjeto
+                            , 'nrVersaoDocumento = ?' => $registro["nrVersaoDocumento"]
+                            , 'nrPergunta = ?' => $questao->nrPergunta
+                            , 'idProjeto = ?' => $this->idPreProjeto,
                         );
                         $resposta = $tbRespostaDAO->buscar($where);
 
@@ -967,7 +1190,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->_helper->viewRenderer->setNoRender(true);
         }
 
-
         $this->view->orgaoUsuarioLogado = $this->codOrgaoSuperior;
         $this->view->proposta = $rsProposta;
         $this->view->orgaoSecretaria = $rsOrgaoSecretaria;
@@ -1008,14 +1230,13 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
         $analistas = $vwPainelAvaliar->propostas($where, null, null, null);
 
-
         $this->view->analistas = array();
         $this->view->urlResumo = $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-distribuicao-propostas";
         $i = 0;
         foreach ($analistas as $analista) {
             $this->view->analistas[$analista->Tecnico][$i]['nrProposta'] = $analista->idProjeto;
             $this->view->analistas[$analista->Tecnico][$i]['NomeProjeto'] = $analista->NomeProposta;
-            $this->view->analistas[$analista->Tecnico][$i]['DtMovimentacao'] = ConverteData($analista->DtAdmissibilidade, 5);;
+            $this->view->analistas[$analista->Tecnico][$i]['DtMovimentacao'] = ConverteData($analista->DtAdmissibilidade, 5);
             $this->view->analistas[$analista->Tecnico][$i]['fase'] = $analista->Fase;
             $i++;
         }
@@ -1074,7 +1295,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
             $msgComplementar = "Altera&ccedil;&atilde;o realizada com sucesso!";
 
-            if ((int)$params->uog_status === 0) {
+            if ((int) $params->uog_status === 0) {
                 $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
                 $tecnicoTemProposta = $tblPreProjeto->tecnicoTemProposta($params->usu_cod);
 
@@ -1132,11 +1353,11 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 if ($tipoCpf == "contendo") {
                     $arrBusca[" CNPJCPF LIKE "] = "'%" . $cpfCnpj . "%'";
                 } elseif ($tipoCpf == "igual") {
-                    $arrBusca[" CNPJCPF "] = "'" . $cpfCnpj . "'";;
+                    $arrBusca[" CNPJCPF "] = "'" . $cpfCnpj . "'";
                 } elseif ($tipoCpf == "inicioIgual") {
-                    $arrBusca[" CNPJCPF LIKE "] = "'" . $cpfCnpj . "%'";;
+                    $arrBusca[" CNPJCPF LIKE "] = "'" . $cpfCnpj . "%'";
                 } elseif ($tipoCpf == "diferente") {
-                    $arrBusca[" CNPJCPF <> "] = "'" . $cpfCnpj . "'";;
+                    $arrBusca[" CNPJCPF <> "] = "'" . $cpfCnpj . "'";
                 }
             }
             //ANALISTA
@@ -1180,7 +1401,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             //$arrBusca[" SAC.dbo.fnIdOrgaoSuperiorAnalista(x.idTecnico) "] = $_SESSION['GrupoAtivo']['codOrgao'];
             $arrBusca[" SAC.dbo.fnIdOrgaoSuperiorAnalista(x.idTecnico) = "] = $this->codOrgaoSuperior;
             //$arrBusca[" TABELAS.dbo.fnCodigoOrgaoEstrutura(u.usu_orgao, 1) "] = $this->codOrgaoSuperior;
-
 
             $this->view->analistas = AdmissibilidadeDAO::consultarGerenciamentoProposta($arrBusca, array("Tecnico ASC"));
 
@@ -1241,7 +1461,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             //Conectando com projetos
             $tblProjetos = new Projetos();
             $tbAvaliacao = new AvaliacaoProposta();
-            $tblUsuario = new Autenticacao_Model_Usuario();
+            $tblUsuario = new Autenticacao_Model_DbTable_Usuario();
 
             $movimentacoes = array();
             foreach ($rsPropostas as $proposta) {
@@ -1275,9 +1495,9 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                         }
                         //$movimentacoes[$proposta->idPreProjeto]["txtMovimentacao"] = "<font color=#0000FF>Proposta com Proponente</font>";
                         /*if (!count($tecnico)>0)
-                        {
-                            $movimentacoes[$proposta->idPreProjeto]["txtMovimentacao"] = "<font color=#FF0000>" . 'Proposta em An&aacute;lise' . "</font>";
-                        }*/
+                    {
+                    $movimentacoes[$proposta->idPreProjeto]["txtMovimentacao"] = "<font color=#FF0000>" . 'Proposta em An&aacute;lise' . "</font>";
+                    }*/
                     } elseif ($rsMovimentacao->Movimentacao == 97 and (!count($rsProjeto) > 0)) {
                         $movimentacoes[$proposta->idPreProjeto]["txtMovimentacao"] = "<font color=#FF0000>" . 'Proposta aguardando documentos' . "</font>";
                     } elseif (count($rsProjeto) > 0) {
@@ -1296,12 +1516,12 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                         /*$rsUsuario = $tblUsuario->find($rsMovimentacao->Usuario)->current();
                         // Verificando se usuario e um coordenador
                         if(!empty($rsUsuario)>0){
-                            if($tblUsuario->ECoordenador($rsUsuario->usu_codigo)){
-                                $tipoUsuario = "Coordenador";
-                            }else{
-                                $tipoUsuario = "Analista";
-                            }
-                            $usuarioNome = $rsUsuario->usu_nome;
+                        if($tblUsuario->ECoordenador($rsUsuario->usu_codigo)){
+                        $tipoUsuario = "Coordenador";
+                        }else{
+                        $tipoUsuario = "Analista";
+                        }
+                        $usuarioNome = $rsUsuario->usu_nome;
                         }*/
 
                         $rsAvaliacao = $tbAvaliacao->buscar(array("idProjeto = ?" => $proposta->idPreProjeto, "ConformidadeOK =?" => 1, "stEstado =?" => 0))->current();
@@ -1331,7 +1551,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $arrDados = array(
             "propostas" => $rsPropostas,
             "agente" => $rsAgente,
-            "movimentacoes" => $movimentacoes
+            "movimentacoes" => $movimentacoes,
         );
 
         $this->montaTela("admissibilidade/listarpropostasproponente.phtml", $arrDados);
@@ -1380,7 +1600,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             "tecnicosPropostasInicial" => $arrTecnicosPropostasInicial,
             "urlXLS" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/xls-propostas-analise-visual-tecnico",
             "urlPDF" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/pdf-propostas-analise-visual-tecnico",
-            "urlResumo" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/resumo-propostas-analise-visual-tecnico"
+            "urlResumo" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/resumo-propostas-analise-visual-tecnico",
         );
 
         if (!empty($view)) {
@@ -1414,7 +1634,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             "propostas" => $rsProposta,
             "tecnicosPropostas" => $arrTecnicosPropostas,
             "urlXLS" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/xls-propostas-analise-visual-tecnico",
-            "urlPDF" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/pdf-propostas-analise-visual-tecnico"
+            "urlPDF" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/pdf-propostas-analise-visual-tecnico",
         );
 
         $this->montaTela("admissibilidade/listarpropostasanalisedocumentaltecnico.phtml", $arrDados);
@@ -1438,7 +1658,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             "tecnicosPropostas" => $arrTecnicosPropostas,
             "urlXLS" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/xls-propostas-analise-final",
             "urlPDF" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/pdf-propostas-analise-final",
-            "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-proposta-analise-final"
+            "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-proposta-analise-final",
         );
 
         $this->montaTela("admissibilidade/listarpropostasanalisefinal.phtml", $arrDados);
@@ -1703,7 +1923,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
             $arrDados = array(
                 "tecnicos" => $rsTecnicos,
-                "urlForm" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/historico-analise-visual"
+                "urlForm" => $this->view->baseUrl() . "/admissibilidade/admissibilidade/historico-analise-visual",
             );
 
             $this->montaTela("admissibilidade/consultarhistoricoanalisevisual.phtml", $arrDados);
@@ -1725,7 +1945,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $arrDados = array(
                 "propostas" => $rsProposta,
                 "tecnicosPropostas" => $arrTecnicosPropostas,
-                "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-historico-analise-visual"
+                "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-historico-analise-visual",
             );
 
             $this->montaTela("admissibilidade/listarhistoricoanalisevisual.phtml", $arrDados);
@@ -1736,7 +1956,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     {
         $arrDados = array(
             "resumo" => $_POST,
-            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-historico-analise-visual"
+            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-historico-analise-visual",
         );
         $this->montaTela("admissibilidade/resumohistoricoanalisevisual.phtml", $arrDados);
     }
@@ -1816,21 +2036,8 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             "orgao" => $rsOrgao,
             "grupo" => $this->codGrupo,
             "formularioLocalizar" => $this->_urlPadrao . "/admissibilidade/admissibilidade/localizar",
-            "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-propostas"
+            "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-propostas",
         );
-
-        if ($this->codGrupo == Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE
-            || $this->codGrupo == Autenticacao_Model_Grupos::COORDENADOR_ABMISSIBILIDADE
-            || $this->codGrupo == Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO
-            || $this->codGrupo == Autenticacao_Model_Grupos::COMPONENTE_COMISSAO
-        ) {
-            $arrDados['liberarEncaminhamento'] = true;
-        }
-
-        if ($this->codGrupo) {
-            $gruposDbTable = new Autenticacao_Model_Grupos();
-            $this->view->perfis = $gruposDbTable->obterPerfisEncaminhamentoAvaliacaoProposta($this->codGrupo);
-        }
 
         $this->montaTela("admissibilidade/listarpropostas.phtml", $arrDados);
     }
@@ -1848,20 +2055,23 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $inicio = ($pag > 1) ? ($pag - 1) * $this->intTamPag : 0;
         $fim = $inicio + $this->intTamPag;
 
-        $rsPropostasNaoEnviadas = array();
-
         $tblProposta = new Proposta_Model_DbTable_PreProjeto();
 
         // =========== PROPOSTAS NAO ENVIADAS AO MINC AINDA =======================
         $arrBusca['m.Movimentacao = ?'] = 95;
-        $rsPropostasNaoEnviadas = $tblProposta->buscarPropostaAdmissibilidadeZend($arrBusca, array("idProjeto DESC"), $this->intTamPag, $inicio); //m.Movimentacao = 95 >> NAO ENVIADA
+        $rsPropostasNaoEnviadas = $tblProposta->buscarPropostaAdmissibilidadeZend(
+            $arrBusca,
+            ["idProjeto DESC"],
+            $this->intTamPag,
+            $inicio
+        ); //m.Movimentacao = 95 >> NAO ENVIADA
 
         $total = $tblProposta->_totalRegistros;
 
         if ($fim > $total) {
             $fim = $total;
         }
-        $totalPag = (int)(($total % $this->intTamPag == 0) ? ($total / $this->intTamPag) : (($total / $this->intTamPag) + 1));
+        $totalPag = (int) (($total % $this->intTamPag == 0) ? ($total / $this->intTamPag) : (($total / $this->intTamPag) + 1));
 
         $arrDados = array(
             "pag" => $pag,
@@ -1872,7 +2082,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             "propostasNaoEnviadas" => $rsPropostasNaoEnviadas,
             "formularioLocalizar" => $this->_urlPadrao . "/admissibilidade/admissibilidade/localizar",
             "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-propostas",
-            "urlPaginacao" => $this->_urlPadrao . "/admissibilidade/admissibilidade/listar-propostas-nao-enviadas?"
+            "urlPaginacao" => $this->_urlPadrao . "/admissibilidade/admissibilidade/listar-propostas-nao-enviadas?",
         );
 
         $this->montaTela("admissibilidade/listarpropostasnaoenviadas.phtml", $arrDados);
@@ -1882,7 +2092,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     {
         $arrDados = array(
             "resumo" => $_POST,
-            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-admissibilidade-propostas"
+            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-admissibilidade-propostas",
         );
         $this->montaTela("admissibilidade/resumopropostas.phtml", $arrDados);
     }
@@ -1909,7 +2119,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $arrDados = array(
             "resumo" => $_POST,
             "analistas" => $dados,
-            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-distribuicao-propostas"
+            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-distribuicao-propostas",
         );
         $this->montaTela("admissibilidade/resumodistribuicaopropostas.phtml", $arrDados);
     }
@@ -1918,7 +2128,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     {
         $arrDados = array(
             "resumo" => $_POST,
-            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-gerenciamento-propostas"
+            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-gerenciamento-propostas",
         );
         $this->montaTela("admissibilidade/resumogerenciamentopropostas.phtml", $arrDados);
     }
@@ -1927,7 +2137,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     {
         $arrDados = array(
             "resumo" => $_POST,
-            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-propostas-analise-final"
+            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-propostas-analise-final",
         );
         $this->montaTela("admissibilidade/resumopropostasanalisefinal.phtml", $arrDados);
     }
@@ -1955,7 +2165,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $arrDados = array(
             "resumoReavaliacao" => $arrReavaliacao,
             "resumoInicial" => $arrInicial,
-            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-proposta-analise-visual-tecnico"
+            "urlGerarGrafico" => $this->_urlPadrao . "/admissibilidade/admissibilidade/grafico-proposta-analise-visual-tecnico",
         );
         $this->montaTela("admissibilidade/resumopropostaanalisevisualtecnico.phtml", $arrDados);
     }
@@ -2115,19 +2325,19 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 if (isset($nomeInicial[1])) {
                     $analista[] = $nomeInicial[1];
                 }
-            }/*elseif(isset($_POST[$nomeAnalista])){
-                $chaves = array_keys($_POST);
-                $analista[]=$chaves[0];
-                break;
+            } /*elseif(isset($_POST[$nomeAnalista])){
+            $chaves = array_keys($_POST);
+            $analista[]=$chaves[0];
+            break;
             }*/
 
             /*if(isset($nomeInicial[1])){
-                $analista[] = str_replace("_", " ", $nomeInicial[1]);
-                $valores[$nomeInicial[1]][] = $qtde;
-                $valores2[] = $qtde;
-            }else{
-                $valores[$aux1[1]][] = 0;
-            }*/
+        $analista[] = str_replace("_", " ", $nomeInicial[1]);
+        $valores[$nomeInicial[1]][] = $qtde;
+        $valores2[] = $qtde;
+        }else{
+        $valores[$aux1[1]][] = 0;
+        }*/
         }
 
         $analista = array_unique($analista);
@@ -2202,12 +2412,11 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     {
         throw new Exception("Metodo descontinuado nesta vers&atilde;o");
         $arrDados = array(
-            "urlAcao" => $this->_urlPadrao . "/admissibilidade/admissibilidade/listar-propostas"
+            "urlAcao" => $this->_urlPadrao . "/admissibilidade/admissibilidade/listar-propostas",
         );
 
         $this->montaTela("admissibilidade/localizarpropostas.phtml", $arrDados);
     }
-
 
     public function localizarGerenciamentoPropostaAction()
     {
@@ -2218,7 +2427,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $this->view->novosAnalistas = AdmissibilidadeDAO::consultarRedistribuirAnaliseItemSelect($params);
         $arrDados = array(
             "urlAcao" => $this->_urlPadrao . "/admissibilidade/admissibilidade/gerenciamentodepropostas",
-            "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-gerenciamento-proposta"
+            "urlResumo" => $this->_urlPadrao . "/admissibilidade/admissibilidade/resumo-gerenciamento-proposta",
         );
 
         $this->montaTela("admissibilidade/localizarpropostasgerenciamento.phtml", $arrDados);
@@ -2267,7 +2476,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $dados = array(
 //                'DtArquivamento' => new Zend_Db_Expr('GETDATE()'),
                 'DtArquivamento' => null,
-                'stEstado' => 1
+                'stEstado' => 1,
             );
             $where = array('idPreProjeto = ?' => $post->nrProposta);
 
@@ -2362,7 +2571,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $total = $vwProjetoDistribuidoVinculada->buscarUnidades($where, $order, null, null, true);
         $fim = $inicio + $this->intTamPag;
 
-        $totalPag = (int)(($total % $this->intTamPag == 0) ? ($total / $this->intTamPag) : (($total / $this->intTamPag) + 1));
+        $totalPag = (int) (($total % $this->intTamPag == 0) ? ($total / $this->intTamPag) : (($total / $this->intTamPag) + 1));
         $tamanho = ($fim > $total) ? $total - $inicio : $this->intTamPag;
 
         $busca = $vwProjetoDistribuidoVinculada->buscarUnidades($where, $order, $tamanho, $inicio);
@@ -2379,7 +2588,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             "fim" => $fim,
             "totalPag" => $totalPag,
             "Itenspag" => $this->intTamPag,
-            "tamanho" => $tamanho
+            "tamanho" => $tamanho,
         );
 
         $this->view->paginacao = $paginacao;
@@ -2581,11 +2790,10 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $situacaoProjeto = Projeto_Model_Situacao::PROPOSTA_TRANSFORMADA_EM_PROJETO;
         $providenciaTomada = 'Proposta transformada em projeto cultural';
 
-
 //        if (!empty($stProposta) && $stProposta != $propostaNormal) {
-//            $situacaoProjeto = Projeto_Model_Situacao::ENCAMINHADO_PARA_ANALISE_TECNICA;
-//            $providenciaTomada = 'Projeto encamihado a unidade vinculada para an&aacute;lise e emiss&atilde;o de parecer t&eacute;cnico';
-//        }
+        //            $situacaoProjeto = Projeto_Model_Situacao::ENCAMINHADO_PARA_ANALISE_TECNICA;
+        //            $providenciaTomada = 'Projeto encamihado a unidade vinculada para an&aacute;lise e emiss&atilde;o de parecer t&eacute;cnico';
+        //        }
 
         $sqlProjetos = "INSERT INTO SAC.dbo.Projetos
                               (AnoProjeto,Sequencial,UFProjeto,Area,Segmento,Mecanismo,NomeProjeto,CgcCpf,Situacao,DtProtocolo,DtAnalise,
@@ -2610,21 +2818,21 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $idPronac = $db->lastInsertId();
         if (!empty($idPronac)) {
             // @todo a pedido do Rômulo todas as propostas seguirao o fluxo normal
-//            if (!empty($stProposta) && $stProposta != $propostaNormal) {
-//
-//                $tbPlanoDistribuicao = new PlanoDistribuicao();
-//                $idVinculada = $tbPlanoDistribuicao->buscarIdVinculada($idPreProjeto);
-//
-//                $tbDistribuirParecer = new tbDistribuirParecer();
-//                $resultado = $tbDistribuirParecer->inserirDistribuicaoParaParecer($idPreProjeto, $idPronac, $idVinculada);
-//
-//                $tbAnaliseDeConteudo = new tbAnaliseDeConteudo();
-//                $resultado = $tbAnaliseDeConteudo->inserirAnaliseConteudoParaParecerista($idPreProjeto, $idPronac);
-//
-//                $PlanilhaProjeto = new PlanilhaProjeto();
-//                $resultado = $PlanilhaProjeto->inserirPlanilhaParaParecerista($idPreProjeto, $idPronac);
-//
-//            }
+            //            if (!empty($stProposta) && $stProposta != $propostaNormal) {
+            //
+            //                $tbPlanoDistribuicao = new PlanoDistribuicao();
+            //                $idVinculada = $tbPlanoDistribuicao->buscarIdVinculada($idPreProjeto);
+            //
+            //                $tbDistribuirParecer = new tbDistribuirParecer();
+            //                $resultado = $tbDistribuirParecer->inserirDistribuicaoParaParecer($idPreProjeto, $idPronac, $idVinculada);
+            //
+            //                $tbAnaliseDeConteudo = new tbAnaliseDeConteudo();
+            //                $resultado = $tbAnaliseDeConteudo->inserirAnaliseConteudoParaParecerista($idPreProjeto, $idPronac);
+            //
+            //                $PlanilhaProjeto = new PlanilhaProjeto();
+            //                $resultado = $PlanilhaProjeto->inserirPlanilhaParaParecerista($idPreProjeto, $idPronac);
+            //
+            //            }
 
             # INSERIR INFORMAÇÕES NA TABELA CONTABANCARIA
             $sqlContaBancaria = "INSERT INTO SAC.dbo.ContaBancaria (AnoProjeto,Sequencial,Mecanismo,Banco,Agencia,Logon)
@@ -2645,7 +2853,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $idTextoEmail = 12;
 
                 $objTbTextoEmail = new tbTextoEmail();
-                $resultadoTetoEmail = $objTbTextoEmail->obterTextoPorIdentificador($idTextoEmail);;
+                $resultadoTetoEmail = $objTbTextoEmail->obterTextoPorIdentificador($idTextoEmail);
 
                 $objProjetos = new Projetos();
 
@@ -2683,7 +2891,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     {
         $start = $this->getRequest()->getParam('start');
         $length = $this->getRequest()->getParam('length');
-        $draw = (int)$this->getRequest()->getParam('draw');
+        $draw = (int) $this->getRequest()->getParam('draw');
         $search = $this->getRequest()->getParam('search');
         $order = $this->getRequest()->getParam('order');
         $columns = $this->getRequest()->getParam('columns');
@@ -2692,7 +2900,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             && $order[0]['column']
             && $order[0]['dir']
             && $order[0]['dir'] != 1)
-            ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : array("DtAvaliacao DESC");
+        ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : array("DtAvaliacao DESC");
 
         $vwPainelAvaliar = new Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas();
 
@@ -2708,6 +2916,21 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $distribuicaoAvaliacaoProposta = new Admissibilidade_Model_DistribuicaoAvaliacaoProposta();
         $distribuicaoAvaliacaoProposta->setIdOrgaoSuperior($orgaoSuperior);
         $distribuicaoAvaliacaoProposta->setIdPerfil($this->grupoAtivo->codGrupo);
+
+        $get = $this->getRequest()->getParams();
+        switch ($get['filtro']) {
+            case 'inicial':
+                $where['ConformidadeOK = ?'] = AvaliacaoProposta::CONFORMIDADE_OK_PRE_ENVIADO;
+                break;
+            case 'reavaliacao':
+                $where['ConformidadeOK = ?'] = AvaliacaoProposta::CONFORMIDADE_OK_REPROVADO;
+                break;
+            case 'vinculada':
+                break;
+            case 'avaliada':
+                $where['ConformidadeOK = ?'] = AvaliacaoProposta::CONFORMIDADE_OK_APROVADO;
+                break;
+        }
 
         $propostas = $vwPainelAvaliar->obterPropostasParaAvaliacao(
             $where,
@@ -2729,6 +2952,10 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $proposta->NomeProposta = utf8_encode($proposta->NomeProposta);
                 $proposta->Tecnico = utf8_encode($proposta->Tecnico);
                 $proposta->DtMovimentacao = $zDate->toString('dd/MM/y h:m');
+                $proposta->descricao_segmento = utf8_encode($proposta->descricao_segmento);
+                $proposta->descricao_area = utf8_encode($proposta->descricao_area);
+                $proposta->descricao_segmento_inicial = utf8_encode($proposta->descricao_segmento_inicial);
+                $proposta->descricao_area_inicial = utf8_encode($proposta->descricao_area_inicial);
                 $sugestaoEnquadramento->setIdPreprojeto($proposta->idProjeto);
                 $sugestaoEnquadramento->setIdOrgao($this->grupoAtivo->codOrgao);
                 $sugestaoEnquadramento->setIdPerfilUsuario($this->grupoAtivo->codGrupo);
@@ -2754,13 +2981,12 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $distribuicaoAvaliacaoProposta
             );
         }
-
         $this->_helper->json(
             [
                 "data" => !empty($aux) ? $aux : 0,
                 'recordsTotal' => $recordsTotal ? $recordsTotal->total : 0,
                 'draw' => $draw,
-                'recordsFiltered' => $recordsFiltered ? $recordsFiltered->total : 0
+                'recordsFiltered' => $recordsFiltered ? $recordsFiltered->total : 0,
             ]
         );
     }
@@ -2916,9 +3142,9 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                         $resposta = '';
                         $where = array(
                             'nrFormDocumento = ?' => $registro["nrFormDocumento"]
-                        , 'nrVersaoDocumento = ?' => $registro["nrVersaoDocumento"]
-                        , 'nrPergunta = ?' => $questao->nrPergunta
-                        , 'idProjeto = ?' => $this->idPreProjeto
+                            , 'nrVersaoDocumento = ?' => $registro["nrVersaoDocumento"]
+                            , 'nrPergunta = ?' => $questao->nrPergunta
+                            , 'idProjeto = ?' => $this->idPreProjeto,
                         );
                         $resposta = $tbRespostaDAO->buscar($where);
                         $arrPerguntas[$registro["nrFormDocumento"]]["titulo"] = $registro["nmFormDocumento"];
@@ -2936,8 +3162,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         }
     }
 
-
-    function analisarAlteracoesDaDiligenciaAction()
+    public function analisarAlteracoesDaDiligenciaAction()
     {
         $idPreProjeto = $this->getRequest()->getParam('idPreProjeto');
 

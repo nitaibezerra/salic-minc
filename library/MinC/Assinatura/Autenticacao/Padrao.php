@@ -3,13 +3,13 @@
 class MinC_Assinatura_Autenticacao_Padrao implements MinC_Assinatura_Autenticacao_IAutenticacaoAdapter
 {
     /**
-     * @var Autenticacao_Model_Usuario $usuario
+     * @var Autenticacao_Model_DbTable_Usuario $usuario
      */
     private $usuario;
 
     public function __construct($post, $identidadeUsuarioLogado)
     {
-        $this->usuario = new Autenticacao_Model_Usuario();
+        $this->usuario = new Autenticacao_Model_DbTable_Usuario();
         $this->usuario->setUsuIdentificacao($identidadeUsuarioLogado->usu_identificacao);
         $this->usuario->setUsuSenha($post['password']);
     }

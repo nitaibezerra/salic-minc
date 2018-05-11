@@ -17,14 +17,15 @@ header #topo {
     background-color: #acda5d;
 }
 
+header #topo #logo-homolog,
 header #topo #logo {
     width: 224px;
     display: inline-block;
 }
 
+header #topo #logo-homolog h1,
 header #topo #logo h1 {
     height: 60px;
-
     font-size: 12px;
     margin: 0;
     text-indent: -1000px;
@@ -34,15 +35,10 @@ header #topo #logo h1 {
 }
 
 header #topo #logo-homolog h1 {
-    height: 60px;
-    font-size: 12px;
-    margin: 0;
-    text-indent: -1000px;
-    background: url(/public/img/logo_salic_homolog.png) center no-repeat;
-    background-size: 150px;
-    cursor: pointer;
+    background-image: url(/public/img/logo_salic_homolog.png);
 }
 
+header #topo  #logo-homolog h1 a,
 header #topo  #logo h1 a {
     display: block;
     height: 58px;

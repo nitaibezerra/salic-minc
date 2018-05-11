@@ -423,7 +423,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             }
 
             // caso projeto tenha diligencia de prestacao de contas não mostrar menu readequacão
-            if ($dadosProjeto->Situacao == 'E17') {
+            if ($dadosProjeto->Situacao == 'E17' || $dadosProjeto->Situacao == 'E30') {
                 $Readequacao = 0;
                 $Readequacao_50 = 0;
             }

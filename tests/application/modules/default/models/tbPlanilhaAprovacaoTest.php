@@ -12,7 +12,7 @@ class TbPlanilhaAprovacaoTest extends MinC_Test_ModelTestCase
 
         // Marcado para refatoração futura
         // * fixture do banco de dados com dados controlados
-        $this->idPronac = '206025';
+        $this->idPronac = '202665';
     }
 
     public function testValorTotalPlanilha()
@@ -35,9 +35,9 @@ class TbPlanilhaAprovacaoTest extends MinC_Test_ModelTestCase
         // * fixture do banco de dados com dados controlados
         $nrFonteRecurso = 109;
         $idProduto = 51;
-        $idEtapa = 1;
-        $idMunicipioDespesa = 431490;
-        $idPlanilhaItem = 35;
+        $idEtapa = 2;
+        $idMunicipioDespesa = 430930;
+        $idPlanilhaItem = 1125;
         
         $this->assertTrue(
             $tbPlanilhaAprovacao->itemJaAdicionado(

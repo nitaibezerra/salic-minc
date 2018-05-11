@@ -4,23 +4,12 @@
  *
  *
  */
-class Proposta_Model_DbTable_TbDetalhamentoPlanoDistribuicaoProduto extends MinC_Db_Table_Abstract
+class Proposta_Model_DbTable_TbDetalhaPlanoDistribuicao extends MinC_Db_Table_Abstract
 {
-    /**
-     * _schema
-     *
-     * @var string
-     * @access protected
-     */
-    protected $_schema = 'sac';
 
-    /**
-     * _name
-     *
-     * @var bool
-     * @access protected
-     */
+    protected $_schema = 'sac';
     protected $_name = 'tbDetalhaPlanoDistribuicao';
+    protected $_primary = 'idDetalhaPlanoDistribuicao';
 
     public function salvar($dados)
     {
@@ -30,27 +19,7 @@ class Proposta_Model_DbTable_TbDetalhamentoPlanoDistribuicaoProduto extends MinC
     public function listarPorMunicicipioUF($dados)
     {
         $cols = array(
-            'idDetalhaPlanoDistribuicao',
-            'idPlanoDistribuicao',
-            'idUF' ,
-            'idMunicipio' ,
-            'stDistribuicao' ,
-            'dsProduto' ,
-            'qtExemplares' ,
-            'qtGratuitaDivulgacao' ,
-            'qtGratuitaPatrocinador' ,
-            'qtGratuitaPopulacao' ,
-            'qtPopularIntegral' ,
-            'qtPopularParcial' ,
-            "vlUnitarioPopularIntegral as vlUnitarioPopularIntegral",
-            "vlReceitaPopularIntegral as vlReceitaPopularIntegral",
-            "vlReceitaPopularParcial as vlReceitaPopularParcial",
-            'qtProponenteIntegral' ,
-            'qtProponenteParcial' ,
-            "vlUnitarioProponenteIntegral as  vlUnitarioProponenteIntegral",
-            "vlReceitaProponenteIntegral as vlReceitaProponenteIntegral",
-            "vlReceitaProponenteParcial as vlReceitaProponenteParcial",
-            "vlReceitaPrevista as vlReceitaPrevista"
+            '*'
         );
 
         $sql = $this->select()

@@ -68,7 +68,7 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $idOrgao = $GrupoAtivo->codOrgao; //  ¿rg¿o ativo na sess¿o
 
-        $UsuarioDAO = new Autenticacao_Model_Usuario();
+        $UsuarioDAO = new Autenticacao_Model_DbTable_Usuario();
         $agente = $UsuarioDAO->getIdUsuario($idusuario);
         $idAgenteParecerista = $agente['idagente'];
 
@@ -117,8 +117,6 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
 
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $idOrgao = $GrupoAtivo->codOrgao; //  ¿rg¿o ativo na sess¿o
-        $UsuarioDAO = Autenticacao_Model_Usuario();
-
         $idAgenteParecerista = $idusuario;
 
         $nrRelatorio = $this->_request->getParam("nrRelatorio");
@@ -1011,7 +1009,7 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
 
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $idOrgao = $GrupoAtivo->codOrgao; //  ¿rg¿o ativo na sess¿o
-        $UsuarioDAO = Autenticacao_Model_Usuario();
+        $UsuarioDAO = new Autenticacao_Model_DbTable_Usuario();
         $agente = $UsuarioDAO->getIdUsuario($idusuario);
         $idAgenteParecerista = $agente['idAgente'];
 

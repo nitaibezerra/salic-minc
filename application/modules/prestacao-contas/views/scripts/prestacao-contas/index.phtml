@@ -1,2 +1,25 @@
-<?php var_dump($this->foos);?>
-<?php var_dump($this->toos);?>
+<div id="app" class="container-fluid">
+    <page-title></page-title>
+  <!-- component matched by the route will render here -->
+  <router-view></router-view>
+</div>
+
+<!-- vendor -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="https://unpkg.com/vuetable-2@1.6.0"></script>
+<!-- vendor -->
+
+<!-- componentes -->
+<script src="/public/scripts/prestacao-contas/components/page-title.vue.js"></script>
+<script src="/public/scripts/prestacao-contas/components/button-analisar.vue.js"></script>
+<!-- componentes -->
+
+
+<!-- views -->
+<script src="/public/scripts/prestacao-contas/views/index.vue.js"></script>
+<script src="/public/scripts/prestacao-contas/views/analisar.vue.js"></script>
+<!-- views -->
+
+<script src="/public/scripts/prestacao-contas/router.vue.js"></script>
+<script src="/public/scripts/prestacao-contas/app.vue.js"></script>

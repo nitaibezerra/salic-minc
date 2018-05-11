@@ -101,8 +101,12 @@
                                         <td><?php echo $this->produto->Sintese; ?></td>
                                         <td><?php echo $this->etapa->Descricao; ?></td>
                                         <td><?php echo $this->item->Descricao; ?></td>
-                                        <td><?php echo $this->currency($this->itemPlanilhaAprovacao->valorAprovado); ?></td>
-                                        <td><?php echo $this->currency($this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'); ?></td>
+                                        <td>
+                                            <?php echo $this->currency($this->valores->vlAprovado ? $this->valores->vlAprovado : '0'); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $this->currency($this->valores->vlComprovado ? $this->valores->vlComprovado : '0'); ?>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -128,7 +132,7 @@
                                     <input type='hidden' name='idpronac' id='idpronac'
                                            value='<?php echo $this->idpronac; ?>'/>
 
-                                    <?php if ($this->idComprovantePagamento): ?>
+                                    <?php if ($this->idComprovantePagamento && $this->idTipoDiligencia != 174): ?>
                                         <input type='hidden' name='paginaRedirecionar' id='paginaRedirecionar'
                                                value='comprovacaopagamento'/>
                                     <?php endif; ?>
@@ -507,15 +511,20 @@
                                                         id="frComprovarPagamentoSubmit" value="" class="btn">salvar
                                                 </button>
                                                 <!-- input type="button" name="incluirNovo" id="incluirNovo" value="" class="btn_novo" /-->
-                                                <button type="button" name="incluirNovo" id="incluirNovo" value=""
-                                                        class="btn">novo
-                                                </button>
+
+                                                <?php if ($this->idTipoDiligencia == 645 || $this->idTipoDiligencia == null ) : ?>
+                                                    <button type="button" name="incluirNovo" id="incluirNovo" value=""
+                                                            class="btn">novo
+                                                    </button>
+                                                <?php endif; ?>
                                             <?php else: ?>
                                                 <!--input type="submit" name="frComprovarPagamentoSubmit" id="frComprovarPagamentoSubmit" value="" class="btn_incluir" /-->
-                                                <button type="submit" name="frComprovarPagamentoSubmit"
-                                                        id="frComprovarPagamentoSubmit" value="" class="btn">
-                                                    <i class="material-icons left ">add</i>incluir
-                                                </button>
+                                                <?php if ($this->idTipoDiligencia != 174 || $this->idTipoDiligencia == null ) : ?>
+                                                    <button type="submit" name="frComprovarPagamentoSubmit"
+                                                            id="frComprovarPagamentoSubmit" value="" class="btn">
+                                                        <i class="material-icons left ">add</i>incluir
+                                                    </button>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         </div>
                                     </div>

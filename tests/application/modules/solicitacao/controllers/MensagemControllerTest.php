@@ -9,9 +9,6 @@ class Solicitacao_MensagemControllerTest extends MinC_Test_ControllerActionTestC
     public function setUp()
     {
         parent::setUp();
-
-        $this->idPreProjeto = 276034;
-
         $this->autenticar();
         $this->resetRequest()->resetResponse();
         $this->alterarPerfil(
@@ -25,13 +22,15 @@ class Solicitacao_MensagemControllerTest extends MinC_Test_ControllerActionTestC
         );
         $this->resetRequest()->resetResponse();
     }
-
-    public function testListarAction()
+    public function testIndexAction()
     {
-//        $this->alterarPerfil(Autenticacao_Model_Grupos::COMPONENTE_COMISSAO, Orgaos::ORGAO_SUPERIOR_SAV);
         $this->dispatch("/solicitacao/mensagem/index");
         $this->assertUrl('solicitacao', 'mensagem', 'index');
 
-        $this->assertQuery('div.container-fluid div');
+    }
+    public function testListarAction()
+    {
+        $this->dispatch("/solicitacao/mensagem/listar");
+        $this->assertUrl('solicitacao', 'mensagem', 'listar');
     }
 }
