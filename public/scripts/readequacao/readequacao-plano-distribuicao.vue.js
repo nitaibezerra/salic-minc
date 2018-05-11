@@ -20,14 +20,14 @@ Vue.component('readequacao-plano-distribuicao', {
             produtos: {},
             detalhamentos: {},
             locais: {},
-            disabled: false,
             active: true,
             componenteDetalhamento: "readequacao-plano-distribuicao-detalhamentos"
         }
     },
-    props: [
-        'idPronac'
-    ],
+    props: {
+        'idPronac': '',
+        'disabled' : false
+    },
     mixins: [utils],
     watch: {
         idPronac: function (value) {

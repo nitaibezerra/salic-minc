@@ -14,12 +14,13 @@ Vue.component('plano-distribuicao-detalhamentos-consolidacao', {
                 <td class="right-align"> -</td>
                 <td class="center-align"><b>{{ qtDistribuicaoGratuitaTotal }}</b></td>
                 <td class="right-align"><b>{{ receitaPrevistaTotal }}</b></td>
-                <td colspan="2"></td>
+                <td v-if="!disabled" colspan="2"></td>
             </tr>
         </tfoot>
     `,
     props: {
         detalhamentos: {},
+        disabled: false
     },
     mixins: [utils],
     computed: {

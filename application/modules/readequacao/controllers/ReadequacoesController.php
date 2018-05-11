@@ -1757,6 +1757,11 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         $p = $Projetos->buscarProjetoXProponente(array('idPronac = ?' => $d->idPronac))->current();
         $this->view->projeto = $p;
 
+        $fnIN2017 = new fnVerificarProjetoAprovadoIN2017();
+
+        $this->in2017 = $fnIN2017->verificar($d->idPronac);
+        $this->view->in2017 = $this->in2017;
+
         $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
         $this->view->Parecer = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao = ?'=>$id, 'idTipoAgente =?'=>1))->current();
     }
@@ -1842,7 +1847,6 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         }
         $this->view->dados = $dados;
         $this->view->idPronac = $dados->idPronac;
-
         $this->view->nmPagina = $dados->dsReadequacao;
         $d = array();
         $d['ProvidenciaTomada'] = 'Readequa&ccedil;&atilde;o enviado para avalia&ccedil;&atilde;o t&eacute;cnica.';
@@ -1857,6 +1861,11 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
 
         $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
         $this->view->Parecer = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao = ?'=>$idReadequacao, 'b.idTipoAgente = ?'=>1))->current();
+
+        $fnIN2017 = new fnVerificarProjetoAprovadoIN2017();
+
+        $this->in2017 = $fnIN2017->verificar($dados->idPronac);
+        $this->view->in2017 = $this->in2017;
 
         //DADOS DO PROJETO
         $p = $Projetos->buscarProjetoXProponente(array('idPronac = ?' => $dados->idPronac))->current();

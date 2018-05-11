@@ -69,19 +69,32 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
         $dadosReadequacao = $tbReadequacao->buscar(array('idReadequacao=?' => $idReadequacao))->current();
         $siEncaminhamento = $dadosReadequacao->siEncaminhamento;
 
+        $Produtos = new Produto();
+        $produtos = $Produtos->buscar(array('stEstado=?' => 0), array('Descricao'));
+
+        $Verificacao = new Verificacao();
+        $posicoesLogomarca = $Verificacao->buscar(array('idTipo=?' => 3), array('Descricao'));
+
+        $Area = new Area();
+        $areas = $Area->buscar(array('Codigo != ?' => 7), array('Descricao'));
+
         $get = Zend_Registry::get('get');
         $link = isset($get->link) ? true : false;
 
         $this->montaTela(
-            'plano-distribuicao/carregar-planos-de-distribuicao.phtml',
+            'plano-distribuicao/visualizar-planos-de-distribuicao.phtml',
             array(
                 'idPronac' => $idPronac,
-                'planosDeDistribuicao' => $planosDistribuicao,
-                'link' => $link,
+                'planosDistribuicao' => $planosDistribuicao,
+                'produtos' => $produtos,
+                'posicoesLogomarca' => $posicoesLogomarca,
+                'areas' => $areas,
                 'idReadequacao' => $idReadequacao,
+                'link' => $link,
                 'siEncaminhamento' => $siEncaminhamento
             )
         );
+
     }
 
     public function incluirPlanosDeDistribuicaoAction()
@@ -242,7 +255,7 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
             }
 
             $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
-            $dados['planodistribuicao'] = $tbPlanoDistribuicaoMapper->obterPlanosDistribuicao($this->projeto);
+            $dados['planodistribuicao'] = $tbPlanoDistribuicaoMapper->obterPlanosDistribuicao($this->projeto, $this->idPerfil);
 
             $detalhamentoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
             $dados['detalhamentos'] = $detalhamentoMapper->obterDetalhamentosParaReadequacao($this->projeto);
@@ -276,6 +289,10 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
                 throw new Exception("Projeto &eacute; obrigat&oacute;rio");
             }
 
+            if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+                throw new Exception("Acesso negado!");
+            }
+
             $detalhamentoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
             $mdlDetalhaReadequacao = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao();
 
@@ -297,6 +314,10 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
 
             if (empty($this->projeto)) {
                 throw new Exception("Projeto &eacute; obrigat&oacute;rio");
+            }
+
+            if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+                throw new Exception("Acesso negado!");
             }
 
             $mdlDetalhaReadequacao = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao();
@@ -323,6 +344,10 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
 
             if (empty($this->projeto)) {
                 throw new Exception("Projeto &eacute; obrigat&oacute;rio");
+            }
+
+            if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+                throw new Exception("Acesso negado!");
             }
 
             $mdlDetalhaReadequacao = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao();

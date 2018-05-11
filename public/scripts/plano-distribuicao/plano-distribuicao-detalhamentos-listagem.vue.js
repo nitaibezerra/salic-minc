@@ -10,7 +10,7 @@ Vue.component('plano-distribuicao-detalhamentos-listagem', {
                         <th colspan="3" class="popular center-align">Pre&ccedil;o Popular</th>
                         <th rowspan="2" class="gratuito center-align">Distribui&ccedil;&atilde;o <br>Gratuita</th>
                         <th rowspan="2" class="center-align">Receita <br> Prevista</th>
-                        <th rowspan="2" colspan="2" width="12%" class="center-align">A&ccedil;&otildees</th>
+                        <th v-if="!disabled" rowspan="2" colspan="2" width="12%" class="center-align">A&ccedil;&otildees</th>
                     </tr>
                     <tr>
                         <th class="proponente center-align">Qtd. Inteira</th>
@@ -42,7 +42,7 @@ Vue.component('plano-distribuicao-detalhamentos-listagem', {
                             }}
                         </td>
                         <td class="right-align">{{ formatarValor(detalhamento.vlReceitaPrevista) }}</td>
-                        <td colspan="2">
+                        <td colspan="2" v-if="!disabled">
                             <component
                                 v-bind:is="componenteDetalhamento"
                                 :disabled="disabled"
@@ -61,6 +61,7 @@ Vue.component('plano-distribuicao-detalhamentos-listagem', {
                 
                 <plano-distribuicao-detalhamentos-consolidacao
                     :detalhamentos="detalhamentos"
+                    :disabled="disabled"
                 ></plano-distribuicao-detalhamentos-consolidacao>
             </table>
             <table style="max-width: 300px; margin: 0;" v-if="detalhamentos && detalhamentos.length > 0">

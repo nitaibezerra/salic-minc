@@ -12,12 +12,12 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
         return parent::save($model);
     }
 
-    public function obterPlanosDistribuicao(Projeto_Model_TbProjetos $projeto)
+    public function obterPlanosDistribuicao(Projeto_Model_TbProjetos $projeto, $idPerfil)
     {
         $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
         $planosDistribuicao = $tbPlanoDistribuicao->obterPlanosDistribuicaoReadequacao($projeto->getIdPRONAC());
 
-        if (count($planosDistribuicao) == 0) {
+        if (count($planosDistribuicao) == 0 && $idPerfil == Autenticacao_Model_Grupos::PROPONENTE) {
 
             $tbDetalhaPlanoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
             $tbDetalhaPlanoMapper->copiarDetalhamentosDaProposta($projeto);

@@ -17,7 +17,8 @@ Vue.component('plano-distribuicao-listagem', {
                             title="Editar detalhamentos do produto"
                             @click.prevent="visualizarOcultarDetalhamentos()"
                         >
-                            <span v-if="active">Editar<i class="material-icons right">edit</i></span>
+                            <span v-if="active && !disabled">Editar<i class="material-icons right">edit</i></span>
+                            <span v-if="active && disabled">Visualizar detalhamentos<i class="material-icons right">visibility</i></span>
                             <span v-if="!active">Visualizar resumo<i class="material-icons right">visibility</i></span>
                         </a>
                     </div>
@@ -129,7 +130,8 @@ Vue.component('plano-distribuicao-listagem', {
             });
         },
         visualizarOcultarDetalhamentos: function () {
-            if (!this.active) {
+
+            if (!this.active && !this.disabled) {
                 detalhamentoEventBus.$emit('busAtualizarProdutos', true);
             }
             this.active = !this.active;
