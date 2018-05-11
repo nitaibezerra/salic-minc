@@ -20,6 +20,7 @@
 //    $applicationConf = Zend_Registry::get('config')->application->{APPLICATION_ENV};
     $config = Zend_Registry::get('config');
     $configLayout = $config->layout->{$this->layout()->name};
+    $gitTag = $this->gitTag();
 
     $arrJsFiles = array();
     if ($configLayout->resources->js->global->files) {
@@ -35,7 +36,11 @@
 
 //    $arrJsFiles = array_reverse($arrJsFiles);
     foreach ($arrJsFiles as $strJsValue) {
-        $this->headScript()->appendFile($configLayout->resources->js->path . '/' . $strJsValue, 'text/javascript', array('language' => 'javascript'));
+        $this->headScript()->appendFile(
+            $configLayout->resources->js->path . '/' . $strJsValue . '?v=' . $gitTag,
+            'text/javascript',
+            array('language' => 'javascript')
+        );
 //        $this->headScript()->prependFile($configLayout->resources->js->path . '/' . $strJsValue, 'text/javascript', array('language' => 'javascript'));
     }
 
@@ -50,10 +55,12 @@
             $arrCssFiles[] = $arrCssValues;
         }
     }
-//    $arrCssFiles = array_reverse($arrCssFiles);
+
+
+
     foreach ($arrCssFiles as $arrCssValue) {
         $this->headLink()->appendStylesheet(
-            $configLayout->resources->css->path . '/' . $arrCssValue,
+            $configLayout->resources->css->path . '/' . $arrCssValue . '?v=' . $gitTag,
             'all',
             true,
             array('rel' => 'stylesheet')

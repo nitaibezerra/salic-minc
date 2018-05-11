@@ -14,7 +14,6 @@ module.exports = {
         app: './src/main.js',
         style: './src/style/main.scss',
         proposta: './src/modules/proposta/proposta.js'
-
     },
     output: {
         path: config.build.assetsRoot,
