@@ -111,6 +111,7 @@
 </template>
 
 <script>
+
     export default {
         name: 'salic-proposta-plano-distribuicao',
         data: function () {

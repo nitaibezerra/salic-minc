@@ -25,6 +25,8 @@
 </template>
 
 <script>
+    import numeral from 'numeral'
+    
     export default {
         name: "salic-proposta-detalhamento-consolidacao",
         props: {
@@ -39,7 +41,7 @@
                 }
                 return total;
             },
-            // Total de divulgação gratuita.
+            // Total de divulgaÃ§Ã£o gratuita.
             qtGratuitaDivulgacaoTotal: function () {
                 total = 0;
                 for (var i = 0; i < this.items.length; i++) {
@@ -47,7 +49,7 @@
                 }
                 return total;
             },
-            // Total de divulgação Patrocinador
+            // Total de divulgaÃ§Ã£o Patrocinador
             qtGratuitaPatrocinadorTotal: function () {
                 total = 0;
                 for (var i = 0; i < this.items.length; i++) {
@@ -55,7 +57,7 @@
                 }
                 return total;
             },
-            // Total de divulgação gratuita.
+            // Total de divulgaÃ§Ã£o gratuita.
             qtGratuitaPopulacaoTotal: function () {
                 total = 0;
                 for (var i = 0; i < this.items.length; i++) {
@@ -63,7 +65,7 @@
                 }
                 return total;
             },
-            //Preço Popular: Quantidade de Inteira
+            //PreÃ§o Popular: Quantidade de Inteira
             qtPopularIntegralTotal: function () {
                 total = 0;
                 for (var i = 0; i < this.items.length; i++) {
@@ -71,7 +73,7 @@
                 }
                 return total;
             },
-            //Preço Popular: Quantidade de meia entrada
+            //PreÃ§o Popular: Quantidade de meia entrada
             qtPopularParcialTotal: function () {
                 total = 0;
                 for (var i = 0; i < this.items.length; i++) {
@@ -150,7 +152,7 @@
 
                 return valor;
             }
-        }ß
+        }ÃŸ
     }
 </script>
 

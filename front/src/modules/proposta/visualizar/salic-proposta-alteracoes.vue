@@ -1,5 +1,5 @@
 <template>
-    <div class="alteracoes-proposta">
+    <div class="alteracoes-proposta"> aaaaaaa
         <ul class="collapsible" data-collapsible="expandable">
             <li>
                 <div class="collapsible-header"
@@ -19,7 +19,7 @@
                                                           :proposta="dadosAtuais"></salic-proposta-identificacao>
                         </div>
                     </div>
-                </div>ß
+                </div>
             </li>
             <li>
                 <div class="collapsible-header"><i class="material-icons">history</i>Hist&oacute;rico de avalia&ccedil;&otilde;es

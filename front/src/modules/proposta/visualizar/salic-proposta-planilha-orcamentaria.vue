@@ -88,6 +88,8 @@
 </template>
 
 <script>
+    import numeral from 'numeral'
+
     export default {
         name: 'salic-proposta-planilha-orcamentaria',
         data: function () {

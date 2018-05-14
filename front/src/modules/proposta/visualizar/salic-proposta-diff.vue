@@ -7,9 +7,9 @@
         <div v-else-if="Object.keys(dadosAtuais).length > 2">
             <div class="card padding20">
                 <div class="nao-existe-versao-proposta">
-                    <h4><i class="material-icons small left">report</i>Não existe versionamento de alterações para o
+                    <h4><i class="material-icons small left">report</i>NÃ£o existe versionamento de alteraÃ§Ãµes para o
                         projeto informado...</h4>
-                    <p style="margin-left: 44px">O proponente não fez alterações no projeto no prazo estabelecido.</p>
+                    <p style="margin-left: 44px">O proponente nÃ£o fez alteraÃ§Ãµes no projeto no prazo estabelecido.</p>
                 </div>
             </div>
             <salic-proposta :idpreprojeto="idpreprojeto" :proposta="dadosAtuais"></salic-proposta>
@@ -24,6 +24,7 @@
     </div>
 </template>
 <script>
+
     export default {
         data: function () {
             return {
@@ -49,7 +50,7 @@
             }
         },
         created: function() {
-          console.log("comoponte diff create");
+          console.log("comoponte diff createadddd");
         },
         methods: {
             buscar_dados: function () {

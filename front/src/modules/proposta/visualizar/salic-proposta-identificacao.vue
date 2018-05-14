@@ -9,7 +9,7 @@
                         {{ proposta.PRONAC }}
                     </div>
                     <div class="col s12 l3 m3" v-if="proposta.idPreProjeto">
-                        <b>Nº da proposta</b><br>
+                        <b>NÂº da proposta</b><br>
                         {{ proposta.idPreProjeto }}
                     </div>
                     <div class="col s12 l6 m6">
@@ -48,7 +48,7 @@
                         <salic-texto-simples :texto="proposta.AgenciaBancaria"></salic-texto-simples>
                     </div>
                     <div class="col s12 l3 m3" v-if="proposta.AreaAbrangencia">
-                        <b>É proposta audiovisual</b><br>
+                        <b>Ã‰ proposta audiovisual</b><br>
                         {{ AreaAbrangencia }}
                     </div>
                     <div class="col s12 l3 m3" v-if="proposta.tpProrrogacao">
@@ -67,7 +67,7 @@
                 <h5>Tombamento</h5>
                 <div class="row">
                     <div class="col s12 l4 m4">
-                        <b>Nº Ato</b><br>
+                        <b>NÂº Ato</b><br>
                         {{ proposta.NrAtoTombamento }}
                     </div>
                     <div class="col s12 l4 m4">
@@ -85,6 +85,8 @@
 </template>
 
 <script>
+    import moment from 'moment'
+
     export default {
         name: 'salic-proposta-identificacao',
         props: {
@@ -103,7 +105,7 @@
                 if (valor == 1)
                     return 'Sim';
                 else
-                    return 'Não';
+                    return 'NÃ£o';
             },
             label_mecanismo: function (valor) {
                 switch (valor) {
@@ -111,7 +113,7 @@
                         return 'Mecenato';
                         break;
                     default:
-                        return 'Inválido';
+                        return 'InvÃ¡lido';
                         break;
                 }
             },
@@ -136,7 +138,7 @@
                         string = 'Federal';
                         break;
                     default:
-                        string = 'Não informada';
+                        string = 'NÃ£o informada';
                         break;
                 }
 

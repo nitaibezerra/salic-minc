@@ -63,6 +63,8 @@
 </template>
 
 <script>
+    import numeral from 'numeral'
+
     export default {
         data: function () {
             return {

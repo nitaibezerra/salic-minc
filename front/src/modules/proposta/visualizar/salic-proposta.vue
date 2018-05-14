@@ -17,7 +17,7 @@
                 </div>
             </li>
             <li>
-                <div class="collapsible-header"><i class="material-icons">history</i>Hist&oacute;rico de avalia&ccedil;&otilde;es
+                <div class="collapsible-header"><i class="material-icons">history</i>Histórico de avaliações
                 </div>
                 <div class="collapsible-body padding20">
                     <salic-proposta-historico-avaliacoes
