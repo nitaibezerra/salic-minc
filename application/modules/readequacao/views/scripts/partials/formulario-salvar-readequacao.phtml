@@ -1,0 +1,187 @@
+<form name="formReadequacao"
+      id="formReadequacao"
+      action="<?php echo $this->url(
+          [
+              'module' => 'readequacao',
+              'controller' => 'readequacoes',
+              'action' => 'incluir-solicitacao-readequacao'
+          ], null, true); ?><?php echo '?idPronac=' . Seguranca::encrypt($this->idPronac); ?>"
+      method="post"
+      enctype="multipart/form-data">
+    <input type="hidden" id="idReadequacao" name="idReadequacao"
+           value="<?php echo $this->readequacao->idReadequacao; ?>">
+    <input type="hidden" id="pertenceIn2017" name="pertenceIn2017" value="<?php echo $this->in2017; ?>">
+    <input type="hidden" id="tipoReadequacao" name="tipoReadequacao" value="<?php echo $this->idTipoReadequacao; ?>">
+
+    <div class="row">
+        <div class="col s12">
+            <span>Justificativa da Solicita&ccedil;&atilde;o </span><span class="red-text">*</span>
+            <textarea cols="80" class="editor" id="descJustificativa" name="descJustificativa" rows="10"></textarea>
+        </div>
+        <div class="col s12">
+            <span>Anexo</span><br>
+            <input type="file" name="arquivo" class="input_simples">
+            <span style="margin-left: 10px;" class="red-text">Somente arquivos .pdf</span>
+        </div>
+    </div>
+    <div class="padding20 center-align">
+        <a
+            id="IncluirReadequacao" class="waves-effect waves-light btn btn-primary">
+            <i class="material-icons right">save</i>Salvar
+        </a>
+        <a
+            href="javascript:void(0)"
+            id="btn_finalizar"
+            class="waves-effect waves-light btn btn-secondary">
+            <i class="material-icons right">send</i>Finalizar
+        </a>
+        <a
+            href="javascript:void(0)"
+            class="btn waves-effect waves-light btn-danger btn-excluir"
+            title="Excluir readequa&ccedil;&atilde;o"
+            readequacao="<?php echo $this->idReadequacao; ?>"
+        > Excluir
+            <i class="material-icons right">delete</i>
+        </a>
+    </div>
+</form>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("textarea.editor").each(function () {
+            $(this).editorRico({
+                altura: 200,
+                maxchar: 5000,
+                isLimitarCarateres: true,
+                isDesabilitarEdicao: 0
+            });
+        });
+
+        $('#IncluirReadequacao').click(function () {
+            var descJustificativa = CKEDITOR.instances['descJustificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, ''),
+                texto = CKEDITOR.instances['descJustificativa'].getData(),
+                erro = 0,
+                msg = 'Favor preencher os dados obrigat&oacute;rios!',
+                tipoRead = $('#tipoReadequacao').val(),
+                solicitacoesSimples = new Array(3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21),
+                solicitacoesSimplesCKEditor = new Array(5, 6, 7, 8, 16, 17, 18, 19, 20, 21),
+                naoPedeConfirmacao = new Array(2, 11);
+
+            if (descJustificativa == '') {
+                erro++;
+            }
+
+            if (texto.length > 5000) {
+                erro++;
+                msg = 'O campo s\u00F3 permite 5.000 caracteres!';
+            }
+
+            if (in_array(tipoRead, solicitacoesSimples)) {
+
+
+                if (tipoRead == 15) {
+                    var campoRead = CKEDITOR.instances['descSolicitacao'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, ''),
+                        textoSolicitacao = CKEDITOR.instances['descSolicitacao'].getData();
+                    if (campoRead == '') {
+                        erro++;
+                    } else if (textoSolicitacao.length > 1000) {
+                        erro++;
+                        msg = 'O campo s\u00F3 permite 1.000 caracteres!';
+                    }
+                }
+
+                if (in_array(tipoRead, solicitacoesSimplesCKEditor)) {
+                    var campoRead = CKEDITOR.instances['descSolicitacao'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, ''),
+                        textoSolicitacao = CKEDITOR.instances['descSolicitacao'].getData();
+                    if (campoRead == '') {
+                        erro++;
+                    }
+                }
+            }
+
+            if (erro > 0) {
+                $("#msgAlerta").dialog("destroy");
+                $("#msgAlerta").html(msg);
+                $("#msgAlerta").dialog({
+                    resizable: false,
+                    title: 'Alerta!',
+                    width: 340,
+                    height: 170,
+                    modal: true,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('.ui-dialog-titlebar-close').remove();
+            } else {
+                $("#msgAlerta").dialog("destroy");
+                $("#msgAlerta").html('Deseja incluir essa solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o?');
+                $("#msgAlerta").dialog({
+                    resizable: false,
+                    title: 'Alerta!',
+                    width: 360,
+                    height: 170,
+                    modal: true,
+                    buttons: {
+                        'N\u00E3o': function () {
+                            $(this).dialog('close');
+                        },
+                        'Sim': function () {
+                            $(this).dialog('close');
+                            $("#msgAlerta").dialog("destroy");
+                            $("#msgAlerta").html('<br /><div align="center"><img src="<?php echo $this->baseUrl() . '/public/img/ajax.gif'; ?>"><br />Aguarde..</div>');
+                            $("#msgAlerta").dialog({
+                                resizable: false,
+                                width: 320,
+                                modal: true,
+                                title: 'Carregando..'
+                            });
+                            $('.ui-dialog-titlebar-close').remove();
+                            window.setTimeout('enviarformulario()', 1000);
+                        }
+                    }
+                });
+                $('.ui-dialog-titlebar-close').remove();
+            }
+        });
+
+        $('.btn-excluir').click(function () {
+            var idReadequacao = $(this).attr('readequacao');
+            $("#msgAlerta").dialog("destroy");
+            $("#msgAlerta").html('Deseja excluir a solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o?');
+            $("#msgAlerta").dialog({
+                resizable: false,
+                title: 'Alerta!',
+                width: 360,
+                modal: true,
+                buttons: {
+                    'N\xE3o': function () {
+                        $(this).dialog('close');
+                    },
+                    'Sim': function () {
+                        $(this).dialog('close');
+                        $("#msgAlerta").dialog("destroy");
+                        $("#msgAlerta").html('<br /><div align="center"><img src="<?php echo $this->baseUrl() . '/public/img/ajax.gif'; ?>"><br />Aguarde..</div>');
+                        $("#msgAlerta").dialog({
+                            resizable: false,
+                            width: 320,
+                            modal: true,
+                            title: 'Carregando..'
+                        });
+                        $('.ui-dialog-titlebar-close').remove();
+                        window.setTimeout('excluirReadequacao(' + idReadequacao + ')', 1000);
+                    }
+                }
+            });
+            $('.ui-dialog-titlebar-close').remove();
+        });
+
+        function enviarformulario() {
+            $('#formReadequacao').submit();
+        }
+    });
+</script>

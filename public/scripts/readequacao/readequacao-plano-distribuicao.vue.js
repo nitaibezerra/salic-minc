@@ -1,6 +1,6 @@
 Vue.component('readequacao-plano-distribuicao', {
     template: `
-        <div class="readequacao-plano-distribuicao padding10">
+        <div class="readequacao-plano-distribuicao">
              <div v-if="!produtos.length" class="padding10">
                 <b>Aguarde! Carregando....</b>
             </div>

@@ -7,6 +7,15 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
         parent::init();
     }
 
+    public function indexAction()
+    {
+        $idPronac = $this->_request->getParam("idPronac");
+
+        $this->view->projeto = $this->projeto;
+        $this->view->idTipoReadequacao = Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO;
+
+    }
+
     public function carregarPlanosDeDistribuicaoAction()
     {
         $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout

@@ -28,7 +28,7 @@ Vue.component('plano-distribuicao-listagem', {
                         </div>
                    </transition>
                    <transition name="custom-classes-transition" enter-active-class="animated bounceInUp">
-                        <ul v-show="!active" class="collapsible collapsible-locais padding10" data-collapsible="accordion">
+                        <ul v-show="!active" class="collapsible collapsible-locais" data-collapsible="accordion">
                             <li v-for="local of locais" v-if="local.idMunicipio">
                                 <div class="collapsible-header black-text active">
                                     <i class="material-icons">place</i> {{local.uf}} - {{local.municipio}}
