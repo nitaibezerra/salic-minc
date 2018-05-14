@@ -327,15 +327,18 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
             $this->view->isPermitidoEncaminharAvaliacao = $this->_isPermitidoEncaminharAvaliacao(
                 $distribuicaoAvaliacaoPropostaAtual,
-                $this->view->isPropostaEnquadrada
+                $this->view->isPropostaEnquadrada,
+                $this->codGrupo
             );
+
             $this->montaTela("admissibilidade/proposta-por-incentivo-fiscal.phtml");
         }
     }
 
     private function _isPermitidoEncaminharAvaliacao(
         array $distribuicaoAvaliacaoPropostaAtual,
-        $isPropostaEnquadrada
+        $isPropostaEnquadrada,
+        $id_perfil_atual
     )
     {
         if (count($distribuicaoAvaliacaoPropostaAtual) > 0
@@ -343,6 +346,10 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             && $isPropostaEnquadrada) {
             return true;
         } else if($isPropostaEnquadrada && $distribuicaoAvaliacaoPropostaAtual['id_perfil'] == Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
+            return true;
+        } else if($isPropostaEnquadrada 
+            && count($distribuicaoAvaliacaoPropostaAtual) < 1 
+            && $id_perfil_atual == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
             return true;
         }
         return false;
@@ -352,7 +359,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $distribuicaoAvaliacaoPropostaAtual,
         $ultimaSugestaoEnquadramento,
         $recursoEnquadramento,
-        $id_perfil,
+        $id_perfil_atual,
         $isRecursoAvaliado
     ) {
         $perfisAutorizadosTransformarPropostaEmProjeto = [
@@ -361,7 +368,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         ];
         if ($this->isAutorizado(
             $perfisAutorizadosTransformarPropostaEmProjeto,
-            (int) $id_perfil
+            (int) $id_perfil_atual
         )
             && $isRecursoAvaliado
         ) {
