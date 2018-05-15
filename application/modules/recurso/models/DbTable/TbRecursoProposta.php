@@ -56,14 +56,23 @@ class Recurso_Model_DbTable_TbRecursoProposta extends MinC_Db_Table_Abstract
     private function enviarEmailAberturaDePrazoRecursal($id_preprojeto)
     {
         $mensagemEmail = <<<MENSAGEM_EMAIL
-Foi aberto o prazo para entrada com Recurso ou Desist&ecirc;ncia do Prazo Recursal.
-Ao acessar a Proposta {$id_preprojeto} a op&ccedil;&atilde;o "Enquadramento" no menu lateral estar&aacute; dispon&iacute;vel.
+Senhor(a) Proponente,
+
+Conforme dispõe o artigo 24 da Instrução Normativa nº 05/2017 do MinC, informamos que sua proposta será enquadrada nos termos da Lei nº 8.313/1991.
+
+Caso discorde do enquadramento poderá solicitar sua revisão acessando a proposta no Salic e clicando no item “Enquadramento” localizado no menu lateral esquerdo.
+
+Mensagem automática gerada pelo Sistema Salic. Favor NÃO RESPONDER.
+
+Atenciosamente,
+
+Ministério da Cultura
 MENSAGEM_EMAIL;
 
         $preprojetoDbTable = new Proposta_Model_DbTable_PreProjeto();
         $preprojetoDbTable->enviarEmailProponente(
             $id_preprojeto,
-            'Recurso',
+            'Sugest&atilde;o de Enquadramento',
             $mensagemEmail
         );
     }
