@@ -26,29 +26,29 @@ class Diligencia_GerenciarController extends MinC_Controller_Action_Abstract
         if (is_object($resposta)) {
             foreach ($resposta as $val) {
                 $modalidade = '';
-                if ($val->idCotacao != '') {
-                    $modalidade = 'Cota&ccedil;&atilde;o';
-                    $idmod      =   'cot'.$val->idCotacao.'_'.$val->idFornecedorCotacao;
-                }
-                if ($val->idDispensaLicitacao != '') {
-                    $modalidade = 'Dispensa';
-                    $idmod      =   'dis'.$val->idDispensaLicitacao;
-                }
-                if ($val->idLicitacao != '') {
-                    $modalidade =   'Licita&ccedil;&atilde;o';
-                    $idmod      =   'lic'.$val->idLicitacao;
-                }
-                if ($val->idContrato != '') {
-                    if ($modalidade != '') {
-                        $modalidade .=   ' /';
-                    }
-                    $modalidade .=   ' Contrato';
-                    $idmod      =   'con'.$val->idContrato;
-                }
-                if ($modalidade == '') {
-                    $modalidade =   '-';
-                    $idmod      =   'sem';
-                }
+                /* if ($val->idCotacao != '') { */
+                /*     $modalidade = 'Cota&ccedil;&atilde;o'; */
+                /*     $idmod      =   'cot'.$val->idCotacao.'_'.$val->idFornecedorCotacao; */
+                /* } */
+                /* if ($val->idDispensaLicitacao != '') { */
+                /*     $modalidade = 'Dispensa'; */
+                /*     $idmod      =   'dis'.$val->idDispensaLicitacao; */
+                /* } */
+                /* if ($val->idLicitacao != '') { */
+                /*     $modalidade =   'Licita&ccedil;&atilde;o'; */
+                /*     $idmod      =   'lic'.$val->idLicitacao; */
+                /* } */
+                /* if ($val->idContrato != '') { */
+                /*     if ($modalidade != '') { */
+                /*         $modalidade .=   ' /'; */
+                /*     } */
+                /*     $modalidade .=   ' Contrato'; */
+                /*     $idmod      =   'con'.$val->idContrato; */
+                /* } */
+                /* if ($modalidade == '') { */
+                /*     $modalidade =   '-'; */
+                /*     $idmod      =   'sem'; */
+                /* } */
 
                 $itemComprovacao = $planilhaItemModel->pesquisar($val->idPlanilhaAprovacao);
 
@@ -64,6 +64,7 @@ class Diligencia_GerenciarController extends MinC_Controller_Action_Abstract
                 }
             }
         }
+        
 
         $this->view->incFiscaisA   = array('Administra&ccedil;&atilde;o do Projeto' =>$arrayA);
         $this->view->incFiscaisP   = array('Custo por Produto' =>$arrayP);

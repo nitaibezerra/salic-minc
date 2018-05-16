@@ -291,6 +291,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->order('pAprovacao.qtItem');
         $select->order('pEtapa.tpCusto');
 
+        /* echo $select;die; */
         if ($itemAvaliadoFilter == 1) {
             $select->where('cppa.stItemAvaliado = ?', 4);
         } elseif ($itemAvaliadoFilter == 2) {
@@ -298,7 +299,6 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         } elseif ($itemAvaliadoFilter == 3) {
             $select->where('cppa.stItemAvaliado = ?', 3);
         }
-        /* echo $select;die; */
         return $this->fetchAll($select);
     }
 
@@ -2370,7 +2370,6 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         if ($codigoProduto || ($codigoProduto == 0 && !is_null($codigoProduto) )) {
             $select->where('cdProduto = ?', $codigoProduto);
         }
-
 
         $select->order('tpCusto desc');
         $select->order('Produto');

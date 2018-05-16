@@ -12,7 +12,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
         parent::init();
 
         $this->auth = Zend_Auth::getInstance();
-        $this->authIdentity = array_change_key_case((array)$this->auth->getIdentity());
+        $this->authIdentity = array_change_key_case((array) $this->auth->getIdentity());
         $this->grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
 
         $this->view->id_perfil = $this->grupoAtivo->codGrupo;
@@ -25,7 +25,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
 
     public function visaoProponenteAction()
     {
-        if ((int)$this->view->id_perfil != (int)Autenticacao_Model_Grupos::PROPONENTE) {
+        if ((int) $this->view->id_perfil != (int) Autenticacao_Model_Grupos::PROPONENTE) {
             throw new Exception("Perfil de Usu&aacute;rio sem permiss&atilde;o acessar essa funcionalidade.");
         }
 
@@ -36,7 +36,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             && !is_null($this->view->recursoEnquadramento['idArquivo'])) {
             $tbArquivoDbTable = new tbArquivo();
             $this->view->arquivoRecursoProponente = $tbArquivoDbTable->findBy([
-                'idArquivo' => $this->view->recursoEnquadramento['idArquivo']
+                'idArquivo' => $this->view->recursoEnquadramento['idArquivo'],
             ]);
         }
 
@@ -46,7 +46,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
                 ||
                 (
                     !is_null($this->view->recursoEnquadramento['stRascunho']) &&
-                    (int)$this->view->recursoEnquadramento['stRascunho'] != (int)Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                    (int) $this->view->recursoEnquadramento['stRascunho'] != (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
                 )
             ) && !$this->view->recursoEnquadramento['dtAvaliacaoTecnica']
         );
@@ -54,8 +54,8 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
 
     public function visaoAvaliadorAction()
     {
-        if ((int)$this->view->id_perfil != (int)Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
-            && (int)$this->view->id_perfil != (int)Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
+        if ((int) $this->view->id_perfil != (int) Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
+            && (int) $this->view->id_perfil != (int) Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
             throw new Exception("Perfil de Usu&aacute;rio sem permiss&atilde;o acessar essa funcionalidade.");
         }
 
@@ -74,7 +74,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             && !is_null($this->view->recursoEnquadramento['idArquivo'])) {
             $tbArquivoDbTable = new tbArquivo();
             $this->view->arquivoRecursoProponente = $tbArquivoDbTable->findBy([
-                'idArquivo' => $this->view->recursoEnquadramento['idArquivo']
+                'idArquivo' => $this->view->recursoEnquadramento['idArquivo'],
             ]);
         }
 
@@ -82,11 +82,11 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             is_null($this->view->recursoEnquadramento['stRascunho'])
             || (
                 !is_null($this->view->recursoEnquadramento['stRascunho'])
-                && (int)$this->view->recursoEnquadramento['stRascunho'] != (int)Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                && (int) $this->view->recursoEnquadramento['stRascunho'] != (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
             )
             || (
                 !is_null($this->view->recursoEnquadramento['stRascunho'])
-                && (int)$this->view->recursoEnquadramento['stRascunho'] == (int)Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                && (int) $this->view->recursoEnquadramento['stRascunho'] == (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
                 && !$this->view->recursoEnquadramento['dtAvaliacaoTecnica']
             )
         );
@@ -106,26 +106,26 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             if (empty($id_preprojeto) || is_null($id_preprojeto)) {
                 throw new Exception("Identificador da Proposta n&atilde;o foi localizado.");
             }
-    
+
             $tpSolicitacao = trim($post['tpSolicitacao']);
             if (empty($tpSolicitacao) || is_null($tpSolicitacao)) {
                 throw new Exception("O campo 'Tipo de Solicita&amp;ccedil;&amp;atilde;o' &eacute; de preenchimento obrigat&oacute;rio.");
             }
-    
+
             $justificativa = trim($post['dsRecursoProponente']);
             if (empty($justificativa) || is_null($justificativa)) {
                 throw new Exception("O campo 'Justificativa' &eacute; de preenchimento obrigat&oacute;rio.");
             }
-    
+
             $acao_salvar = trim($post['acao_salvar']);
             if (empty($acao_salvar) || is_null($acao_salvar)) {
                 throw new Exception("Bot&atilde;o de a&ccedil;&atilde;o n&atilde;o informado.");
             }
             $stRascunho = ($acao_salvar == 'rascunho') ? Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_SALVO : Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO;
-    
+
             $recursoEnquadramentoDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
             $recursoEnquadramento = $recursoEnquadramentoDbTable->obterRecursoAtualVisaoProponente($id_preprojeto);
-    
+
             $idArquivo = $this->uploadAnexoProponente($recursoEnquadramento);
             $tbRecursoModel = new Recurso_Model_TbRecursoProposta([
                 'idRecursoProposta' => $recursoEnquadramento['idRecursoProposta'],
@@ -138,14 +138,14 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             ]);
             $tbRecursoMapper = new Recurso_Model_TbRecursoPropostaMapper();
             $tbRecursoMapper->save($tbRecursoModel);
-    
+
             parent::message(
                 'Dados armazenados com sucesso.',
                 "/recurso/recurso-proposta/visao-proponente/idPreProjeto/{$id_preprojeto}",
                 'CONFIRM'
             );
-        } catch(Exception $exception) {
-            if($id_preprojeto) {
+        } catch (Exception $exception) {
+            if ($id_preprojeto) {
                 parent::message($exception->getMessage(), "/recurso/recurso-proposta/visao-proponente/idPreProjeto/{$id_preprojeto}");
             }
             parent::message($exception->getMessage(), "/proposta/manterpropostaincentivofiscal/listarproposta");
@@ -188,6 +188,11 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
                 throw new Exception("Identificador do Recurso da Proposta n&atilde;o localizado.");
             }
 
+            if ($recursoEnquadramento['stRascunho'] == Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                && !empty(trim($recursoEnquadramento['dtAvaliacaoTecnica']))) {
+                throw new Exception("N&atilde;o &eacute; poss&iacute;vel avaliar novamente um recurso j&aacute; Enviado.");
+            }
+
             $stAtivo = Recurso_Model_TbRecursoProposta::SITUACAO_RECURSO_ATIVO;
             if ($recursoEnquadramento['stAtendimento'] == Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
                 && $recursoEnquadramento['tpRecurso'] == Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
@@ -201,13 +206,13 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
                 'stAtendimento' => $stAtendimento,
                 'idAvaliadorTecnico' => $idAvaliadorTecnico,
                 'stRascunho' => $stRascunho,
-                'stAtivo' => $stAtivo
+                'stAtivo' => $stAtivo,
             ]);
             $tbRecursoMapper = new Recurso_Model_TbRecursoPropostaMapper();
             $tbRecursoMapper->save($tbRecursoModel);
 
-            if ((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
-                && (int)$recursoEnquadramento['tpRecurso'] == (int)Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
+            if ((string) $recursoEnquadramento['stAtendimento'] == (string) Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
+                && (int) $recursoEnquadramento['tpRecurso'] == (int) Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
                 $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
                 $tbRecursoPropostaDbTable->cadastrarRecurso(
                     $id_preprojeto,
@@ -215,10 +220,10 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
                 );
             }
 
-            if((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
+            if ((string) $recursoEnquadramento['stAtendimento'] == (string) Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
                 $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
                 $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($this->idPreProjeto);
-        
+
                 $dadosSugestaoEnquadramento = [];
                 $dadosSugestaoEnquadramento['id_orgao'] = $this->grupoAtivo->codOrgao;
                 $dadosSugestaoEnquadramento['id_perfil'] = $this->grupoAtivo->codGrupo;
@@ -227,18 +232,18 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
                 $dadosSugestaoEnquadramento['descricao_motivacao'] = $dsAvaliacaoTecnica;
                 $dadosSugestaoEnquadramento['id_area'] = $enquadramentoInicialProponente['id_area'];
                 $dadosSugestaoEnquadramento['id_segmento'] = $enquadramentoInicialProponente['id_segmento'];
-        
+
                 $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
                 $sugestaoEnquadramentoDbTable->salvarSugestaoEnquadramento($dadosSugestaoEnquadramento, false);
             }
 
             parent::message(
                 'Dados armazenados com sucesso.',
-                "/recurso/recurso-proposta/visao-avaliador/idPreProjeto/{$id_preprojeto}",
+                "/admissibilidade/admissibilidade/exibirpropostacultural/idPreProjeto/{$id_preprojeto}?realizar_analise=sim",
                 'CONFIRM'
             );
-        } catch(Exception $exception) {
-            if($id_preprojeto) {
+        } catch (Exception $exception) {
+            if ($id_preprojeto) {
                 parent::message($exception->getMessage(), "/recurso/recurso-proposta/visao-avaliador/idPreProjeto/{$id_preprojeto}");
             }
             parent::message($exception->getMessage(), "/admissibilidade/admissibilidade/listar-propostas");
@@ -269,7 +274,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             $get = $this->getRequest()->getParams();
 
             $id_perfil = $this->grupoAtivo->codGrupo;
-            if ((int)$id_perfil != (int)Autenticacao_Model_Grupos::PROPONENTE) {
+            if ((int) $id_perfil != (int) Autenticacao_Model_Grupos::PROPONENTE) {
                 throw new Exception("Perfil de Usu&aacute;rio sem permiss&atilde;o para realizar essa opera&ccedil;&atilde;o.");
             }
 
@@ -291,7 +296,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             }
 
             $fnVerificarPermissao = new Autenticacao_Model_FnVerificarPermissao();
-            $possuiPermissaoDeEdicao = (bool)$fnVerificarPermissao->verificarPermissaoProposta(
+            $possuiPermissaoDeEdicao = (bool) $fnVerificarPermissao->verificarPermissaoProposta(
                 $id_preprojeto,
                 $this->authIdentity['idusuario'],
                 false
