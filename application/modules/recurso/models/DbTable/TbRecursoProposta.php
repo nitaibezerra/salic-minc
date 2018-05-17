@@ -58,15 +58,15 @@ class Recurso_Model_DbTable_TbRecursoProposta extends MinC_Db_Table_Abstract
         $mensagemEmail = <<<MENSAGEM_EMAIL
 Senhor(a) Proponente,
 
-Conforme dispõe o artigo 24 da Instrução Normativa nº 05/2017 do MinC, informamos que sua proposta será enquadrada nos termos da Lei nº 8.313/1991.
+Conforme disp&otilde;e o artigo 24 da Instru&ccedil;&atilde;o Normativa n&ordm; 05/2017 do MinC, informamos que sua proposta ser&aacute; enquadrada nos termos da Lei n&ordm; 8.313/1991.
 
-Caso discorde do enquadramento poderá solicitar sua revisão acessando a proposta no Salic e clicando no item “Enquadramento” localizado no menu lateral esquerdo.
+Caso discorde do enquadramento poder&aacute; solicitar sua revis&atilde;o acessando a proposta no Salic e clicando no item &OpenCurlyDoubleQuote;Enquadramento&rdquor; localizado no menu lateral esquerdo.
 
-Mensagem automática gerada pelo Sistema Salic. Favor NÃO RESPONDER.
+Mensagem autom&aacute;tica gerada pelo Sistema Salic. Favor N&Atilde;O RESPONDER.
 
 Atenciosamente,
 
-Ministério da Cultura
+Minist&eacute;rio da Cultura
 MENSAGEM_EMAIL;
 
         $preprojetoDbTable = new Proposta_Model_DbTable_PreProjeto();
