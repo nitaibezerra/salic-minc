@@ -117,4 +117,11 @@ MENSAGEM_EMAIL;
         ]);
     }
 
+    public function obterHistoricoRecurso($idPreProjeto)
+    {
+        $table = $this->select();
+        $table->where('idPreProjeto = ?', $idPreProjeto);
+        $table->order('idRecursoProposta asc');
+        return $this->fetchAll($table);
+    }
 }

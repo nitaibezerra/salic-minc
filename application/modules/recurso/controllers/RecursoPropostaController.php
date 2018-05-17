@@ -7,6 +7,9 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
     private $grupoAtivo;
     private $auth;
 
+    const VISAO_PROPONENTE = 'proponente';
+    const VISAO_AVALIADOR = 'avaliador';
+
     public function init()
     {
         parent::init();
@@ -40,15 +43,25 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             ]);
         }
 
-        $this->view->isPermitidoEditar = (
+        $this->view->isPermitidoEditar = $this->_isPermitidoEditar(
+            $this->view->recursoEnquadramento, 
+            Recurso_RecursoPropostaController::VISAO_PROPONENTE
+        );
+
+        $recursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
+        $this->view->historicoRecursoProposta = $recursoPropostaDbTable->obterHistoricoRecurso($this->idPreProjeto)->toArray();
+    }
+
+    private function _isPermitidoEditar($recursoEnquadramento, $visao = Recurso_RecursoPropostaController::VISAO_PROPONENTE) {
+        return (
             (
-                is_null($this->view->recursoEnquadramento['stRascunho'])
+                is_null($this->recursoEnquadramento['stRascunho'])
                 ||
                 (
-                    !is_null($this->view->recursoEnquadramento['stRascunho']) &&
-                    (int) $this->view->recursoEnquadramento['stRascunho'] != (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                    !is_null($this->recursoEnquadramento['stRascunho']) &&
+                    (int) $this->recursoEnquadramento['stRascunho'] != (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
                 )
-            ) && !$this->view->recursoEnquadramento['dtAvaliacaoTecnica']
+            ) && !$this->recursoEnquadramento['dtAvaliacaoTecnica']
         );
     }
 

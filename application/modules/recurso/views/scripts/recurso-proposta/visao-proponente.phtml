@@ -37,10 +37,45 @@ if (isset($this->proposta['idpreprojeto'])) {
         </div>
         <div class="content">
             <div class="card-panel">
+
+
+                <ul class="collapsible" data-collapsible="accordion">
+    <li>
+      <div class="collapsible-header"><i class="material-icons">filter_drama</i>Hist&oacute;rico</div>
+      <div class="collapsible-body">
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Data</th>
+                    <th>Avalia&ccedil;&atilde;o</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach($this->historicoRecursoProposta as $avaliacao) { ?>
+                    <tr>
+                        <td><?php echo $avaliacao['tpRecurso'] ?></td>
+                        <td><?php echo $avaliacao['dtRecursoProponente'] ?></td>
+                        <td><?php echo $avaliacao['dsAvaliacaoTecnica'] ?> <?php echo ($avaliacao['stRascunho'] == '1') ? "<hr /><b>[Rascunho]</>" : '' ?></td>
+                    </tr>
+                    
+            <?php } ?>
+            </tbody>
+        </table>
+      </div>
+    </li>
+  </ul>
+                    <script>
+                    $(document).ready(function(){
+                        $('.collapsible').collapsible();
+                    });
+                    </script>
+
                 <?php
                 echo $this->partial("recurso-proposta/inc/bloco_identificacao-proposta-cultural.phtml", $this);
                 ?>
                 <br/>
+                
                 <?php
                 echo $this->partial("recurso-proposta/inc/bloco_enquadramento-proposto-avaliador.phtml", $this);
                 ?>
