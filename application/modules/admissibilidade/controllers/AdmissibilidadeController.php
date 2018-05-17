@@ -324,7 +324,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $this->codGrupo,
                 $this->view->isRecursoAvaliado
             );
-
+            
             $this->view->isPermitidoEncaminharAvaliacao = $this->_isPermitidoEncaminharAvaliacao(
                 $distribuicaoAvaliacaoPropostaAtual,
                 $this->view->isPropostaEnquadrada,
@@ -400,10 +400,10 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $id_segmento_proponente
             );
         }
-
+        
         if($isEnquadramentoProponenteIgualEndramentoAvaliador 
             && count($distribuicaoAvaliacaoPropostaAtual) > 0
-            && $distribuicaoAvaliacaoPropostaAtual['id_perfil'] != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE) {
+            && (int)$distribuicaoAvaliacaoPropostaAtual['id_perfil'] == (int)Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE) {
             return true;
         }
         

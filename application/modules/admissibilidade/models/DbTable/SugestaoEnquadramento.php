@@ -334,8 +334,8 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
     ) 
     {
         return (
-            $dadosSugestaoEnquadramento['id_area'] != $id_area_proponente
-            || $dadosSugestaoEnquadramento['id_segmento'] != $id_segmento_proponente
+            $dadosSugestaoEnquadramento['id_area'] == $id_area_proponente
+            || $dadosSugestaoEnquadramento['id_segmento'] == $id_segmento_proponente
         );
     }
 
