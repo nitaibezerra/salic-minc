@@ -77,7 +77,7 @@ MENSAGEM_EMAIL;
         $preprojetoDbTable = new Proposta_Model_DbTable_PreProjeto();
         $preprojetoDbTable->enviarEmailProponente(
             $id_preprojeto,
-            'Sugest&atilde;o de Enquadramento',
+            'Sugestao de Enquadramento',
             $mensagemEmail
         );
     }
