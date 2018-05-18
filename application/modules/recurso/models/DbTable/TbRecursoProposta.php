@@ -120,7 +120,27 @@ MENSAGEM_EMAIL;
     public function obterHistoricoRecurso($idPreProjeto)
     {
         $table = $this->select();
+        $table->setIntegrityCheck(false);
+        $table->from(
+            ['TbRecursoProposta' => $this->_name],
+            ['*'],
+            $this->getSchema('sac')
+        );
+        $table->joinLeft(
+            ['UsuarioAvaliador' => 'Usuarios'],
+            'UsuarioAvaliador.usu_codigo = TbRecursoProposta.idAvaliadorTecnico',
+            ['nome_avaliador' => 'usu_nome'],
+            $this->getSchema('tabelas')
+        );
+        $table->joinLeft(
+            ['NomeProponente' => 'Nomes'],
+            'NomeProponente.idAgente = TbRecursoProposta.idProponente',
+            ['nome_proponente' => 'Descricao'],
+            $this->getSchema('Agentes')
+        );
+
         $table->where('idPreProjeto = ?', $idPreProjeto);
+        $table->where('stRascunho = ?', Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO);
         $table->order('idRecursoProposta asc');
         return $this->fetchAll($table);
     }
