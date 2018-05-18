@@ -11,11 +11,17 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
 
     public function comprovarAction()
     {
-        $this->view->diligenciaTodosItens = true;
+        $idPronac = $this->getRequest()->getParam('idpronac');
+
+        $diligencia = new Diligencia();
+        $diligencia = $diligencia->aberta($idPronac);
+
+        $this->view->diligenciaTodosItens = $diligencia;
+        /* var_dump($diligencia);die; */
+
         $idPlanilhaAprovacao = $this->getRequest()->getParam('idPlanilhaAprovacao');
 
         //Adicionado para ser usado como novo parametro do metodo pesquisarComprovantePorItem
-        $idPronac = $this->getRequest()->getParam('idpronac');
         $idComprovantePagamento = $this->getRequest()->getParam('idComprovantePagamento');
 
         $planilhaItemModel = new PlanilhaItem();
