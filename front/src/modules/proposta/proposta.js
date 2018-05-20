@@ -25,6 +25,7 @@ import TextoSimples from '../../components/salic-texto-simples.vue';
 import Proposta from './visualizar/salic-proposta.vue';
 import PropostaCustosVinculados from './visualizar/salic-proposta-custos-vinculados.vue';
 import PropostaDetalhamentoPlanoDistribuicao from './visualizar/salic-proposta-detalhamento-plano-distribuicao.vue';
+import PropostaDetalhamentoConsolidacao from './visualizar/salic-proposta-detalhamento-consolidacao.vue';
 import PropostaDiff from './visualizar/salic-proposta-diff.vue';
 import PropostaAlteracoes from './visualizar/salic-proposta-alteracoes.vue';
 import PropostaDocumentos from './visualizar/salic-proposta-documentos.vue';
@@ -41,8 +42,8 @@ import AutenticacaoUsuario from '../autenticacao/index/salic-autenticacao-usuari
 /*
 * Inicialize com Vue.component para componentes globais que podem ser usados dentro de
 * outros components.
-* A declaração de componentes dentro de 'new Vue' torna os componentes locais,
-* só em relação ao #container-vue.
+* A declaraÃ§Ã£o de componentes dentro de 'new Vue' torna os componentes locais,
+* sÃ³ em relaÃ§Ã£o ao #container-vue.
 */
 
 Vue.component('salic-table-easy', TableEasy);
@@ -51,6 +52,7 @@ Vue.component('salic-texto-simples', TextoSimples);
 Vue.component('salic-proposta', Proposta);
 Vue.component('salic-proposta-custos-vinculados', PropostaCustosVinculados);
 Vue.component('salic-proposta-detalhamento-plano-distribuicao', PropostaDetalhamentoPlanoDistribuicao);
+Vue.component('salic-proposta-detalhamento-consolidacao', PropostaDetalhamentoConsolidacao);
 Vue.component('salic-proposta-diff', PropostaDiff);
 Vue.component('salic-proposta-alteracoes', PropostaAlteracoes);
 Vue.component('salic-proposta-documentos', PropostaDocumentos);
@@ -63,6 +65,8 @@ Vue.component('salic-proposta-plano-distribuicao', PropostaPlanoDistribuicao);
 
 Vue.component('salic-agente-proponente', AgenteProponente);
 Vue.component('salic-autenticacao-usuario', AutenticacaoUsuario);
+
+
 
 new Vue({
     el: '#container-vue',

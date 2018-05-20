@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+var EncodingPlugin = require('webpack-encoding-plugin');
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
@@ -11,16 +12,13 @@ function resolve(dir) {
 module.exports = {
     context: path.resolve(__dirname, '../'),
     entry: {
-        app: './src/main.js',
-        style: './src/style/main.scss',
+        app: ['./src/main.js', './src/style/main.scss'],
         proposta: './src/modules/proposta/proposta.js'
     },
     output: {
         path: config.build.assetsRoot,
-        filename: '[name]/[name].js',
-        publicPath: process.env.NODE_ENV === 'production'
-            ? config.build.assetsPublicPath
-            : config.dev.assetsPublicPath
+        filename: utils.assetsPath('js/[name].js'),
+        chunkFilename: utils.assetsPath('js/[id].[name].js')
     },
     resolve: {
         extensions: ['.js', '.vue', '.json'],
@@ -67,7 +65,10 @@ module.exports = {
             }
         ]
     },
-    node: {
+    plugins: [new EncodingPlugin({
+        encoding: 'iso-8859-1'
+    })],
+    node    : {
         // prevent webpack from injecting useless setImmediate polyfill because Vue
         // source contains it (although only uses it if it's native).
         setImmediate: false,

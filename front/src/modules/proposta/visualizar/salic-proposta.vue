@@ -30,7 +30,7 @@
                 <div class="collapsible-header"><i class="material-icons">person</i>Proponente</div>
                 <div class="collapsible-body padding20">
                     <salic-agente-proponente :idagente="dados.idAgente"></salic-agente-proponente>
-                    <salic-agente-usuario :idusuario="dados.idUsuario"></salic-agente-usuario>
+                    <salic-autenticacao-usuario :idusuario="dados.idUsuario"></salic-autenticacao-usuario>
                 </div>
             </li>
 

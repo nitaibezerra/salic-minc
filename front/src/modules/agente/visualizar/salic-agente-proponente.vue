@@ -1,7 +1,5 @@
-Vue.component('salic-agente-proponente', {
-    template: `
+<template>
     <div id="proponente" v-if="proponente">
-
         <div v-if="identificacao" class="card">
             <div class="card-content">
                 <h5>Identifica&ccedil;&atilde;o</h5>
@@ -153,57 +151,63 @@ Vue.component('salic-agente-proponente', {
             </div>
         </div>
     </div>
-    `,
-    data: function () {
-        return {
-            proponente: [],
-            identificacao: []
-        }
-    },
-    props: ['idagente'],
-    mounted: function () {
-        if (typeof this.idagente != 'undefined') {
-            this.fetch(this.idagente);
-        }
-    },
-    watch: {
-        idagente: function (value) {
-            this.fetch(value);
-        }
-    },
-    computed: {
-        TipoPessoa: function () {
-            return this.label_tipo_pessoa(this.identificacao.tipopessoa);
-        }
-    },
-    methods: {
-        fetch: function (id) {
-            if (id) {
-                let vue = this;
-                $3.ajax({
-                    url: '/agente/visualizar/obter-dados-proponente/idAgente/' + id
-                }).done(function (response) {
-                    vue.proponente = response.data;
+</template>
 
-                    if (vue.proponente && vue.proponente.identificacao) {
-                        vue.identificacao = vue.proponente.identificacao;
-                    }
-                });
+<script>
+
+    export default {
+        name: "salic-agente-proponente",
+        data: function () {
+            return {
+                proponente: [],
+                identificacao: []
             }
         },
-        label_tipo_pessoa: function (tipo) {
-            let string = 'Pessoa Física';
-
-            if (tipo == '1')
-                string = 'Pessoa Jurídica';
-
-            return string;
+        props: ['idagente'],
+        mounted: function () {
+            if (typeof this.idagente != 'undefined') {
+                this.fetch(this.idagente);
+            }
         },
-        label_sim_ou_nao: function (valor) {
-            if (valor == 1)
-                return 'Sim';
-            else
-                return 'Não';
+        watch: {
+            idagente: function (value) {
+                this.fetch(value);
+            }
+        },
+        computed: {
+            TipoPessoa: function () {
+                return this.label_tipo_pessoa(this.identificacao.tipopessoa);
+            }
+        },
+        methods: {
+            fetch: function (id) {
+                if (id) {
+                    let vue = this;
+                    $3.ajax({
+                        url: '/agente/visualizar/obter-dados-proponente/idAgente/' + id
+                    }).done(function (response) {
+                        vue.proponente = response.data;
+
+                        if (vue.proponente && vue.proponente.identificacao) {
+                            vue.identificacao = vue.proponente.identificacao;
+                        }
+                    });
+                }
+            },
+            label_tipo_pessoa: function (tipo) {
+                let string = 'Pessoa FÃ­sica';
+
+                if (tipo == '1')
+                    string = 'Pessoa JurÃ­dica';
+
+                return string;
+            },
+            label_sim_ou_nao: function (valor) {
+                if (valor == 1)
+                    return 'Sim';
+                else
+                    return 'NÃ£o';
+            }
         }
-    }
-});
+    };
+</script>

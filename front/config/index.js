@@ -8,14 +8,17 @@ module.exports = {
   dev: {
 
     // Paths
-    assetsSubDirectory: 'dist',
+    assetsSubDirectory: '',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+        path: /./,
+        target: "http://localhost"
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
@@ -41,8 +44,8 @@ module.exports = {
     index: path.resolve(__dirname, '../../public/dist/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../../public'),
-    assetsSubDirectory: 'dist',
+    assetsRoot: path.resolve(__dirname, '../../public/dist'),
+    assetsSubDirectory: '',
     assetsPublicPath: '/',
 
     /**
