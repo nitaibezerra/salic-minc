@@ -127,7 +127,7 @@ class Readequacao_LocalRealizacaoController extends Readequacao_GenericControlle
         $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
         $locais = $tbAbrangencia->buscarLocaisConsolidadoReadequacao($idReadequacao);
 
-        $tbReadequacao = new Readequacao_Model_tbReadequacao();
+        $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
         $dadosReadequacao = $tbReadequacao->buscar(array('idReadequacao=?'=>$idReadequacao))->current();
         $siEncaminhamento = $dadosReadequacao->siEncaminhamento;
 

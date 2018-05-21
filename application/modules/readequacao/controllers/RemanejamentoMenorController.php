@@ -116,12 +116,12 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
         $DadosProjeto = $projetos->buscarProjetoXProponente(array('idPronac = ?' => $idPronac))->current();
         $this->view->DadosProjeto = $DadosProjeto;
         
-        $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
-        $this->view->readequacao = $Readequacao_Model_tbReadequacao->buscar(
+        $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $this->view->readequacao = $Readequacao_Model_DbTable_TbReadequacao->buscar(
             array(
                 'idPronac = ?' => $idPronac,
-                'stEstado =?' => Readequacao_Model_tbReadequacao::ST_ESTADO_EM_ANDAMENTO,
-                'idTipoReadequacao=?' => Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL
+                'stEstado =?' => Readequacao_Model_DbTable_TbReadequacao::ST_ESTADO_EM_ANDAMENTO,
+                'idTipoReadequacao=?' => Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL
             )
         )->current();
         
@@ -218,22 +218,22 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             $tblAgente = new Agente_Model_DbTable_Agentes();
             $rsAgente = $tblAgente->buscar(array('CNPJCPF=?'=>$auth->getIdentity()->Cpf))->current();
 
-            $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
+            $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
             
             $dadosReadequacao = array();
             $dadosReadequacao['idPronac'] = $idPronac;
             $dadosReadequacao['dtSolicitacao'] = new Zend_Db_Expr('GETDATE()');
             $dadosReadequacao['idSolicitante'] = $rsAgente->idAgente;
             $dadosReadequacao['dsJustificativa'] = utf8_decode('Readequação até 50%');
-            $dadosReadequacao['stEstado'] = Readequacao_Model_tbReadequacao::ST_ESTADO_FINALIZADO;
-            $update = $Readequacao_Model_tbReadequacao->update(
+            $dadosReadequacao['stEstado'] = Readequacao_Model_DbTable_TbReadequacao::ST_ESTADO_FINALIZADO;
+            $update = $Readequacao_Model_DbTable_TbReadequacao->update(
                 $dadosReadequacao,
                 array(
                     'idPronac=?' => $idPronac,
-                    'idTipoReadequacao=?' => Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
+                    'idTipoReadequacao=?' => Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
                     'stAtendimento=?' => 'D',
                     'siEncaminhamento=?' => Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_NAO_ENVIA_MINC,
-                    'stEstado = ?' => Readequacao_Model_tbReadequacao::ST_ESTADO_EM_ANDAMENTO,
+                    'stEstado = ?' => Readequacao_Model_DbTable_TbReadequacao::ST_ESTADO_EM_ANDAMENTO,
                     'idReadequacao=?' => $idReadequacao
                 )
             );
@@ -283,8 +283,8 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             $PlanilhaAtivaGrupoC = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, $tiposEtapa['C'])->current();
             $PlanilhaAtivaGrupoD = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, $tiposEtapa['D'])->current();
             
-            $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
-            $readequacaoAtiva = $Readequacao_Model_tbReadequacao->buscar(
+            $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+            $readequacaoAtiva = $Readequacao_Model_DbTable_TbReadequacao->buscar(
                 array(
                     'idReadequacao = ?' => $idReadequacao
                 )
@@ -418,12 +418,12 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
         //x($PlanilhaAtiva->Total);
 
         //BUSCAR VALOR TOTAL DA PLANILHA DE REMANEJADA
-        $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
-        $readequacaoAtiva = $Readequacao_Model_tbReadequacao->buscar(
+        $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $readequacaoAtiva = $Readequacao_Model_DbTable_TbReadequacao->buscar(
             array(
                 'idPronac = ?'=> $idPronac,
-                'idTipoReadequacao = ?' => Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
-                'stEstado = ?' => Readequacao_Model_tbReadequacao::ST_ESTADO_EM_ANDAMENTO
+                'idTipoReadequacao = ?' => Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
+                'stEstado = ?' => Readequacao_Model_DbTable_TbReadequacao::ST_ESTADO_EM_ANDAMENTO
             )
         );
         
@@ -523,8 +523,8 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
         
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
         
-        $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
-        $readequacao = $Readequacao_Model_tbReadequacao->buscar(
+        $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $readequacao = $Readequacao_Model_DbTable_TbReadequacao->buscar(
             array(
                 'idReadequacao = ?' => $idReadequacao
             )
@@ -542,11 +542,11 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 );
                 
                 if ($del > 0) {
-                    $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
-                    $readequacaoAtiva = $Readequacao_Model_tbReadequacao->delete(
+                    $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+                    $readequacaoAtiva = $Readequacao_Model_DbTable_TbReadequacao->delete(
                         array(
                             'idPronac=?' => $idPronac,
-                            'idTipoReadequacao=?' => Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
+                            'idTipoReadequacao=?' => Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
                             'idReadequacao = ?' => $idReadequacao
                         )
                     );
@@ -605,7 +605,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 'R$ '.number_format(
                     (
                         $valoresOriginais['vlAtual'] - (
-                            $valoresOriginais['vlAtual'] * Readequacao_Model_tbReadequacao::PERCENTUAL_REMANEJAMENTO/100
+                            $valoresOriginais['vlAtual'] * Readequacao_Model_DbTable_TbReadequacao::PERCENTUAL_REMANEJAMENTO/100
                         )
                     ),
                     2,
@@ -615,7 +615,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             );
         }
         
-        $dadosPlanilhaOriginal['ValorMaximoProItem'] = utf8_encode('R$ '.number_format(($valoresOriginais['vlAtual'] + ($valoresOriginais['vlAtual'] * Readequacao_Model_tbReadequacao::PERCENTUAL_REMANEJAMENTO/100))/100, 2, ',', '.'));
+        $dadosPlanilhaOriginal['ValorMaximoProItem'] = utf8_encode('R$ '.number_format(($valoresOriginais['vlAtual'] + ($valoresOriginais['vlAtual'] * Readequacao_Model_DbTable_TbReadequacao::PERCENTUAL_REMANEJAMENTO/100))/100, 2, ',', '.'));
         $dadosPlanilhaOriginal['vlMinimoValidacao'] = utf8_encode($valoresOriginais['vlAtualMin']);
         $dadosPlanilhaOriginal['vlMaximoValidacao'] = utf8_encode($valoresOriginais['vlAtualMax']);
         $dadosPlanilhaOriginal['ValorMinimoProItemValidacao'] = utf8_encode($valoresOriginais['vlAtualMin']);
@@ -740,7 +740,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 $itemAlterado['vlTotal'] < $valoresAtuais['vlAtualMin']
             )
                       ? "O valor total do item desejado é menor que o mínimo de " . $valoresAtuais['vlAtualMin']
-                      : "O valor total do item ultrapassou a margem de ". Readequacao_Model_tbReadequacao::PERCENTUAL_REMANEJAMENTO . "%.";
+                      : "O valor total do item ultrapassou a margem de ". Readequacao_Model_DbTable_TbReadequacao::PERCENTUAL_REMANEJAMENTO . "%.";
             
             $this->_helper->json(
                 array(
@@ -793,10 +793,10 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
         $tblAgente = new Agente_Model_DbTable_Agentes();
         $rsAgente = $tblAgente->buscar(array('CNPJCPF=?'=>$auth->getIdentity()->Cpf))->current();
         
-        $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
+        $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
         $dados = array();
         $dados['idPronac'] = $idPronac;
-        $dados['idTipoReadequacao'] = Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL;
+        $dados['idTipoReadequacao'] = Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL;
         $dados['dtSolicitacao'] = new Zend_Db_Expr('GETDATE()');
         $dados['idSolicitante'] = $rsAgente->idAgente;
         $dados['dsJustificativa'] = utf8_decode('Readequação até 50%');
@@ -804,10 +804,10 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
         $dados['stAtendimento'] = 'D';
         $dados['idDocumento'] = null;
         $dados['siEncaminhamento'] = Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_NAO_ENVIA_MINC;
-        $dados['stEstado'] = Readequacao_Model_tbReadequacao::ST_ESTADO_EM_ANDAMENTO;
+        $dados['stEstado'] = Readequacao_Model_DbTable_TbReadequacao::ST_ESTADO_EM_ANDAMENTO;
         
         try {
-            $idReadequacao = $Readequacao_Model_tbReadequacao->inserir($dados);
+            $idReadequacao = $Readequacao_Model_DbTable_TbReadequacao->inserir($dados);
             
             return $idReadequacao;
             

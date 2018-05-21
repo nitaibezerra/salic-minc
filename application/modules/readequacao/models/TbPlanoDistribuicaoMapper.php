@@ -12,24 +12,48 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
         return parent::save($model);
     }
 
-    public function obterPlanosDistribuicao(Projeto_Model_TbProjetos $projeto, $idPerfil)
+    public function criarReadequacaoPlanoDistribuicao(Projeto_Model_TbProjetos $projeto)
+    {
+        $TbReadequacaoMapper = new Readequacao_Model_TbReadequacaoMapper();
+        $readequacaoAtiva = $TbReadequacaoMapper->findBy([
+            'idPronac = ?' => $projeto->getIdPRONAC(),
+            'idTipoReadequacao = ?' => Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO,
+            'stEstado = ?' => 0
+        ]);
+
+        if (empty($readequacaoAtiva)) {
+            $idReadequacao = $TbReadequacaoMapper->salvarSolicitacaoReadequacao([
+                'idPronac' => $projeto->getIdPRONAC(),
+                'idTipoReadequacao' => Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO,
+                'dsJustificativa' => ' ',
+            ]);
+        } else {
+            $idReadequacao = $readequacaoAtiva['idReadequacao'];
+        }
+
+        $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
+        $planosDistribuicao = $tbPlanoDistribuicaoMapper->findBy(
+            ['idPronac = ?' => $projeto->getidProjeto(), 'stAtivo = ?' => 'S', 'idReadequacao IS NULL' => '']
+        );
+
+        if (empty($planosDistribuicao)) {
+            $tbDetalhaPlanoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
+            $tbDetalhaPlanoMapper->copiarDetalhamentosDaProposta($projeto, $idReadequacao);
+            $this->copiarPlanoDistribuicaoDaProposta($projeto, $idReadequacao);
+        }
+
+        return true;
+    }
+
+    public function obterPlanosDistribuicao(Projeto_Model_TbProjetos $projeto)
     {
         $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
         $planosDistribuicao = $tbPlanoDistribuicao->obterPlanosDistribuicaoReadequacao($projeto->getIdPRONAC());
 
-        if (count($planosDistribuicao) == 0 && $idPerfil == Autenticacao_Model_Grupos::PROPONENTE) {
-
-            $tbDetalhaPlanoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
-            $tbDetalhaPlanoMapper->copiarDetalhamentosDaProposta($projeto);
-
-            $this->copiarPlanoDistribuicaoDaProposta($projeto);
-            $planosDistribuicao = $tbPlanoDistribuicao->obterPlanosDistribuicaoReadequacao($projeto->getIdPRONAC());
-        }
-
         return $planosDistribuicao->toArray();
     }
 
-    public function copiarPlanoDistribuicaoDaProposta(Projeto_Model_TbProjetos $projeto)
+    public function copiarPlanoDistribuicaoDaProposta(Projeto_Model_TbProjetos $projeto, $idReadequacao = null)
     {
         $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
         $distribuicaoDaProposta = $tbPlanoDistribuicao->buscarPlanosDistribuicaoReadequacao($projeto->getIdPRONAC());
@@ -42,7 +66,7 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
             $novoPlanoDistribuicao = [];
             $tbDetalhaReadequacao = new Readequacao_Model_DbTable_TbDetalhaPlanoDistribuicaoReadequacao();
             foreach ($distribuicaoDaProposta as $value) {
-                $novoPlanoDistribuicao['idReadequacao'] = null;
+                $novoPlanoDistribuicao['idReadequacao'] = $idReadequacao;
                 $novoPlanoDistribuicao['idProduto'] = $value->idProduto;
                 $novoPlanoDistribuicao['cdArea'] = $value->idArea;
                 $novoPlanoDistribuicao['cdSegmento'] = $value->idSegmento;
@@ -85,9 +109,58 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
         return true;
     }
 
-    public function incluirIdReadequacaoNasSolicitacoesAtivas($idPronac, $idReadequacao) {
+    public function incluirIdReadequacaoNasSolicitacoesAtivas($idPronac, $idReadequacao)
+    {
         $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
         $whereDistribuicao = "idPronac = {$idPronac} AND idReadequacao IS NULL";
         return $tbPlanoDistribuicao->update(['idReadequacao' => $idReadequacao], $whereDistribuicao);
+    }
+
+    public function excluirReadequacaoPlanoDistribuicaoAtiva($idPronac)
+    {
+        if (empty($idPronac)) {
+            throw new Exception("Pronac é obrigatório");
+        }
+
+        $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $readequacaoAtiva = $tbReadequacao->buscar(array(
+            'idPronac = ?' => $idPronac,
+            'idTipoReadequacao = ?' => Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO,
+            'siEncaminhamento = ?' => Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE,
+            'stEstado = ?' => 0,
+            'stAtendimento = ?' => 'N'
+        ))->current();
+
+        if (empty($readequacaoAtiva)) {
+            throw new Exception("Nenhuma readequa&ccedil;&atilde;o encontrada!");
+        }
+
+        if (!empty($readequacaoAtiva->idDocumento)) {
+            $tbDocumento = new tbDocumento();
+            $dadosArquivo = $tbDocumento->buscar(array('idDocumento =?' => $readequacaoAtiva->idDocumento))->current();
+
+            if ($dadosArquivo) {
+                $tbDocumento = new tbDocumento();
+                $tbDocumento->excluir("idArquivo = {$dadosArquivo->idArquivo} and idDocumento= {$readequacaoAtiva->idDocumento} ");
+
+                $tbArquivoImagem = new tbArquivoImagem();
+                $tbArquivoImagem->excluir("idArquivo =  {$dadosArquivo->idArquivo} ");
+
+                $tbArquivo = new tbArquivo();
+                $tbArquivo->excluir("idArquivo = {$dadosArquivo->idArquivo} ");
+            }
+        }
+
+        $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
+        $tbPlanoDistribuicao->delete(array(
+            'idReadequacao = ?' => $readequacaoAtiva->idReadequacao, 'idPronac = ?' => $idPronac, 'stAtivo = ?' => 'S'
+        ));
+
+        $tbDetalhaPlanoDistribuicao = new Readequacao_Model_DbTable_TbDetalhaPlanoDistribuicaoReadequacao();
+        $tbDetalhaPlanoDistribuicao->delete(array(
+            'idReadequacao = ?' => $readequacaoAtiva->idReadequacao, 'idPronac = ?' => $idPronac, 'stAtivo = ?' => 'S'
+        ));
+
+        return $tbReadequacao->delete(array('idPronac =?' => $idPronac, 'idReadequacao = ?' => $readequacaoAtiva->idReadequacao));
     }
 }

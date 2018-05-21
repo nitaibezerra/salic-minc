@@ -58,7 +58,6 @@ Vue.component('plano-distribuicao-detalhamentos-listagem', {
                         <td colspan="12" class="center-align">Nenhum detalhamento cadastrado</td>
                     </tr>
                 </tbody>
-                
                 <plano-distribuicao-detalhamentos-consolidacao
                     :detalhamentos="detalhamentos"
                     :disabled="disabled"
@@ -66,13 +65,11 @@ Vue.component('plano-distribuicao-detalhamentos-listagem', {
             </table>
             <table style="max-width: 300px; margin: 0;" v-if="detalhamentos && detalhamentos.length > 0">
                 <tr>
-                    <th>
-                        <b>Valor m&eacute;dio </b>
-                    </th>
-                    <td class="center-align red" v-if="((valorMedioProponente.value() > 225) && (this.canalaberto == 0))"> 
+                    <th><b>Valor m&eacute;dio </b></th>
+                    <td v-if="((valorMedioProponente.value() > 225) && (this.canalaberto == 0))" class="center-align red"> 
                         {{valorMedioProponenteFormatado}}
                     </td>
-                    <td class="center-align " v-else>{{valorMedioProponenteFormatado}}</td>
+                    <td v-else class="center-align ">{{valorMedioProponenteFormatado}}</td>
                 </tr>
             </table>
         </div>

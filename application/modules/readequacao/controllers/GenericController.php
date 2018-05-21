@@ -8,6 +8,7 @@ abstract class Readequacao_GenericController extends MinC_Controller_Action_Abst
     protected $idPerfil = 0;
 
     protected $idPronac;
+    protected $idPronacHash;
     protected $projeto;
     protected $in2017;
 
@@ -32,6 +33,18 @@ abstract class Readequacao_GenericController extends MinC_Controller_Action_Abst
             $this->redirect($url);
         }
 
+        $idPronac = $this->_request->getParam("idPronac");
+        $this->idPronacHash = Seguranca::encrypt($idPronac);
+
+        if (strlen($idPronac) > 7) {
+            $this->idPronacHash = $idPronac;
+            $idPronac = Seguranca::dencrypt($idPronac);
+        }
+
+        $this->idPronac = $idPronac;
+        $this->view->idPronac = $idPronac;
+        $this->view->idPronacHash = $this->idPronacHash;
+
         if (isset($auth->getIdentity()->usu_codigo)) { // autenticacao novo salic
             $this->view->usuarioInterno = true;
             $this->idUsuario = $auth->getIdentity()->usu_codigo;
@@ -49,18 +62,13 @@ abstract class Readequacao_GenericController extends MinC_Controller_Action_Abst
             parent::perfil(4, $PermissoesGrupo);
             $this->idUsuario = (isset($_GET["idusuario"])) ? $_GET["idusuario"] : 0;
 
-            $this->verificarPermissaoAcesso(false, true, false);
+            if($this->idPronac) {
+                $this->verificarPermissaoAcesso(false, true, false);
+            }
         }
-
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-        $this->view->idPronac = $idPronac;
-        $this->idPronac = $idPronac;
 
         $this->view->in2017 = false;
-        if($idPronac) {
+        if ($idPronac) {
             $tbProjetos = new Projeto_Model_DbTable_Projetos();
             $this->projeto = (new Projeto_Model_TbProjetos($tbProjetos->findBy(['idPronac' => $idPronac])));
 

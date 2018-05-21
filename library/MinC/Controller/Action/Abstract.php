@@ -632,10 +632,11 @@ abstract class MinC_Controller_Action_Abstract extends Zend_Controller_Action
                 if (strlen($idPronac) > 7) {
                     $idPronac = Seguranca::dencrypt($idPronac);
                 }
-
+                
                 $fnVerificarPermissao = new Autenticacao_Model_FnVerificarPermissao();
                 $consulta = $fnVerificarPermissao->verificarPermissaoProjeto($idPronac, $idUsuarioLogado);
-
+                //print $idPronac . '/' . $idUsuarioLogado;
+                //print_r($consulta);
                 $permissao = $consulta->Permissao;
             }
             # Verifica Permissao de Proposta

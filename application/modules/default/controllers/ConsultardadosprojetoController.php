@@ -1017,10 +1017,10 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
             $pronac = $rsProjeto->AnoProjeto.$rsProjeto->Sequencial;
             $this->view->projeto = $rsProjeto;
 
-            $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
-            $dadosReadequacoes = $Readequacao_Model_tbReadequacao->buscarDadosReadequacoes(array('a.idPronac = ?'=>$idPronac, 'a.siEncaminhamento <> ?'=>12))->toArray();
+            $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+            $dadosReadequacoes = $Readequacao_Model_DbTable_TbReadequacao->buscarDadosReadequacoes(array('a.idPronac = ?'=>$idPronac, 'a.siEncaminhamento <> ?'=>12))->toArray();
 
-            $dadosReadequacoesDevolvidas = $Readequacao_Model_tbReadequacao->buscarDadosReadequacoes(array('a.idPronac = ?'=>$idPronac, 'a.siEncaminhamento = ?'=>12, 'a.stAtendimento = ?' => 'E', 'a.stEstado = ?' => 0))->toArray();
+            $dadosReadequacoesDevolvidas = $Readequacao_Model_DbTable_TbReadequacao->buscarDadosReadequacoes(array('a.idPronac = ?'=>$idPronac, 'a.siEncaminhamento = ?'=>12, 'a.stAtendimento = ?' => 'E', 'a.stEstado = ?' => 0))->toArray();
 
             $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
             foreach ($dadosReadequacoes as &$dr) {

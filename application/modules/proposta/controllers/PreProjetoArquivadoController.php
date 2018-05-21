@@ -141,7 +141,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $agente = $agente->buscaCompleta(['a.idPreProjeto = ? ' => $idPreProjeto]);
 
         $email = new StdClass();
-        $email->text = 'Motivo Arquivamento: '. $MotivoArquivamento;
+        $email->text = 'Motivo Arquivamento: '. utf8_decode(html_entity_decode($MotivoArquivamento));
         $email->to = $agente->current()->EmailAgente;
         $email->subject = 'SALIC - Arquivamento Proposta: ' . $idPreProjeto;
 

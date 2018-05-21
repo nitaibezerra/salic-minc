@@ -346,7 +346,7 @@ Vue.component('plano-distribuicao-detalhamentos-formulario', {
                 </form>
              </div>
             <div class="modal-footer">
-                <a href="#!" class="modal-action modal-close waves-effect waves-green btn btn-info white-text">Fechar</a>
+                
             </div>
         </div>
     </div>

@@ -214,7 +214,7 @@ class Readequacao_Model_DbTable_TbPlanoDistribuicao extends MinC_Db_Table_Abstra
     /*
      * Funcao utilizada para buscar os planos de distribuicao do projeto para readequacao.
      */
-    public function buscarPlanosDistribuicaoReadequacao($idPronac, $tabela = 'PlanoDistribuicaoProduto')
+    public function buscarPlanosDistribuicaoReadequacao($idPronac, $tabela = 'PlanoDistribuicaoProduto', $where = [])
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -310,6 +310,10 @@ class Readequacao_Model_DbTable_TbPlanoDistribuicao extends MinC_Db_Table_Abstra
                 array('e.Descricao as DescricaoSegmento'),
                 'SAC.dbo'
             );
+        }
+
+        foreach ($where as $coluna => $valor) {
+            $select->where($coluna, $valor);
         }
 
         $select->where('a.IdPRONAC = ?', $idPronac);
@@ -448,7 +452,7 @@ class Readequacao_Model_DbTable_TbPlanoDistribuicao extends MinC_Db_Table_Abstra
 
         $select->joinInner(
             array('b' => $this->_name),
-            "a.IdPRONAC = b.idPronac AND stAtivo='S'",
+            "a.IdPRONAC = b.idPronac",
             array(
                 new Zend_Db_Expr("
                     b.idPlanoDistribuicao,
@@ -500,6 +504,7 @@ class Readequacao_Model_DbTable_TbPlanoDistribuicao extends MinC_Db_Table_Abstra
         );
 
         $select->where('a.IdPRONAC = ?', $idPronac);
+        $select->where('b.stAtivo = ?', 'S');
         $select->order('b.stPrincipal DESC');
 
         return $this->fetchAll($select);

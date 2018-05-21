@@ -31,7 +31,7 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper extends MinC
         return $detalhamentosReadequacao;
     }
 
-    public function copiarDetalhamentosDaProposta(Projeto_Model_TbProjetos $projeto)
+    public function copiarDetalhamentosDaProposta(Projeto_Model_TbProjetos $projeto, $idReadequacao = null)
     {
         $tbDetalhaReadequacao = new Readequacao_Model_DbTable_TbDetalhaPlanoDistribuicaoReadequacao();
         $paramsBuscarDetalhamentos = [
@@ -56,7 +56,7 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper extends MinC
             $this->beginTransaction();
             foreach ($detalhamentosDaProposta as $key => $detalhamento) {
                 unset($detalhamento['idDetalhaPlanoDistribuicao']);
-                $detalhamento['idReadequacao'] = null;
+                $detalhamento['idReadequacao'] = $idReadequacao;
                 $detalhamento['tpSolicitacao'] = 'N';
                 $detalhamento['stAtivo'] = 'S';
                 $detalhamento['idPronac'] = $projeto->getIdPRONAC();

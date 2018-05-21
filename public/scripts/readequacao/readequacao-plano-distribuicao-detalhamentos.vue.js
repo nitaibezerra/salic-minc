@@ -38,7 +38,7 @@ Vue.component('readequacao-plano-distribuicao-detalhamentos', {
         this.obterDetalhamentos();
     },
     methods: {
-        tratarEvento: function(evento, dados, index) {
+        tratarEvento: function (evento, dados, index) {
             switch (evento) {
                 case 'editarItem':
                     this.editarDetalhamento(dados, index);
@@ -114,7 +114,7 @@ Vue.component('readequacao-plano-distribuicao-detalhamentos', {
         },
         obterDetalhamentos: function () {
             var self = this;
-            self.$data.detalhamentos =  this.arrayDetalhamentos;
+            self.$data.detalhamentos = this.arrayDetalhamentos;
         }
     }
 });

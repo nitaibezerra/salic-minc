@@ -308,10 +308,10 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             $Marcas = 1;
 
             $objTbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
-            $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
-            $existeReadequacaoEmAndamento = $Readequacao_Model_tbReadequacao->existeReadequacaoEmAndamento($idPronac);
-            $existeReadequacaoPlanilhaEmEdicao = $Readequacao_Model_tbReadequacao->existeReadequacaoPlanilhaEmEdicao($idPronac);
-            $existeReadequacaoParcialEmEdicao = $Readequacao_Model_tbReadequacao->existeReadequacaoParcialEmEdicao($idPronac);
+            $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+            $existeReadequacaoEmAndamento = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoEmAndamento($idPronac);
+            $existeReadequacaoPlanilhaEmEdicao = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoPlanilhaEmEdicao($idPronac);
+            $existeReadequacaoParcialEmEdicao = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoParcialEmEdicao($idPronac);
 
             if (!$existeReadequacaoEmAndamento && !$existeReadequacaoEmAndamento) {
                 $Readequacao_50 = 1;
@@ -398,7 +398,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                         $this->_schema
                     )
                     ->where('a.idPronac = ?', $idPronac)
-                                  ->where('b.idTipoReadequacao = ?', Readequacao_Model_tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA)
+                                  ->where('b.idTipoReadequacao = ?', Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA)
                                   ->where(
                                       'a.siEncaminhamento NOT IN (?)',
                                       array(

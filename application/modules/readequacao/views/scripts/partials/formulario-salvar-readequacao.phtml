@@ -1,28 +1,37 @@
 <form name="formReadequacao"
       id="formReadequacao"
-      action="<?php echo $this->url(
-          [
-              'module' => 'readequacao',
-              'controller' => 'readequacoes',
-              'action' => 'incluir-solicitacao-readequacao'
-          ], null, true); ?><?php echo '?idPronac=' . Seguranca::encrypt($this->idPronac); ?>"
+      action="<?php echo $this->action; ?>"
       method="post"
       enctype="multipart/form-data">
     <input type="hidden" id="idReadequacao" name="idReadequacao"
-           value="<?php echo $this->readequacao->idReadequacao; ?>">
-    <input type="hidden" id="pertenceIn2017" name="pertenceIn2017" value="<?php echo $this->in2017; ?>">
+           value="<?php echo $this->readequacao['idReadequacao']; ?>">
     <input type="hidden" id="tipoReadequacao" name="tipoReadequacao" value="<?php echo $this->idTipoReadequacao; ?>">
-
+    <input type="hidden" id="urlCallback" name="urlCallback" value="<?php echo $this->urlCallback; ?>">
     <div class="row">
         <div class="col s12">
             <span>Justificativa da Solicita&ccedil;&atilde;o </span><span class="red-text">*</span>
-            <textarea cols="80" class="editor" id="descJustificativa" name="descJustificativa" rows="10"></textarea>
+            <textarea cols="80" class="editor" id="descJustificativa" name="descJustificativa" rows="10">
+                <?php echo $this->readequacao['justificativa']; ?>
+            </textarea>
         </div>
-        <div class="col s12">
-            <span>Anexo</span><br>
-            <input type="file" name="arquivo" class="input_simples">
-            <span style="margin-left: 10px;" class="red-text">Somente arquivos .pdf</span>
-        </div>
+        <table class="tabela solicitacoesSimples">
+            <tr>
+                <td>
+                    <label for="arquivo" style="width: 100px; ">Anexar arquivo: </label>
+                    <input type="file" name="arquivo" id="arquivo" class="input_simples">
+                </td>
+            </tr>
+            <?php if (!empty($this->readequacao['idDocumento'])): ?>
+                <tr>
+                    <td>
+                        Anexo: <a href="<?= $this->url(
+                            array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'abrir-documento-readequacao'), null, true); ?>?id=<?= $this->readequacao['idDocumento']; ?>">
+                            <?php echo $this->readequacao['nomeArquivo']; ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </table>
     </div>
     <div class="padding20 center-align">
         <a
@@ -35,19 +44,28 @@
             class="waves-effect waves-light btn btn-secondary">
             <i class="material-icons right">send</i>Finalizar
         </a>
-        <a
-            href="javascript:void(0)"
-            class="btn waves-effect waves-light btn-danger btn-excluir"
-            title="Excluir readequa&ccedil;&atilde;o"
-            readequacao="<?php echo $this->idReadequacao; ?>"
-        > Excluir
-            <i class="material-icons right">delete</i>
-        </a>
+
+        <?php if ($this->readequacao['idReadequacao']) : ?>
+            <a
+                href="javascript:void(0)"
+                class="btn waves-effect waves-light btn-danger btn-excluir"
+                title="Excluir readequa&ccedil;&atilde;o"
+                readequacao="<?php echo $this->readequacao['idReadequacao']; ?>"
+            > Excluir
+                <i class="material-icons right">delete</i>
+            </a>
+        <?php endif; ?>
     </div>
 </form>
 
+<div id="msgAlertaFormulario" class="sumir"></div>
 
 <script type="text/javascript">
+
+    function excluirReadequacao(idReadequacao) {
+        window.location = "<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'excluir-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao=" + idReadequacao;
+    }
+
     $(document).ready(function () {
 
         $("textarea.editor").each(function () {
@@ -60,8 +78,12 @@
         });
 
         $('#IncluirReadequacao').click(function () {
-            var descJustificativa = CKEDITOR.instances['descJustificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, ''),
-                texto = CKEDITOR.instances['descJustificativa'].getData(),
+            if (typeof tinyMCE == 'object') {
+                tinyMCE.triggerSave();
+            }
+
+            var descJustificativa = $('#descJustificativa').val().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, ''),
+                texto = $('#descJustificativa').val(),
                 erro = 0,
                 msg = 'Favor preencher os dados obrigat&oacute;rios!',
                 tipoRead = $('#tipoReadequacao').val(),
@@ -69,7 +91,7 @@
                 solicitacoesSimplesCKEditor = new Array(5, 6, 7, 8, 16, 17, 18, 19, 20, 21),
                 naoPedeConfirmacao = new Array(2, 11);
 
-            if (descJustificativa == '') {
+            if (descJustificativa.length <= 1) {
                 erro++;
             }
 
@@ -79,7 +101,6 @@
             }
 
             if (in_array(tipoRead, solicitacoesSimples)) {
-
 
                 if (tipoRead == 15) {
                     var campoRead = CKEDITOR.instances['descSolicitacao'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, ''),
@@ -102,9 +123,9 @@
             }
 
             if (erro > 0) {
-                $("#msgAlerta").dialog("destroy");
-                $("#msgAlerta").html(msg);
-                $("#msgAlerta").dialog({
+                $("#msgAlertaFormulario").dialog("destroy");
+                $("#msgAlertaFormulario").html(msg);
+                $("#msgAlertaFormulario").dialog({
                     resizable: false,
                     title: 'Alerta!',
                     width: 340,
@@ -118,9 +139,9 @@
                 });
                 $('.ui-dialog-titlebar-close').remove();
             } else {
-                $("#msgAlerta").dialog("destroy");
-                $("#msgAlerta").html('Deseja incluir essa solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o?');
-                $("#msgAlerta").dialog({
+                $("#msgAlertaFormulario").dialog("destroy");
+                $("#msgAlertaFormulario").html('Deseja incluir essa solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o?');
+                $("#msgAlertaFormulario").dialog({
                     resizable: false,
                     title: 'Alerta!',
                     width: 360,
@@ -132,16 +153,17 @@
                         },
                         'Sim': function () {
                             $(this).dialog('close');
-                            $("#msgAlerta").dialog("destroy");
-                            $("#msgAlerta").html('<br /><div align="center"><img src="<?php echo $this->baseUrl() . '/public/img/ajax.gif'; ?>"><br />Aguarde..</div>');
-                            $("#msgAlerta").dialog({
+                            $("#msgAlertaFormulario").dialog("destroy");
+                            $("#msgAlertaFormulario").html('<br /><div align="center"><img src="<?php echo $this->baseUrl() . '/public/img/ajax.gif'; ?>"><br />Aguarde..</div>');
+                            $("#msgAlertaFormulario").dialog({
                                 resizable: false,
                                 width: 320,
                                 modal: true,
                                 title: 'Carregando..'
                             });
                             $('.ui-dialog-titlebar-close').remove();
-                            window.setTimeout('enviarformulario()', 1000);
+                            $('#formReadequacao').submit();
+//                            window.setTimeout('enviarformulario()', 1000);
                         }
                     }
                 });
@@ -151,9 +173,9 @@
 
         $('.btn-excluir').click(function () {
             var idReadequacao = $(this).attr('readequacao');
-            $("#msgAlerta").dialog("destroy");
-            $("#msgAlerta").html('Deseja excluir a solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o?');
-            $("#msgAlerta").dialog({
+            $("#msgAlertaFormulario").dialog("destroy");
+            $("#msgAlertaFormulario").html('Deseja excluir a solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o?');
+            $("#msgAlertaFormulario").dialog({
                 resizable: false,
                 title: 'Alerta!',
                 width: 360,
@@ -164,9 +186,9 @@
                     },
                     'Sim': function () {
                         $(this).dialog('close');
-                        $("#msgAlerta").dialog("destroy");
-                        $("#msgAlerta").html('<br /><div align="center"><img src="<?php echo $this->baseUrl() . '/public/img/ajax.gif'; ?>"><br />Aguarde..</div>');
-                        $("#msgAlerta").dialog({
+                        $("#msgAlertaFormulario").dialog("destroy");
+                        $("#msgAlertaFormulario").html('<br /><div align="center"><img src="<?php echo $this->baseUrl() . '/public/img/ajax.gif'; ?>"><br />Aguarde..</div>');
+                        $("#msgAlertaFormulario").dialog({
                             resizable: false,
                             width: 320,
                             modal: true,

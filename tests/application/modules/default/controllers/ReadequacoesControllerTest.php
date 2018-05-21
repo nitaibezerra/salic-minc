@@ -11,7 +11,7 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
     {
         parent::setUp();
         
-        $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
+        $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
         $this->idPronac = $this->getProjetoAptoReadequacao();
 
         $projetos = new Projetos();
@@ -63,13 +63,13 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
         
         $result = $projetos->fetchAll($select);
         
-        $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
+        $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
         $tbCumprimentoObjeto = new tbCumprimentoObjeto();
         foreach ($result as $item) {
             
-            $existeReadequacaoEmAndamento = $Readequacao_Model_tbReadequacao->existeReadequacaoEmAndamento($item->idPronac);
-            $existeReadequacaoPlanilhaEmEdicao = $Readequacao_Model_tbReadequacao->existeReadequacaoPlanilhaEmEdicao($item->idPronac);
-            $existeReadequacaoParcialEmEdicao = $Readequacao_Model_tbReadequacao->existeReadequacaoParcialEmEdicao($item->idPronac);
+            $existeReadequacaoEmAndamento = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoEmAndamento($item->idPronac);
+            $existeReadequacaoPlanilhaEmEdicao = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoPlanilhaEmEdicao($item->idPronac);
+            $existeReadequacaoParcialEmEdicao = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoParcialEmEdicao($item->idPronac);
             $possuiRelatorioDeCumprimento = $tbCumprimentoObjeto->possuiRelatorioDeCumprimento($item->idPronac);
             
             $Readequacao = false;
@@ -144,8 +144,8 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
      */    
     public function testPlanilhaOrcamentariaCondicoesNaoSatisfeitas()
     {
-        $Readequacao_Model_tbReadequacao = new Readequacao_Model_tbReadequacao();
-        $possuiReadequacao = $Readequacao_Model_tbReadequacao->existeReadequacaoEmAndamento($this->idPronac);
+        $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $possuiReadequacao = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoEmAndamento($this->idPronac);
         
         $this->assertFalse($possuiReadequacao);
 

@@ -520,7 +520,7 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
             '',
             ''
         );
-        $vlAtualPerc = $vlAtual* Readequacao_Model_tbReadequacao::PERCENTUAL_REMANEJAMENTO/100;
+        $vlAtualPerc = $vlAtual* Readequacao_Model_DbTable_TbReadequacao::PERCENTUAL_REMANEJAMENTO/100;
         
         //VALOR MINIMO E MAXIMO DO ITEM ORIGINAL
         //SE TIVER VALOR COMPROVADO, DEVE SUBTRAIR O VALOR DO ITEM COMPROVADO DO VALOR UNITARIO

@@ -320,7 +320,7 @@
 
     <?php if (!empty($this->planosDistribuicao)) : ?>
         <?php foreach($this->planosDistribuicao as $planoDistribuicao): ?>
-            <?php $planoAlterado = ($this->planoDistribuicaoCopia[$planoDistribuicao->idProduto]) ? false : true; ?>
+            <?php $planoAlterado = $planoDistribuicao->tpSolicitacao == 'N' ? false : true; ?>
             <table class="tabela">
                 <tr>
                     <td align="left">
@@ -348,12 +348,8 @@
                                 <tr>
                                     <td class="destacar bold" style="width: 1px;">&Aacute;rea <span style="color: red;">*</span></td>
                                     <td>
+                                        <span><?php echo $planoDistribuicao->DescricaoArea; ?></span>
                                         <input type="hidden" name="areaCultural" id="areaCultural-<?php echo $planoDistribuicao->idProduto; ?>" value="<?php echo $planoDistribuicao->idArea; ?>">
-                                        <?php foreach ($this->areas as $area): ?>
-                                            <?php if ($planoDistribuicao->idArea == $area->Codigo): ?>
-                                                <?php echo $area->Descricao; ?>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
                                     </td>
                                     <td class="destacar bold" style="width: 1px;">Segmento <span style="color: red;">*</span></td>
                                     <td>
@@ -442,7 +438,13 @@
                             </table>
 
                             <div style="width: 100%">
-                                <p align="center"><input type="button" value="" class="btn_salvar" id="btn_salvar-<?php echo $planoDistribuicao->idProduto; ?>" /></p>
+                                <p align="center">
+                                    <a
+                                        id="btn_salvar-<?php echo $planoDistribuicao->idProduto; ?>"
+                                        class="waves-effect waves-light btn btn-primary">
+                                        <i class="material-icons right">save</i>Salvar
+                                    </a>
+                                </p>
                             </div>
                             <br clear="all" />
                             <div class="sumir mensagem-<?php echo $planoDistribuicao->idProduto; ?>"></div>

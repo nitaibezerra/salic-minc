@@ -9116,4 +9116,74 @@ class Projetos extends MinC_Db_Table_Abstract
 
         return $this->fetchAll($select);
     }
+
+    public function buscarProjetoTransferidor($idPronac)
+    {
+
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        
+        $select->from(
+            array('p' => $this->_name),
+            array(
+                new Zend_Db_Expr("
+                    p.IdPRONAC AS idPronac,
+                    (p.AnoProjeto+p.Sequencial) AS pronac,
+                    p.nomeProjeto,
+                    100000 AS valorAComprovar
+                ")
+            )
+        );
+
+        $select->joinInner(
+            ['a' => 'Area'],
+            'a.Codigo = p.Area',
+            [
+                'a.Descricao as area',
+                'a.Codigo as codArea'
+            ]
+        );
+
+        $select->where('idPronac = ?', $idPronac);
+        
+        $projeto = $this->fetchAll($select);
+        if (count($projeto) > 0) {
+            return $projeto->current();
+        } else {
+            return false;
+        }
+    }
+
+    
+    public function buscarProjetosRecebedoresDisponiveis($idPronac)
+    {
+        $projetos = [];
+        try {
+            $select = $this->select();
+            $select->where('idPronac = ?', $idPronac);      
+            $projetoAtual = $this->fetchAll($select)->current();
+            
+        } catch (Exception $objException) {
+            $this->view->message = $objException->getMessage();
+            return [];
+        }
+
+        $areasProjetosOutrosProponentes = [
+            Area::AREA_PATRIMONIO_CULTURAL,
+            Area::AREA_MUSEUS_MEMORIA
+        ];
+        
+        $select = $this->select();
+        $select->where('idPronac != ?', $projetoAtual->IdPRONAC);
+        
+        if (in_array($projetoAtual->Area, $areasProjetosOutrosProponentes)) {
+            $select->limit(10);
+        } else {
+            $select->where('CgcCpf = ?', $projetoAtual->CgcCpf);
+        }
+        
+        $projetos = $this->fetchAll($select);
+        
+        return $projetos;
+    }
 }
