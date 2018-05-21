@@ -55,13 +55,13 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
     private function _isPermitidoEditar($recursoEnquadramento, $visao = Recurso_RecursoPropostaController::VISAO_PROPONENTE) {
         return (
             (
-                is_null($this->recursoEnquadramento['stRascunho'])
+                is_null($recursoEnquadramento['stRascunho'])
                 ||
                 (
-                    !is_null($this->recursoEnquadramento['stRascunho']) &&
-                    (int) $this->recursoEnquadramento['stRascunho'] != (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                    !is_null($recursoEnquadramento['stRascunho']) &&
+                    (int) $recursoEnquadramento['stRascunho'] != (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
                 )
-            ) && !$this->recursoEnquadramento['dtAvaliacaoTecnica']
+            ) && !$recursoEnquadramento['dtAvaliacaoTecnica']
         );
     }
 
