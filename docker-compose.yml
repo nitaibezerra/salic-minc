@@ -4,7 +4,7 @@ services:
     image: culturagovbr/salic-web:1.5
     container_name: salic-web
     ports:
-     - "80:80"
+     # - "80:80"
      - "8888:8888"
     volumes:
      - .:/var/www/salic
@@ -13,8 +13,7 @@ services:
      - ./public/plenaria:/var/www/salic/public/plenaria/
     environment:
       - APPLICATION_ENV=development
-
-        #xDebug configs for 'development' enviroment
+      #xDebug configs for 'development' enviroment
       - XDEBUG_INSTALL="true"
       - XDEBUG_REMOTE_ENABLE=on
       - XDEBUG_REMOTE_AUTOSTART=on
@@ -27,21 +26,12 @@ services:
 
       - XDEBUG_DEFAULT_ENABLE=1
       - XDEBUG_IDEKEY=PHPSTORM
-  
-  webserver:
-    image: nginx:alpine
-    container_name: salic-api-webserver
-    working_dir: /application
-    volumes:
-        - ./api:/application
-        - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - "81:80"
-
-  php-fpm:
-    build: docker/php-fpm
-    container_name: salic-api-php-fpm
-    working_dir: /application
-    volumes:
-      - ./api:/application
-      - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.3
+networks:
+   static-network:
+    ipam:
+      config:
+         - subnet: 172.20.0.0/16
+           ip_range: 172.28.5.0/24

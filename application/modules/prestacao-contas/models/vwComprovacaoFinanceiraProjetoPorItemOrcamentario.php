@@ -389,4 +389,46 @@ class PrestacaoContas_Model_vwComprovacaoFinanceiraProjetoPorItemOrcamentario ex
 
         return $this->fetchAll($select);
     }
+
+    public function comprovacoes(
+        $idpronac, 
+        $idPlanilhaItem = null , 
+        $stItemAvaliado = null,
+        $codigoProduto = null,
+        $idComprovantePagamento = null
+    ) {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoFinanceiraProjetoPorItemOrcamentario'),
+            [
+                '*',
+                'nmFornecedor as Descricao',
+                'nrCNPJCPF as CNPJCPF',
+                'dsJustificativaProponente as dsJustificativa',
+                'dsOcorrenciaDoTecnico as ocorrencia'
+            ],
+            $this->_schema
+        );
+
+        if ($stItemAvaliado) {
+            $select->where('stItemAvaliado = ?', $stItemAvaliado);
+        }
+
+        if ($codigoProduto || ($codigoProduto == 0&& !is_null($codigoProduto))) {
+            $select->where('cdProduto = ?', $codigoProduto);
+        }
+
+        if ($idComprovantePagamento) {
+            $select->where('idComprovantePagamento = ?', $idComprovantePagamento);
+        }
+
+        if ($idPlanilhaItem) {
+            $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
+        }
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        return $this->fetchAll($select);
+    }
 }
