@@ -15,7 +15,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
         parent::init();
 
         $this->auth = Zend_Auth::getInstance();
-        $this->authIdentity = array_change_key_case((array) $this->auth->getIdentity());
+        $this->authIdentity = array_change_key_case((array)$this->auth->getIdentity());
         $this->grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
 
         $this->view->id_perfil = $this->grupoAtivo->codGrupo;
@@ -28,7 +28,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
 
     public function visaoProponenteAction()
     {
-        if ((int) $this->view->id_perfil != (int) Autenticacao_Model_Grupos::PROPONENTE) {
+        if ((int)$this->view->id_perfil != (int)Autenticacao_Model_Grupos::PROPONENTE) {
             throw new Exception("Perfil de Usu&aacute;rio sem permiss&atilde;o acessar essa funcionalidade.");
         }
 
@@ -44,7 +44,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
         }
 
         $this->view->isPermitidoEditar = $this->_isPermitidoEditar(
-            $this->view->recursoEnquadramento, 
+            $this->view->recursoEnquadramento,
             Recurso_RecursoPropostaController::VISAO_PROPONENTE
         );
 
@@ -52,14 +52,15 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
         $this->view->historicoRecursoProposta = $recursoPropostaDbTable->obterHistoricoRecurso($this->idPreProjeto)->toArray();
     }
 
-    private function _isPermitidoEditar($recursoEnquadramento, $visao = Recurso_RecursoPropostaController::VISAO_PROPONENTE) {
+    private function _isPermitidoEditar($recursoEnquadramento, $visao = Recurso_RecursoPropostaController::VISAO_PROPONENTE)
+    {
         return (
             (
                 is_null($recursoEnquadramento['stRascunho'])
                 ||
                 (
                     !is_null($recursoEnquadramento['stRascunho']) &&
-                    (int) $recursoEnquadramento['stRascunho'] != (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                    (int)$recursoEnquadramento['stRascunho'] != (int)Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
                 )
             ) && !$recursoEnquadramento['dtAvaliacaoTecnica']
         );
@@ -67,8 +68,8 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
 
     public function visaoAvaliadorAction()
     {
-        if ((int) $this->view->id_perfil != (int) Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
-            && (int) $this->view->id_perfil != (int) Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
+        if ((int)$this->view->id_perfil != (int)Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE
+            && (int)$this->view->id_perfil != (int)Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
             throw new Exception("Perfil de Usu&aacute;rio sem permiss&atilde;o acessar essa funcionalidade.");
         }
 
@@ -95,11 +96,11 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             is_null($this->view->recursoEnquadramento['stRascunho'])
             || (
                 !is_null($this->view->recursoEnquadramento['stRascunho'])
-                && (int) $this->view->recursoEnquadramento['stRascunho'] != (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                && (int)$this->view->recursoEnquadramento['stRascunho'] != (int)Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
             )
             || (
                 !is_null($this->view->recursoEnquadramento['stRascunho'])
-                && (int) $this->view->recursoEnquadramento['stRascunho'] == (int) Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
+                && (int)$this->view->recursoEnquadramento['stRascunho'] == (int)Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO
                 && !$this->view->recursoEnquadramento['dtAvaliacaoTecnica']
             )
         );
@@ -188,9 +189,9 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             if (empty($acao_salvar) || is_null($acao_salvar)) {
                 throw new Exception("Bot&atilde;o de a&ccedil;&atilde;o n&atilde;o informado.");
             }
-            $stRascunho = Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO;
+            $stRascunho = (int)Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_ENVIADO;
             if ($acao_salvar == 'rascunho') {
-                $stRascunho = Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_SALVO;
+                $stRascunho = (int)Recurso_Model_TbRecursoProposta::SITUACAO_RASCUNHO_SALVO;
             }
 
             $idAvaliadorTecnico = $this->authIdentity['usu_codigo'];
@@ -224,8 +225,8 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             $tbRecursoMapper = new Recurso_Model_TbRecursoPropostaMapper();
             $tbRecursoMapper->save($tbRecursoModel);
 
-            if ((string) $recursoEnquadramento['stAtendimento'] == (string) Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
-                && (int) $recursoEnquadramento['tpRecurso'] == (int) Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
+            if ((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
+                && (int)$recursoEnquadramento['tpRecurso'] == (int)Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
                 $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
                 $tbRecursoPropostaDbTable->cadastrarRecurso(
                     $id_preprojeto,
@@ -233,7 +234,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
                 );
             }
 
-            if ((string) $recursoEnquadramento['stAtendimento'] == (string) Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
+            if ((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
                 $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
                 $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($this->idPreProjeto);
 
@@ -287,7 +288,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             $get = $this->getRequest()->getParams();
 
             $id_perfil = $this->grupoAtivo->codGrupo;
-            if ((int) $id_perfil != (int) Autenticacao_Model_Grupos::PROPONENTE) {
+            if ((int)$id_perfil != (int)Autenticacao_Model_Grupos::PROPONENTE) {
                 throw new Exception("Perfil de Usu&aacute;rio sem permiss&atilde;o para realizar essa opera&ccedil;&atilde;o.");
             }
 
@@ -309,7 +310,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             }
 
             $fnVerificarPermissao = new Autenticacao_Model_FnVerificarPermissao();
-            $possuiPermissaoDeEdicao = (bool) $fnVerificarPermissao->verificarPermissaoProposta(
+            $possuiPermissaoDeEdicao = (bool)$fnVerificarPermissao->verificarPermissaoProposta(
                 $id_preprojeto,
                 $this->authIdentity['idusuario'],
                 false
