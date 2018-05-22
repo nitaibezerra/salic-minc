@@ -62,7 +62,7 @@ Senhor(a) Proponente,
 Conforme disp&otilde;e o artigo 24 da Instru&ccedil;&atilde;o Normativa n&ordm; 05/2017 do MinC, informamos que sua proposta ser&aacute; enquadrada nos termos da Lei n&ordm; 8.313/1991.
 <br />
 <br />
-Caso discorde do enquadramento poder&aacute; solicitar sua revis&atilde;o acessando a proposta no Salic e clicando no item “Enquadramento” localizado no menu lateral esquerdo.
+Caso discorde do enquadramento poder&aacute; solicitar sua revis&atilde;o acessando a proposta no Salic e clicando no item "Enquadramento" localizado no menu lateral esquerdo.
 <br />
 <br />
 Mensagem autom&aacute;tica gerada pelo Sistema Salic. Favor N&Atilde;O RESPONDER.
