@@ -117,7 +117,7 @@ Vue.component('readequacao-formulario', {
             });
         },
         salvarReadequacao: function () {
-            if (this.readequacao.justificativa.length == 0) {
+            if (this.readequacao.justificativa.length < 3) {
                 this.mensagemAlerta("\xC9 obrigat\xF3rio preencher a justificativa da readequa\xE7\xE3o!");
                 this.$refs.readequacaoJustificativa.focus();
                 return;
@@ -195,5 +195,5 @@ Vue.component('readequacao-formulario', {
             }
             return true;
         }
-    },
+    }
 });

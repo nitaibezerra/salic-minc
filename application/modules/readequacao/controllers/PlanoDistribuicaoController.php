@@ -534,9 +534,10 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
                 'idReadequacao' => $params['idReadequacao'],
                 'idPronac' => $params['idPronac'],
                 'idTipoReadequacao' => $params['idTipoReadequacao'],
-                'dsJustificativa' => $params['justificativa'],
+                'dsJustificativa' => utf8_decode($params['justificativa']),
                 'idDocumento' => $params['idDocumento']
             ];
+
             $TbReadequacaoMapper = new Readequacao_Model_TbReadequacaoMapper();
             $idReadequacao = $TbReadequacaoMapper->salvarSolicitacaoReadequacao($dados);
 
@@ -550,7 +551,6 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
     public function excluirReadequacaoPlanoDistribuicaoAjaxAction()
     {
         try {
-
             if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
                 throw new Exception("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!");
             }

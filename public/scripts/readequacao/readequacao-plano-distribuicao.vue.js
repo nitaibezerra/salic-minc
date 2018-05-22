@@ -95,9 +95,13 @@ Vue.component('readequacao-plano-distribuicao', {
     watch: {
         produtos: function (value) {
             if (value.length > 0) {
+                this.obterDadosReadequacao();
+                this.obterLocaisRealizacao();
                 this.mostrarFormulario = true;
-                this.obterLocaisRealizacao()
-            } else {
+                this.mostrarMensagemInicial = false;
+            }
+
+            if (value.length === 0) {
                 this.mostrarMensagemInicial = true;
             }
         }
@@ -109,7 +113,6 @@ Vue.component('readequacao-plano-distribuicao', {
         });
 
         this.obterPlanoDistribuicao();
-        this.obterDadosReadequacao();
 
         $3(document).ajaxStart(function () {
             $3('#container-loading').fadeIn('slow');
@@ -133,7 +136,7 @@ Vue.component('readequacao-plano-distribuicao', {
                     idPronac: self.idPronac
                 }
             }).done(function (response) {
-                self.obterPlanoDistribuicao(self.idPronac);
+                self.obterPlanoDistribuicao();
                 self.mostrarMensagemInicial = false;
                 self.mostrarFormulario = true;
             }).fail(function (response) {
