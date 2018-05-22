@@ -315,7 +315,7 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
             && $distribuicaoAvaliacaoProposta
             && $this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])
             && $this->isPropostaDistribuidaParaCoordenadorGeral($distribuicaoAvaliacaoProposta['id_perfil'])
-            && $this->isEnquadramentoProponenteIgualEndramentoAvaliador(
+            && !$this->isEnquadramentoProponenteIgualEndramentoAvaliador(
                 $dadosSugestaoEnquadramento, 
                 $id_area_proponente, 
                 $id_segmento_proponente

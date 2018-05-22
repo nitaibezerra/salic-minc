@@ -225,7 +225,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
             $tbRecursoMapper = new Recurso_Model_TbRecursoPropostaMapper();
             $tbRecursoMapper->save($tbRecursoModel);
 
-            if ((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
+            if ($stAtendimento == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_INDEFERIDO
                 && (int)$recursoEnquadramento['tpRecurso'] == (int)Recurso_Model_TbRecursoProposta::TIPO_RECURSO_PEDIDO_DE_RECONSIDERACAO) {
                 $tbRecursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
                 $tbRecursoPropostaDbTable->cadastrarRecurso(
@@ -234,7 +234,7 @@ class Recurso_RecursoPropostaController extends Proposta_GenericController
                 );
             }
 
-            if ((string)$recursoEnquadramento['stAtendimento'] == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
+            if ($stAtendimento == (string)Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
                 $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
                 $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($this->idPreProjeto);
 
