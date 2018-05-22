@@ -1144,7 +1144,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             }
         } // fecha try
         catch (Exception $e) {
-            parent::message($e->getMessage(), "readequacoes?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
+            parent::message($e->getMessage(), "/readequacao/readequacoes?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
         }
     }
 

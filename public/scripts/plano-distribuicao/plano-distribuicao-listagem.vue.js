@@ -2,7 +2,10 @@ Vue.component('plano-distribuicao-listagem', {
     template: `
         <div class="plano-distribuicao-listagem">
             <div v-if="!produtos.length" class="padding20 center-align">
-                <b>Aguarde! Carregando....</b>
+                <b>Carregando produtos....</b>
+            </div>
+            <div v-if="!locais.length" class="padding20 center-align">
+                <b>Carregando locais de realizacao....</b>
             </div>
             <ul v-if="produtos" class="collapsible collapsible-produto no-padding" data-collapsible="accordion">
                 <li v-for="produto of produtos">

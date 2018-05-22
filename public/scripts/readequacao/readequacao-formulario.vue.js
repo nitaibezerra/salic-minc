@@ -21,10 +21,9 @@ Vue.component('readequacao-formulario', {
             ></component>
             <div class="row">
                 <div class="col s12">
-                    <span>Anexar arquivo</span>
                     <div class="file-field input-field">
                         <div class="btn">
-                            <span>File</span>
+                            <span>Selecionar arquivo</span>
                             <input type="file"
                                    name="arquivo"
                                    id="arquivo"
@@ -38,8 +37,8 @@ Vue.component('readequacao-formulario', {
                     <div id="carregando-arquivo" class="progress sumir">
                       <div class="indeterminate"></div>
                     </div>
-                    <div class="col s12">
-                        <a v-bind:href="'/readequacao/readequacoes/abrir-documento-readequacao?id=' + readequacao.idDocumento" v-if="readequacao.idDocumento !=''">
+                    <div v-if="readequacao.idDocumento" class="col s12">
+                        Arquivo anexado: <a v-bind:href="'/readequacao/readequacoes/abrir-documento-readequacao?id=' + readequacao.idDocumento">
                             {{readequacao.nomeArquivo }}
                         </a>
                         <a

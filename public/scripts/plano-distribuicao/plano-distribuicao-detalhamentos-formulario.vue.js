@@ -335,6 +335,7 @@ Vue.component('plano-distribuicao-detalhamentos-formulario', {
                     </div>
                     <div class="row salvar center-align">
                         <br>
+                        <a href="#!" class="modal-close waves-effect waves-green btn btn-info">Fechar</a>
                         <a 
                             href="javascript:void(0)"
                             class="btn waves-effect waves-light white-text" 
