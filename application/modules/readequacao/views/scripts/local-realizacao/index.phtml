@@ -1,13 +1,13 @@
-<div class="container-fluid" id="vue-container">
+<div class="container-fluid">
     <div class="row">
         <div class="page-title">
             <div class="row">
                 <div class="col s12 m9 l10">
-                    <h1>Readequa&ccedil;&atilde;o Plano de Distribui&ccedil;&atilde;o</h1>
+                    <h1>Readequa&ccedil;&atilde;o Local de Realiza&ccedil;&atilde;o</h1>
 
                     <?php
                     gerarNovoBreadCrumb(array(
-                        array('Plano de Distribui&ccedil;&atilde;o' => '')
+                        array('Local de realiza&ccedil;&atilde;o' => '')
                     ));
                     ?>
                 </div>
@@ -19,7 +19,6 @@
             </div>
         </div>
         <div class="content">
-            <input type="hidden" id="pertenceIn2017" name="pertenceIn2017" value="<?php echo $this->in2017; ?>">
             <input type="hidden" id="idPronacHash" name="idPronacHash" value="<?php echo $this->idPronacHash; ?>">
             <div id="cabecalho" class="card">
                 <div class="card-content">
@@ -39,8 +38,8 @@
                 <div id="conteudo" style="margin: 0; width: 100%">
                     <div class="card">
                         <div class="card-content">
-                            <div id="planosDeDistribuicao">
-                                carregando produtos ...
+                            <div id="locaisParaRealizacao">
+                                carregando locais ...
                             </div>
                         </div>
                     </div>
@@ -59,12 +58,12 @@
 <?php if (!$this->existeSolicitacaoEmAnalise) : ?>
 
     <script type="text/javascript">
-        function carregarFormularioAntigaIN() {
-            jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'plano-distribuicao', 'action' => 'carregar-planos-de-distribuicao'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'planosDeDistribuicao');
+        function atualizarDadosLocaisRealizacao() {
+            jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'local-realizacao', 'action' => 'carregar-locais-de-realizacao'), '', true) ?>?idPronac=<?php echo $this->idPronacHash; ?>', '', 'locaisParaRealizacao');
         }
 
         $(document).ready(function () {
-            carregarFormularioAntigaIN();
+            atualizarDadosLocaisRealizacao();
         });
 
     </script>

@@ -15,7 +15,10 @@ Vue.component('readequacao-plano-distribuicao', {
             </div>
             <ul v-if="mostrarFormulario" class="collapsible no-padding" data-collapsible="accordion">
                 <li>
-                    <div class="collapsible-header active"><i class="material-icons">edit</i>Readequar Plano de Distribui&ccedil;&atilde;o</div>
+                    <div class="collapsible-header active"><i class="material-icons">edit</i>
+                        <span v-if="!disabled">Readequar Plano de Distribui&ccedil;&atilde;o</span>
+                        <span v-else>Readequação do Plano de Distribui&ccedil;&atilde;o</span>
+                    </div>
                     <div class="collapsible-body padding10">
                         <plano-distribuicao-listagem
                             :id-projeto="idPronac"
@@ -29,7 +32,10 @@ Vue.component('readequacao-plano-distribuicao', {
                     </div>
                 </li>
                 <li>
-                    <div class="collapsible-header"><i class="material-icons">assignment</i>Justificar readequa&ccedil;&atilde;o</div>
+                    <div class="collapsible-header"><i class="material-icons">assignment</i>
+                        <span v-if="!disabled">Justificar readequa&ccedil;&atilde;o</span>
+                        <span v-else>Justificativa da readequa&ccedil;&atilde;o</span>
+                    </div>
                     <div class="collapsible-body padding10">
                         <readequacao-formulario
                             v-if="mostrarFormulario"
@@ -44,7 +50,7 @@ Vue.component('readequacao-plano-distribuicao', {
                     </div>
                 </li>
             </ul>
-            <div v-if="mostrarFormulario" class="readequacao-plano-distribuicao padding20 right-align">
+            <div v-if="mostrarFormulario && !disabled" class="readequacao-plano-distribuicao padding20 right-align">
                 <a
                     href="javascript:void(0)"
                     class="btn waves-effect waves-light btn-danger btn-excluir"
@@ -206,37 +212,42 @@ Vue.component('readequacao-plano-distribuicao', {
         },
         excluirReadequacao: function () {
             let self = this;
-            $3.ajax({
-                type: "GET",
-                url: "/readequacao/plano-distribuicao/excluir-readequacao-plano-distribuicao-ajax",
-                data: {
-                    idPronac: self.idPronac
-                }
-            }).done(function (response) {
-                self.restaurarFormulario();
-                self.mostrarMensagemInicial = true;
-                self.mensagemSucesso(response.msg);
-            }).fail(function (response) {
-                self.mensagemErro(response.responseJSON.msg)
-            });
+            if (confirm("Tem certeza que deseja excluir a redequa\u00E7\u00E3o?")) {
+                $3.ajax({
+                    type: "GET",
+                    url: "/readequacao/plano-distribuicao/excluir-readequacao-plano-distribuicao-ajax",
+                    data: {
+                        idPronac: self.idPronac
+                    }
+                }).done(function (response) {
+                    self.restaurarFormulario();
+                    self.mostrarMensagemInicial = true;
+                    self.mensagemSucesso(response.msg);
+                }).fail(function (response) {
+                    self.mensagemErro(response.responseJSON.msg)
+                });
+            }
         },
         finalizarReadequacao: function () {
             let self = this;
-            $3.ajax({
-                type: "GET",
-                url: "/readequacao/plano-distribuicao/finalizar-readequacao-plano-distribuicao-ajax",
-                data: {
-                    idPronac: self.idPronac,
-                    idTipoReadequacao: self.idTipoReadequacao
-                }
-            }).done(function (response) {
-                self.mensagemSucesso(response.msg);
-                self.restaurarFormulario();
-                self.mostrarMensagemInicial = false;
-                self.mostrarMensagemFinal = true;
-            }).fail(function (response) {
-                self.mensagemErro(response.responseJSON.msg)
-            });
+
+            if (confirm("Tem certeza que deseja finalizar a redequa\u00E7\u00E3o?")) {
+                $3.ajax({
+                    type: "GET",
+                    url: "/readequacao/plano-distribuicao/finalizar-readequacao-plano-distribuicao-ajax",
+                    data: {
+                        idPronac: self.idPronac,
+                        idTipoReadequacao: self.idTipoReadequacao
+                    }
+                }).done(function (response) {
+                    self.mensagemSucesso(response.msg);
+                    self.restaurarFormulario();
+                    self.mostrarMensagemInicial = false;
+                    self.mostrarMensagemFinal = true;
+                }).fail(function (response) {
+                    self.mensagemErro(response.responseJSON.msg)
+                });
+            }
         },
         restaurarFormulario: function () {
             Object.assign(this.$data, this.$options.data.apply(this))

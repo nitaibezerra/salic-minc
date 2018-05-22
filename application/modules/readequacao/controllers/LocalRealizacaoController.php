@@ -2,9 +2,102 @@
 
 class Readequacao_LocalRealizacaoController extends Readequacao_GenericController
 {
+    private $_siEncaminhamento = null;
+    private $_idTipoReadequacao = null;
+    private $_existeSolicitacaoEmAnalise = false;
+
     public function init()
     {
         parent::init();
+
+        $this->_siEncaminhamento = TbTipoEncaminhamento::SOLICITACAO_CADASTRADA_PELO_PROPONENTE;
+        $this->_idTipoReadequacao = Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_LOCAL_REALIZACAO;
+
+        $tbReadequacaoMapper = new Readequacao_Model_TbReadequacaoMapper();
+        $this->_existeSolicitacaoEmAnalise = $tbReadequacaoMapper->existeSolicitacaoEmAnalise($this->idPronac, $this->_idTipoReadequacao);
+        $this->view->existeSolicitacaoEmAnalise = $this->_existeSolicitacaoEmAnalise;
+    }
+
+    public function indexAction()
+    {
+        $this->view->projeto = $this->projeto;
+        $this->view->idTipoReadequacao = $this->_idTipoReadequacao;
+        $this->view->urlCallback = '/readequacao/local-realizacao/index/?idPronac=' . $this->idPronacHash;
+        $this->view->action = '/readequacao/local-realizacao/salvar-readequacao/?idPronac=' . $this->idPronacHash;
+
+        $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $this->view->readequacao = $tbReadequacao->obterDadosReadequacao(
+            $this->_idTipoReadequacao,
+            $this->idPronac
+        );
+    }
+
+    public function salvarReadequacaoAction()
+    {
+        if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+            parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
+        }
+
+        if (empty($this->idPronac)) {
+            parent::message("PRONAC &eacute; obrigat&oacute;rio", "principalproponente", "ALERT");
+        }
+
+
+        $urlCallback = $this->_request->getParam('urlCallback');
+        if (empty($urlCallback)) {
+            $urlCallback = "readequacao/readequacoes/index?idPronac=" . $this->idPronacHash;
+        }
+        
+        if ($this->_existeSolicitacaoEmAnalise) {
+            parent::message('Já existe uma solicita&ccedil;ao de readequa&ccedil;&atilde;o em an&aacute;lise!', $urlCallback, "ERROR");
+        }
+
+
+        try {
+            $idReadequacao = filter_var($this->_request->getParam("idReadequacao"), FILTER_SANITIZE_NUMBER_INT);
+            $idTipoReadequacao = filter_var($this->_request->getParam("tipoReadequacao"), FILTER_SANITIZE_NUMBER_INT);
+            $params = $this->getRequest()->getParams();
+
+            $tbAbrangencia = new Readequacao_Model_DbTable_TbAbrangencia();
+            $locaisReadequados = $tbAbrangencia->buscar(
+                ['idPronac = ?' => $this->idPronac, 'idReadequacao is null' => '']
+            );
+
+            if (count($locaisReadequados) == 0) {
+                parent::message('N&atilde;o houve nenhuma altera&ccedil;&atilde;o nos locais de realiza&ccedil;&atilde;o do projeto!', $urlCallback, "ERROR");
+            }
+
+            $arrDoc = [];
+            $arrDoc['idTipoDocumento'] = Arquivo_Model_TbTipoDocumento::TIPO_DOCUMENTO_SOLICITACAO_READEQUACAO;
+            $arrDoc['dsDocumento'] = 'Solicita&ccedil;&atilde;o de Readequa&ccedil;&atilde;o';
+            $mapperArquivo = new Arquivo_Model_TbDocumentoMapper();
+            $idDocumento = $mapperArquivo->saveCustom($arrDoc, new Zend_File_Transfer());
+
+            if (!empty($idDocumento)) {
+                if (!empty($params['idDocumento'])) {
+                    $tbDocumento = new Arquivo_Model_DbTable_TbDocumento();
+                    $tbDocumento->excluirDocumento($params['idDocumento']);
+                }
+                $params['idDocumento'] = $idDocumento;
+            }
+
+            if (!empty($idReadequacao)) {
+                $dados['idReadequacao'] = $idReadequacao;
+            }
+
+            $dados['idPronac'] = $this->idPronac;
+            $dados['idTipoReadequacao'] = $idTipoReadequacao;
+            $dados['dsJustificativa'] = $params['descJustificativa'];
+            $dados['dsSolicitacao'] = $params['descSolicitacao'];
+            $dados['idDocumento'] = $params['idDocumento'];
+
+            $tbReadequacaoMapper = new Readequacao_Model_TbReadequacaoMapper();
+            $tbReadequacaoMapper->salvarSolicitacaoReadequacao($dados);
+
+            parent::message("Solicita&ccedil;&atilde;o cadastrada com sucesso!", $urlCallback, "CONFIRM");
+        } catch (Exception $e) {
+            parent::message($e->getMessage(), $urlCallback, "ERROR");
+        }
     }
 
     public function obterLocaisReadequacaoAjaxAction() {
@@ -280,4 +373,5 @@ class Readequacao_LocalRealizacaoController extends Readequacao_GenericControlle
         }
         $this->_helper->viewRenderer->setNoRender(true);
     }
+
 }

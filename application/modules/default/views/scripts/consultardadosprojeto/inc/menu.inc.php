@@ -252,9 +252,10 @@
 		    } ?>
 		    <?php if ($this->fnLiberarLinks['Readequacao']) {
                     ?>
-			<a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'transferencia-recursos', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Transfer&ecirc;ncia de recursos">Transfer&ecirc;ncia de recursos</a>
-			<a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'plano-distribuicao', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Transfer&ecirc;ncia de recursos">Plano de Distribui&ccedil;&atilde;o</a>
-			<a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Solicita&ccedil;&otilde;es Gerais">Solicita&ccedil;&otilde;es Gerais</a>
+                <a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'local-realizacao', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Readequar Local de realizaca&ccedil;&atilde;o">Local de realiza&ccedil;&atilde;o</a>
+                <a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'plano-distribuicao', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Readequar Plano de Distribui&ccedil;&atilde;o">Plano de Distribui&ccedil;&atilde;o</a>
+                <a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'transferencia-recursos', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Transfer&ecirc;ncia de recursos">Transfer&ecirc;ncia de recursos</a>
+                <a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Solicita&ccedil;&otilde;es Gerais">Solicita&ccedil;&otilde;es Gerais</a>
                     <?php
             } ?>
                 </div>

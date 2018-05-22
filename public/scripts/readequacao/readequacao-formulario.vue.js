@@ -7,6 +7,7 @@ Vue.component('readequacao-formulario', {
             <div class="row">
                 <div class="input-field col s12">
                         <textarea
+                            :disabled="disabled"
                             id="textarea1"
                             class="materialize-textarea"
                             ref="readequacaoJustificativa"
@@ -21,7 +22,7 @@ Vue.component('readequacao-formulario', {
             ></component>
             <div class="row">
                 <div class="col s12">
-                    <div class="file-field input-field">
+                    <div v-if="!disabled" class="file-field input-field">
                         <div class="btn">
                             <span>Selecionar arquivo</span>
                             <input type="file"
@@ -42,6 +43,7 @@ Vue.component('readequacao-formulario', {
                             {{readequacao.nomeArquivo }}
                         </a>
                         <a
+                            v-if="!disabled"
                             v-show="readequacao.idDocumento"
                             v-on:click="excluirDocumento"
                             title="Remover aquivo"
@@ -51,7 +53,7 @@ Vue.component('readequacao-formulario', {
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div v-if="!disabled" class="row">
                 <div class="right-align padding20 col s12">
                     <button
                         v-on:click="salvarReadequacao"
@@ -85,6 +87,7 @@ Vue.component('readequacao-formulario', {
         'idPronac': '',
         'idTipoReadequacao': '',
         'objReadequacao': {},
+        'disabled': false,
         'componenteDsSolicitacao': ''
     },
     mixins: [utils],

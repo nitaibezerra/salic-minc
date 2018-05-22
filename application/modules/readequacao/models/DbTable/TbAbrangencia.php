@@ -180,7 +180,7 @@ class Readequacao_Model_DbTable_TbAbrangencia extends MinC_Db_Table_Abstract
         $select->from(
             array('a' => 'Projetos'),
             array(
-                new Zend_Db_Expr('b.idAbrangencia, b.idPais, c.Descricao as Pais, b.idUF, d.Descricao as UF, b.idMunicipioIBGE as idCidade, e.Descricao as Cidade')
+                new Zend_Db_Expr('b.idAbrangencia, b.idPais, c.Descricao as pais, b.idUF, d.Descricao as uf, b.idMunicipioIBGE as idCidade, e.Descricao as municipio')
             ),
             'SAC.dbo'
         );
@@ -191,7 +191,7 @@ class Readequacao_Model_DbTable_TbAbrangencia extends MinC_Db_Table_Abstract
             'SAC.dbo'
         );
         $select->joinInner(
-            array('c' => 'Pais'),
+            array('c' => 'pais'),
             "b.idPais = c.idPais",
             array(),
             'AGENTES.dbo'
