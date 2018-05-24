@@ -101,7 +101,20 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         $tableSelect->setIntegrityCheck(false);
         $tableSelect->from(
             [$this->_name => $this->_name],
-            '*',
+            [
+                'id_sugestao_enquadramento',
+                'id_preprojeto',
+                'id_orgao',
+                'id_perfil_usuario',
+                'id_usuario_avaliador',
+                'descricao_motivacao' => new Zend_Db_Expr('CAST(descricao_motivacao AS TEXT)'),
+                'data_avaliacao',
+                'id_area',
+                'id_segmento',
+                'id_orgao_superior',
+                'ultima_sugestao',
+                'id_distribuicao_avaliacao_proposta',
+            ],
             $this->_schema
         );
         $tableSelect->joinInner(
@@ -213,13 +226,31 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
     }
 
     public function obterSugestaoAtiva($id_preprojeto)
-    { 
-        return $this->findBy(
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            $this->_name,
             [
-                'id_preprojeto' => $id_preprojeto,
-                'ultima_sugestao' => self::ULTIMA_SUGESTAO_ATIVA,
-            ]
-        );
+                'id_sugestao_enquadramento',
+                'id_preprojeto',
+                'id_orgao',
+                'id_perfil_usuario',
+                'id_usuario_avaliador',
+                'descricao_motivacao' => new Zend_Db_Expr('CAST(descricao_motivacao AS TEXT)'),
+                'data_avaliacao',
+                'id_area',
+                'id_segmento',
+                'id_orgao_superior',
+                'ultima_sugestao',
+                'id_distribuicao_avaliacao_proposta',
+            ],
+            $this->_schema);
+        $select->where('id_preprojeto = ?', $id_preprojeto);
+        $select->where('ultima_sugestao = ?', self::ULTIMA_SUGESTAO_ATIVA);
+        $result = $this->fetchRow($select);
+
+        return ($result)? $result->toArray() : array();
     }
 
     public function salvarSugestaoEnquadramento(array $dadosSugestaoEnquadramento, $isCadastrarRecurso = true)
@@ -280,15 +311,20 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
                 'id_orgao_superior' => $orgaoSuperior,
                 'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil'],
                 'id_usuario_avaliador' => $dadosSugestaoEnquadramento['id_usuario_avaliador']
-            ] 
+            ]
         );
 
         if ($distribuicaoAvaliacaoProposta && $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop']) {
             $dadosNovaSugestaoEnquadramento['id_distribuicao_avaliacao_proposta'] = $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop'];
         }
 
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->setFetchMode(Zend_DB::FETCH_OBJ);
+        $db->fetchAll("SET TEXTSIZE 10485760");
         if (count($dadosBuscaPorSugestao) < 1) {
             $sugestaoEnquadramentoDbTable->inativarSugestoes($dadosSugestaoEnquadramento['id_preprojeto']);
+
+
             $sugestaoEnquadramentoDbTable->inserir($dadosNovaSugestaoEnquadramento);
 
             $distribuicaoAtiva = $distribuicaoAvaliacaoPropostaDbTable->obterDistribuicaoAtiva();
@@ -304,20 +340,20 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
          */
         $planoDistribuicao = (new Proposta_Model_DbTable_PlanoDistribuicaoProduto())->buscar(
             [
-                'stPrincipal = ?' => 1, 
+                'stPrincipal = ?' => 1,
                 'idProjeto = ?' => $dadosSugestaoEnquadramento['id_preprojeto']
             ]
         );
         $id_area_proponente = $planoDistribuicao[0]['Area'];
         $id_segmento_proponente = $planoDistribuicao[0]['Segmento'];
 
-        if ($isCadastrarRecurso 
+        if ($isCadastrarRecurso
             && $distribuicaoAvaliacaoProposta
             && $this->isPermitidoCadastrarRecurso($dadosSugestaoEnquadramento['id_perfil'])
             && $this->isPropostaDistribuidaParaCoordenadorGeral($distribuicaoAvaliacaoProposta['id_perfil'])
             && !$this->isEnquadramentoProponenteIgualEndramentoAvaliador(
-                $dadosSugestaoEnquadramento, 
-                $id_area_proponente, 
+                $dadosSugestaoEnquadramento,
+                $id_area_proponente,
                 $id_segmento_proponente
             )
             ) {
@@ -328,10 +364,10 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
     }
 
     public function isEnquadramentoProponenteIgualEndramentoAvaliador(
-        array $dadosSugestaoEnquadramento, 
-        $id_area_proponente, 
+        array $dadosSugestaoEnquadramento,
+        $id_area_proponente,
         $id_segmento_proponente
-    ) 
+    )
     {
         return (
             $dadosSugestaoEnquadramento['id_area'] == $id_area_proponente
@@ -345,8 +381,26 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
             || (int)$id_perfil == (int)Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE);
     }
 
-    private function isPropostaDistribuidaParaCoordenadorGeral($id_perfil_distribuicao) 
+    private function isPropostaDistribuidaParaCoordenadorGeral($id_perfil_distribuicao)
     {
         return ((int)$id_perfil_distribuicao == (int)Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE);
+    }
+
+    public function recuperarUltimaSugestaoPerfil($idPreProjeto, $idPerfilUsuario)
+    {
+        $ultimaSugestaoPerfil = [];
+        if($idPerfilUsuario){
+            $this->sugestaoEnquadramento->setIdPreprojeto($idPreProjeto);
+            $this->sugestaoEnquadramento->setIdPerfilUsuario($idPerfilUsuario);
+            $ultimaSugestaoPerfil = $this->obterSugestaoAtiva($idPreProjeto);
+
+            if(empty($ultimaSugestaoPerfil['id_area'])){
+                $planoDistribuicao = (new Proposta_Model_DbTable_PlanoDistribuicaoProduto())->buscar(['stPrincipal = ?'=>1, 'idProjeto = ?' => $idPreProjeto]);
+                $ultimaSugestaoPerfil['id_area'] = !empty($planoDistribuicao[0]['Area']) ? $planoDistribuicao[0]['Area'] : null;
+                $ultimaSugestaoPerfil['id_segmento'] = !empty($planoDistribuicao[0]['Segmento']) ? $planoDistribuicao[0]['Segmento'] : null;
+            }
+        }
+
+        return $this->createRow($ultimaSugestaoPerfil)->toArray();
     }
 }
