@@ -13,11 +13,18 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
     {
         $idPronac = $this->getRequest()->getParam('idpronac');
 
+        $idPlanilhaAprovacao = $this->getRequest()->getParam('idPlanilhaAprovacao');
+        $idPlanilhaItens = $this->getRequest()->getParam('idPlanilhaItens');
+        $idComprovantePagamento = $this->getRequest()->getParam('idComprovantePagamento');
+        $uf = $this->getRequest()->getParam('uf');
+        $cdproduto = $this->getRequest()->getParam('produto');
+        $cdcidade = $this->getRequest()->getParam('cidade');
+        $cdetapa = $this->getRequest()->getParam('etapa');
+
         $diligencia = new Diligencia();
         $diligencia = $diligencia->aberta($idPronac);
 
         $this->view->diligenciaTodosItens = $diligencia;
-        /* var_dump($diligencia);die; */
 
         $idPlanilhaAprovacao = $this->getRequest()->getParam('idPlanilhaAprovacao');
 
@@ -31,23 +38,16 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
 
         $itemPlanilhaAprovacao = $planilhaItemModel->buscarItemDaAprovacao($idPlanilhaAprovacao);
 
-        /*todos*/
+        /*todo*/
         $planilhaAprovacao = new PlanilhaAprovacao();
-        $planilhaAprovacaoItem = $planilhaAprovacao->vwComprovacaoFinanceiraProjetoPorItemOrcamentario(
+        $valoresItem = $planilhaAprovacao->planilhaAprovada(
             $idPronac,
+            $uf,
+            $cdetapa,
+            $cdproduto,
+            $cdcidade,
             null,
-            null,
-            null,
-            $idComprovantePagamento
-        );
-        $valoresItem = $planilhaAprovacao->vwComprovacaoFinanceiraProjeto(
-            $idPronac,
-            null,
-            $planilhaAprovacaoItem->current()->cdEtapa,
-            $planilhaAprovacaoItem->current()->cdProduto,
-            $planilhaAprovacaoItem->current()->cdCidade,
-            null,
-            $planilhaAprovacaoItem->current()->idPlanilhaItem
+            $idPlanilhaItens
         );
         $this->view->valores = $valoresItem->current();
         /*todos*/

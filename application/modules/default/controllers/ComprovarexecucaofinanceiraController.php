@@ -103,14 +103,8 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             ->addActionContext('cadastrarcomprovacaopagamento', 'json')
             ->initContext()
         ;
-    } // fecha m�todo init()
+    } 
 
-    /*
-     * P�gina index
-     * @access public
-     * @param void
-     * @return void
-     */
     public function indexAction()
     {
         /* =============================================================================== */
@@ -129,13 +123,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de menu
-     * * verificar real necessidade da fun��o *
-     * @access public
-     * @param void
-     * @return void
-     */
     public function menuAction()
     {
         //verificar data da licita��o se antes de 2009
@@ -143,29 +130,8 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
 
         $post       = Zend_Registry::get('post');
         $this->view->idpronac   = $post->idpronac;
-        /*
-        $dao      = new ComprovarexecucaofinanceiraDao();
-        $resposta = $dao->selectTable('SAC.dbo.Projetos',array('DtProtocolo'),array('IdPRONAC'=>" = {$this->view->idpronac}"));
-
-        $anoLicitacao = date('Y',strtotime($resposta[0]->DtProtocolo));
-        if($anoLicitacao <= 2009){
-            $this->view->anoAntes = 'true';
-            $this->view->veriCEF  = 'false';
-        }
-        else{
-            $this->view->anoAntes = 'false';
-            $this->view->veriCEF  = 'true';
-        }
-         *
-         */
     }
 
-    /*
-     * Fun��o de dados do projeto
-     * @access public
-     * @param void
-     * @return void
-     */
     public function dadosProjeto()
     {
 
@@ -220,7 +186,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $planilhaAprovacaoModel = new PlanilhaAprovacao();
         $planilhaItemModel = new PlanilhaItem();
 
-        $resposta   = $planilhaAprovacaoModel->buscarItensPagamento($this->view->idpronac); //Alysson - Altera��o da Query para n�o mostrar os itens excluidos
+        /* $resposta = $planilhaAprovacaoModel->buscarItensPagamento($this->view->idpronac); //Alysson - Altera��o da Query para n�o mostrar os itens excluidos */
+
+        $resposta = $planilhaAprovacaoModel->planilhaAprovada($this->view->idpronac);
 
         $arrayA =   array();
         $arrayP =   array();
@@ -228,40 +196,40 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         if (is_object($resposta)) {
             foreach ($resposta as $val) {
                 $modalidade = '';
-                if ($val->idCotacao != '') {
-                    $modalidade = 'Cota&ccedil;&atilde;o';
-                    $idmod      =   'cot'.$val->idCotacao.'_'.$val->idFornecedorCotacao;
-                }
-                if ($val->idDispensaLicitacao != '') {
-                    $modalidade = 'Dispensa';
-                    $idmod      =   'dis'.$val->idDispensaLicitacao;
-                }
-                if ($val->idLicitacao != '') {
-                    $modalidade =   'Licita&ccedil;&atilde;o';
-                    $idmod      =   'lic'.$val->idLicitacao;
-                }
-                if ($val->idContrato != '') {
-                    if ($modalidade != '') {
-                        $modalidade .=   ' /';
-                    }
-                    $modalidade .=   ' Contrato';
-                    $idmod      =   'con'.$val->idContrato;
-                }
-                if ($modalidade == '') {
-                    $modalidade =   '-';
-                    $idmod      =   'sem';
-                }
 
                 $itemComprovacao = $planilhaItemModel->pesquisar($val->idPlanilhaAprovacao);
 
                 if ($val->tpCusto == 'A') {
-                    $arrayA[$val->descEtapa][$val->uf.' '.$val->cidade][$val->idPlanilhaAprovacao] = array(
-                        $val->descItem, $val->Total, $val->tpDocumento, $itemComprovacao->vlComprovado, $modalidade, $idmod
+                    $arrayA[$val->descEtapa][$val->uf.' '.$val->cidade][$val->idPlanilhaItens] = array(
+                        $val->descItem,
+                        (float)$val->vlAprovado,
+                        null,
+                        (float)$val->vlComprovado,
+                        $modalidade,
+                        $idmod,
+                        $val->idPlanilhaItens,
+                        $val->uf,
+                        $val->cdProduto,
+                        $val->cdCidade,
+                        $val->cdEtapa,
+                        $val->idPlanilhaAprovacao
                     );
                 }
+
                 if ($val->tpCusto == 'P') {
-                    $arrayP[$val->Descricao][$val->descEtapa][$val->uf.' '.$val->cidade][$val->idPlanilhaAprovacao] = array(
-                        $val->descItem, $val->Total, $val->tpDocumento, $itemComprovacao->vlComprovado, $modalidade, $idmod
+                    $arrayP[$val->Descricao][$val->descEtapa][$val->uf.' '.$val->cidade][$val->idPlanilhaItens] = array(
+                        $val->descItem,
+                        (float)$val->vlAprovado,
+                        null,
+                        (float)$val->vlComprovado,
+                        $modalidade,
+                        $idmod,
+                        $val->idPlanilhaItens,
+                        $val->uf,
+                        $val->cdProduto,
+                        $val->cdCidade,
+                        $val->cdEtapa,
+                        $val->idPlanilhaAprovacao
                     );
                 }
             }
@@ -272,27 +240,14 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
     }
 
     public function vincularcomprovacaoAction()
-    {
-    }
+    {}
 
-    /*
-     * P�gina de licita��o anterior
-     * @access public
-     * @param void
-     * @return void
-     */
     public function licitacaoanteriorAction()
     {
         $this->_helper->layout->disableLayout();
         $this->view->etapaconteudo = array(array('id'=>1,'nome'=>'aaaaaaaaa'),array('id'=>2,'nome'=>'bbbbbbb'));
     }
 
-    /*
-     * P�gina de cadastrar licita��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function cadastrarlicitacaoAction()
     {
         $valido = true;
@@ -352,12 +307,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de cadastrar cota��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function cadastrarcotacaoAction()
     {
         try {
@@ -477,12 +426,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de inserir fornecedor
-     * @access public
-     * @param void
-     * @return string Json contendo idAgente, mensagem e fechar
-     */
     public function inserirfornecedorAction()
     {
         $this->_helper->layout->disableLayout();
@@ -522,12 +465,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de cadastrar contrato
-     * @access public
-     * @param void
-     * @return void
-     */
     public function cadastrarcontratoAction()
     {
         $this->_helper->layout->disableLayout();
@@ -634,12 +571,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * Fun��o de cadastrar v�nculo com fornecedor
-     * @access private
-     * @param array $dados Array com dados de idAgente, idContrato, idCotacao, idLicita��o ou dispensaLicita��o
-     * @return mixed Retorna true/false ou idAgente
-     */
     private function cadastrarVinculoFornecedor($dados)
     {
         if ($dados['idAgente'] == '') {
@@ -702,6 +633,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
     public function cadastrarcomprovacaopagamentoAction()
     {
         $dtPagamento = $this->getRequest()->getParam('dtPagamento') ? new DateTime(data::dataAmericana($this->getRequest()->getParam('dtPagamento'))) : null;
+        /* xd(empty($dtPagamento->__toString())); */
         $this->verificarPermissaoAcesso(false, true, false);
 
         try {
@@ -939,12 +871,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de excluir comprova��o de pagamento
-     * @access public
-     * @param void
-     * @return void
-     */
     public function excluircomprovacaopagamentoAction()
     {
         $this->_helper->layout->disableLayout();
@@ -988,18 +914,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
-    /*
-     * P�gina de cadastrar dispensa
-     * @access public
-     * @param void
-     * @return void
-     */
     public function cadastrardispensaAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->_helper->layout->disableLayout();
@@ -1070,12 +987,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de vincular item de custo
-     * @access public
-     * @param void
-     * @return void
-     */
     public function vincularitemcustoAction()
     {
         $this->_helper->layout->disableLayout();
@@ -1093,12 +1004,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de cadastrar v�nculo de item de cust
-     * @access private
-     * @param array $dados
-     * @return void
-     */
     private function cadastravinculoitemcusto($dados = array())
     {
         $post = Zend_Registry::get('post');
@@ -1161,17 +1066,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de incluir cota��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function incluircotacaoAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->view->idcotacao = $this->getRequest()->getParam('idcotacao');
@@ -1242,17 +1139,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de incluir dispensa
-     * @access public
-     * @param void
-     * @return void
-     */
     public function incluirdispensaAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $get = Zend_Registry::get('get');
@@ -1281,17 +1170,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de incluir contrato
-     * @access public
-     * @param void
-     * @return void
-     */
     public function incluircontratoAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->view->tipoAquisicaoConteudo = $this->tipoAquisicao;
@@ -1332,12 +1213,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de incluir itens de custo
-     * @access public
-     * @param void
-     * @return void
-     */
     public function incluiritenscustoAction()
     {
         $this->_helper->layout->disableLayout();
@@ -1359,12 +1234,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->dataAssinatura             = '01/01/2011';
     }
 
-    /*
-     * P�gina de detalhar licita��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function detalharlicitacaoAction()
     {
         //$this->_helper->layout->disableLayout();
@@ -1406,21 +1275,10 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->documentosAnexados = $ArquivoLicitacaoDao->buscarArquivos($this->view->idlicitacao);
     }
 
-    /*
-     * P�gina de detalhar cota��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function detalharcotacaoAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
-
-        // $this->_helper->layout->disableLayout();
 
         $get = Zend_Registry::get('get');
         $this->view->idcotacao = $get->idcotacao;
@@ -1461,21 +1319,10 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->documentosAnexados = $ArquivoCotacaoDao->buscarArquivos($this->view->idcotacao);
     }
 
-    /*
-     * P�gina de detalhar contrato
-     * @access public
-     * @param void
-     * @return void
-     */
     public function detalharcontratoAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
-
-        //$this->_helper->layout->disableLayout();
 
         $this->view->tipoAquisicaoConteudo = $this->tipoAquisicao;
 
@@ -1512,21 +1359,11 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->documentosAnexados = $ArquivoContrataoDao->buscarArquivos($this->view->idcontrato);
     }
 
-    /*
-     * P�gina de detalhar dispensa
-     * @access public
-     * @param void
-     * @return void
-     */
     public function detalhardispensaAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
-//        $this->_helper->layout->disableLayout();
         $post = Zend_Registry::get('get');
         $this->view->iddispensa = $post->iddispensa;
         $this->view->idpronac   =  $post->idpronac;
@@ -1550,20 +1387,11 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->documentosAnexados = $ArquivoDispensaLicitacaoDao->buscarArquivos($this->view->iddispensa);
     }
 
-    /*
-     * P�gina de alterar licita��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function alterarlicitacaoAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
-        //$this->_helper->layout->disableLayout();
         $this->view->modalidadeConteudo         = $this->modalidade;
         $this->view->tipoLicitacaoConteudo      = $this->tipoLicitacao;
         $this->view->tipoCompraConteudo         = $this->tipoCompra;
@@ -1607,12 +1435,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de excluir itens de custo
-     * @access public
-     * @param void
-     * @return void
-     */
     public function excluiritenscustoAction()
     {
         $this->_helper->layout->disableLayout();
@@ -1653,6 +1475,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
         $this->_helper->viewRenderer->setNoRender(true);
     }
+
     public function excluirdocumentoAction()
     {
         $this->_helper->layout->disableLayout();
@@ -1690,17 +1513,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de cota��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function cotacaoAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
         $this->dadosProjeto();
         $this->view->idpronac   = $this->getRequest()->getParam('idpronac');
@@ -1721,17 +1536,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->listacotacao = $array;
     }
 
-    /*
-     * P�gina de licita��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function licitacaoAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->dadosProjeto();
@@ -1753,17 +1560,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->listaLicitacao = $array;
     }
 
-    /*
-     * P�gina de dispensa
-     * @access public
-     * @param void
-     * @return void
-     */
     public function dispensaAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->dadosProjeto();
@@ -1785,17 +1584,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->listadispensa = $array;
     }
 
-    /*
-     * P�gina de contrato
-     * @access public
-     * @param void
-     * @return void
-     */
     public function contratoAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
         $this->dadosProjeto();
         $this->view->idpronac   = $this->getRequest()->getParam('idpronac');
@@ -1815,23 +1606,18 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->listacontrato = $array;
     }
 
-    /**
-     * Altera��o realizada por pedido da �rea Finalistica em 16/02/2016 as 10:48
-     * Author: Alysson Vicu�a de Oliveira
-     * @access public
-     * @param void
-     * @return void
-     * @throws Zend_Db_Table_Exception
-     */
     public function comprovacaopagamentoAction()
     {
         $this->verificarPermissaoAcesso(false, true, false);
 
-        $idPlanilhaAprovacao = $this->getRequest()->getParam('idPlanilhaAprovacao');
-
-        //Adicionado para ser usado como novo parametro do metodo pesquisarComprovantePorItem
         $idPronac = $this->getRequest()->getParam('idpronac');
+        $idPlanilhaAprovacao = $this->getRequest()->getParam('idPlanilhaAprovacao');
+        $idPlanilhaItens = $this->getRequest()->getParam('idPlanilhaItens');
         $idComprovantePagamento = $this->getRequest()->getParam('idComprovantePagamento');
+        $uf = $this->getRequest()->getParam('uf');
+        $cdproduto = $this->getRequest()->getParam('produto');
+        $cdcidade = $this->getRequest()->getParam('cidade');
+        $cdetapa = $this->getRequest()->getParam('etapa');
 
         $tblProjetos = new Projetos();
         $projeto = $tblProjetos->buscarTodosDadosProjeto($idPronac);
@@ -1845,33 +1631,21 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
 
         $produto = $produtoModel->find($itemPlanilhaAprovacao->idProduto)->current();
         $etapa = $etapaModel->find($itemPlanilhaAprovacao->idEtapa)->current();
-        $item = $itemModel->find($itemPlanilhaAprovacao->idPlanilhaItem)->current();
+        $item = $itemModel->find($idPlanilhaItens)->current();
 
         /*todo*/
         $planilhaAprovacao = new PlanilhaAprovacao();
-        $planilhaAprovacaoItem = $planilhaAprovacao->vwComprovacaoFinanceiraProjetoPorItemOrcamentario(
+        $valoresItem = $planilhaAprovacao->planilhaAprovada(
             $idPronac,
+            $uf,
+            $cdetapa,
+            $cdproduto,
+            $cdcidade,
             null,
-            null,
-            null,
-            $idComprovantePagamento
-        );
-        /* var_dump($planilhaAprovacaoItem[0]); */
-        /* die; */
-        $valoresItem = $planilhaAprovacao->vwComprovacaoFinanceiraProjeto(
-            $idPronac,
-            null, //$planilhaAprovacaoItem->current()->cdUF,
-            $planilhaAprovacaoItem->current()->cdEtapa,
-            $planilhaAprovacaoItem->current()->cdProduto,
-            $planilhaAprovacaoItem->current()->cdCidade,
-
-            /* $planilhaAprovacaoItem->current()->idComprovantePagamento, */
-            null,
-            $planilhaAprovacaoItem->current()->idPlanilhaItem
+            $idPlanilhaItens
         );
 
         $this->view->valores = $valoresItem->current();
-        /*todo*/
 
         $fornecedorModel = new FornecedorModel();
         $fornecedor = $fornecedorModel->pesquisarFornecedorItem($idPlanilhaAprovacao);
@@ -1887,7 +1661,23 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
 
         $comprovantePagamentoModel = new ComprovantePagamento();
-        $comprovantesDePagamento = $comprovantePagamentoModel->pesquisarComprovantePorItem($item->idPlanilhaItens, $idPronac, $etapa->idPlanilhaEtapa, $itemPlanilhaAprovacao->idProduto, $itemPlanilhaAprovacao->idUFDespesa, $itemPlanilhaAprovacao->idMunicipioDespesa); //ID Recuperado
+        /* $comprovantesDePagamento = $comprovantePagamentoModel */
+        /*     ->pesquisarComprovantePorItem( */
+        /*         $item->idPlanilhaItens, */
+        /*         $idPronac, */
+        /*         $etapa->idPlanilhaEtapa, */
+        /*         $itemPlanilhaAprovacao->idProduto, */
+        /*         $itemPlanilhaAprovacao->idUFDespesa, */
+        /*         $itemPlanilhaAprovacao->idMunicipioDespesa); //ID Recuperado */
+
+        $comprovantesDePagamento = $planilhaAprovacao->vwComprovacaoFinanceiraProjetoPorItemOrcamentario(
+                $idPronac,
+                $idPlanilhaItens,
+                null,
+                $cdproduto,
+                null,
+                $cdcidade
+            )->toArray();
 
         array_walk($comprovantesDePagamento, function (&$comprovanteDePagamento) use ($fornecedorModel) {
             $comprovanteDePagamento = (object) $comprovanteDePagamento;
@@ -2011,24 +1801,18 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                 null,
                 $idComprovantePagamento
             );
-            /* var_dump($planilhaAprovacaoItem[0]); */
-            /* die; */
+
             $valoresItem = $planilhaAprovacao->vwComprovacaoFinanceiraProjeto(
                 $idpronac,
-                null, //$planilhaAprovacaoItem->current()->cdUF,
+                null,
                 $planilhaAprovacaoItem->current()->cdEtapa,
                 $planilhaAprovacaoItem->current()->cdProduto,
                 $planilhaAprovacaoItem->current()->cdCidade,
-
-                /* $planilhaAprovacaoItem->current()->idComprovantePagamento, */
                 null,
                 $planilhaAprovacaoItem->current()->idPlanilhaItem
             );
 
             $this->view->valores = $valoresItem->current();
-
-            /* var_dump($valoresItem->current()->vlAprovado); */
-            /* die; */
 
             if (empty($itemPlanilhaAprovacao)) {
                 throw new Exception("Erro! O item para comprova&ccedil;&atilde;o n&atilde;o foi encontrado!");
@@ -2107,12 +1891,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de descrever item
-     * @access public
-     * @param void
-     * @return void
-     */
     public function descreveritemAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2121,17 +1899,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->idpronac               = $post->idpronac;
     }
 
-    /*
-     * P�gina de descri��o de item
-     * @access public
-     * @param void
-     * @return void
-     */
     public function descricaoitemAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->_helper->layout->disableLayout();
@@ -2146,12 +1916,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de cadastrar descri��o de item
-     * @access public
-     * @param void
-     * @return void
-     */
     public function cadastrardescricaoitemAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2188,18 +1952,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->_helper->json($report);
     }
 
-    /*
-     * P�gina de anexar
-     * @access public
-     * @param void
-     * @return void
-     */
     public function anexarAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->_helper->layout->disableLayout();
@@ -2211,18 +1966,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->idpronac       = $post->idpronac;
     }
 
-    /*
-     * P�gina de cadastro de anexos
-     * @access public
-     * @param void
-     * @return void
-     */
     public function cadastraranexoAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->_helper->layout->disableLayout();
@@ -2292,11 +2038,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
 
                     parent::message('Anexado com sucesso!', '/comprovarexecucaofinanceira/incluircotacao'.'?idusuario='.$this->view->idusuario.'&idpronac='.$idpronac.'&idcotacao='.$idcotacao, 'CONFIRM');
                 }
-                /*$this->view->idlicitacao    = $idlicitacao;
-                $this->view->iddispensa     = $iddispensa;
-                $this->view->idcontrato     = $idcontrato;
-                $this->view->idcotacao      = $idcotacao;
-                $this->view->idpronac       = $idpronac;*/
             } else {
                 if ($idlicitacao) {
                     parent::message('Arquivo com extens&atilde;o inv�lida!', '/comprovarexecucaofinanceira/alterarlicitacao'.'?idusuario='.$this->view->idusuario.'&idpronac='.$idpronac.'&idlicitacao='.$idlicitacao, 'ERROR');
@@ -2317,18 +2058,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de descrever itens de custo
-     * @access public
-     * @param void
-     * @return void
-     */
     public function descreveritenscustoAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->_helper->layout->disableLayout();
@@ -2360,18 +2092,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de verificar valores de comprova��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function verificarvaloresajaxAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->_helper->layout->disableLayout();
@@ -2413,12 +2136,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de carregar select de planilha
-     * @access public
-     * @param void
-     * @return void
-     */
     public function carregaselectajaxAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2511,18 +2228,9 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de carregar contrato
-     * @access public
-     * @param void
-     * @return void
-     */
     public function carregacontratoajaxAction()
     {
-
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
 
         $this->_helper->layout->disableLayout();
@@ -2536,12 +2244,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de buscar fornecedor
-     * @access public
-     * @param void
-     * @return void
-     */
     public function buscarfornecedorAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2559,12 +2261,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de buscar fornecedor da base da receita
-     * @access public
-     * @param void
-     * @return void
-     */
     public function buscarfornecedorDaReceitaAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2620,12 +2316,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * P�gina de remover fornecedor
-     * @access public
-     * @param void
-     * @return void
-     */
     public function removerfornecedorAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2644,12 +2334,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->_helper->json($resposta);
     }
 
-    /*
-     * P�gina de fornecedor vencedor
-     * @access public
-     * @param void
-     * @return void
-     */
     public function fornecedorvencedorAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2670,12 +2354,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->_helper->json($resposta);
     }
 
-    /*
-     * P�gina de finalizar comprova��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function finalizarAction()
     {
         $this->_helper->layout->disableLayout();
@@ -2705,12 +2383,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->redirect(str_replace($this->view->baseUrl(), '', $url));
     }
 
-    /*
-     * P�gina de comprova��o finalizada
-     * @access public
-     * @param void
-     * @return void
-     */
     public function finalizadoAction()
     {
         $get = Zend_Registry::get('get');
@@ -2722,12 +2394,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->redirect("comprovarexecucaofinanceira/pagamento?idusuario=".$_GET['idusuario']."&idpronac=".$_GET['idpronac']);
     }
 
-    /*
-     * P�gina de apagar licita��o
-     * @access public
-     * @param void
-     * @return void
-     */
     public function deletarLicitacaoAction()
     {
         try {
@@ -2762,14 +2428,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->idusuario = Zend_Auth::getInstance()->getIdentity()->IdUsuario;
     }
 
-
-    /**
-     * Fun��o criada a pedido da �rea Finalistica em 13/04/2016
-     * @author: Fern�o Lopes Ginez de Lara
-     * @access public
-     * @param void
-     * @return void
-     */
     public function enviarcomprovacaopagamentoAction()
     {
         $idPronac = $this->getRequest()->getParam('idPronac');

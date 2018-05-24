@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of PlanilhaAprovacao
- *
- * @author augusto
- */
 class PlanilhaAprovacao extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbPlanilhaAprovacao';
@@ -2494,11 +2489,12 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
 
     public function vwComprovacaoFinanceiraProjetoPorItemOrcamentario
     (
-        $idpronac, 
-        $idPlanilhaItem = null , 
+        $idpronac,
+        $idPlanilhaItem = null ,
         $stItemAvaliado = null,
         $codigoProduto = null,
-        $idComprovantePagamento = null
+        $idComprovantePagamento = null,
+        $cidade = null
     ) {
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -2509,7 +2505,9 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
                 'nmFornecedor as Descricao',
                 'nrCNPJCPF as CNPJCPF',
                 'dsJustificativaProponente as dsJustificativa',
-                'dsOcorrenciaDoTecnico as ocorrencia'
+                'dsOcorrenciaDoTecnico as ocorrencia',
+                'tpDocumento as tipoDocumentoNome',
+                'nrcnpjcpf as CNPJCPF'
             ],
             $this->_schema
         );
@@ -2518,7 +2516,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             $select->where('stItemAvaliado = ?', $stItemAvaliado);
         }
 
-        if ($codigoProduto || ($codigoProduto == 0&& !is_null($codigoProduto))) {
+        if ($codigoProduto || ($codigoProduto == 0 && !is_null($codigoProduto))) {
             $select->where('cdProduto = ?', $codigoProduto);
         }
 
@@ -2528,6 +2526,10 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         if ($idPlanilhaItem) {
             $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
+        }
+
+        if ($cidade) {
+            $select->where('cdCidade = ?', $cidade);
         }
 
         $select->where('IdPRONAC = ?', $idpronac);
@@ -2602,9 +2604,9 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             'SAC.dbo'
         );
         $select->joinLeft(
-            array('prod'=>'Produto'), 
-                'pAprovacao.idProduto = prod.Codigo', 
-                array('prod.Codigo','prod.Descricao as produto'), 
+            array('prod'=>'Produto'),
+                'pAprovacao.idProduto = prod.Codigo',
+                array('prod.Codigo','prod.Descricao as produto'),
                 'SAC.dbo');
 
         $select->joinInner(array('UFT'=>'UF'), 'pAprovacao.idUFDespesa = UFT.idUF', array('uf'=>'UFT.Sigla'), 'AGENTES.dbo');
@@ -2678,6 +2680,148 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         } elseif ($itemAvaliadoFilter == 3) {
             $select->where('cppa.stItemAvaliado = ?', 3);
         }
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
+
+    public function planilhaAprovada(
+        $idpronac,
+        $uf = null,
+        $idPlanilhaEtapa = null,
+        $codigoProduto = null,
+        $idMunicipio = null,
+        $tpCusto = null,
+        $idPlanilhaItem = null
+    ) {
+        $cols = new Zend_Db_Expr("
+            a.IdPRONAC,
+            a.idPlanilhaAprovacao,
+            i.AnoProjeto+i.Sequencial AS Pronac,
+            i.NomeProjeto,
+            ISNULL(d.Codigo,0) as cdProduto,
+            ISNULL(d.Descricao,'Administração do Projeto') AS Produto,
+            b.tpCusto,
+            b.idPlanilhaEtapa as cdEtapa,
+            b.Descricao AS Etapa,
+            b.Descricao AS descEtapa,
+            a.idUFDespesa AS cdUF,
+            e.Sigla AS Uf,
+            e.Sigla AS uf,
+            a.idMunicipioDespesa as cdCidade,
+            f.Descricao AS Cidade,
+            f.Descricao AS cidade,
+            c.idPlanilhaItens,
+            c.Descricao AS Item,
+            c.Descricao AS descItem,
+            d.Descricao ,
+            sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
+                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    a.idMunicipioDespesa,a.idPlanilhaItem) as vlAprovado,
+            sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item
+                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    a.idMunicipioDespesa,a.idPlanilhaItem) as vlComprovado,
+            sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
+                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    a.idMunicipioDespesa,a.idPlanilhaItem)  as ComprovacaoValidada,
+            sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
+                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    a.idMunicipioDespesa,a.idPlanilhaItem) as Total
+        ");
+
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+
+        $select->from(
+            ['a' => 'tbplanilhaaprovacao'],
+            $cols,
+            'SAC.dbo'
+        );
+
+        $select->join(
+                ['b' => 'tbPlanilhaEtapa'],
+                "(a.idEtapa = b.idPlanilhaEtapa)",
+                [],
+                'SAC.dbo'
+        );
+
+        $select->join(
+                ['c' => 'tbPlanilhaItens'],
+                "(a.idPlanilhaItem  = c.idPlanilhaItens)",
+                [],
+                'SAC.dbo'
+        );
+
+        $select->joinLeft(
+                ['d' => 'produto'],
+                "(a.idproduto = d.Codigo)",
+                [],
+               'SAC.dbo'
+        );
+
+        $select->join(
+                ['e' => 'UF'],
+                "(a.idUFDespesa = e.idUF)",
+                [],
+                'AGENTES.dbo'
+        );
+
+        $select->join(
+            ['f' => 'Municipios'],
+            "(a.idMunicipioDespesa = f.idMunicipioIBGE)",
+            [],
+            'AGENTES.dbo'
+        );
+
+        $select->joinLeft(
+                ['g' => 'tbComprovantePagamentoxPlanilhaAprovacao'],
+                "(a.idPlanilhaAprovacao = g.idPlanilhaAprovacao)",
+                [],
+                'BDCORPORATIVO.scSAC'
+        );
+
+        $select->joinLeft(
+                ['h' => 'tbComprovantePagamento'],
+                "(g.idComprovantePagamento = h.idComprovantePagamento)" ,
+               [],
+                'BDCORPORATIVO.scSAC'
+        );
+
+        $select->join(
+                ['i' => 'Projetos'],
+                "(a.IdPRONAC = i.IdPRONAC)" ,
+               [],
+             'sac.dbo'
+        );
+
+        $select->where('a.IdPRONAC = ?', $idpronac);
+        $select->where('a.nrFonteRecurso = 109');
+
+        if ($uf) {
+            $select->where('sigla = ?', $uf);
+        }
+
+        if ($idMunicipio) {
+            $select->where('f.idMunicipioIBGE = ?', $idMunicipio);
+        }
+
+        if ($idPlanilhaEtapa) {
+            $select->where('b.idPlanilhaEtapa = ?', $idPlanilhaEtapa);
+        }
+
+        if ($idPlanilhaItem) {
+            $select->where('c.idPlanilhaItens = ?', $idPlanilhaItem);
+        }
+
+        if ($codigoProduto != 0 && !is_null($codigoProduto)) {
+            $select->where('d.codigo = ?', $codigoProduto);
+        } else if($codigoProduto == 0 && !is_null($codigoProduto)){
+            $select->where('d.codigo is null');
+        }
+        /* $select->order('tpCusto desc'); */
+        /* $select->order('Produto'); */
+        /* $select->order('cdEtapa'); */
+        /* $select->order('Uf'); */
+        /* $select->order('Cidade'); */
         /* echo $select;die; */
         return $this->fetchAll($select);
     }
