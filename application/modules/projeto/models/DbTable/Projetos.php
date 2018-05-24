@@ -160,8 +160,7 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
         return $db->fetchRow($exec);
     }
 
-    public function atualizarProjetoEnquadrado($projeto, $id_usuario_logado) {
-        $situacaoFinalProjeto = 'B02';
+    public function atualizarProjetoEnquadrado($projeto, $id_usuario_logado, $situacaoFinalProjeto = 'B02') {
         $orgaoDestino = null;
         $providenciaTomada = 'Projeto enquadrado ap&oacute;s avalia&ccedil;&atilde;o t&eacute;cnica.';
         if ($projeto['Situacao'] == 'B03') {

@@ -300,7 +300,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $recursoEnquadramento = $sugestaoEnquadramentoDbTable->obterRecursoEnquadramentoProposta();
 
             $this->view->isRecursoAvaliado = false;
-            
+
             $this->view->isRecursoDesistidoDePrazoRecursal = false;
             if ($recursoEnquadramento) {
                 $this->view->isRecursoDesistidoDePrazoRecursal = $this->isRecursoDesistidoDePrazoRecursal($recursoEnquadramento);
@@ -324,7 +324,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $this->codGrupo,
                 $this->view->isRecursoAvaliado
             );
-            
+
             $this->view->isPermitidoEncaminharAvaliacao = $this->_isPermitidoEncaminharAvaliacao(
                 $distribuicaoAvaliacaoPropostaAtual,
                 $this->view->isPropostaEnquadrada,
@@ -347,8 +347,8 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             return true;
         } else if($isPropostaEnquadrada && $distribuicaoAvaliacaoPropostaAtual['id_perfil'] == Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
             return true;
-        } else if($isPropostaEnquadrada 
-            && count($distribuicaoAvaliacaoPropostaAtual) < 1 
+        } else if($isPropostaEnquadrada
+            && count($distribuicaoAvaliacaoPropostaAtual) < 1
             && $id_perfil_atual == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
             return true;
         }
@@ -384,29 +384,29 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
         $planoDistribuicao = (new Proposta_Model_DbTable_PlanoDistribuicaoProduto())->buscar(
             [
-                'stPrincipal = ?' => 1, 
+                'stPrincipal = ?' => 1,
                 'idProjeto = ?' => $this->idPreProjeto
             ]
         );
         $id_area_proponente = $planoDistribuicao[0]['Area'];
         $id_segmento_proponente = $planoDistribuicao[0]['Segmento'];
         $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-        
+
         $isEnquadramentoProponenteIgualEndramentoAvaliador = false;
         if(is_array($ultimaSugestaoEnquadramento) && count($ultimaSugestaoEnquadramento) > 0) {
             $isEnquadramentoProponenteIgualEndramentoAvaliador = $sugestaoEnquadramentoDbTable->isEnquadramentoProponenteIgualEndramentoAvaliador(
-                $ultimaSugestaoEnquadramento, 
-                $id_area_proponente, 
+                $ultimaSugestaoEnquadramento,
+                $id_area_proponente,
                 $id_segmento_proponente
             );
         }
-        
-        if($isEnquadramentoProponenteIgualEndramentoAvaliador 
+
+        if($isEnquadramentoProponenteIgualEndramentoAvaliador
             && count($distribuicaoAvaliacaoPropostaAtual) > 0
             && (int)$distribuicaoAvaliacaoPropostaAtual['id_perfil'] == (int)Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -902,19 +902,18 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         try {
 
             $recursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
-            $recursoAtual = $recursoPropostaDbTable->obterRecursoAtual($this->idPreProjeto);
+            $recursoAtual = $recursoPropostaDbTable->obterRecursoAtual($rsProjeto->idProjeto);
             $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-            if ((string) $recursoAtual['stAtendimento'] == (string) Recurso_Model_TbRecursoProposta::SITUACAO_ATENDIMENTO_DEFERIDO) {
-                $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
-                $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($this->idPreProjeto);
-
-                $tpEnquadramento = $enquadramentoInicialProponente['tp_enquadramento'];
-                $observacao = $recursoAtual['dsAvaliacaoTecnica'];
-            } elseif ((string) $recursoAtual['tpSolicitacao'] == (string) Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL) {
-                $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($this->idPreProjeto);
+            if ((string) $recursoAtual['tpSolicitacao'] == (string) Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL) {
+                $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($rsProjeto->idProjeto);
                 $ultimaSugestaoEnquadramento = $sugestaoEnquadramentoDbTable->obterUltimaSugestaoEnquadramentoProposta();
                 $tpEnquadramento = $ultimaSugestaoEnquadramento['tp_enquadramento'];
                 $observacao = $ultimaSugestaoEnquadramento['descricao_motivacao'];
+            } else {
+                $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+                $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($rsProjeto->idProjeto);
+                $tpEnquadramento = $enquadramentoInicialProponente['tp_enquadramento'];
+                $observacao = (count($recursoAtual) > 0 && !empty($recursoAtual['dsAvaliacaoTecnica'])) ? $recursoAtual['dsAvaliacaoTecnica'] : "Enquadramento sem sugestao previa.";
             }
 
             $arrayArmazenamentoEnquadramento = [
@@ -926,6 +925,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 'Logon' => $idUsuario,
                 'IdPRONAC' => $rsProjeto->IdPRONAC,
             ];
+
             $enquadramentoDbTable = new Admissibilidade_Model_Enquadramento();
             $enquadramentoDbTable->salvar($arrayArmazenamentoEnquadramento);
 
@@ -937,7 +937,8 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $projetos = new Projeto_Model_DbTable_Projetos();
             $projetos->atualizarProjetoEnquadrado(
                 $dadosProjeto,
-                $idUsuario
+                $idUsuario,
+                'B04'
             );
             return true;
         } catch (Exception $exception) {

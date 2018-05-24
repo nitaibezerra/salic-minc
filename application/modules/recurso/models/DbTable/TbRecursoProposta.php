@@ -113,8 +113,8 @@ MENSAGEM_EMAIL;
     public function obterRecursoAtual($id_preprojeto)
     {
         $preprojetoDbTable = new Proposta_Model_DbTable_PreProjeto();
-        $arrPreprojeto = $preprojetoDbTable->findBy(['idPreProjeto' => $id_preprojeto]);
 
+        $arrPreprojeto = $preprojetoDbTable->findBy(['idPreProjeto' => $id_preprojeto]);
         return $this->findBy([
             'idPreProjeto' => $id_preprojeto,
             'idProponente' => $arrPreprojeto['idAgente'],
