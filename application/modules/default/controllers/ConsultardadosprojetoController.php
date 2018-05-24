@@ -139,7 +139,8 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
                 'Readequacao_50' => $linksGeral[11],
                 'Marcas' => $linksGeral[12],
                 'SolicitarProrrogacao' => $linksGeral[13],
-                'ReadequacaoPlanilha' => $linksGeral[14]
+                'ReadequacaoPlanilha' => $linksGeral[14],
+                'ReadequacaoTransferenciaRecursos' => $linksGeral[15]
             );
             $this->view->fnLiberarLinks = $arrayLinks;
             $projetos = new Projeto_Model_DbTable_Projetos();

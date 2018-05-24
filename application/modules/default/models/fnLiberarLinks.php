@@ -46,6 +46,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
         $SolicitarProrrogacao = 0;
         $Marcas = 0;
         $ReadequacaoPlanilha = 0;
+        $ReadequacaoTransferenciaRecursos = 0;
 
         # Verificar permiss�o
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -126,6 +127,15 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
 
         $PercentualCaptado = ($PercentualCaptado->dado) ? $PercentualCaptado->dado : 0;
 
+        if ($PercentualCaptado > 20) {
+            $fnVlAcomprovar = new Zend_Db_Expr("SELECT sac.dbo.fnVlAComprovarProjeto($idPronac) AS vlAComprovar");
+            $vlAComprovar = $db->fetchOne($fnVlAcomprovar);
+            
+            if ($vlAComprovar > 0) {
+                $ReadequacaoTransferenciaRecursos = 1;
+            }            
+        }
+        
         # Verificar se h� dilig�ncia para responder
         $vDiligencia = $db->select()
            ->from(
@@ -438,7 +448,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             $Analise = 1;
         }
 
-        $permissao = array('links'=>"$Permissao - $Fase - $Diligencia - $Recursos - $Readequacao - $ComprovacaoFinanceira - $RelatorioTrimestral - $RelatorioFinal - $Analise - $Execucao - $PrestacaoDeContas - $Readequacao_50 - $Marcas - $SolicitarProrrogacao - $ReadequacaoPlanilha");
+        $permissao = array('links'=>"$Permissao - $Fase - $Diligencia - $Recursos - $Readequacao - $ComprovacaoFinanceira - $RelatorioTrimestral - $RelatorioFinal - $Analise - $Execucao - $PrestacaoDeContas - $Readequacao_50 - $Marcas - $SolicitarProrrogacao - $ReadequacaoPlanilha - $ReadequacaoTransferenciaRecursos");
 
         return (object) $permissao;
     }
