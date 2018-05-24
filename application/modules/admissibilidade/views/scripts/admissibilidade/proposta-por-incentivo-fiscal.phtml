@@ -466,19 +466,17 @@
                             </tr>
                             <tr id="historicoEnquadramento" style="display: none;">
                                 <td>
-                                    <table class="tabela striped responsive-table">
-                                        <thead>
-                                        <tr class="destacar">
-                                            <td class="center" width="10%"><b>N&uacute;mero</b></td>
-                                            <td class="center" width="10%"><b>Data</b></td>
-                                            <td class="center" width="20%"><b>Avaliador</b></td>
-                                            <td class="center" width="20%"><b>Unidade</b></td>
-                                            <td class="center" width="10%"><b>&Aacute;rea</b></td>
-                                            <td class="center" width="10%"><b>Segmento</b></td>
-                                            <td class="center" width="10%"><b>Enquadramento</b></td>
+                                    <table class="bordered striped responsive-table">
+                                        <tr class="">
+                                            <td class="center"><b>N&uacute;mero</b></td>
+                                            <td class="center"><b>Data</b></td>
+                                            <td class="center"><b>Avaliador</b></td>
+                                            <td class="center"><b>Unidade</b></td>
+                                            <td class="center"><b>&Aacute;rea</b></td>
+                                            <td class="center"><b>Segmento</b></td>
+                                            <td class="center"><b>Enquadramento</b></td>
                                             <td class="center"><b>Parecer</b></td>
                                         </tr>
-                                        </thead>
                                         <tbody>
                                         <?php if (is_array($this->sugestao_enquadramento) and count($this->sugestao_enquadramento) > 0)
                                             foreach ($this->sugestao_enquadramento as $indice => $historico) { ?>
@@ -501,8 +499,7 @@
                                                         echo $tp_enquadramento
                                                         ?>
                                                     </td>
-                                                    <td align="left"
-                                                        nowrap><?php echo $historico['descricao_motivacao'] ?></td>
+                                                    <td align="left"><?php echo $historico['descricao_motivacao'] ?></td>
                                                 </tr>
                                             <?php 
                                         } ?>
