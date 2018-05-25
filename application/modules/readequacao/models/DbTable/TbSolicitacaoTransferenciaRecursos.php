@@ -18,7 +18,7 @@ class Readequacao_Model_DbTable_TbSolicitacaoTransferenciaRecursos extends MinC_
         $select->from(
             array('a' => $this->_name),
             array(
-                new Zend_Db_Expr("a.idReadequacao, a.tpTransferencia, a.idPronacRecebedor, a.vlRecebido, a.siAnaliseTecnica, a.siAnaliseComissao, a.stEstado")
+                new Zend_Db_Expr("a.idSolicitacaoTransferenciaRecursos AS idSolicitacao, a.idReadequacao, a.tpTransferencia, a.idPronacRecebedor, a.vlRecebido, a.siAnaliseTecnica, a.siAnaliseComissao, a.stEstado")
             )
         );
         
@@ -28,7 +28,9 @@ class Readequacao_Model_DbTable_TbSolicitacaoTransferenciaRecursos extends MinC_
             array(
                 new Zend_Db_Expr("
                     b.NomeProjeto,
-                    b.AnoProjeto + b.Sequencial AS pronac"
+                    b.AnoProjeto + b.Sequencial AS pronac,
+                    b.CgcCpf
+                    "
                 )
             ),
             'SAC.dbo'

@@ -163,4 +163,136 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
 
         return $tbReadequacao->delete(array('idPronac =?' => $idPronac, 'idReadequacao = ?' => $readequacaoAtiva->idReadequacao));
     }
+
+    public function atualizarAnaliseTecnica($idPronac, $idReadequacao, $idPerfil, $parecerReadequacao)
+    {
+        $tpAnaliseTecnica = 'N';
+        $data = [];
+
+        if ($parecerReadequacao == 2) {
+            $tpAnaliseTecnica = 'D';
+        }
+
+        if ($idPerfil == Autenticacao_Model_Grupos::PARECERISTA || $idPerfil == Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO) {
+            $data['tpAnaliseTecnica'] = $tpAnaliseTecnica;
+        }
+
+        if ($idPerfil == Autenticacao_Model_Grupos::COMPONENTE_COMISSAO) {
+            $data['tpAnaliseComissao'] = $tpAnaliseTecnica;
+        }
+
+        $where = ['idPronac = ?' => $idPronac, 'idReadequacao = ?' => $idReadequacao, 'stAtivo = ?' => 'S'];
+
+        $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
+        return $tbPlanoDistribuicao->update($data, $where);
+    }
+
+    public function finalizarReadequacaoPlanoDistribuicao($idPronac, $idReadequacao)
+    {
+        $auth = Zend_Auth::getInstance();
+
+        $PlanoDistribuicaoProduto = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+        $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
+        $tbDetalhaPlanoDistribuicao = new Proposta_Model_DbTable_TbDetalhaPlanoDistribuicao();
+        $tbDetalhaPlanoDistribuicaoReadequacao = new Readequacao_Model_DbTable_TbDetalhaPlanoDistribuicaoReadequacao();
+
+        $planosDistribuicaoReadequados = $tbPlanoDistribuicao->buscar([
+            'idReadequacao = ?' => $idReadequacao,
+            'stAtivo = ?' => 'S',
+            'tpSolicitacao <> ?' => 'N',
+        ])->toArray();
+
+        $detalhamentosReadequados = $tbDetalhaPlanoDistribuicaoReadequacao->buscar([
+            'idReadequacao = ?' => $idReadequacao,
+            'tpSolicitacao <> ?' => 'E',
+            'stAtivo = ?' => 'S'
+        ])->toArray();
+
+        $projetos = new Projetos();
+        $projeto = $projetos->buscar(array('IdPRONAC=?' => $idPronac))->current();
+
+        $planosDistribuicaoOriginais = $PlanoDistribuicaoProduto->buscar(array('idProjeto=?' => $projeto->idProjeto));
+
+        foreach ($planosDistribuicaoReadequados as $planoReadequado) {
+
+            $idPlanoDistribuicaoOriginal = $planoReadequado['idPlanoDistribuicaoOrignal'];
+
+            if (empty($idPlanoDistribuicaoOriginal)) {
+                foreach ($planosDistribuicaoOriginais as $planoOriginal) {
+                    if ($planoOriginal->idProduto == $planoReadequado['idProduto']
+                        && $planoOriginal->Area == $planoReadequado['cdArea']
+                        && $planoOriginal->Segmento == $planoReadequado['cdSegmento']
+                        && $planoOriginal->idProjeto == $projeto->idProjeto
+                    ) {
+                        $idPlanoDistribuicaoOriginal = $planoOriginal->idPlanoDistribuicao;
+                    }
+                }
+            }
+
+            $avaliacao = $planoReadequado['tpAnaliseComissao'];
+            if ($planoReadequado['tpAnaliseComissao'] == 'N') {
+                $avaliacao = $planoReadequado['tpAnaliseTecnica'];
+            }
+
+            //Se a avaliação foi deferida, realiza as mudanças necessárias na tabela original.
+            if ($avaliacao == 'D' && !empty($idPlanoDistribuicaoOriginal)
+            ) {
+                // pega dados da tabela temporaria (tbPlanoDistribuicao) e faz update em PlanoDistribuicaoProduto
+                $updatePlanoDistr = array();
+                $updatePlanoDistr['idProjeto'] = $projeto->idProjeto;
+                $updatePlanoDistr['idProduto'] = $planoReadequado['idProduto'];
+                $updatePlanoDistr['Area'] = $planoReadequado['cdArea'];
+                $updatePlanoDistr['Segmento'] = $planoReadequado['cdSegmento'];
+                $updatePlanoDistr['idPosicaoDaLogo'] = $planoReadequado['idPosicaoLogo'];
+                $updatePlanoDistr['QtdeProduzida'] = $planoReadequado['qtProduzida'];
+                $updatePlanoDistr['QtdePatrocinador'] = $planoReadequado['qtPatrocinador'];
+                $updatePlanoDistr['QtdeOutros'] = $planoReadequado['qtOutros'];
+                $updatePlanoDistr['QtdeProponente'] = $planoReadequado['qtProponente'];
+                $updatePlanoDistr['QtdeVendaNormal'] = $planoReadequado['qtVendaNormal'];
+                $updatePlanoDistr['QtdeVendaPromocional'] = $planoReadequado['qtVendaPromocional'];
+                $updatePlanoDistr['PrecoUnitarioPromocional'] = $planoReadequado['vlUnitarioPromocional'];
+                $updatePlanoDistr['vlReceitaTotalPrevista'] = $planoReadequado['vlReceitaTotalPrevista'];
+                $updatePlanoDistr['qtdeVendaPopularNormal'] = $planoReadequado['qtdeVendaPopularNormal'];
+                $updatePlanoDistr['qtdeVendaPopularPromocional'] = $planoReadequado['qtdeVendaPopularPromocional'];
+                $updatePlanoDistr['vlUnitarioPopularNormal'] = $planoReadequado['vlUnitarioPopularNormal'];
+                $updatePlanoDistr['receitaPopularPromocional'] = $planoReadequado['receitaPopularPromocional'];
+                $updatePlanoDistr['receitaPopularNormal'] = $planoReadequado['receitaPopularNormal'];
+                $updatePlanoDistr['precoUnitarioNormal'] = $planoReadequado['precoUnitarioNormal'];
+                $updatePlanoDistr['stPrincipal'] = $planoReadequado['stPrincipal'];
+                $updatePlanoDistr['canalAberto'] = $planoReadequado['canalAberto'];
+                $updatePlanoDistr['Usuario'] = $auth->getIdentity()->usu_codigo;
+
+                $wherePlanoDistr = array();
+                $wherePlanoDistr['idPlanoDistribuicao = ?'] = $idPlanoDistribuicaoOriginal;
+
+                $PlanoDistribuicaoProduto->update($updatePlanoDistr, $wherePlanoDistr);
+
+                # detalhamentos - remove
+                $tbDetalhaPlanoDistribuicao->delete(['idPlanoDistribuicao = ?' => $idPlanoDistribuicaoOriginal]);
+
+                # detalhamentos - adiciona
+                foreach ($detalhamentosReadequados as $detalhamento) {
+                    if ($detalhamento['idPlanoDistribuicao'] == $planoReadequado['idPlanoDistribuicao']) {
+                        $detalhamento['idPlanoDistribuicao'] = $idPlanoDistribuicaoOriginal;
+                        unset($detalhamento['tpSolicitacao']);
+                        unset($detalhamento['stAtivo']);
+                        unset($detalhamento['idPronac']);
+                        unset($detalhamento['idDetalhaPlanoDistribuicao']);
+                        unset($detalhamento['idReadequacao']);
+                        $tbDetalhaPlanoDistribuicao->inserir($detalhamento);
+                    }
+                }
+            }
+        }
+
+        $dados = array();
+        $where = array();
+        $dados['stAtivo'] = 'N';
+        $where['idPronac = ? '] = $idPronac;
+        $where['idReadequacao = ?'] = $idReadequacao;
+
+        $tbPlanoDistribuicao->update($dados, $where);
+        $tbDetalhaPlanoDistribuicaoReadequacao->update($dados, $where);
+    }
+
 }

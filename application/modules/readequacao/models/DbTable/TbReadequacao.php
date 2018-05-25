@@ -1435,7 +1435,8 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
     {
         $where = [
             'a.idTipoReadequacao = ?' => $idTipoReadequacao,
-            'a.stEstado = ?' => Readequacao_Model_DbTable_TbReadequacao::ST_ESTADO_EM_ANDAMENTO
+            'a.stEstado = ?' => Readequacao_Model_DbTable_TbReadequacao::ST_ESTADO_EM_ANDAMENTO,
+            'a.siEncaminhamento = ?' => Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE
         ];
         
         if ($idPronac) {

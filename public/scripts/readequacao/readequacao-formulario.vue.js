@@ -138,10 +138,12 @@ Vue.component('readequacao-formulario', {
             var formData = new FormData();
             formData.append('arquivo', arquivo);
             formData.append('idPronac', self.idPronac);
-            formData.append('idReadequacao', self.readequacao.idReadequacao);
             formData.append('idTipoReadequacao', self.idTipoReadequacao);
             formData.append('idDocumentoAtual', self.readequacao.idDocumento);
-
+	    if (self.readequacao.idReadequacao) {
+		formData.append('idReadequacao', self.readequacao.idReadequacao);
+	    }
+	    
             $3('#carregando-arquivo').fadeIn('slow');
             $3.ajax(
                 Object.assign(

@@ -1,6 +1,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.btn_voltar').click(function () {
+        $('#btn_voltar').click(function () {
             voltar();
         });
 
@@ -154,110 +154,121 @@
     }
 </style>
 
-<!-- ========== INÍCIO BREADCRUMB (LINKS TOPO) ========== -->
 <div id="alerta"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="page-title">
+            <div class="row">
+                <div class="col s12 m9 l10">
+                    <?php
+                    $paginaAtual = "Encaminhar para an&aacute;lise t&eacute;cnica";
+                    $paginaAtual .= (in_array($this->readequacao->idTipoReadequacao, array(2, 9, 11, 14))) ? ' - ' . $this->readequacao->dsReadequacao : '';
+                    ?>
+                    <h1><?= $paginaAtual; ?></h1>
 
-<div id="breadcrumb">
-    <ul>
-        <li class="first"><a
-                href="<?php echo $this->url(array('module' => 'default', 'controller' => 'principal', 'action' => '')); ?>"
-                title="Ir para In&iacute;cio">In&iacute;cio</a></li>
-        <li>
-            <a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'painel'), '', true); ?>"
-               title="Readequa&ccedil;&atilde;o">Readequa&ccedil;&otilde;es</a></li>
-        <li>Aguardando An&aacute;lise</li>
-        <li class="last">Encaminhar para an&aacute;lise
-            t&eacute;cnica<?php echo (in_array($this->readequacao->idTipoReadequacao, array(2, 9, 11, 14))) ? ' - ' . $this->readequacao->dsReadequacao : ''; ?></li>
-    </ul>
-</div>
-<!-- ========== FIM BREADCRUMB (LINKS TOPO) ========== -->
-
-
-<!-- ========== INÍCIO TÍTULO ========== -->
-<div id="titulo">
-    <div>Encaminhar para an&aacute;lise
-        t&eacute;cnica<?php echo (in_array($this->readequacao->idTipoReadequacao, array(2, 9, 11, 14))) ? ' - ' . $this->readequacao->dsReadequacao : ''; ?>
-        <span class="voltar"><a href="javascript:voltar();">Voltar</a></span></div>
-</div>
-
-
-<!-- ========== INÍCIO CONTEÚDO ========== -->
-<div id="conteudo">
-    <form name="formAvaliacao" id="formAvaliacao"
-          action="<?php echo $this->baseUrl(); ?>/readequacoes/form-encaminhar-analise-tecnica" method="post">
-        <input type="hidden" name="filtro" value="<?php echo $this->filtro; ?>"/>
-        <table class="tabela">
-            <tr>
-                <td class="destacar bold centro" width="20%">PRONAC</td>
-                <td class="destacar bold centro">NOME DO PROJETO</td>
-            </tr>
-            <tr>
-                <td align="center">
-                    <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index')); ?>?idPronac=<?php echo $this->projeto->IdPRONAC; ?>"
-                       target="_blank">
-                        <?php echo $this->projeto->pronac; ?>
+                    <?php
+                    gerarNovoBreadCrumb(
+                        [
+                            ['Readequa&ccedil;&otilde;es' => '/readequacao/readequacoes/painel'],
+                            [$paginaAtual => '']
+                        ]
+                    );
+                    ?>
+                </div>
+                <div class="col s12 m3 l2 right-align">
+                    <a href="javascript:voltar();" title="P&aacute;gina Anterior" title="P&aacute;gina Anterior"
+                       class="btn small grey lighten-3 grey-text z-depth-0 chat-toggle"><i class="material-icons">arrow_back</i>
                     </a>
-                </td>
-                <td align="center"><?php echo $this->projeto->NomeProjeto; ?></td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
+        <div class="card-panel">
+            <div id="conteudo">
+                <form name="formAvaliacao" id="formAvaliacao"
+                      action="<?php echo $this->baseUrl(); ?>/readequacao/readequacoes/form-encaminhar-analise-tecnica"
+                      method="post">
+                    <input type="hidden" name="filtro" value="<?php echo $this->filtro; ?>"/>
+                    <table class="tabela">
+                        <tr>
+                            <td class="destacar bold centro" width="20%">PRONAC</td>
+                            <td class="destacar bold centro">NOME DO PROJETO</td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index')); ?>?idPronac=<?php echo $this->projeto->IdPRONAC; ?>"
+                                   target="_blank">
+                                    <?php echo $this->projeto->pronac; ?>
+                                </a>
+                            </td>
+                            <td align="center"><?php echo $this->projeto->NomeProjeto; ?></td>
+                        </tr>
+                    </table>
 
-        <table class="tabela" id="opcoesEncaminhar">
-            <tr>
-                <td class="destacar bold" width="130px;">Encaminhar para: <span class="asterisco">*</span></td>
-                <td>
-                    <select name="vinculada" id="vinculada" class="select_simples obrigatorio" style="width: 120px;">
-                        <option value=""> - Selecione -</option>
-                        <option value="93">FBN</option>
-                        <option value="94">FCP</option>
-                        <option value="95">FCRB</option>
-                        <option value="92">FUNARTE</option>
-                        <option value="335">IBRAM</option>
-                        <option value="91">IPHAN</option>
-                        <option value="166">SAV</option>
-                        <option value="262">SEFIC</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="destacar bold" width="130px;">Destinatário: <span class="asterisco_dinamico sumir">*</span>
-                </td>
-                <td>
-                    <select name="destinatario" id="destinatario" class="select_simples" disabled="disabled">
-                        <option value=""> - Selecione -</option>
-                    </select>
-                </td>
-            </tr>
-        </table>
+                    <table class="tabela" id="opcoesEncaminhar">
+                        <tr>
+                            <td class="destacar bold" width="130px;">Encaminhar para: <span class="asterisco">*</span>
+                            </td>
+                            <td>
+                                <select name="vinculada" id="vinculada" class="select_simples obrigatorio"
+                                        style="width: 120px;">
+                                    <option value=""> - Selecione -</option>
+                                    <option value="93">FBN</option>
+                                    <option value="94">FCP</option>
+                                    <option value="95">FCRB</option>
+                                    <option value="92">FUNARTE</option>
+                                    <option value="335">IBRAM</option>
+                                    <option value="91">IPHAN</option>
+                                    <option value="166">SAV</option>
+                                    <option value="262">SEFIC</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="destacar bold" width="130px;">Destinatário: <span
+                                        class="asterisco_dinamico sumir">*</span>
+                            </td>
+                            <td>
+                                <select name="destinatario" id="destinatario" class="select_simples"
+                                        disabled="disabled">
+                                    <option value=""> - Selecione -</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
 
-        <table class="tabela">
-            <tr>
-                <th>ORIENTA&Ccedil;&Atilde;O <span class="red bold">*</span></th>
-            </tr>
-            <tr>
-                <td align="center">
-                    <textarea class="textarea_simples" name="dsAvaliacao" id="dsAvaliacao"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span style="color: #c33; font-style: italic;">Quantidade m&aacute;xima de 1.000 caracteres.</span>
-                </td>
-            </tr>
-        </table>
+                    <table class="tabela">
+                        <tr>
+                            <th>ORIENTA&Ccedil;&Atilde;O <span class="red bold">*</span></th>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                <textarea class="textarea_simples" name="dsAvaliacao" id="dsAvaliacao"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color: #c33; font-style: italic;">Quantidade m&aacute;xima de 1.000 caracteres.</span>
+                            </td>
+                        </tr>
+                    </table>
 
-        <input type="hidden" name="idReadequacao" value="<?php echo $this->readequacao->idReadequacao; ?>">
-    </form>
+                    <input type="hidden" name="idReadequacao" value="<?php echo $this->readequacao->idReadequacao; ?>">
+                </form>
 
-    <p align="center">
-        <input type="button" class="btn_enviar" name="btn_enviar" id="btn_enviar">
-        <input type="button" class="btn_voltar" name="btn_voltar" id="btn_voltar">
-    </p>
-
-    <br clear="all"/>
+                <p align="center">
+                    <a
+                            id="btn_enviar"
+                            href="javascript:void(0)"
+                            class="waves-effect waves-light white-text btn btn-secondary"
+                    ><i class="material-icons right">send</i>Enviar</a>
+                    <a
+                            id="btn_voltar"
+                            href="javascript:void(0)"
+                            class="waves-effect waves-light white-text btn btn-info"
+                    ><i class="material-icons left">keyboard_backspace</i>voltar</a>
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- ========== INÍCIO RODAPÉ DO CONTEÚDO ========== -->
-<div id="rodapeConteudo"><span></span></div>
-<!-- ========== FIM RODAPÉ DO CONTEÚDO ========== -->
-<br clear="all"/>
