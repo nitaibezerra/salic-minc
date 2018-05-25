@@ -138,11 +138,14 @@ Vue.component('readequacao-plano-distribuicao', {
         },
         desativarBotaoFinalizar: function () {
 
+            console.log('tesdsds');
             if(typeof this.readequacao.idReadequacao == 'undefined') {
+                console.log('iddd', this.readequacao.idReadequacao);
                 return true;
             }
 
             if(this.readequacao.justificativa.length < 3) {
+                console.log('sssdsds', this.readequacao.justificativa.length < 3);
                 return true;
             }
 

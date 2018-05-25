@@ -188,7 +188,7 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
         return $tbPlanoDistribuicao->update($data, $where);
     }
 
-    public function finalizarReadequacaoPlanoDistribuicao($idPronac, $idReadequacao)
+    public function finalizarAnaliseReadequacaoPlanoDistribuicao($idPronac, $idReadequacao)
     {
         $auth = Zend_Auth::getInstance();
 

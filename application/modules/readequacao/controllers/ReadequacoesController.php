@@ -2578,7 +2578,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
 
                             } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) { //Se for readequação de plano de distribuição, atualiza os dados na SAC.dbo.PlanoDistribuicaoProduto.
                                 $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
-                                $tbPlanoDistribuicaoMapper->finalizarReadequacaoPlanoDistribuicao($read->idPronac, $idReadequacao);
+                                $tbPlanoDistribuicaoMapper->finalizarAnaliseReadequacaoPlanoDistribuicao($read->idPronac, $idReadequacao);
 
                             } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_NOME_PROJETO) { //Se for readequação de nome do projeto, insere o registo na tela de Checklist de Publicação.
                                 $Projetos = new Projetos();
@@ -2972,7 +2972,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) { //Se for readequação de plano de distribuição, atualiza os dados na SAC.dbo.PlanoDistribuicaoProduto.
 
                 $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
-                $tbPlanoDistribuicaoMapper->finalizarReadequacaoPlanoDistribuicao($read->idPronac, $idReadequacao);
+                $tbPlanoDistribuicaoMapper->finalizarAnaliseReadequacaoPlanoDistribuicao($read->idPronac, $idReadequacao);
 
             } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_NOME_PROJETO) { //Se for readequação de nome do projeto, insere o registo na tela de Checklist de Publicação.
                 $Projetos = new Projetos();
@@ -3632,8 +3632,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                 $idReadequacao,
                 $siEncaminhamento
             );
-            xd($readequacao);
-            
+
             if (empty($readequacao)) {
                 $mensagem = 'Nenhuma readequa&ccedil;&atilde;o para o idPronac ' . $this->idPronac;
                 $readequacao = [];
