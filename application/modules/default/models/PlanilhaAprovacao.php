@@ -2826,7 +2826,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         } else if($codigoProduto == 0 && !is_null($codigoProduto)){
             $select->where('d.codigo is null');
         }
-        /* $select->order('tpCusto desc'); */
+        $select->order('c.Descricao');
         /* $select->order('Produto'); */
         /* $select->order('cdEtapa'); */
         /* $select->order('Uf'); */
