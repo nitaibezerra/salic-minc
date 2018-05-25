@@ -124,7 +124,8 @@ Vue.component('readequacao-transferencia-recursos', {
 	    `,
     props: [
 	'idPronac',
-	'idTipoReadequacao'
+	'idTipoReadequacao',
+	'siEncaminhamento'
     ],
     mixins: [utils],
     data: function() {
@@ -320,7 +321,8 @@ Vue.component('readequacao-transferencia-recursos', {
                 url: "/readequacao/readequacoes/obter-dados-readequacao",
                 data: {
                     idTipoReadequacao: self.idTipoReadequacao,
-                    idPronac: self.idPronac
+                    idPronac: self.idPronac,
+		    siEncaminhamento: self.siEncaminhamento
                 }
             }).done(function (response) {
 		if (response.readequacao != null) {

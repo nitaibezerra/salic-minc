@@ -452,10 +452,6 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
 
         try {
 
-            if (empty($this->projeto)) {
-                throw new Exception("Projeto &eacute; obrigat&oacute;rio");
-            }
-
             if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
                 throw new Exception("Acesso negado!");
             }
@@ -464,14 +460,8 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
                 throw new Exception("Readequa&ccedil;&atilde;o em an&aacute;lise");
             }
 
-            $mdlDetalhaReadequacao = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao();
             $detalhamentoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
-
-            $dados = $detalhamentoMapper->alterarSituacaoDetalhamento(
-                $dados,
-                $mdlDetalhaReadequacao::TP_SOLICITACAO_EXCLUIR,
-                $this->projeto
-            );
+            $dados = $detalhamentoMapper->excluirItemDetalhamento($dados, $this->projeto);
 
             $this->_helper->json(array('data' => $dados, 'success' => 'true', 'msg' => 'Detalhamento exclu&iacute;do com sucesso!'));
         } catch (Exception $e) {
@@ -518,34 +508,44 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
         try {
             $params = $this->getRequest()->getParams();
 
-            if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
-                throw new Exception("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!");
-            }
-
-            if (empty($this->idPronac)) {
-                throw new Exception("PRONAC &eacute; obrigat&oacute;rio");
-            }
-
-            if ($this->_existeSolicitacaoEmAnalise) {
-                throw new Exception("Readequa&ccedil;&atilde;o em an&aacute;lise");
-            }
-
-            $dados = [
-                'idReadequacao' => $params['idReadequacao'],
-                'idPronac' => $params['idPronac'],
-                'idTipoReadequacao' => $params['idTipoReadequacao'],
-                'dsJustificativa' => utf8_decode($params['justificativa']),
-                'idDocumento' => $params['idDocumento']
-            ];
-
-            $TbReadequacaoMapper = new Readequacao_Model_TbReadequacaoMapper();
-            $idReadequacao = $TbReadequacaoMapper->salvarSolicitacaoReadequacao($dados);
+            $idReadequacao = $this->salvarReadequacao($params);
 
             $this->_helper->json(array('data' => $idReadequacao, 'success' => 'true', 'msg' => 'Solicita&ccedil;&atilde;o atualizada com sucesso!'));
         } catch (Exception $e) {
             $this->getResponse()->setHttpResponseCode(412);
             $this->_helper->json(array('data' => $params, 'success' => 'false', 'msg' => $e->getMessage()));
         }
+    }
+
+    private function salvarReadequacao($data)
+    {
+
+        if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+            throw new Exception("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!");
+        }
+
+        if (empty($data['idPronac'])) {
+            throw new Exception("PRONAC &eacute; obrigat&oacute;rio");
+        }
+
+        if ($this->_existeSolicitacaoEmAnalise) {
+            throw new Exception("Readequa&ccedil;&atilde;o em an&aacute;lise");
+        }
+
+        if (count(trim($data['justificativa'])) == 0) {
+            throw new Exception("Readequa&ccedil;&atilde;o em an&aacute;lise");
+        }
+
+        $dados = [
+            'idReadequacao' => $data['idReadequacao'],
+            'idPronac' => $data['idPronac'],
+            'idTipoReadequacao' => $data['idTipoReadequacao'],
+            'dsJustificativa' => utf8_decode($data['justificativa']),
+            'idDocumento' => $data['idDocumento']
+        ];
+
+        $TbReadequacaoMapper = new Readequacao_Model_TbReadequacaoMapper();
+        return $TbReadequacaoMapper->salvarSolicitacaoReadequacao($dados);
     }
 
     public function excluirReadequacaoPlanoDistribuicaoAjaxAction()
@@ -578,24 +578,26 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
         try {
             $params = $this->getRequest()->getParams();
 
-            if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
-                throw new Exception("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!");
+            if (empty($params['idTipoReadequacao'])) {
+                throw new Exception('Tipo da readequa&ccedil;&atilde;o n&atilde;o informada!');
             }
 
-            if (empty($this->idPronac) || empty($params['idTipoReadequacao'])) {
-                throw new Exception('Dados obrigat&oacute;rios n&atilde;o informados');
+            if (empty($params['idReadequacao'])) {
+                throw new Exception('Readequa&ccedil;&atilde;o n&atilde;o encontrada');
             }
 
-            if ($this->_existeSolicitacaoEmAnalise) {
-                throw new Exception("Readequa&ccedil;&atilde;o em an&aacute;lise");
+            $idReadequacao = $this->salvarReadequacao($params);
+
+            if (empty($idReadequacao)) {
+                throw new Exception("Erro ao salvar readequa&ccedil;&atilde;o");
             }
 
             $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();
             $planosReadequados = $tbPlanoDistribuicao->buscar(array(
-                'idPronac = ?' => $this->idPronac,
+                'idPronac = ?' => $params['idPronac'],
                 'tpSolicitacao <> ?' => 'N',
                 'stAtivo = ?' => 'S',
-                'idReadequacao is not null' => ''
+                'idReadequacao = ?' => $params['idReadequacao']
             ));
 
             if (count($planosReadequados) == 0) {
@@ -604,7 +606,7 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
 
             $tbReadequacaoMapper = new Readequacao_Model_TbReadequacaoMapper();
             $status = $tbReadequacaoMapper->finalizarSolicitacaoReadequacao(
-                $this->idPronac, $params['idTipoReadequacao']
+                $this->idPronac, $params['idTipoReadequacao'], $params['idReadequacao']
             );
 
             if ($status == false) {

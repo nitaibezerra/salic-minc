@@ -198,13 +198,13 @@ class Readequacao_TransferenciaRecursosController extends Readequacao_GenericCon
                         'nome' => utf8_encode($projeto->NomeProjeto),
                         'pronac' => $projeto->pronac,
                         'vlRecebido' => $projeto->vlRecebido,
-                        'saldoDisponivel' => 10000
+                        'saldoDisponivel' => $projeto->vlRecebido
                     ];
                 }
                 $mensagem = "Projetos retornados: " . count($projetosRecebedores);
             } else {
                 $projetoArr = [];
-                $mensagem = "Não existe nenhum projeto com o idPronac forncedido!";
+                $mensagem = "Não existe nenhum projeto com o idPronac fornecido!";
             }
             
             $this->_helper->json(

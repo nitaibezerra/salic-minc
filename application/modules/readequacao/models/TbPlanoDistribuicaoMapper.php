@@ -67,6 +67,7 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
             $tbDetalhaReadequacao = new Readequacao_Model_DbTable_TbDetalhaPlanoDistribuicaoReadequacao();
             foreach ($distribuicaoDaProposta as $value) {
                 $novoPlanoDistribuicao['idReadequacao'] = $idReadequacao;
+                $novoPlanoDistribuicao['idPlanoDistribuicaoOriginal'] = $value->idPlanoDistribuicao;
                 $novoPlanoDistribuicao['idProduto'] = $value->idProduto;
                 $novoPlanoDistribuicao['cdArea'] = $value->idArea;
                 $novoPlanoDistribuicao['cdSegmento'] = $value->idSegmento;
@@ -294,5 +295,4 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
         $tbPlanoDistribuicao->update($dados, $where);
         $tbDetalhaPlanoDistribuicaoReadequacao->update($dados, $where);
     }
-
 }

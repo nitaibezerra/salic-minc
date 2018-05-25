@@ -141,6 +141,29 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper extends MinC
         return $dados;
     }
 
+    public function excluirItemDetalhamento($dados, Projeto_Model_TbProjetos $projeto)
+    {
+
+        if (empty($projeto)) {
+            throw new Exception("Projeto &eacute; obrigat&oacute;rio");
+        }
+
+        $tbDetalhaPlanoDistribuicaoReadequacao = new Readequacao_Model_DbTable_TbDetalhaPlanoDistribuicaoReadequacao();
+        $detalhamento = $tbDetalhaPlanoDistribuicaoReadequacao->buscar(['idDetalhaPlanoDistribuicao = ?' => $dados['idDetalhaPlanoDistribuicao']])->current();
+
+        if ($detalhamento['tpSolicitacao'] == 'I') {
+            return $detalhamento->delete();
+        }
+
+        $dados = $this->alterarSituacaoDetalhamento(
+            $dados,
+            Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao::TP_SOLICITACAO_EXCLUIR,
+            $projeto
+        );
+
+        return $dados;
+    }
+
     public function alterarSituacaoDetalhamento($dados, $situacao, $projeto)
     {
         if (empty($dados['idDetalhaPlanoDistribuicao'])) {

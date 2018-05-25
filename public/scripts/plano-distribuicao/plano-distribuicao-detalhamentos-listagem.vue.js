@@ -22,7 +22,10 @@ Vue.component('plano-distribuicao-detalhamentos-listagem', {
                     </tr>
                 </thead>
                 <tbody v-if="detalhamentos && detalhamentos.length > 0">
-                    <tr v-for="( detalhamento, index ) in detalhamentos" :class="definirClassesDaLinha(detalhamento)">
+                    <tr v-for="( detalhamento, index ) in detalhamentos" 
+                        :key="detalhamento.idDetalhaPlanoDistribuicao"
+                        :id="detalhamento.idDetalhaPlanoDistribuicao"
+                        :class="definirClassesDaLinha(detalhamento)">
                         <td>{{ detalhamento.dsProduto }}</td>
                         <td class="center-align">{{ detalhamento.qtExemplares }}</td>
                         <!--Preço Proponente -->

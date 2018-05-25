@@ -41,4 +41,7 @@ ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD receitaPopularPromocional money DEFA
 ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD receitaPopularNormal money DEFAULT 0;
 ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD vlReceitaTotalPrevista money DEFAULT 0;
 
+ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD idPlanoDistribuicaoOriginal int DEFAULT 0;
+ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD CONSTRAINT tbPlanoDistribuicao_PlanoDistribuicaoProduto_FK FOREIGN KEY (idPlanoDistribuicaoOriginal) REFERENCES SAC.dbo.PlanoDistribuicaoProduto(idPlanoDistribuicao)
+
 ALTER TABLE sac.dbo.tbPlanoDistribuicao DROP CONSTRAINT tbPlanoDistribuicao_Verificacao_FK;

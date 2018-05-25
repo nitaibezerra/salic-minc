@@ -2056,6 +2056,10 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         $idComponente = (int) $post->componente;
         $idReadequacao = (int) $post->idReadequacao;
 
+        if(count($idReadequacao) > 7) {
+            $idReadequacao = (int) Seguranca::dencrypt($idReadequacao);
+        }
+
         $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
         $dadosReadequacao = $tbReadequacao->buscar(array('idReadequacao = ?'=>$idReadequacao))->current();
         $idPronac = $dadosReadequacao->idPronac;
@@ -3618,17 +3622,21 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         $idTipoReadequacao = $this->_request->getParam('idTipoReadequacao');
         $idReadequacao = $this->_request->getParam('idReadequacao');
         $idPronac = $this->_request->getParam('idPronac');
-
+        $siEncaminhamento = $this->_request->getParam('siEncaminhamento');
+        
         try {
             $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
             $readequacao = $tbReadequacao->obterDadosReadequacao(
                 $idTipoReadequacao,
                 $idPronac,
-                $idReadequacao
+                $idReadequacao,
+                $siEncaminhamento
             );
-
+            xd($readequacao);
+            
             if (empty($readequacao)) {
                 $mensagem = 'Nenhuma readequa&ccedil;&atilde;o para o idPronac ' . $this->idPronac;
+                $readequacao = [];
             }
 
             $this->_helper->json(
@@ -3761,5 +3769,37 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    public function encaminharParaCnicAction() {
+
+        if ($this->idPerfil != Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO
+            && $this->idPerfil != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO
+            && $this->idPerfil != Autenticacao_Model_Grupos::PRESIDENTE_VINCULADA_SUBSTITUTO
+            && $this->idPerfil != Autenticacao_Model_Grupos::DIRETOR_DEPARTAMENTO) {
+            parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
+        }
+
+        $idReadequacao = Seguranca::dencrypt($this->_request->getParam('id'));
+        $cnic = $this->_request->getParam('cnic');
+
+        $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $r = $tbReadequacao->buscarDadosReadequacoes(array('idReadequacao = ?'=>$idReadequacao))->current();
+
+        if ($r) {
+            $Projetos = new Projetos();
+            $p = $Projetos->buscarProjetoXProponente(array('idPronac = ?' => $r->idPronac))->current();
+
+            $this->view->filtro = $this->_request->getParam('filtro');
+            $this->view->readequacao = $r;
+            $this->view->projeto = $p;
+            $this->view->idPronac = $r->idPronac;
+            $this->view->cnic = $cnic;
+        }
+
+        $this->view->idReadequacao = $idReadequacao;
+
+        $tbTitulacaoConselheiro = new tbTitulacaoConselheiro();
+        $this->view->conselheiros = $tbTitulacaoConselheiro->buscarConselheirosTitularesTbUsuarios();
     }
 }

@@ -6,12 +6,15 @@ class Readequacao_Model_DbTable_TbSolicitacaoTransferenciaRecursos extends MinC_
     protected $_name    = "tbSolicitacaoTransferenciaRecursos";
     
     /**
-     * Método para buscar projetos recebedores de uma readequação
+     * Método para buscar projetos recebedores de uma readequação ou pronac
      * @access public
      * @param integer $idReadequacao
+     * @param integer $idPronacRecebedor
      * @return integer
      */
-    public function obterProjetosRecebedores($idReadequacao)
+    public function obterProjetosRecebedores(
+        $idReadequacao = '',
+        $idPronacRecebedor = '')
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -35,8 +38,13 @@ class Readequacao_Model_DbTable_TbSolicitacaoTransferenciaRecursos extends MinC_
             ),
             'SAC.dbo'
         );
-        
-        $select->where('idReadequacao = ?', $idReadequacao);
+
+        if ($idReadequacao) {
+            $select->where('idReadequacao = ?', $idReadequacao);
+        }
+        if ($idPronacRecebedor) {
+            $select->where('idPronacRecebedor = ?', $idPronacRecebedor);
+        }
         
         return $this->fetchAll($select);
     }

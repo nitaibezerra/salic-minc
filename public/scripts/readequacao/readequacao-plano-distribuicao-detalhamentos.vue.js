@@ -83,10 +83,16 @@ Vue.component('readequacao-plano-distribuicao-detalhamentos', {
                 url: "/readequacao/plano-distribuicao/excluir-detalhamento-ajax/idPronac/" + self.id,
                 data: detalhamento
             }).done(function (response) {
-                self.atualizarItemNaListagem(response);
+                if (response.success == 'true' && response.data == 1) { // exclusao fisica
+                    Vue.delete(self.detalhamentos, index);
+                    self.mensagemSucesso(response.msg);
+                } else { // exclusao logica
+                    self.atualizarItemNaListagem(response);
+                }
             }).fail(function (response) {
                 self.mensagemErro(response.responseJSON.msg);
             });
+
         },
         restaurarDetalhamento(detalhamento, index) {
             let self = this;

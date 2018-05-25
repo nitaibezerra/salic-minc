@@ -150,33 +150,40 @@ x - Menu lateral (legado)
     display: inline;
 }
 
-#sidenav {
-    max-width: 250px;
-    position: absolute;
-    top: 100px;
-    background-color: #35384C;
-    height: 100%;
-    height: calc(100% - 99px);
-    padding-bottom: 99px;
-    overflow-x: hidden;
-    z-index: 990;
-}
-
 @media only screen and (min-width: 993px) {
+    #sidenav {
+        max-width: 250px;
+        position: absolute;
+        top: 100px;
+        background-color: #35384C;
+        height: 100%;
+        height: calc(100% - 99px);
+        padding-bottom: 99px;
+        overflow-x: hidden;
+        z-index: 990;
+    }
+
+    body.nav-fixed #menuContexto,
+    body.nav-fixed #sidenav {
+        top: 40px;
+        position: fixed;
+        height: 100%;
+        height: calc(100% - 40px);
+        height: -moz-calc(100% - 40px);
+        padding-bottom: 40px;
+    }
+
     #menuContexto,
     #sidenav {
         transition: transform .3s ease, width .3s ease;
     }
 }
 
-body.nav-fixed #menuContexto,
-body.nav-fixed #sidenav {
-    top: 40px;
-    position: fixed;
-    height: 100%;
-    height: calc(100% - 40px);
-    height: -moz-calc(100% - 40px);
-    padding-bottom: 40px;
+@media only screen and (max-width: 992px) {
+    #sidenav.side-nav {
+        /*z-index: 1000;*/
+    }
+
 }
 
 #sidenav .sidebar-info {

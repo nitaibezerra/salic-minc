@@ -418,7 +418,7 @@ $arrMenu['admissibilidade']['menu'][] = array(
 );
 
 $arrMenu['admissibilidade']['menu'][] = array(
-    'grupo' => array(92,97,131),
+    'grupo' => array(92, 97, 131),
     'url' => $this->url(array('module' => 'admissibilidade', 'controller' => 'admissibilidade', 'action' => 'listar-solicitacoes-desarquivamento'), '', true),
     'title' => 'Desarquivamento',
     'label' => 'Desarquivamento'
@@ -644,6 +644,8 @@ $arrMenu['relatorios']['menu'][] = array(
     'title' => 'Ir para Listar Selecionados',
     'label' => 'Listar Selecionados'
 );
+
+
 $arrMenu['solicitacoes'] = array(
     'id' => 'solicitacoes',
     'label' => 'Solicita&ccedil;&otilde;es',
@@ -879,31 +881,30 @@ if (isset ($auth['cpf'])) {
 <div id="navbar-header">
     <nav class="">
         <div class="nav-wrapper  container">
-            <a id="menu-left" href="#" data-activates="sidenav" class="button-collapse left"><i class="material-icons">menu</i></a>
             <a id="menu-right" href="#" data-activates="nav-mobile" class="button-collapse right"><i
                         class="material-icons">menu</i></a>
-
             <ul class="left hide-on-med-and-down">
                 <?php echo $this->partialLoop('partials/menu/item.phtml', $arrMenu); ?>
             </ul>
             <ul class="menu-apoio right">
                 <?php echo $this->partial('partials/menu/notificacao-mensagem.phtml') ?>
-<!--                --><?php //echo $this->partial('partials/menu/notificacoes.phtml') ?>
+                <!--                --><?php //echo $this->partial('partials/menu/notificacoes.phtml') ?>
 
-<!--                <li><a class="white-text" href="sass.html"><i class="material-icons">power_settings_new</i></a></li>-->
-<!--                <li><a class="white-text" href="mobile.html"><i class="material-icons">more_vert</i></a></li>-->
-            </ul>
-
-            <ul class="side-nav" id="nav-mobile">
-                <?php echo $this->partialLoop('partials/menu/item-side-nav.phtml', $arrMenu); ?>
+                <!--                <li><a class="white-text" href="sass.html"><i class="material-icons">power_settings_new</i></a></li>-->
+                <!--                <li><a class="white-text" href="mobile.html"><i class="material-icons">more_vert</i></a></li>-->
             </ul>
         </div>
+    </nav>
 </div>
-</nav>
-</div>
+<aside id="sidebar-right">
+    <ul class="side-nav" id="nav-mobile">
+        <?php echo $this->partialLoop('partials/menu/item-side-nav.phtml', $arrMenu); ?>
+    </ul>
+</aside>
+
 <script>
     $3(document).ready(function () {
-        $3('#menu-left').sideNav({edge: 'left', menuWidth: 250})
+
         $3('#menu-right').sideNav({edge: 'right'})
     })
 
@@ -942,8 +943,11 @@ if (isset ($auth['cpf'])) {
             $3('#navbar-header nav').prepend(
                 '<a id="small-menu-button" href="#" class="left hide-on-med-and-down">' +
                 '<i class="material-icons">more_vert</i>' +
-                '</a>'
+                '</a>' +
+                '<a id="menu-left" href="#" data-activates="sidenav" class="button-collapse left"><i class="material-icons">menu</i></a>'
             )
+
+            $3('#menu-left').sideNav({edge: 'left', menuWidth: 250})
         }
 
         // Ajuste na sidebar, quando faz scroll ela dá um bug
@@ -974,14 +978,14 @@ if (isset ($auth['cpf'])) {
 
     })
 
-    function setCookie (cname, cvalue, exdays) {
+    function setCookie(cname, cvalue, exdays) {
         var d = new Date()
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000))
         var expires = 'expires=' + d.toUTCString()
         document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/'
     }
 
-    function getCookie (cname) {
+    function getCookie(cname) {
         var name = cname + '='
         var ca = document.cookie.split(';')
         for (var i = 0; i < ca.length; i++) {

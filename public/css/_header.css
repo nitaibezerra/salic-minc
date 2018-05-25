@@ -34,6 +34,8 @@ header #topo #logo h1 {
     cursor: pointer;
 }
 
+
+
 header #topo #logo-homolog h1 {
     background-image: url(../img/logo_salic_homolog.png);
 }
@@ -42,6 +44,31 @@ header #topo  #logo-homolog h1 a,
 header #topo  #logo h1 a {
     display: block;
     height: 58px;
+}
+
+@media only screen and (max-width: 993px) {
+    header #topo {
+        height: 45px;
+    }
+
+    header #topo #logo-homolog,
+    header #topo #logo {
+        width: 45px;
+    }
+
+
+    header #topo #logo-homolog h1,
+    header #topo #logo h1 {
+        height: 45px;
+        margin-left: 10px;
+        background-position: left center;
+        background-size: 102px;
+    }
+
+    header #topo  #logo-homolog h1 a,
+    header #topo  #logo h1 a {
+        height: 45px;
+    }
 }
 
 /*--------------------------------------------------------------
@@ -54,7 +81,7 @@ header #atalhos {
     width: 80%;
     text-align: right;
     min-height: 45px;
-    z-index: 1001;
+    z-index: 998;
 }
 
 header #atalhos a {
@@ -148,6 +175,29 @@ header #atalhos #combousuario select.perfilXgrupo option {
     color: #27360d;
 }
 
+@media only screen and (max-width: 993px) {
+    header #atalhos {
+        top: 0px;
+        right: 0px;
+        font-size: 10px;
+        z-index: 998;
+    }
+
+    header #atalhos #combousuario {
+        min-width: 260px;
+    }
+
+    header #atalhos #combousuario input.select-dropdown {
+        font-size: 10px;
+    }
+
+    header #atalhos ul li:last-child {
+        position: absolute;
+        top: 50px;
+        left: 0px;
+    }
+}
+
 /*--------------------------------------------------------------
 x - Menu principal
 --------------------------------------------------------------*/
@@ -195,6 +245,8 @@ header nav .nav-wrapper {
     color: #fff;
     height: 40px;
     line-height: 40px;
+    width: 90%;
+    margin: 0 auto;
 }
 
 header nav,
@@ -210,7 +262,7 @@ header nav {
     background-color: #388E3C;
     width: 100%;
     height: 40px;
-    z-index: 1000;
+    z-index: 997;
     position: relative;
 }
 
@@ -229,6 +281,16 @@ header .dropdown-content li > a, .dropdown-content li > span {
     display: block;
     line-height: 22px;
     padding: 14px 16px;
+}
+
+@media only screen and (max-width: 1200px) {
+    header nav {
+        /*z-index: 998;*/
+    }
+
+    header nav .nav-wrapper {
+        width: 100%;
+    }
 }
 
 header .menu-apoio {

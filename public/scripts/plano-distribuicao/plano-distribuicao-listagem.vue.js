@@ -37,6 +37,7 @@ Vue.component('plano-distribuicao-listagem', {
                                 <li v-for="local of locais" v-if="local.idMunicipio">
                                     <div class="collapsible-header black-text active">
                                         <i class="material-icons">place</i> {{local.uf}} - {{local.municipio}}
+                                        <span class="badge" v-if="detalhamentos">{{filtrarDetalhamentos(detalhamentos, produto.idPlanoDistribuicao, local.idMunicipio).length}}</span>
                                     </div>
                                     <div class="collapsible-body no-padding margin10 scroll-x">
                                         <component

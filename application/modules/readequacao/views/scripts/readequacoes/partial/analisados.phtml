@@ -29,8 +29,8 @@
     </th>
     <th>Visualizar</th>
     <th>Encaminhar</th>
-    <th>Enviar para CNIC</th>
     <th>Finalizar</th>
+    <th>CNIC</th>
 </tr>
 </thead>
 <tbody>
@@ -87,25 +87,6 @@ foreach ($this->dados as $d): ?>
                 <i class="material-icons">forward</i>
             </a>
         </td>
-        <td align="center" style="width: 290px">
-            <select name="tecnico"
-                    class="select_simples comboComponente"
-                    style="display: inline; height: 35px;"
-            >
-                <option value=""> - Selecione -</option>
-                <?php foreach ($this->conselheiros as $conselheiro) : ?>
-                    <option value="<?php echo $conselheiro->id; ?>"><?php echo $conselheiro->nome; ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a
-                href="javascript:void(0)"
-                class="btn-enviar finalizarReadequacao btn small waves-effect waves-light white-text tooltipped btn-primary"
-                data-tooltip="Enviar para o componente da comiss&atilde;o selecionado"
-                idReadequacao="<?php echo $d->idReadequacao; ?>"
-            >
-                <i class="material-icons">mail</i>
-            </a>
-        </td>
         <td align="center">
             <a
                 href="javascript:void(0)"
@@ -114,6 +95,22 @@ foreach ($this->dados as $d): ?>
                 idReadequacao="<?php echo $d->idReadequacao; ?>"
             >
                 <i class="material-icons">send</i>
+            </a>
+        </td>
+        <td align="center" style="width: 290px">
+            <a
+                href="<?php echo $this->url([
+                    'module' => 'readequacao',
+                    'controller' => 'readequacoes',
+                    'action' => 'encaminhar-para-cnic',
+                    'id' => Seguranca::encrypt($d->idReadequacao),
+                    'idPronac' => $d->idPronac,
+                ], '', true); ?>"
+                class="btn small waves-effect waves-light white-text tooltipped btn-primary"
+                data-tooltip="Enviar para um membro da comiss&atilde;o"
+                idReadequacao="<?php echo $d->idReadequacao; ?>"
+            >
+                <i class="material-icons">mail</i>
             </a>
         </td>
     </tr>

@@ -18,6 +18,10 @@ main {
     flex: 1 0 auto;
 }
 
+#toast-container {
+    z-index: 68060;
+}
+
 .toast {
     font-weight: 500;
 }
