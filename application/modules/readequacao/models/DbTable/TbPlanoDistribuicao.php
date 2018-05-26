@@ -240,6 +240,7 @@ class Readequacao_Model_DbTable_TbPlanoDistribuicao extends MinC_Db_Table_Abstra
                     b.QtdeVendaNormal,
                     b.QtdeVendaPromocional,
                     b.PrecoUnitarioNormal,
+                    b.vlUnitarioNormal,
                     b.PrecoUnitarioPromocional,
                     b.stPrincipal,
                     b.canalAberto,
@@ -264,7 +265,8 @@ class Readequacao_Model_DbTable_TbPlanoDistribuicao extends MinC_Db_Table_Abstra
                         b.qtOutros as QtdeOutros,
                         b.qtVendaNormal as QtdeVendaNormal,
                         b.qtVendaPromocional as QtdeVendaPromocional,
-                        b.vlUnitarioNormal as PrecoUnitarioNormal,
+                        b.vlUnitarioNormal,
+                        b.PrecoUnitarioNormal,
                         b.vlUnitarioPromocional as PrecoUnitarioPromocional,
                         b.stPrincipal,
                         '0' as Usuario,
@@ -335,11 +337,26 @@ class Readequacao_Model_DbTable_TbPlanoDistribuicao extends MinC_Db_Table_Abstra
             "a.IdPRONAC = b.idPronac",
             array(
                 new Zend_Db_Expr("
-                    b.idPlanoDistribuicao,a.idProjeto,b.cdArea as idArea, b.cdSegmento as idSegmento,b.idProduto,b.idPosicaoLogo as idPosicaoDaLogo,
+                    b.idPlanoDistribuicao,
+                    a.idProjeto,b.cdArea as idArea,
+                    b.cdSegmento as idSegmento,
+                    b.idProduto,
+                    b.idPosicaoLogo as idPosicaoDaLogo,
                     (b.qtVendaNormal+b.qtVendaPromocional+b.qtPatrocinador+b.qtOutros+b.qtProponente) as QtdeProduzida,
-                    b.qtPatrocinador as QtdePatrocinador, b.qtProponente as QtdeProponente, b.qtOutros as QtdeOutros, b.qtVendaNormal as QtdeVendaNormal,
-                    b.qtVendaPromocional as QtdeVendaPromocional, b.vlUnitarioNormal as PrecoUnitarioNormal, b.vlUnitarioPromocional as PrecoUnitarioPromocional,
-                    b.stPrincipal, '0' as Usuario, b.tpSolicitacao,b.tpAnaliseTecnica,b.tpAnaliseComissao, c.Descricao as Produto
+                    b.qtPatrocinador as QtdePatrocinador,
+                    b.qtProponente as QtdeProponente,
+                    b.qtOutros as QtdeOutros,
+                    b.qtVendaNormal as QtdeVendaNormal,
+                    b.qtVendaPromocional as QtdeVendaPromocional,
+                    b.PrecoUnitarioNormal,
+                    b.vlUnitarioNormal,
+                    b.vlUnitarioPromocional as PrecoUnitarioPromocional,
+                    b.stPrincipal,
+                    '0' as Usuario,
+                    b.tpSolicitacao,
+                    b.tpAnaliseTecnica,
+                    b.tpAnaliseComissao,
+                    c.Descricao as Produto
                 ")
             ),
             'SAC.dbo'

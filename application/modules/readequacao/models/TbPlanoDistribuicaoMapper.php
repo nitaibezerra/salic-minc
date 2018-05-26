@@ -167,9 +167,9 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
 
     public function atualizarAnaliseTecnica($idPronac, $idReadequacao, $idPerfil, $parecerReadequacao)
     {
-        $tpAnaliseTecnica = 'N';
         $data = [];
 
+        $tpAnaliseTecnica = 'I';
         if ($parecerReadequacao == 2) {
             $tpAnaliseTecnica = 'D';
         }
@@ -188,7 +188,7 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
         return $tbPlanoDistribuicao->update($data, $where);
     }
 
-    public function finalizarAnaliseReadequacaoPlanoDistribuicao($idPronac, $idReadequacao)
+    public function finalizarAnaliseReadequacaoPlanoDistribuicao($idPronac, $idReadequacao, $parecer)
     {
         $auth = Zend_Auth::getInstance();
 
@@ -197,27 +197,35 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
         $tbDetalhaPlanoDistribuicao = new Proposta_Model_DbTable_TbDetalhaPlanoDistribuicao();
         $tbDetalhaPlanoDistribuicaoReadequacao = new Readequacao_Model_DbTable_TbDetalhaPlanoDistribuicaoReadequacao();
 
-        $planosDistribuicaoReadequados = $tbPlanoDistribuicao->buscar([
-            'idReadequacao = ?' => $idReadequacao,
-            'stAtivo = ?' => 'S',
-            'tpSolicitacao <> ?' => 'N',
-        ])->toArray();
+        $planosDistribuicaoReadequados = [];
+        if ($parecer == 2) {
+            $planosDistribuicaoReadequados = $tbPlanoDistribuicao->buscar([
+                'idReadequacao = ?' => $idReadequacao,
+                'stAtivo = ?' => 'S',
+                'tpSolicitacao <> ?' => 'N',
+            ])->toArray();
 
-        $detalhamentosReadequados = $tbDetalhaPlanoDistribuicaoReadequacao->buscar([
-            'idReadequacao = ?' => $idReadequacao,
-            'tpSolicitacao <> ?' => 'E',
-            'stAtivo = ?' => 'S'
-        ])->toArray();
+            $detalhamentosReadequados = $tbDetalhaPlanoDistribuicaoReadequacao->buscar([
+                'idReadequacao = ?' => $idReadequacao,
+                'tpSolicitacao <> ?' => 'E',
+                'stAtivo = ?' => 'S'
+            ])->toArray();
 
-        $projetos = new Projetos();
-        $projeto = $projetos->buscar(array('IdPRONAC=?' => $idPronac))->current();
+            $projetos = new Projetos();
+            $projeto = $projetos->buscar(array('IdPRONAC=?' => $idPronac))->current();
 
-        $planosDistribuicaoOriginais = $PlanoDistribuicaoProduto->buscar(array('idProjeto=?' => $projeto->idProjeto));
+            $planosDistribuicaoOriginais = $PlanoDistribuicaoProduto->buscar(array('idProjeto=?' => $projeto->idProjeto));
+        }
 
         foreach ($planosDistribuicaoReadequados as $planoReadequado) {
 
             $idPlanoDistribuicaoOriginal = $planoReadequado['idPlanoDistribuicaoOrignal'];
 
+            /**
+             * if temporario, ate que esse select retorne zero em prod:
+             * select * from sac.dbo.tbPlanoDistribuicao
+             * where idPlanoDistribuicaoOriginal is null and stAtivo = 'S';
+             */
             if (empty($idPlanoDistribuicaoOriginal)) {
                 foreach ($planosDistribuicaoOriginais as $planoOriginal) {
                     if ($planoOriginal->idProduto == $planoReadequado['idProduto']
@@ -259,6 +267,7 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
                 $updatePlanoDistr['receitaPopularPromocional'] = $planoReadequado['receitaPopularPromocional'];
                 $updatePlanoDistr['receitaPopularNormal'] = $planoReadequado['receitaPopularNormal'];
                 $updatePlanoDistr['precoUnitarioNormal'] = $planoReadequado['precoUnitarioNormal'];
+                $updatePlanoDistr['vlUnitarioNormal'] = $planoReadequado['vlUnitarioNormal'];
                 $updatePlanoDistr['stPrincipal'] = $planoReadequado['stPrincipal'];
                 $updatePlanoDistr['canalAberto'] = $planoReadequado['canalAberto'];
                 $updatePlanoDistr['Usuario'] = $auth->getIdentity()->usu_codigo;

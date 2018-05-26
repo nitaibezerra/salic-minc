@@ -2288,7 +2288,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
 
         if ($dadosRead->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) {
             $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
-            $tbPlanoDistribuicaoMapper->atualizarAnaliseTecnica($idPronac, $idReadequacao, $this->idPerfil, $parecerProjeto);
+           $tbPlanoDistribuicaoMapper->atualizarAnaliseTecnica($idPronac, $idReadequacao, $this->idPerfil, $parecerProjeto);
         }
 
         try {
@@ -2318,14 +2318,14 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     'Logon' => $this->idUsuario
                 );
 
-                foreach ($dadosParecer as $dp) {
+//                foreach ($dadosParecer as $dp) {
                     $parecerAntigo = array(
                         'Atendimento' => 'S',
                         'stAtivo' => 0
                     );
                     $whereUpdateParecer = 'IdPRONAC = '.$idPronac;
                     $alteraParecer = $parecerDAO->alterar($parecerAntigo, $whereUpdateParecer);
-                }
+//                }
 
                 $tbReadequacaoXParecer = new Readequacao_Model_DbTable_TbReadequacaoXParecer();
                 $buscarParecer = $tbReadequacaoXParecer->buscarPareceresReadequacao(array('a.idReadequacao = ?'=>$idReadequacao, 'b.idTipoAgente =?'=>6))->current();
@@ -2390,10 +2390,10 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     $dados['siEncaminhamento'] = $campoSiEncaminhamento; // Devolvido da análise técnica
                     $dados['idNrReuniao'] = $idNrReuniao;
                     $dados['stEstado'] = $stEstado;
+
+                    $dados['stAnalise'] = 'IC';
                     if ($parecerProjeto == 2) {
                         $dados['stAnalise'] = 'AC';
-                    } else {
-                        $dados['stAnalise'] = 'IC';
                     }
 
                     $where = "idReadequacao = $idReadequacao";
@@ -2401,6 +2401,12 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     $tbReadequacao->update($dados, $where);
 
                     if ($campoSiEncaminhamento != Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_ENVIADO_PLENARIA) {
+
+                        if ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) {
+                            $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
+                            $tbPlanoDistribuicaoMapper->finalizarAnaliseReadequacaoPlanoDistribuicao($idPronac, $idReadequacao, $parecerProjeto);
+                        }
+
                         if ($parecerProjeto == 2) { //Se for parecer favorável, atualiza os dados solicitados na readequação
 
                             if ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA) {
@@ -2575,10 +2581,6 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                                     'idReadequacao' => $idReadequacao
                                 );
                                 $idAprovacao = $tbAprovacao->inserir($dadosAprovacao);
-
-                            } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) { //Se for readequação de plano de distribuição, atualiza os dados na SAC.dbo.PlanoDistribuicaoProduto.
-                                $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
-                                $tbPlanoDistribuicaoMapper->finalizarAnaliseReadequacaoPlanoDistribuicao($read->idPronac, $idReadequacao);
 
                             } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_NOME_PROJETO) { //Se for readequação de nome do projeto, insere o registo na tela de Checklist de Publicação.
                                 $Projetos = new Projetos();
@@ -2786,6 +2788,11 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
         $read = $tbReadequacao->buscarReadequacao(array('idReadequacao =?'=>$idReadequacao))->current();
 
+        if ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) { //Se for readequação de plano de distribuição, atualiza os dados na SAC.dbo.PlanoDistribuicaoProduto.
+            $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
+            $tbPlanoDistribuicaoMapper->finalizarAnaliseReadequacaoPlanoDistribuicao($read->idPronac, $idReadequacao, $parecerTecnico->ParecerFavoravel);
+        }
+
         if ($parecerTecnico->ParecerFavoravel == 2) { //Se for parecer favorável, atualiza os dados solicitados na readequação
             if ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA) {
                 $Projetos = new Projetos();
@@ -2968,11 +2975,6 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     'idReadequacao' => $idReadequacao
                 );
                 $idAprovacao = $tbAprovacao->inserir($dadosAprovacao);
-
-            } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) { //Se for readequação de plano de distribuição, atualiza os dados na SAC.dbo.PlanoDistribuicaoProduto.
-
-                $tbPlanoDistribuicaoMapper = new Readequacao_Model_TbPlanoDistribuicaoMapper();
-                $tbPlanoDistribuicaoMapper->finalizarAnaliseReadequacaoPlanoDistribuicao($read->idPronac, $idReadequacao);
 
             } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_NOME_PROJETO) { //Se for readequação de nome do projeto, insere o registo na tela de Checklist de Publicação.
                 $Projetos = new Projetos();
@@ -3784,6 +3786,10 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
 
         $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
         $r = $tbReadequacao->buscarDadosReadequacoes(array('idReadequacao = ?'=>$idReadequacao))->current();
+
+        if($r->siEncaminhamento <> '10') {
+            parent::message("Este projeto n&atilde;o pode ser encaminhado!", "/readequacao/readequacoes/painel", "ERROR");
+        }
 
         if ($r) {
             $Projetos = new Projetos();

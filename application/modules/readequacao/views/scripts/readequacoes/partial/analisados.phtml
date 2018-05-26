@@ -56,7 +56,8 @@ foreach ($this->dados as $d): ?>
             } else {
                 echo Data::tratarDataZend($d->dtDistribuicao, 'Brasileira');
             } ?></td>
-        <td align="center"><?php if ($d->dtDevolucao == '') {
+        <td align="center">
+            <?php if ($d->dtDevolucao == '') {
                 echo '---';
             } else {
                 echo Data::tratarDataZend($d->dtDevolucao, 'Brasileira');
@@ -106,7 +107,7 @@ foreach ($this->dados as $d): ?>
                     'id' => Seguranca::encrypt($d->idReadequacao),
                     'idPronac' => $d->idPronac,
                 ], '', true); ?>"
-                class="btn small waves-effect waves-light white-text tooltipped btn-primary"
+                class="btn small waves-effect waves-light white-text tooltipped btn-secondary"
                 data-tooltip="Enviar para um membro da comiss&atilde;o"
                 idReadequacao="<?php echo $d->idReadequacao; ?>"
             >

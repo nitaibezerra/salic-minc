@@ -17,7 +17,7 @@
         <a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'painel')) . '?pag=1&qtde=' . $this->paginacao['qtde'] . '&tipoFiltro=' . $this->filtro . '&pronac=' . $this->pronac . '&campo=8&ordem=' . $this->paginacao['novaOrdem']; ?>">Qtd.
             de dias aguardando distribui&ccedil;&atilde;o</a></th>
     <th style="width: 90px; text-align: center">Visualizar</th>
-    <th style="width: 90px; text-align: center">Avaliar</th>
+    <th style="width: 90px; text-align: center">Distribuir</th>
 </tr>
 </thead>
 <tbody>
@@ -58,7 +58,7 @@ foreach ($this->dados as $d): ?>
                 nomeprojeto="<?php echo $d->NomeProjeto; ?>"
                 data-tooltip="Receber, rejeitar ou devolver para o proponente"
             >
-                <i class="material-icons">gavel</i>
+                <i class="material-icons">forward</i>
             </a>
         </td>
     </tr>

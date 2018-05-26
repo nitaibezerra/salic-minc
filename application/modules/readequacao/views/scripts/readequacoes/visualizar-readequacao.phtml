@@ -28,10 +28,6 @@
         </div>
         <div class="card-panel">
             <div id="conteudo">
-                <input type="hidden" id="pertenceIn2017" name="pertenceIn2017" value="<?php echo $this->in2017; ?>">
-                <input type="hidden" id="idTipoReadequacao" name="idTipoReadequacao"
-                       value="<?php echo $this->dados->idTipoReadequacao; ?>">
-                <input type="hidden" id="idPronac" name="idPronac" value="<?php echo $this->dados->idPronac; ?>">
                 <table class="tabela">
                     <tr>
                         <td class="destacar bold centro" width="20%">PRONAC</td>
@@ -91,9 +87,10 @@
                         <tr>
                             <td colspan="3"><?php echo $this->dados->dsJustificativa; ?></td>
                         </tr>
-                        <?php if ($this->dados->idTipoReadequacao == 2) { ?>
-                            <tr>
-                                <td colspan="3">
+                        <tr>
+                            <td colspan="3">
+                                <?php if ($this->dados->idTipoReadequacao == 2) { ?>
+
                                     <?php /***** CARREGA VALOR ENTRE AS PLANILHAS ATIVA E READEQUADA *****/ ?>
                                     <script type="text/javascript">
                                         jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-valor-entre-planilhas'), '', true) ?>?idPronac=<?php echo $this->dados->idPronac; ?>', '', 'valorEntrePlanilhas');
@@ -105,80 +102,59 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <?php /****** FIM VALOR ENTRE AS PLANILHAS ATIVA E READEQUADA ******/ ?>
+                                <?php /****** FIM VALOR ENTRE AS PLANILHAS ATIVA E READEQUADA ******/ ?>
 
                                     <br clear="all"/>
 
-                                    <?php /***** CARREGA A PLANILHA ORCAMENTARIA *****/ ?>
+                                <?php /***** CARREGA A PLANILHA ORCAMENTARIA *****/ ?>
                                     <script type="text/javascript">
                                         jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'default', 'controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?php echo $this->dados->idPronac; ?>&tipoPlanilha=6&view_edicao=true', '', 'planilhaOrcamentariaMontada');
                                     </script>
                                     <div id="planilhaOrcamentariaMontada"></div>
                                     <?php /****** FIM DA PLANILHA ORCAMENTARIA ******/ ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
+                                <?php } ?>
 
-                        <?php if ($this->dados->idTipoReadequacao == 9) { ?>
-                            <tr>
-                                <td colspan="3">
+                                <?php if ($this->dados->idTipoReadequacao == 9) { ?>
                                     <?php /***** CARREGA LOCAIS DE REALIZA플O *****/ ?>
                                     <script type="text/javascript">
                                         jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'local-realizacao', 'action' => 'carregar-locais-de-realizacao-readequacoes'), '', true) ?>?idPronac=<?php echo $this->dados->idPronac; ?>&idReadequacao=<?php echo $this->dados->idReadequacao; ?>', '', 'locaisParaRealizacao');
                                     </script>
                                     <div id="locaisParaRealizacao"></div>
                                     <?php /****** FIM LOCAIS DE REALIZA플O ******/ ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
+                                <?php } ?>
 
-                        <?php if ($this->dados->idTipoReadequacao == 11) { ?>
-                            <tr>
-                                <td colspan="3">
-                                    <?php /***** CARREGA PLANOS DE DISTRIBUI플O *****/ ?>
-                                    <div id="planosDeDistribuicao"></div>
-
-                                    <div id="componente-dinamico">
-                                        <component
-                                            v-bind:is="componenteAtual"
-                                            :id-pronac="idPronac"
-                                            :disabled="disabled"
-                                        ></component>
-                                    </div>
-                                    <?php /****** FIM PLANOS DE DISTRIBUI플O ******/ ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
-
-                        <?php if ($this->dados->idTipoReadequacao == 14) { ?>
-                            <tr>
-                                <td colspan="3">
+                                <?php if ($this->dados->idTipoReadequacao == 14) { ?>
                                     <?php /***** CARREGA PLANOS DE DIVULGA플O *****/ ?>
                                     <script type="text/javascript">
                                         jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-planos-de-divulgacao-readequacoes'), '', true) ?>?idPronac=<?php echo $this->dados->idPronac; ?>&idReadequacao=<?php echo $this->dados->idReadequacao; ?>', '', 'planosDeDivulgacao');
                                     </script>
                                     <div id="planosDeDivulgacao"></div>
                                     <?php /****** FIM PLANOS DE DIVULGA플O ******/ ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
-			<?php if ($this->dados->idTipoReadequacao == 23) { ?>
-			    <tr>
-                                <td colspan="3">
-                                    <div id="transferenciaRecursos"></div>
-				    
-                                    <div id="componente-dinamico">
-                                        <component
+                                <?php } ?>
+
+                                <input type="hidden" id="idPronac" name="idPronac"
+                                       value="<?php echo $this->dados->idPronac; ?>">
+                                <input type="hidden" id="pertenceIn2017" name="pertenceIn2017"
+                                       value="<?php echo $this->in2017; ?>">
+                                <input type="hidden" id="idTipoReadequacao" name="idTipoReadequacao"
+                                       value="<?php echo $this->dados->idTipoReadequacao; ?>">
+                                <input type="hidden" id="siEncaminhamento" name="siEncaminhamento"
+                                       value="<?php echo $this->dados->siEncaminhamento; ?>">
+
+                                <div id="transferenciaRecursos"></div>
+                                <div id="planosDeDistribuicao"></div>
+
+                                <div id="componente-dinamico">
+                                    <component
                                             v-bind:is="componenteAtual"
                                             :id-pronac="idPronac"
-					    :id-tipo-readequacao="idTipoReadequacao"
-					    :si-encaminhamento="<?php echo Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_ENVIADO_ANALISE_TECNICA; ?>"
+                                            :id-tipo-readequacao="idTipoReadequacao"
+                                            :si-encaminhamento="siEncaminhamento"
                                             :disabled="disabled"
-                                        ></component>
-                                    </div>
-                                </td>
-                            </tr>
-			<?php } ?>
+                                    ></component>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <table class="tabela">
@@ -260,19 +236,22 @@
     <script src="/public/scripts/proposta/visualizar/salic-proposta-detalhamento-plano-distribuicao.vue.js"
             type="text/javascript"></script>
     <script src="/public/scripts/readequacao/readequacao-transferencia-recursos.vue.js" type="text/javascript"></script>
-    <script src="/public/scripts/readequacao/readequacao-transferencia-recursos-tipo-transferencia.vue.js" type="text/javascript"></script>    
+    <script src="/public/scripts/readequacao/readequacao-transferencia-recursos-tipo-transferencia.vue.js"
+            type="text/javascript"></script>
 
     <script>
         function atualizarDadosPlanosDeDistribuicao() {
             jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'plano-distribuicao', 'action' => 'carregar-planos-de-distribuicao-readequacoes'), '', true) ?>?idPronac=<?php echo $this->dados->idPronac; ?>&idReadequacao=<?php echo $this->dados->idReadequacao; ?>', '', 'planosDeDistribuicao');
         }
+
         new Vue({
             el: '#componente-dinamico',
             data: {
                 componenteAtual: '',
-                idPronac: $("#idPronac").val(),
-                idTipoReadequacao: $("#idTipoReadequacao").val(),
-                pertenceIn2017: $("#pertenceIn2017").val(),
+                idPronac: parseInt($("#idPronac").val()),
+                idTipoReadequacao: parseInt($("#idTipoReadequacao").val()),
+                siEncaminhamento: parseInt($("#siEncaminhamento").val()),
+                pertenceIn2017: parseInt($("#pertenceIn2017").val()),
                 disabled: true
             },
             mounted: function () {
@@ -281,18 +260,16 @@
             methods: {
                 carregarComponente: function () {
                     let self = this;
-
                     switch (self.idTipoReadequacao) {
-                        case "11": // plano distribuicao
-                            if (self.pertenceIn2017) {
+                        case 11: // plano distribuicao
+                            if (self.pertenceIn2017 == 1) {
                                 self.componenteAtual = "readequacao-plano-distribuicao";
                             } else {
                                 self.carregarPlanoDistribuicaoAntigaIN();
                             }
                             break;
-                        case "23": // transferencia de recursos
+                        case 23: // transferencia de recursos
                             self.componenteAtual = "readequacao-transferencia-recursos";
-                            
                             break;
                     }
                 },

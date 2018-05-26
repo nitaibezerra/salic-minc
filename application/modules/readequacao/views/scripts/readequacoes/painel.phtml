@@ -187,9 +187,8 @@ $situacoes = array(
                 </div>
             </div>
         </div>
-        <div class="card-panel">
-            <div id="conteudo">
-
+        <div class="card-panel padding10">
+            <div id="conteudo" class="no-margin" style="width:100%">
                 <form name="formPesquisa" id="formPesquisa"
                       action="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'painel')); ?>"
                       method="get">
@@ -200,7 +199,7 @@ $situacoes = array(
                         <tr class="divFiltroPesquisa">
                             <td class="destacar bold" width="60">PRONAC</td>
                             <td width="120">
-                                <input type="text" class="input_simples" name="pronac" maxlength="7"
+                                   <input type="text" class="input_simples" name="pronac" maxlength="7"
                                        style="width: 70px;"
                                        value="<?php echo $this->pronac; ?>" id="pronacSelecionado">
                                 <input type="hidden" name="qtde" value="<?php echo $this->intTamPag; ?>">
@@ -258,7 +257,7 @@ $situacoes = array(
                                                 &nbsp;</option>
                                         <?php endfor; ?>
                                     </select>
-                                    &nbsp;Registros por página:<input type="text" size="1" name="qtde" id="qtde"
+                                    &nbsp;Registros por página:<input type="text" size="2" name="qtde" id="qtde"
                                                                       class="input_simples"
                                                                       value="<?php echo $this->intTamPag; ?>"><input
                                         type="submit" class="btn_recarregar" value="">

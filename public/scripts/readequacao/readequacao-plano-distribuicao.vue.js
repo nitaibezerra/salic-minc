@@ -1,12 +1,15 @@
 Vue.component('readequacao-plano-distribuicao', {
     template: `
         <div class="readequacao-plano-distribuicao">
+            <div v-if="loading" class="center-align animated tada">
+                <h4>carregando ...</h4>
+            </div>
             <div v-if="mostrarMensagemInicial" class="card">
                 <div class="card-content">
                     <p class="center-align">Aqui voc&ecirc; pode readequar os detalhamentos do seu plano de distribui&ccedil;&atilde;o.</p>
                     <p class="center-align bold">
                         <br>
-                        <a class="waves-effect waves-light btn white-text btn-incluir-novo-item"
+                        <a class="waves-effect waves-light btn white-text btn-incluir-novo-item pulse"
                            @click.prevent="criarReadequacao"
                            ><i class="material-icons left">add</i><strong>Iniciar readequa&ccedil;&atilde;o</strong>
                         </a>
@@ -90,15 +93,19 @@ Vue.component('readequacao-plano-distribuicao', {
             mostrarMensagemInicial: false,
             mostrarMensagemFinal: false,
             readequacao: {},
-            idTipoReadequacao: 11,
+            loading: true,
             componenteDetalhamento: "readequacao-plano-distribuicao-detalhamentos"
         }
     },
     props: {
         'idPronac': '',
         'siEncaminhamento': {
-            default: '12',
-            type: String
+            default: 12,
+            type: Number
+        },
+        'idTipoReadequacao': {
+            default: 11,
+            type: Number
         },
         'disabled': false
     },
@@ -108,11 +115,13 @@ Vue.component('readequacao-plano-distribuicao', {
             if (value.length > 0) {
                 this.obterDadosReadequacao();
                 this.obterLocaisRealizacao();
+                this.loading = false;
                 this.mostrarFormulario = true;
                 this.mostrarMensagemInicial = false;
             }
 
             if (value.length === 0) {
+                this.loading = false;
                 this.mostrarMensagemInicial = true;
             }
         }
@@ -259,6 +268,7 @@ Vue.component('readequacao-plano-distribuicao', {
                 }).done(function (response) {
                     self.mensagemSucesso(response.msg);
                     self.restaurarFormulario();
+                    self.loading = false;
                     self.mostrarMensagemInicial = false;
                     self.mostrarMensagemFinal = true;
                 }).fail(function (response) {

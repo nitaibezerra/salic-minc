@@ -224,6 +224,7 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
             $planosCopiados = array();
             foreach ($planosAtivos as $value) {
                 $planosCopiados['idReadequacao'] = null;
+                $planosCopiados['idPlanoDistribuicaoOriginal'] = $value->idPlanoDistribuicao;
                 $planosCopiados['idProduto'] = $value->idProduto;
                 $planosCopiados['cdArea'] = $value->idArea;
                 $planosCopiados['cdSegmento'] = $value->idSegmento;
@@ -234,7 +235,8 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
                 $planosCopiados['qtProponente'] = $value->QtdeProponente;
                 $planosCopiados['qtVendaNormal'] = $value->QtdeVendaNormal;
                 $planosCopiados['qtVendaPromocional'] = $value->QtdeVendaPromocional;
-                $planosCopiados['vlUnitarioNormal'] = $value->PrecoUnitarioNormal;
+                $planosCopiados['vlUnitarioNormal'] = !empty($value->vlUnitarioNormal) ? $value->vlUnitarioNormal: 0;
+                $planosCopiados['PrecoUnitarioNormal'] = $value->PrecoUnitarioNormal;
                 $planosCopiados['vlUnitarioPromocional'] = $value->PrecoUnitarioPromocional;
                 $planosCopiados['stPrincipal'] = $value->stPrincipal;
                 $planosCopiados['tpSolicitacao'] = 'N'; # N - nenhuma, I - inclusao, A - alteracao
@@ -262,7 +264,11 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
             $dadosInclusao['vlUnitarioPromocional'] = $precopromocional;
             $dadosInclusao['tpSolicitacao'] = 'A'; # N - nenhuma, I - inclusao, A - alteracao
             $dadosInclusao['stAtivo'] = 'S';
-            $where = ['idPronac = ?' => $idPronac, 'idProduto = ?' => $_POST['newPlanoDistribuicao']];
+            $where = [
+                'idPronac = ?' => $idPronac,
+                'idProduto = ?' => $_POST['newPlanoDistribuicao'],
+                'stAtivo = ?' => 'S'
+            ];
             $update = $tbPlanoDistribuicao->update($dadosInclusao, $where);
 
             if ($update) {

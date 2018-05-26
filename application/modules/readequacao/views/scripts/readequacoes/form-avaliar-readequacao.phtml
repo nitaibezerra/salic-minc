@@ -527,48 +527,44 @@
                     <?php } ?>
 
                     <?php if ($this->dados->idTipoReadequacao == 9) { ?>
-                        <tr>
-                            <td colspan="3">
-                                <?php /***** CARREGA LOCAIS DE REALIZA플O *****/ ?>
-                                <script type="text/javascript">
-                                    jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'local-realizacao', 'action' => 'carregar-locais-de-realizacao-readequacoes'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>&idReadequacao=<?php echo $this->dados->idReadequacao; ?>', '', 'locaisParaRealizacao');
-                                </script>
-                                <div id="locaisParaRealizacao"></div>
-                                <?php /****** FIM LOCAIS DE REALIZA플O ******/ ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-
-                    <?php if ($this->dados->idTipoReadequacao == 11) { ?>
-                        <tr>
-                            <td colspan="3">
-                                <?php /***** CARREGA PLANOS DE DISTRIBUI플O *****/ ?>
-                                <div id="planosDeDistribuicao">
-                                    <div id="dynamic-component">
-                                        <component
-                                            v-bind:is="currentComponent"
-                                            :id-pronac="idPronac"
-                                            :disabled="disabled"
-                                        ></component>
-                                    </div>
-                                </div>
-                                <?php /****** FIM PLANOS DE DISTRIBUI플O ******/ ?>
-                            </td>
-                        </tr>
+                        <?php /***** CARREGA LOCAIS DE REALIZA플O *****/ ?>
+                        <script type="text/javascript">
+                            jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'local-realizacao', 'action' => 'carregar-locais-de-realizacao-readequacoes'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>&idReadequacao=<?php echo $this->dados->idReadequacao; ?>', '', 'locaisParaRealizacao');
+                        </script>
+                        <div id="locaisParaRealizacao"></div>
+                        <?php /****** FIM LOCAIS DE REALIZA플O ******/ ?>
                     <?php } ?>
 
                     <?php if ($this->dados->idTipoReadequacao == 14) { ?>
-                        <tr>
-                            <td colspan="3">
-                                <?php /***** CARREGA PLANOS DE DIVULGA플O *****/ ?>
-                                <script type="text/javascript">
-                                    jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-planos-de-divulgacao-readequacoes'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>&idReadequacao=<?php echo $this->dados->idReadequacao; ?>', '', 'planosDeDivulgacao');
-                                </script>
-                                <div id="planosDeDivulgacao"></div>
-                                <?php /****** FIM PLANOS DE DIVULGA플O ******/ ?>
-                            </td>
-                        </tr>
+                        <?php /***** CARREGA PLANOS DE DIVULGA플O *****/ ?>
+                        <script type="text/javascript">
+                            jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-planos-de-divulgacao-readequacoes'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>&idReadequacao=<?php echo $this->dados->idReadequacao; ?>', '', 'planosDeDivulgacao');
+                        </script>
+                        <div id="planosDeDivulgacao"></div>
+                        <?php /****** FIM PLANOS DE DIVULGA플O ******/ ?>
                     <?php } ?>
+
+                    <input type="hidden" id="idPronac" name="idPronac"
+                           value="<?php echo $this->dados->idPronac; ?>">
+                    <input type="hidden" id="pertenceIn2017" name="pertenceIn2017"
+                           value="<?php echo $this->in2017; ?>">
+                    <input type="hidden" id="idTipoReadequacao" name="idTipoReadequacao"
+                           value="<?php echo $this->dados->idTipoReadequacao; ?>">
+                    <input type="hidden" id="siEncaminhamento" name="siEncaminhamento"
+                           value="<?php echo $this->dados->siEncaminhamento; ?>">
+
+                    <div id="transferenciaRecursos"></div>
+                    <div id="planosDeDistribuicao"></div>
+
+                    <div id="componente-dinamico">
+                        <component
+                                v-bind:is="componenteAtual"
+                                :id-pronac="idPronac"
+                                :id-tipo-readequacao="idTipoReadequacao"
+                                :si-encaminhamento="siEncaminhamento"
+                                :disabled="disabled"
+                        ></component>
+                    </div>
                 </div>
 
                 <table class="tabela">
@@ -596,7 +592,6 @@
                         </tr>
                     </table>
                 </div>
-
 
 
                 <form name="form_parecer" id="form_parecer"
@@ -636,23 +631,23 @@
                     <tr>
                         <td class="centro">
                             <a
-                                id="btn_salvar"
-                                href="javascript:void(0)"
-                                class="waves-effect waves-light white-text btn btn-primary"
+                                    id="btn_salvar"
+                                    href="javascript:void(0)"
+                                    class="waves-effect waves-light white-text btn btn-primary"
                             >
                                 <i class="material-icons right">save</i>Salvar
                             </a>
                             <a
-                                id="btn_finalizar"
-                                href="javascript:void(0)"
-                                class="waves-effect waves-light white-text btn btn-secondary"
+                                    id="btn_finalizar"
+                                    href="javascript:void(0)"
+                                    class="waves-effect waves-light white-text btn btn-secondary"
                             >
                                 <i class="material-icons right">send</i>Finalizar
                             </a>
                             <a
-                                id="btn_voltar"
-                                href="javascript:void(0)"
-                                class="waves-effect waves-light white-text btn btn-info"
+                                    id="btn_voltar"
+                                    href="javascript:void(0)"
+                                    class="waves-effect waves-light white-text btn btn-info"
                             >
                                 <i class="material-icons left">keyboard_backspace</i>voltar
                             </a>
@@ -721,7 +716,7 @@
                                     <option value=""> - Selecione -</option>
                                     <?php foreach ($this->Unidade as $unit) { ?>
                                         <option
-                                            value="<?php echo $unit->idUnidade; ?>"><?php echo $unit->Descricao; ?></option>
+                                                value="<?php echo $unit->idUnidade; ?>"><?php echo $unit->Descricao; ?></option>
                                     <?php } ?>
                                 </select>
                             </td>
@@ -732,8 +727,8 @@
                                                       id="modalOcorrencia" type="text" maxlength="4" name="Ocorrencia"
                                                       onkeyup="mascara(this, format_num);"></td>
                             <td class="centro"><input
-                                    class="input_simples w100 multiplicarValores modalValorUnitario modalObrigatorios"
-                                    id="modalValorUnitario" type="text" maxlength="11" name="ValorUnitario"></td>
+                                        class="input_simples w100 multiplicarValores modalValorUnitario modalObrigatorios"
+                                        id="modalValorUnitario" type="text" maxlength="11" name="ValorUnitario"></td>
                             <td class="centro"><input class="input_simples w50 modalObrigatorios" id="modalDias"
                                                       type="text" maxlength="4" name="Dias"
                                                       onkeyup="mascara(this, format_num);"></td>
@@ -758,7 +753,7 @@
 </div>
 
 
-<?php if ($this->dados->idTipoReadequacao == 11) : ?>
+<?php if ($this->dados->idTipoReadequacao == 11 || $this->dados->idTipoReadequacao == 23) : ?>
     <script src="/public/js/vue.js" type="text/javascript"></script>
     <script src="/public/scripts/plugins/moment-with-locales.js"></script>
     <script src="/public/scripts/plugins/numeral.min.js" type="text/javascript"></script>
@@ -776,9 +771,7 @@
     <script src="/public/scripts/readequacao/readequacao-plano-distribuicao.vue.js" type="text/javascript"></script>
     <script src="/public/scripts/readequacao/readequacao-plano-distribuicao-detalhamentos.vue.js"
             type="text/javascript"></script>
-    <script src="/public/scripts/readequacao/readequacao-formulario.vue.js"
-             type="text/javascript"></script>
-
+    <script src="/public/scripts/readequacao/readequacao-formulario.vue.js" type="text/javascript"></script>
     <script src="/public/scripts/plano-distribuicao/plano-distribuicao-detalhamentos-formulario.vue.js"
             type="text/javascript"></script>
     <script src="/public/scripts/plano-distribuicao/plano-distribuicao-detalhamentos-listagem.vue.js"
@@ -791,6 +784,9 @@
             type="text/javascript"></script>
     <script src="/public/scripts/proposta/visualizar/salic-proposta-detalhamento-plano-distribuicao.vue.js"
             type="text/javascript"></script>
+    <script src="/public/scripts/readequacao/readequacao-transferencia-recursos.vue.js" type="text/javascript"></script>
+    <script src="/public/scripts/readequacao/readequacao-transferencia-recursos-tipo-transferencia.vue.js"
+            type="text/javascript"></script>
 
     <script>
         function atualizarDadosPlanosDeDistribuicao() {
@@ -798,29 +794,33 @@
         }
 
         new Vue({
-            el: '#dynamic-component',
+            el: '#componente-dinamico',
             data: {
-                currentComponent: '',
-                idPronac: <?= $this->projeto->IdPRONAC;?>,
+                componenteAtual: '',
+                idPronac: parseInt($("#idPronac").val()),
+                idTipoReadequacao: parseInt($("#idTipoReadequacao").val()),
+                siEncaminhamento: parseInt($("#siEncaminhamento").val()),
+                pertenceIn2017: parseInt($("#pertenceIn2017").val()),
                 disabled: true
             },
             mounted: function () {
-                this.carregarComponenteSelecionado();
+                this.carregarComponente();
             },
             methods: {
-                carregarComponenteSelecionado: function () {
+                carregarComponente: function () {
                     let self = this;
-                    let componente = '';
-
-                    if (self.projetoPertenceIN2017() == 1) {
-                        componente = "readequacao-plano-distribuicao";
-                    } else {
-                        self.carregarPlanoDistribuicaoAntigaIN();
+                    switch (self.idTipoReadequacao) {
+                        case 11: // plano distribuicao
+                            if (self.pertenceIn2017 == 1) {
+                                self.componenteAtual = "readequacao-plano-distribuicao";
+                            } else {
+                                self.carregarPlanoDistribuicaoAntigaIN();
+                            }
+                            break;
+                        case 23: // transferencia de recursos
+                            self.componenteAtual = "readequacao-transferencia-recursos";
+                            break;
                     }
-                    self.currentComponent = componente;
-                },
-                projetoPertenceIN2017: function () {
-                    return $("#pertenceIn2017").val();
                 },
                 carregarPlanoDistribuicaoAntigaIN: function () {
                     atualizarDadosPlanosDeDistribuicao();
@@ -828,5 +828,4 @@
             }
         })
     </script>
-
 <?php endif; ?>

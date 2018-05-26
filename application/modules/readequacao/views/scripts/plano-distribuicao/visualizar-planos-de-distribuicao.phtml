@@ -104,11 +104,11 @@
                             <td class="destacar bold" align="center">Total</td>
                         </tr>
                         <tr>
-                            <td align="center"><?php echo @number_format(($planoDistribuicao->PrecoUnitarioNormal), 2, ",", "."); ?></td>
+                            <td align="center"><?php echo @number_format(($planoDistribuicao->vlUnitarioNormal), 2, ",", "."); ?></td>
                             <td align="center"><?php echo @number_format(($planoDistribuicao->PrecoUnitarioPromocional), 2, ",", "."); ?></td>
-                            <td align="center"><?php echo number_format($planoDistribuicao->QtdeVendaNormal * $planoDistribuicao->PrecoUnitarioNormal, 2, ',', '.'); ?></td>
+                            <td align="center"><?php echo number_format($planoDistribuicao->QtdeVendaNormal * $planoDistribuicao->vlUnitarioNormal, 2, ',', '.'); ?></td>
                             <td align="center"><?php echo $planoDistribuicao->QtdeVendaPromocional * str_replace(",", ".", $planoDistribuicao->PrecoUnitarioPromocional); ?></td>
-                            <td align="center"><?php echo number_format($planoDistribuicao->QtdeVendaNormal * $planoDistribuicao->PrecoUnitarioNormal + $planoDistribuicao->QtdeVendaPromocional * $planoDistribuicao->PrecoUnitarioPromocional, 2, ',', '.'); ?></td>
+                            <td align="center"><?php echo number_format($planoDistribuicao->QtdeVendaNormal * $planoDistribuicao->vlUnitarioNormal + $planoDistribuicao->QtdeVendaPromocional * $planoDistribuicao->PrecoUnitarioPromocional, 2, ',', '.'); ?></td>
                         </tr>
                     </table>
                 </td>
