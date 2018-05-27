@@ -118,12 +118,21 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper extends MinC
             throw new Exception("Produto é obrigatório");
         }
 
-        $dados['idReadequacao'] = null;
         $dados['stAtivo'] = 'S';
         $dados['idPronac'] = $projeto->getIdPRONAC();
 
         if (empty($dados['idDetalhaPlanoDistribuicao'])) {
             unset($dados['idDetalhaPlanoDistribuicao']);
+
+            $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+            $readequacao = $tbReadequacao->findBy([
+                'idPronac = ?' => $projeto->getIdPRONAC(),
+                'idTipoReadequacao = ?' => Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO,
+                'siEncaminhamento = ?' => TbTipoEncaminhamento::SOLICITACAO_CADASTRADA_PELO_PROPONENTE,
+                'stEstado = ?' => 0
+            ]);
+
+            $dados['idReadequacao'] = $readequacao['idReadequacao'];
             $dados['tpSolicitacao'] = 'I';
         }
 

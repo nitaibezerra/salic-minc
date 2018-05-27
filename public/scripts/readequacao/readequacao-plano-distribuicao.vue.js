@@ -146,15 +146,11 @@ Vue.component('readequacao-plano-distribuicao', {
             return $("#idPronacHash").val();
         },
         desativarBotaoFinalizar: function () {
-
-            console.log('tesdsds');
             if(typeof this.readequacao.idReadequacao == 'undefined') {
-                console.log('iddd', this.readequacao.idReadequacao);
                 return true;
             }
 
             if(this.readequacao.justificativa.length < 3) {
-                console.log('sssdsds', this.readequacao.justificativa.length < 3);
                 return true;
             }
 
@@ -251,6 +247,7 @@ Vue.component('readequacao-plano-distribuicao', {
                     }
                 }).done(function (response) {
                     self.restaurarFormulario();
+                    self.loading = false;
                     self.mostrarMensagemInicial = true;
                     self.mensagemSucesso(response.msg);
                 }).fail(function (response) {
