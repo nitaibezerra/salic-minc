@@ -1,12 +1,8 @@
 Vue.component('plano-distribuicao-listagem', {
     template: `
         <div class="plano-distribuicao-listagem">
-            <div v-if="!produtos.length" class="padding20 center-align">
-                <b>Carregando produtos....</b>
-            </div>
-            <div v-if="!locais.length" class="padding20 center-align">
-                <b>Carregando locais de realizacao....</b>
-            </div>
+            <carregando  v-if="!produtos.length" :text="'Carregando produtos'"></carregando>
+            <carregando  v-if="!locais.length" :text="'Carregando locais de realiza&ccedil;&atilde;o'"></carregando>
             <ul v-if="produtos" class="collapsible collapsible-produto no-padding" data-collapsible="accordion">
                 <li v-for="produto of produtos">
                     <div class="collapsible-header green-text" :class="{ active: produto.stPrincipal == 1 }">

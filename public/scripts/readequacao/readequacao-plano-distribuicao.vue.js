@@ -1,9 +1,7 @@
 Vue.component('readequacao-plano-distribuicao', {
     template: `
         <div class="readequacao-plano-distribuicao">
-            <div v-if="loading" class="center-align animated tada">
-                <h4>carregando ...</h4>
-            </div>
+            <carregando v-if="loading" :text="'carregando'"></carregando>
             <div v-if="mostrarMensagemInicial" class="card">
                 <div class="card-content">
                     <p class="center-align">Aqui voc&ecirc; pode readequar os detalhamentos do seu plano de distribui&ccedil;&atilde;o.</p>

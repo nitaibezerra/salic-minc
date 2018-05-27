@@ -642,13 +642,18 @@ Vue.component('plano-distribuicao-detalhamentos-formulario', {
             }
 
             if (this.distribuicaoGratuita == NAO) {
-                if (this.distribuicao.vlUnitarioProponenteIntegral == 0 && this.percentualProponente > 0) {
+                if (this.distribuicao.vlUnitarioProponenteIntegral == 0 && parseFloat(this.percentualProponente) > 0) {
                     this.mensagemAlerta("Pre\xE7o unit\xE1rio no Proponente \xE9 obrigat\xF3rio!");
                     return;
                 }
 
-                if (this.distribuicao.vlUnitarioPopularIntegral == 0 && this.percentualPrecoPopular > 0) {
+                if (this.distribuicao.vlUnitarioPopularIntegral == 0 && parseFloat(this.percentualPrecoPopular) > 0) {
                     this.mensagemAlerta("Pre\xE7o unit\xE1rio no Pre\xE7o Popular \xE9 obrigat\xF3rio!");
+                    return;
+                }
+
+                if (parseFloat(this.distribuicao.vlUnitarioPopularIntegral) > parseFloat(this.distribuicao.vlUnitarioProponenteIntegral)) {
+                    this.mensagemAlerta("Pre\xE7o Unit\u00E1rio Popular n\u00E3o pode ser maior que o Pre\u00E7o Unit\u00E1rio Proponente!");
                     return;
                 }
             }

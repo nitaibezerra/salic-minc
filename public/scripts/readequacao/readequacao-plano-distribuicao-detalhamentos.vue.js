@@ -64,6 +64,7 @@ Vue.component('readequacao-plano-distribuicao-detalhamentos', {
                 url: "/readequacao/plano-distribuicao/salvar-detalhamento-ajax/idPronac/" + self.id,
                 data: detalhamento
             }).done(function (response) {
+                console.log("retornooo", response.data);
                 if (response.success == 'true') {
                     let index = self.$data.detalhamentos.map(item => item.idDetalhaPlanoDistribuicao).indexOf(response.data.idDetalhaPlanoDistribuicao);
                     Vue.delete(self.detalhamentos, index);

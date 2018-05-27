@@ -440,9 +440,6 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
             }
 
             $detalhamentoMapper = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper();
-            $mdlDetalhaReadequacao = new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao();
-
-            $dados['tpSolicitacao'] = $mdlDetalhaReadequacao::TP_SOLICITACAO_ATUALIZAR;
             $dados = $detalhamentoMapper->salvarDetalhamento($dados, $this->projeto);
 
             $this->_helper->json(array('data' => $dados, 'success' => 'true', 'msg' => 'Detalhamento salvo com sucesso!'));
