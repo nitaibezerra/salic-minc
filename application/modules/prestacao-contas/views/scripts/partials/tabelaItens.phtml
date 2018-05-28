@@ -64,6 +64,18 @@
                                     );
                                 ?>
                                 <td>
+                                    <?php 
+                                        $urlEdit = [
+                                            'module' => 'prestacao-contas',
+                                            'controller' => 'gerenciar',
+                                            'action' => 'comprovar',
+                                            'idComprovantePagamento' => $comprovante->idComprovantePagamento,
+                                            'cidade' => $comprovante->cdCidade,
+                                            'produto' => $comprovante->cdProduto,
+                                            /* 'uf' => $comprovante->cdUF, */
+                                            'etapa' => $comprovante->cdEtapa,
+                                        ];
+                                    ?>
                                     <?php if($this->diligenciaTodosItens): ?>
                                         <?php if ($comprovante->stItemAvaliado == 4): /* n¿o analisado ou recusado */ ?>
                                             Aguardando Analise
@@ -72,14 +84,7 @@
                                             <a
                                                 class="small btn btn-primary"
                                                 href="
-                                                    <?php echo $this->url(
-                                                    array(
-                                                        'module' => 'prestacao-contas',
-                                                        'controller' => 'gerenciar',
-                                                        'action' => 'comprovar',
-                                                        'idComprovantePagamento' => $comprovante->idComprovantePagamento,
-                                                    )
-                                                );
+                                                    <?php echo $this->url($urlEdit);
                                                 ?>"
                                             >
                                                 <i class="material-icons">edit</i>
@@ -89,14 +94,7 @@
                                         <a
                                             class="small btn btn-primary"
                                             href="
-                                                <?php echo $this->url(
-                                                array(
-                                                    'module' => 'prestacao-contas',
-                                                    'controller' => 'gerenciar',
-                                                    'action' => 'comprovar',
-                                                    'idComprovantePagamento' => $comprovante->idComprovantePagamento,
-                                                )
-                                            );
+                                                <?php echo $this->url( $urlEdit);
                                             ?>"
                                         >
                                             <i class="material-icons">edit</i>

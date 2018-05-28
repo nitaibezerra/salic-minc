@@ -48,7 +48,7 @@ Vue.component(
                 var vue = this;
                 console.info(this.diligencia);
 
-                url = '/diligencia/diligencia';
+                url = '/diligencia/diligencia/post';
                 $3.ajax({
                   type: "POST",
                   url:url,

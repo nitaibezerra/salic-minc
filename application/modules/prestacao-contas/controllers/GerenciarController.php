@@ -70,7 +70,16 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
         }
 
         $comprovantePagamentoModel = new ComprovantePagamento();
-        $comprovantesDePagamento = $comprovantePagamentoModel->pesquisarComprovantePorItem($item->idPlanilhaItens, $idPronac, $etapa->idPlanilhaEtapa, $itemPlanilhaAprovacao->idProduto, $itemPlanilhaAprovacao->idUFDespesa, $itemPlanilhaAprovacao->idMunicipioDespesa); //ID Recuperado
+        /* $comprovantesDePagamento = $comprovantePagamentoModel->pesquisarComprovantePorItem($item->idPlanilhaItens, $idPronac, $etapa->idPlanilhaEtapa, $itemPlanilhaAprovacao->idProduto, $itemPlanilhaAprovacao->idUFDespesa, $itemPlanilhaAprovacao->idMunicipioDespesa); //ID Recuperado */
+
+        $comprovantesDePagamento = $planilhaAprovacao->vwComprovacaoFinanceiraProjetoPorItemOrcamentario(
+                $idPronac,
+                $idPlanilhaItens,
+                null,
+                $cdproduto,
+                null,
+                $cdcidade
+            )->toArray();
 
         array_walk($comprovantesDePagamento, function (&$comprovanteDePagamento) use ($fornecedorModel) {
             $comprovanteDePagamento = (object) $comprovanteDePagamento;
@@ -175,6 +184,12 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
 
         $this->view->idpronac = $this->getRequest()->getParam('idpronac');
         $this->view->tipoDocumentoConteudo = $this->tipoDocumento;
+
+        $this->view->uf = $this->getRequest()->getParam('uf');
+        $this->view->cdproduto = $this->getRequest()->getParam('produto');
+        $this->view->cdcidade = $this->getRequest()->getParam('cidade');
+        $this->view->cdetapa = $this->getRequest()->getParam('etapa');
+        $this->view->idplanilhaitens = $this->getRequest()->getParam('idPlanilhaItens');
     }
 
     public function cadastrarcomprovacaopagamentoAction()

@@ -501,9 +501,7 @@
                                             <button type="submit" name="frComprovarPagamentoSubmit"
                                                     id="frComprovarPagamentoSubmit" value="" class="btn">salvar
                                             </button>
-                                            <!-- input type="button" name="incluirNovo" id="incluirNovo" value="" class="btn_novo" /-->
-                                            <button type="button" name="incluirNovo" id="incluirNovo" value=""
-                                                    class="btn">novo
+                                            <button type="button" name="incluirNovo" id="incluirNovo" value="" class="btn">novo
                                             </button>
                                         <?php else: ?>
                                             <!--input type="submit" name="frComprovarPagamentoSubmit" id="frComprovarPagamentoSubmit" value="" class="btn_incluir" /-->
@@ -847,15 +845,22 @@
         });
 
         <?php if ($this->idComprovantePagamento): ?>
-        $("#incluirNovo").click(function () {
-            window.location = "<?php echo $this->url(array(
-                'controller' => 'comprovarexecucaofinanceira',
-                'action' => 'comprovacaopagamento',
-                'idusuario' => $this->idusuario,
-                'idpronac' => $this->idpronac,
-                'idPlanilhaAprovacao' => $this->idPlanilhaAprovacao
-            ), null, true); ?>";
-        });
+
+            $("#incluirNovo").click(function () {
+                window.location = "<?php echo $this->url(array(
+                    'module' => 'default',
+                    'controller' => 'comprovarexecucaofinanceira',
+                    'action' => 'comprovacaopagamento',
+                    'idusuario' => $this->idusuario,
+                    'idpronac' => $this->idpronac,
+                    'idPlanilhaAprovacao' => $this->idPlanilhaAprovacao,
+                    'cidade' => $this->cdcidade,
+                    'produto' => $this->cdproduto,
+                    'idPlanilhaItens' => $this->idplanilhaitens,
+                    'etapa' => $this->cdetapa,
+                ), null, true); ?>";
+            });
+
         <?php endif; ?>
 
         $("#frComprovarPagamentoSubmit").click(function () {
@@ -876,7 +881,8 @@
             var valorItem = parseFloat(valorComprovado.replace(".", "").replace(".", "").replace(",", "."));
             var valorAprovado = parseFloat($("#valorAprovado").val());
             var valorComprovado = parseFloat($("#totalComprovado").val());
-            var valorComprovadoAntigo = parseFloat($('#vlComprovadoAntigo').val());
+            /* var valorComprovadoAntigo = parseFloat($('#vlComprovadoAntigo').val()); */
+            var valorComprovadoAntigo = parseFloat($('#vlComprovadoAntigo').val()) ?parseFloat($('#vlComprovadoAntigo').val()) : 0 ;
             var valorAtualComprovado = (valorItem + valorComprovado).toFixed(2) - valorComprovadoAntigo ;
             console.log('total:', $3("#idComprovantePagamento").val());
 
@@ -1011,7 +1017,7 @@
                     elementLink.closest('tr').remove();
                     // atualiza as informacoes do item
                     $("campoValorAprovado").html('000').toNumber().formatCurrency({region: 'pt-BR'});
-                    $("#campoValorComprovado").html('000').toNumber().formatCurrency({region: 'pt-BR'});
+                    /* $("#campoValorComprovado").html('000').toNumber().formatCurrency({region: 'pt-BR'}); */
                     // Recupera o item e preenche os valores aprovado e comprovado.
                     $.ajax({
                         url: '<?php echo $this->baseUrl();?>/planilha-item/pesquisar/format/json',
@@ -1025,6 +1031,7 @@
                                 $("campoValorComprovado").html(result.item.valorComprovado).toNumber().formatCurrency({region: 'pt-BR'});
                             }
                             message('Exclus&atilde;o realizada com sucesso!', 'CONFIRM');
+                            location.reload();
                         }
                     });
                 }
