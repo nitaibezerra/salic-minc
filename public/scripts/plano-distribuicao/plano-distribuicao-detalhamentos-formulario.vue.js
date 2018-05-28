@@ -481,6 +481,17 @@ Vue.component('plano-distribuicao-detalhamentos-formulario', {
                 this.distribuicao.vlReceitaPopularParcial = this.converterParaMoedaAmericana(this.vlReceitaPopularParcial);
                 this.distribuicao.vlUnitarioProponenteIntegral = this.converterParaMoedaAmericana(this.inputUnitarioProponenteIntegral);
                 this.distribuicao.vlUnitarioPopularIntegral = this.converterParaMoedaAmericana(this.inputUnitarioPopularIntegral);
+
+                if (this.distribuicao.vlUnitarioProponenteIntegral < 0) {
+                    this.mensagemAlerta("Valor Proponente n\xE3o pode passar ser menor que zero");
+                    this.inputUnitarioProponenteIntegral = 0;
+                }
+
+                if (this.distribuicao.vlUnitarioPopularIntegral < 0) {
+                    this.mensagemAlerta("Valor Popular n\xE3o pode passar ser menor que zero");
+                    this.inputUnitarioPopularIntegral = 0;
+                }
+
             } else {
                 this.distribuicao.vlUnitarioProponenteIntegral = 0;
                 this.distribuicao.vlUnitarioPopularIntegral = 0;

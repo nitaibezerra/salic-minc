@@ -124,7 +124,7 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper extends MinC
         }
 
         $dados['stAtivo'] = 'S';
-        $dados['idPronac'] = $projeto->getIdPRONAC();
+        $dados['idPronac'] = (string) $projeto->getIdPRONAC();
 
         if (empty($dados['idDetalhaPlanoDistribuicao'])) {
             unset($dados['idDetalhaPlanoDistribuicao']);
@@ -137,14 +137,14 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper extends MinC
                 'stEstado = ?' => 0
             ]);
 
-            $dados['idReadequacao'] = $readequacao['idReadequacao'];
+            $dados['idReadequacao'] = (string) $readequacao['idReadequacao'];
             $dados['tpSolicitacao'] = 'I';
         }
 
         $id = $this->save(new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao($dados));
 
         if (!empty($id)) {
-            $dados['idDetalhaPlanoDistribuicao'] = $id;
+            $dados['idDetalhaPlanoDistribuicao'] = (string) $id;
 
             if ($dados['idPlanoDistribuicao']) {
                 $tbPlanoDistribuicao = new Readequacao_Model_DbTable_TbPlanoDistribuicao();

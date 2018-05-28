@@ -64,12 +64,17 @@ Vue.component('readequacao-plano-distribuicao-detalhamentos', {
                 url: "/readequacao/plano-distribuicao/salvar-detalhamento-ajax/idPronac/" + self.id,
                 data: detalhamento
             }).done(function (response) {
-                console.log("retornooo", response.data);
                 if (response.success == 'true') {
-                    let index = self.$data.detalhamentos.map(item => item.idDetalhaPlanoDistribuicao).indexOf(response.data.idDetalhaPlanoDistribuicao);
-                    Vue.delete(self.detalhamentos, index);
-                    self.$data.detalhamentos.push(response.data);
-                    self.mensagemSucesso(response.msg);
+                    let index = self.$data.detalhamentos.map(
+                        item => item.idDetalhaPlanoDistribuicao
+                    ).indexOf(response.data.idDetalhaPlanoDistribuicao);
+                    if(index >= 0) {
+                        Vue.set(self.detalhamentos, index, response.data);
+                    } else {
+                        self.detalhamentos.push(response.data);
+                    }
+
+                    sel f.mensagemSucesso(response.msg);
                     detalhamentoEventBus.$emit('callBackSalvarDetalhamento', true);
                     $3("#" + detalhamento.idMunicipio + detalhamento.idPlanoDistribuicao + "_modal").modal('close');
                 }
