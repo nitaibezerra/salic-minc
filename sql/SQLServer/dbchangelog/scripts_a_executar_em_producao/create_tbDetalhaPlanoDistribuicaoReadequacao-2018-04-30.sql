@@ -27,6 +27,8 @@ CREATE TABLE SAC.dbo.tbDetalhaPlanoDistribuicaoReadequacao (
 	tpSolicitacao char(1),
 	stAtivo char(1) DEFAULT ('S') NOT NULL,
 	idPronac int NOT NULL,
+	idDetalhaOriginal int DEFAULT ((0)),
+
 	CONSTRAINT PK_tbDetalhaPlanoDistribuicaoReadequacao PRIMARY KEY (idDetalhaPlanoDistribuicao),
   CONSTRAINT FK_Detalha_tbPlanoDistribuicao FOREIGN KEY (idPlanoDistribuicao) REFERENCES SAC.dbo.tbPlanoDistribuicao(idPlanoDistribuicao) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT FK_Detalha_tbReadequacao FOREIGN KEY (idReadequacao) REFERENCES SAC.dbo.tbReadequacao(idReadequacao) ON DELETE CASCADE ON UPDATE CASCADE

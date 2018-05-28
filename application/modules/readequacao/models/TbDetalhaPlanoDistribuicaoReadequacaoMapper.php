@@ -55,11 +55,12 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacaoMapper extends MinC
         try {
             $this->beginTransaction();
             foreach ($detalhamentosDaProposta as $key => $detalhamento) {
-                unset($detalhamento['idDetalhaPlanoDistribuicao']);
                 $detalhamento['idReadequacao'] = $idReadequacao;
                 $detalhamento['tpSolicitacao'] = 'N';
                 $detalhamento['stAtivo'] = 'S';
                 $detalhamento['idPronac'] = $projeto->getIdPRONAC();
+                $detalhamento['idDetalhaOriginal'] = $detalhamento['idDetalhaPlanoDistribuicao'];
+                unset($detalhamento['idDetalhaPlanoDistribuicao']);
 
                 $this->save(new Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao($detalhamento));
             }

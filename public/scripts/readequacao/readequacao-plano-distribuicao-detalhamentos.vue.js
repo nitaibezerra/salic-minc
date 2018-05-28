@@ -74,7 +74,7 @@ Vue.component('readequacao-plano-distribuicao-detalhamentos', {
                         self.detalhamentos.push(response.data);
                     }
 
-                    sel f.mensagemSucesso(response.msg);
+                    self.mensagemSucesso(response.msg);
                     detalhamentoEventBus.$emit('callBackSalvarDetalhamento', true);
                     $3("#" + detalhamento.idMunicipio + detalhamento.idPlanoDistribuicao + "_modal").modal('close');
                 }

@@ -28,6 +28,7 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao extends MinC_Db_Mo
     protected $_tpSolicitacao;
     protected $_stAtivo;
     protected $_idPronac;
+    protected $_idDetalhaOriginal;
 
     const TP_SOLICITACAO_ATUALIZAR = 'A';
     const TP_SOLICITACAO_INCLUIR = 'I';
@@ -302,4 +303,15 @@ class Readequacao_Model_TbDetalhaPlanoDistribuicaoReadequacao extends MinC_Db_Mo
     {
         $this->_idPronac = $idPronac;
     }
+
+    public function getIdDetalhaOriginal()
+    {
+        return $this->_idDetalhaOriginal;
+    }
+
+    public function setIdDetalhaOriginal($idDetalhaOriginal)
+    {
+        $this->_idDetalhaOriginal = $idDetalhaOriginal;
+    }
+
 }

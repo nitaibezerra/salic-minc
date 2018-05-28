@@ -22,5 +22,14 @@ class Readequacao_Model_TbPlanoDistribuicao extends MinC_Db_Model
     protected $_tpAnaliseComissao;
     protected $_stAtivo;
     protected $_idPronac;
+    protected $_canalAberto
+    protected $_vlReceitaTotalPrevista;
+    protected $_qtdeVendaPopularNormal;
+    protected $_qtdeVendaPopularPromocional;
+    protected $_vlUnitarioPopularNormal;
+    protected $_receitaPopularPromocional;
+    protected $_receitaPopularNormal;
+    protected $_precoUnitarioNormal;
+    protected $_idPlanoDistribuicaoOriginal;
 
 }
