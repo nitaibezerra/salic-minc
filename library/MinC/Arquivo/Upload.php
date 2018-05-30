@@ -627,8 +627,6 @@ class Upload
 		return $arquivo;
 	}
 
-
-
 	/**
 	 * Transforma o arquivo em hash
 	 * @access public

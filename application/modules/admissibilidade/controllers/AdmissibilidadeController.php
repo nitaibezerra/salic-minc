@@ -904,16 +904,17 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $recursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
             $recursoAtual = $recursoPropostaDbTable->obterRecursoAtual($rsProjeto->idProjeto);
             $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-            if ((string) $recursoAtual['tpSolicitacao'] == (string) Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_DESISTENCIA_DO_PRAZO_RECURSAL) {
-                $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($rsProjeto->idProjeto);
-                $ultimaSugestaoEnquadramento = $sugestaoEnquadramentoDbTable->obterUltimaSugestaoEnquadramentoProposta();
-                $tpEnquadramento = $ultimaSugestaoEnquadramento['tp_enquadramento'];
-                $observacao = $ultimaSugestaoEnquadramento['descricao_motivacao'];
-            } else {
+            $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($rsProjeto->idProjeto);
+            $ultimaSugestaoEnquadramento = $sugestaoEnquadramentoDbTable->obterUltimaSugestaoEnquadramentoProposta();
+            $observacao = $ultimaSugestaoEnquadramento['descricao_motivacao'];
+            $tpEnquadramento = $ultimaSugestaoEnquadramento['tp_enquadramento'];
+            if (count($recursoAtual) > 0 && (string) $recursoAtual['tpSolicitacao'] == (string) Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_ENQUADRAMENTO) {
                 $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
                 $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($rsProjeto->idProjeto);
                 $tpEnquadramento = $enquadramentoInicialProponente['tp_enquadramento'];
-                $observacao = (count($recursoAtual) > 0 && !empty($recursoAtual['dsAvaliacaoTecnica'])) ? $recursoAtual['dsAvaliacaoTecnica'] : "Enquadramento sem sugestao previa.";
+                if (!empty($recursoAtual['dsAvaliacaoTecnica']))  {
+                    $observacao = $recursoAtual['dsAvaliacaoTecnica'];
+                }
             }
 
             $arrayArmazenamentoEnquadramento = [
@@ -938,7 +939,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $projetos->atualizarProjetoEnquadrado(
                 $dadosProjeto,
                 $idUsuario,
-                'B04'
+                'B02'
             );
             return true;
         } catch (Exception $exception) {

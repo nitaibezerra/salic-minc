@@ -2799,7 +2799,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
                 (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
                 a.idMunicipioDespesa,a.idPlanilhaItem) > 0
             '));
-        $select->where('a.tpacao <> ?', 'E');
+        $select->where("a.tpacao <> 'E' OR a.tpacao is null");
         $select->where('a.IdPRONAC = ?', $idpronac);
         $select->where('a.nrFonteRecurso = 109');
         $select->where('a.stAtivo = ? ', 'S');
@@ -2827,11 +2827,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             $select->where('d.codigo is null');
         }
         $select->order('c.Descricao');
-        /* $select->order('Produto'); */
-        /* $select->order('cdEtapa'); */
-        /* $select->order('Uf'); */
-        /* $select->order('Cidade'); */
-        /* echo $select;die; */
+
         return $this->fetchAll($select);
     }
 }

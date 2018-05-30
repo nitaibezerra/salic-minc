@@ -446,4 +446,75 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
             $this->forward('comprovacaopagamento-recusado');
         }
     }
+
+    public function comprovarPagamentoAction()
+    { }
+
+    public function cadastrarAction()
+    {
+        $comprovante = new PrestacaoContas_Model_ComprovantePagamento();
+
+        /* var_dump($this->getRequest()->getPost()); */
+        /* die; */
+        $comprovante->preencher($this->getRequest()->getPost());
+
+            /* $request->getParam('idAgente'), */
+            /* $request->getParam('itemId'), */
+            /* $request->getParam('tpDocumento'), */
+            /* $request->getParam('nrComprovante'), */
+            /* $request->getParam('nrSerie'), */
+            /* $request->getParam('dtEmissao') ? new DateTime(data::dataAmericana($request->getParam('dtEmissao'))) : null, */
+            /* $arquivoModel->getId(), */
+            /* $request->getParam('tpFormaDePagamento'), */
+            /* $dtPagamento, */
+            /* str_replace(',', '.', str_replace('.', '', $request->getParam('vlComprovado'))), */
+            /* $request->getParam('nrDocumentoDePagamento'), */
+            /* $request->getParam('dsJustificativa') */
+
+        try {
+            $comprovante->cadastrar();
+        } catch (Exception $e) {
+            $this->view->message = $e->getMessage();
+        }
+    }
+
+    public function fornecedorAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $agentesDao = new Agente_Model_DbTable_Agentes();
+
+        $cnpjcpf = preg_replace('/\.|-|\/|\?/', '', utf8_decode($this->getRequest()->getParam('cnpjcpf')));
+
+        $fornecedor = $agentesDao->buscarFornecedor(array(' A.CNPJCPF = ? '=>$cnpjcpf))->current();
+
+        if ($fornecedor) {
+            $fornecedor = array(
+                'retorno'=>true,
+                'idAgente'=>$fornecedor->idAgente,
+                'nome'=>utf8_encode($fornecedor->nome)
+            );
+        } else {
+            $fornecedor = array('retorno'=>false, 'CNPJCPF'=>$cnpjcpf);
+        }
+
+        $this->_helper->json($fornecedor);
+    }
+
+    public function paisAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $pais = new Pais();
+
+        $paises = $pais->buscar();
+        /* var_dump($paises);die; */
+        $data = [];
+        foreach($paises as $key => $pais) {
+            $data[$key]['id']  = $pais['idPais'];
+            $data[$key]['nome']  = utf8_encode($pais['Descricao']);
+        }
+
+        $this->_helper->json($data);
+    }
 }

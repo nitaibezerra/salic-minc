@@ -2244,6 +2244,8 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
+    /**
+    * deprecated*/
     public function buscarfornecedorAction()
     {
         $this->_helper->layout->disableLayout();

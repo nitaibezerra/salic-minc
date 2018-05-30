@@ -1,0 +1,350 @@
+<script src="/public/js/vue.js"></script>
+<script src="/public/js/moment.js"></script>
+<script src="/public/scripts/prestacao-contas/components/page-title.vue.js"></script>
+
+<div class="container-fluid" id="app-comprovante">
+    <page-title></page-title>
+    <div class="card ">
+        <div class="card-content ">
+          <span class="card-title">Comprovante de Pagamento</span>
+          <sl-pc-comprovar-form></sl-pc-comprovar-form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var slComprovarForm = {
+        template: `
+                <form>
+                    <fieldset>
+                        <legend>Identifica&ccedil;&atilde;o do Contratado</legend>
+                        <div class="row">
+                            <div class=" col s8">
+                                <p>Nacionalidade do Fornecedor</p>
+                                <p>
+                                    <input
+                                        v-model="comprovante.fornecedor.nacionalidade"
+                                        type="radio"
+                                        name="nacionalidade"
+                                        value="31"
+                                        id="nacionalidade_1"
+                                    />
+                                    <label for="nacionalidade_1">Brasil</label>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class=" col s1">
+                                    <input
+                                        v-model="comprovante.fornecedor.nacionalidade"
+                                        type="radio"
+                                        name="nacionalidade"
+                                        value="0"
+                                        id="nacionalidade_2"
+                                    />
+                                    <label for="nacionalidade_2">Outros</label>
+                            </div>
+                            <template v-if="(comprovante.fornecedor.nacionalidade != 31)">
+                                <div class="col s4">
+                                    <label class="" for="pais">Nacionalidade do Fornecedor</label>
+                                    <select
+                                        v-model="comprovante.fornecedor.nacionalidade"
+                                        name="pais"
+                                        class=" browser-default "
+
+                                     >
+                                        <option v-for="p in pais" :value="p.id">
+                                            {{p.nome}} 
+                                        </option>
+                                    </select>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="row">
+                            <div class=" col s6">
+                                <p>Tipo do Fornecedor</p>
+                                <p>
+                                    <input
+                                        v-model="comprovante.fornecedor.tipoPessoa"
+                                        type="radio"
+                                        name="tipoPessoa"
+                                        value="1"
+                                        id="tipoPessoa_1"
+                                    />
+                                    <label for="tipoPessoa_1">CPF</label>
+                                    <input
+                                        v-model="comprovante.fornecedor.tipoPessoa"
+                                        type="radio"
+                                        name="tipoPessoa"
+                                        value="2"
+                                        id="tipoPessoa_2"
+                                    />
+                                    <label for="tipoPessoa_2">CNPJ</label>
+                                </p>
+                            </div>
+                        </div>
+                        <template v-if="comprovante.fornecedor.tipoPessoa">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input
+                                        type="text"
+                                        name="CNPJCPF"
+                                        idAgente="idAgente"
+                                        :value="comprovante.fornecedor.cnpjcpfMask"
+                                        v-on:keyup.enter="pesquisarFornecedor()"
+                                        v-on:input="inputCNPJCPF($event.target.value)"
+                                    />
+                                    <template v-if="comprovante.fornecedor.tipoPessoa == 1">
+                                        <label for="CNPJCPF">CPF</label>
+                                    </template>
+                                    <template v-else >
+                                        <label for="CNPJCPF">CNPJ</label>
+                                    </template>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input
+                                        v-model="comprovante.fornecedor.nome"
+                                        type="text"
+                                        name="Descricao"
+                                        id="Descricao"
+                                        null="false"
+                                        value=""
+                                    />
+                                    <template v-if="comprovante.fornecedor.tipoPessoa == 1">
+                                        <label>Nome</label>
+                                    </template>
+                                    <template v-else >
+                                        <label>Raz&atilde;o Social</label>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Dados da Comprova&ccedil;&atilde;o de Pagamento</legend>
+                        <div class="row">
+                            <div class="col s4">
+                                <label>Tipo Comprovante</label>
+                                <select name="tpDocumento" id="tpDocumento"
+                                    v-model="comprovante.tipo"
+                                    class="browser-default"
+                                >
+                                    <option value="0"> - Selecione - </option>
+                                    <option value="1">Cupom Fiscal</option>
+                                    <option value="2">Guia de Recolhimento</option>
+                                    <option value="3" selected="selected">Nota Fiscal/Fatura</option>
+                                    <option value="4">Recibo de Pagamento</option>
+                                    <option value="5">RPA</option>
+                                </select>
+                            </div>
+                            <div class="input-field col s4">
+                                <input type="text" name="nrComprovante" id="nrComprovante"
+                                       maxlength="50" null="false"
+                                       value=""
+                                    v-model="comprovante.numero"
+                                       />
+                                <label>N&uacute;mero</label>
+                            </div>
+                            <div class="input-field col s4">
+                            <input type="text" name="nrSerie"
+                                id="nrSerie" maxlength="8"
+                                        v-model="comprovante.serie"
+                                       value=""/>
+                                <label>S&eacute;rie</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s3">
+                                <input type="text" name="dtEmissao" id="dtEmissao" null="false"
+                                        v-model="comprovante.dataEmissao"
+                                       data="true" value=""/>
+                                <label>Dt. de Emiss&atilde;o do comprovante de despesa</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <input type="text" name="dtPagamento" id="dtPagamento" null="false"
+                                        v-model="comprovante.dataPagamento"
+                                        data="true"
+                                />
+                                <label>Data do pagamento<span style='color:red'>*</span></label>
+                            </div>
+                            <div class=" col s3">
+                                <label>Forma de Pagamento<span style='color:red'>*</span></label>
+                                <select class="browser-default" name="tpFormaDePagamento" id="tpFormaDePagamento"
+                                        v-model="comprovante.forma"
+                                        >
+                                        <option value="0"> - Selecione -</option>
+                                        <option value="1">Cheque</option>
+                                        <option value="2">Transfer&ecirc;ncia Banc&aacute;ria</option>
+                                        <option value="3" <?php echo $selected3; ?>>Saque/Dinheiro</option>
+                                </select>
+                            </div>
+                            <div class="input-field col s3">
+                                <input type="text" name="nrDocumentoDePagamento"
+                                        v-model="comprovante.numeroDocumento"
+                                       id="nrDocumentoDePagamento" maxlength="10"
+                                       null="false" sonumero="true"
+                                       value=""/>
+                                <label for="nrDocumentoDePagamento">N&ordm; Documento Pagamento<span
+                                        style='color:red'>*</span></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s3">
+                                <input type="hidden" name="vlComprovadoAntigo" size="10" id="vlComprovadoAntigo"
+                                       value=""/>
+                                <input type="text" name="vlComprovado" size="10" id="vlComprovado"
+                                       v-model="comprovante.valor"
+                                       value="<?php echo $this->vlComprovacao; ?>"/>
+                                <label>Valor do Item <span style='color:red'>*</span></label>
+                            </div>
+                            <div class="file-field input-field col s4">
+                                <!-- input type="file" name="arquivo" id="arquivo" value=""/>
+                                <label>Anexar comprovante<span style='color:red'>*</span></label -->
+
+                                <div class="btn small">
+                                    <input name="arquivo" id="arquivo" ref="file" type="file" @change="file">
+                                    <span>Comprovante</span>
+                                </div>
+                                <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text"
+                                       v-model="comprovante.arquivo.imagem"
+                                    placeholder="Selecionar arquivo">
+                                </div>
+                            </div>
+                            <a href="">arquivo </a>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea class="materialize-textarea" rows="5"
+                                       v-model="comprovante.justificativa"
+                                          name="dsJustificativa"
+                                          id="dsJustificativa">
+                                          </textarea>
+                                <label>
+                                    Justificativa
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <button type="button" class="btn" @click.prevent="salvar">salvar </button>
+                </form>
+        `,
+        mounted: function() {
+            this.paises();
+        },
+        data: function() {
+            return {
+                comprovante:{
+                    fornecedor: {
+                        nacionalidade: 31,
+                        tipoPessoa: '',
+                        CNPJCPF: '',
+                        cnpjcpfMask: '',
+                        nome: '',
+                        idAgente: ''
+                    },
+                    tipo: '',
+                    numero: '',
+                    serie: '',
+                    dataEmissao: '',
+                    dataPagamento: '',
+                    forma: '',
+                    numeroDocumento: '',
+                    valor: '',
+                    arquivo: {},
+                    justificativa: ''
+                },
+                pais: ''
+            }
+        },
+        computed: {
+        },
+        methods:{
+            salvar: function() {
+               var vue = this;
+               var url = '/prestacao-contas/gerenciar/cadastrar' ;
+
+               let formData = new FormData();
+               formData.append('arquivo', this.comprovante.arquivo);
+               formData.append('comprovante', JSON.stringify(this.comprovante));
+
+               $3.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: 'multipart/form-data', 
+                    contentType: false, 
+                    /* dataType: "json", */
+               }).done(function(data){
+                    console.log(data);
+                });
+            },
+            file: function() {
+                this.comprovante.arquivo = this.$refs.file.files[0];
+            },
+            pesquisarFornecedor: function(){
+               console.log(this.comprovante.fornecedor.CNPJCPF);
+
+               var vue = this;
+               var url = '/prestacao-contas/gerenciar/fornecedor' ;
+
+               if (
+                   (this.comprovante.fornecedor.tipoPessoa == 1 && this.comprovante.fornecedor.CNPJCPF.length == 11)
+                   || ( this.comprovante.fornecedor.tipoPessoa == 2 && this.comprovante.fornecedor.CNPJCPF.length == 14)
+               ) {
+                   $3.ajax({
+                        url: url,
+                        method: 'POST',
+                        data: {cnpjcpf: this.comprovante.fornecedor.CNPJCPF},
+                        dataType: "json",
+                   }).done(function(data){
+                        console.log(data);
+                        if (data.retorno){
+                            vue.comprovante.fornecedor.nome= data.nome;
+                            vue.comprovante.fornecedor.idAgente = data.idAgente;
+                        }
+                   });
+               }
+            },
+            paises: function(){
+               var vue = this;
+               var url = '/prestacao-contas/gerenciar/pais' ;
+
+               $3.ajax({
+                    url: url,
+                    /* method: 'POST', */
+                    /* data: {cnpjcpf: this.comprovante.fornecedor.CNPJCPF}, */
+                    dataType: "json",
+               }).done(function(data){
+                    if (data){
+                        vue.pais = data;
+                    }
+               });
+            },
+            inputCNPJCPF: function(e) {
+                if (e.length < 15) {
+                    if (e.length == 11 || e.length == 14) {
+                       this.comprovante.fornecedor.CNPJCPF = e;
+                       this.comprovante.fornecedor.cnpjcpfMask = this.cnpjcpfMask();
+                    } else {
+                       this.comprovante.fornecedor.CNPJCPF = '';
+                    }
+                }
+
+            },
+            cnpjcpfMask: function() {
+               if ( this.comprovante.fornecedor.tipoPessoa == 1 && this.comprovante.fornecedor.CNPJCPF.length == 11) {
+                    return this.comprovante.fornecedor.CNPJCPF.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,"$1.$2.$3-$4")
+                } else if(this.comprovante.fornecedor.tipoPessoa == 2 && this.comprovante.fornecedor.CNPJCPF.length == 14) {
+                    return this.comprovante.fornecedor.CNPJCPF.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,"$1.$2.$3/$4-$5")
+                }
+            }
+        }
+    }
+
+    const appComprovante = new Vue({
+        components: { 'sl-pc-comprovar-form': slComprovarForm  }
+    }).$mount('#app-comprovante');
+
+</script>
