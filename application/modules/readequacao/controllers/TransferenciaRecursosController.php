@@ -232,7 +232,7 @@ class Readequacao_TransferenciaRecursosController extends Readequacao_GenericCon
             
             $dados['idReadequacao'] = $this->_request->getParam('idReadequacao');
             $dados['tpTransferencia'] = $this->_request->getParam('dsSolicitacao');
-            $dados['idPronacRecebedor'] = $this->_request->getParam('idPronac');
+            $dados['idPronacRecebedor'] = $this->_request->getParam('idPronacRecebedor');
             $dados['vlRecebido'] = (float) str_replace(',', '.', $this->_request->getParam('vlRecebido'));
             $dados['siAnaliseTecnica'] = '';
             $dados['siAnaliseComissao'] = '';
@@ -346,5 +346,40 @@ class Readequacao_TransferenciaRecursosController extends Readequacao_GenericCon
                 ]
             );
         }
+    }
+
+    public function verificarPronacDisponivelReceberAction()
+    {
+        $this->_helper->layout->disableLayout();
+        
+        try {
+            $idPronac = $this->_request->getParam('idPronac');
+            $pronacRecebedor = $this->_request->getParam('pronacRecebedor');
+        
+            $projeto = new Projetos();
+            $verificarProjeto = $projeto->verificarPronacDisponivelReceber(
+                $idPronac,
+                $pronacRecebedor
+            );
+
+            $this->_helper->json(
+                [
+                    'projetoDisponivel' => $verificarProjeto['disponivel'],
+                    'idPronac' =>  utf8_encode($verificarProjeto['idPronac']),
+                    'nomeProjeto' =>  utf8_encode($verificarProjeto['nomeProjeto']),
+                    'resposta' => true,
+                    'msg' => 'Readequa&ccedil;&atilde;o finalizada com sucesso!'
+                ]
+            );            
+        } catch (Exception $objException) {
+            $this->getResponse()->setHttpResponseCode(412);
+            $this->_helper->json(
+                [
+                    'error ' => $objException->getMessage(),
+                    'resposta' => false,
+                    'msg' => $objException->getMessage()
+                ]
+            );
+        } 
     }
 }

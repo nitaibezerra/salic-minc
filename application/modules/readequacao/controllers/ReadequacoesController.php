@@ -82,6 +82,20 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
     }
 
     /**
+     * @return Readequacao_ReadequacaoDocumentoAssinaturaController
+     */
+    public function obterServicoDocumentoAssinatura()
+    {
+        if (!isset($this->servicoDocumentoAssinatura)) {
+            require_once __DIR__ . DIRECTORY_SEPARATOR . "ReadequacaoDocumentoAssinatura.php";
+            $this->servicoDocumentoAssinatura = new Readequacao_ReadequacaoDocumentoAssinaturaController(
+                $this->getRequest()->getPost()
+            );
+        }
+        return $this->servicoDocumentoAssinatura;
+    }
+
+    /**
      * Método privado para carregar lista de cidades
      *
      */
@@ -1562,8 +1576,6 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
     }
 
     /*
-     * Alterada em 11/03/14
-     * @author: Jefferson Alessandro - jeffersonassilva@gmail.com
      * FUNÇÃO ACESSADA PELO TECNICO DE ACOMPANHAMENTO
     */
     public function painelReadequacoesAction()
@@ -1576,30 +1588,23 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         if ($this->_request->getParam("qtde")) {
             $this->intTamPag = $this->_request->getParam("qtde");
         }
-        $order = array();
 
-        //==== parametro de ordenacao  ======//
+        $ordem = "ASC";
+        $novaOrdem = "ASC";
         if ($this->_request->getParam("ordem")) {
             $ordem = $this->_request->getParam("ordem");
             if ($ordem == "ASC") {
                 $novaOrdem = "DESC";
-            } else {
-                $novaOrdem = "ASC";
             }
-        } else {
-            $ordem = "ASC";
-            $novaOrdem = "ASC";
         }
 
-        //==== campo de ordenacao  ======//
+        $campo = null;
+        $order = array(1); //idDistribuirReadequacao
+        $ordenacao = null;
         if ($this->_request->getParam("campo")) {
             $campo = $this->_request->getParam("campo");
             $order = array($campo." ".$ordem);
             $ordenacao = "&campo=".$campo."&ordem=".$ordem;
-        } else {
-            $campo = null;
-            $order = array(1); //idDistribuirReadequacao
-            $ordenacao = null;
         }
 
         $pag = 1;
@@ -1612,14 +1617,11 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         /* ================== PAGINACAO ======================*/
         $where = array();
 
+        $filtro = 'painel_do_tecnico';
         if ($this->_request->getParam('tipoFiltro') !== null) {
             $filtro = $this->_request->getParam('tipoFiltro');
-        } else {
-            if ($this->idPerfil == Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA) {
-                $filtro = 'aguardando_distribuicao';
-            } else {
-                $filtro = 'painel_do_tecnico';
-            }
+        } elseif ($this->idPerfil == Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA) {
+            $filtro = 'aguardando_distribuicao';
         }
         $this->view->filtro = $filtro;
 
@@ -1628,11 +1630,9 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             $this->view->pronac = $this->_request->getParam('pronac');
         }
 
-        // hack!
+        $where['idUnidade = ?'] = $this->idOrgao;
         if ($this->idOrgao == 272) {
             $where['idUnidade = ?'] = 262;
-        } else {
-            $where['idUnidade = ?'] = $this->idOrgao;
         }
 
         $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
@@ -1643,15 +1643,12 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             switch ($filtro) {
                 case 'aguardando_distribuicao':
                     $total = count($tbDistribuirReadequacao->buscarReadequacaoCoordenadorParecerAguardandoAnalise($where));
-//                    $total = $tbReadequacao->count('vwPainelReadequacaoCoordenadorParecerAguardandoAnalise' , $where);
                     break;
                 case 'em_analise':
-//                    $total = $tbReadequacao->count('vwPainelReadequacaoCoordenadorParecerEmAnalise' , $where);
                     $total = count($tbReadequacao->buscarReadequacaoCoordenadorParecerEmAnalise($where));
                     break;
                 case 'analisados':
                     $total  = count($tbDistribuirReadequacao->buscarReadequacaoCoordenadorParecerAnalisados($where));
-//                    $total = $tbReadequacao->count('vwPainelReadequacaoCoordenadorParecerAnalisados' , $where);
                     break;
             }
         } elseif ($this->idPerfil == Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO || $this->idPerfil == Autenticacao_Model_Grupos::PARECERISTA) {
@@ -1707,7 +1704,6 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
     }
 
     /*
-     * Alterada em 12/03/14
      * Função acessada pelo Coordenador de Parecer, Coordenador de Acompanhamento, e Coordenador Geral de Acomapanhamento.
     */
     public function visualizarReadequacaoAction()
@@ -3806,5 +3802,31 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
 
         $tbTitulacaoConselheiro = new tbTitulacaoConselheiro();
         $this->view->conselheiros = $tbTitulacaoConselheiro->buscarConselheirosTitularesTbUsuarios();
+    }
+
+    public function encaminharProjetoParaAssinaturaAction()
+    {
+        try {
+            $this->salvarEncaminhamentoAssinatura();
+            $post = $this->getRequest()->getPost();
+            $servicoDocumentoAssinatura = $this->obterServicoDocumentoAssinatura();
+
+            if (isset($post['IdPRONAC']) && !empty($post['IdPRONAC']) && $post['encaminhar'] == 'true') {
+                $servicoDocumentoAssinatura->idPronac = $post['IdPRONAC'];
+                $servicoDocumentoAssinatura->encaminharProjetoParaAssinatura();
+                parent::message('Projeto encaminhado com sucesso.', '/admissibilidade/enquadramento/encaminhar-assinatura', 'CONFIRM');
+            } elseif (isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
+                foreach ($post['IdPRONAC'] as $idPronac) {
+                    $servicoDocumentoAssinatura->idPronac = $idPronac;
+                    $servicoDocumentoAssinatura->encaminharProjetoParaAssinatura();
+                }
+                parent::message('Projetos encaminhados com sucesso.', '/admissibilidade/enquadramento/encaminhar-assinatura', 'CONFIRM');
+            }
+        } catch (Exception $objException) {
+            parent::message(
+                $objException->getMessage(),
+                '/admissibilidade/enquadramento/encaminhar-assinatura'
+            );
+        }
     }
 }

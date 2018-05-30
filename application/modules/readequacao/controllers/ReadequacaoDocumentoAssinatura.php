@@ -16,7 +16,7 @@ class Readequacao_ReadequacaoDocumentoAssinaturaController implements MinC_Assin
     public function encaminharProjetoParaAssinatura()
     {
         if (!$this->idPronac) {
-            throw new Exception("Identificador do Projeto não informado.");
+            throw new Exception("Identificador do Projeto n&atilde;o informado.");
         }
 
         $objTbProjetos = new Projeto_Model_DbTable_Projetos();
@@ -25,10 +25,6 @@ class Readequacao_ReadequacaoDocumentoAssinaturaController implements MinC_Assin
         if (!$dadosProjeto) {
             throw new Exception("Projeto n&atilde;o encontrado.");
         }
-
-//        if ($dadosProjeto['Situacao'] != 'B02' && $dadosProjeto['Situacao'] != 'B03') {
-//            throw new Exception("Situa&ccedil;&atilde;o do projeto inv&aacute;lida!");
-//        }
 
         $objModelDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
         $isProjetoDisponivelParaAssinatura = $objModelDocumentoAssinatura->isProjetoDisponivelParaAssinatura(
@@ -41,7 +37,11 @@ class Readequacao_ReadequacaoDocumentoAssinaturaController implements MinC_Assin
             $objDocumentoAssinatura = new MinC_Assinatura_Servico_Assinatura($this->post, $auth->getIdentity());
 
             $enquadramento = new Admissibilidade_Model_Enquadramento();
-            $dadosEnquadramento = $enquadramento->obterEnquadramentoPorProjeto($this->idPronac, $dadosProjeto['AnoProjeto'], $dadosProjeto['Sequencial']);
+            $dadosEnquadramento = $enquadramento->obterEnquadramentoPorProjeto(
+                $this->idPronac,
+                $dadosProjeto['AnoProjeto'],
+                $dadosProjeto['Sequencial']
+            );
 
             $objModelDocumentoAssinatura = new Assinatura_Model_TbDocumentoAssinatura();
             $objModelDocumentoAssinatura->setIdPRONAC($this->idPronac);
@@ -49,8 +49,12 @@ class Readequacao_ReadequacaoDocumentoAssinaturaController implements MinC_Assin
             $objModelDocumentoAssinatura->setIdAtoDeGestao($dadosEnquadramento['IdEnquadramento']);
             $objModelDocumentoAssinatura->setConteudo($this->gerarDocumentoAssinatura());
             $objModelDocumentoAssinatura->setIdCriadorDocumento($auth->getIdentity()->usu_codigo);
-            $objModelDocumentoAssinatura->setCdSituacao(Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_DISPONIVEL_PARA_ASSINATURA);
-            $objModelDocumentoAssinatura->setStEstado(Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO);
+            $objModelDocumentoAssinatura->setCdSituacao(
+                Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_DISPONIVEL_PARA_ASSINATURA
+            );
+            $objModelDocumentoAssinatura->setStEstado(
+                Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO
+            );
             $objModelDocumentoAssinatura->setDtCriacao($objTbProjetos->getExpressionDate());
 
             $servicoDocumento = $objDocumentoAssinatura->obterServicoDocumento();

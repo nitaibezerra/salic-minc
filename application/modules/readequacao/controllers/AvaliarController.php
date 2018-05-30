@@ -67,7 +67,8 @@ class Readequacao_AvaliarController extends Readequacao_GenericController implem
 
         $this->view->dados = array();
         $ordenacao = array("dias desc");
-        $dados = $enquadramento->obterProjetosEnquadradosParaAssinatura($this->grupoAtivo->codOrgao, $ordenacao);
+        $situacoes = ['B02', 'B03'];
+        $dados = $enquadramento->obterProjetosEnquadradosParaAssinatura($this->grupoAtivo->codOrgao, $situacoes, $ordenacao);
 
         foreach ($dados as $dado) {
             $dado->desistenciaRecursal = $enquadramento->verificarDesistenciaRecursal($dado->IdPRONAC);
