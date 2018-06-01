@@ -15,7 +15,7 @@
 <div id="breadcrumb">
 	<ul>
 		<li class="first"><a href="<?php echo $this->baseUrl(); ?>" title="Ir para Início">Início</a></li>
-		<li><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'index')); ?>" title="Ir para Recurso">Recurso</a></li>
+		<li><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'index')); ?>" title="Ir para Recurso">Recurso</a></li>
 		<li class="last">Projetos Deferidos - Orçamento</li>
 	</ul>
 </div>
@@ -237,7 +237,7 @@
 						<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/ckeditor/_samples/sample.js"></script>
 						<link type="text/css" rel="stylesheet" href="<?php echo $this->baseUrl(); ?>/public/js/ckeditor/_samples/sample.css" /> -->
 
-						<form name="form" id="form" action="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'orcamento')); ?>?idPronac=<?php echo $_GET['idPronac']; ?>" method="post">
+						<form name="form" id="form" action="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'orcamento')); ?>?idPronac=<?php echo $_GET['idPronac']; ?>" method="post">
 							<div id="dialog-alert" class="sumir">Por favor, digite sua justificativa!</div>
 							<table class="tabela">
 								<tr>

@@ -30,11 +30,11 @@
                 <td class="center-align"><?php echo $d->tpRecurso; ?></td>
                 <td class="center-align">
                     <?php if($this->idPerfil == 131): ?>
-                        <a class="white-text btn tooltipped" data-tooltip="Avaliar Recurso" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recurso', 'action' => 'avaliar-recurso-enquadramento-editar'))?>?recurso=<?php echo $d->idRecurso; ?>">
+                        <a class="white-text btn tooltipped" data-tooltip="Avaliar Recurso" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'avaliar-recurso-enquadramento-editar'))?>?recurso=<?php echo $d->idRecurso; ?>">
                             <i class="material-icons">thumbs_up_down</i>
                         </a>
                     <?php else : ?>
-                        <a class="white-text btn tooltipped" data-tooltip="Avaliar Recurso" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recurso', 'action' => 'avaliar-recurso-enquadramento'))?>?recurso=<?php echo $d->idRecurso; ?>">
+                        <a class="white-text btn tooltipped" data-tooltip="Avaliar Recurso" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'avaliar-recurso-enquadramento'))?>?recurso=<?php echo $d->idRecurso; ?>">
                             <i class="material-icons">thumbs_up_down</i>
                         </a>
                     <?php endif ?>
@@ -77,7 +77,7 @@
                     <td class="center-align"><?php echo $d->tpRecurso; ?></td>
                     <td class="center-align">
                         <a class="white-text btn"
-                            href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recurso', 'action' => 'avaliar-recurso-enquadramento-editar'));?>?recurso=<?php echo $d->idRecurso; ?>">
+                            href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'avaliar-recurso-enquadramento-editar'));?>?recurso=<?php echo $d->idRecurso; ?>">
                             <i class="material-icons">thumbs_up_down</i>
                         </a>
                     </td>

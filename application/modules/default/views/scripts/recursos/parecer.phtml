@@ -15,7 +15,7 @@
 <div id="breadcrumb">
 	<ul>
 		<li class="first"><a href="<?php echo $this->baseUrl(); ?>" title="Ir para Início">Início</a></li>
-		<li><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'index')); ?>" title="Ir para Recurso">Recurso</a></li>
+		<li><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'index')); ?>" title="Ir para Recurso">Recurso</a></li>
 		<li class="last">Projetos Deferidos com Solicitação de Reenquadramento</li>
 	</ul>
 </div>
@@ -79,7 +79,7 @@
 			<td>
 				<?php require_once "inc/btns.inc.php"; ?>
 				<br />
-				<form name="form" id="form" action="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'parecer')); ?>?idPronac=<?php echo $_GET['idPronac']; ?>&idRecurso=<?php echo $_GET['idRecurso']; ?>" method="post">
+				<form name="form" id="form" action="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'parecer')); ?>?idPronac=<?php echo $_GET['idPronac']; ?>&idRecurso=<?php echo $_GET['idRecurso']; ?>" method="post">
 				<table class="tabela">
 					<?php $i = 1; ?>
 					<?php foreach ($this->parecer as $p) : ?>

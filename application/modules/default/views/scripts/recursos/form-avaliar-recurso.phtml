@@ -2,7 +2,7 @@
     $(document).ready(function () {
 
         $('#btn_voltar_enquadramento').click(function () {
-            window.location = "<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')); ?>";
+            window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')); ?>";
         });
 
         $('#btn_finalizar_enquadramento').click(function () {
@@ -255,7 +255,7 @@
         <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => '')); ?>"
                              title="Ir para In�cio">In&iacute;cio</a></li>
         <li>
-            <a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos'), '', true); ?>"
+            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos'), '', true); ?>"
                title="Avalia&ccedil;&atilde;o de Recurso">Avalia&ccedil;&atilde;o de Recurso</a></li>
         <li class="last">Avalia&ccedil;&atilde;o de Recurso</li>
     </ul>
@@ -266,7 +266,7 @@
 <!-- ========== IN�CIO T�TULO ========== -->
 <div id="titulo">
     <div>Avalia&ccedil;&atilde;o de Recurso - <?php echo $this->nmPagina; ?> <span class="voltar"><a
-                href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos'), '', true); ?>">Voltar</a></span>
+                href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos'), '', true); ?>">Voltar</a></span>
     </div>
 </div>
 
@@ -452,7 +452,7 @@
                     //BUSCA OS DADOS DO ITEM PARA VISUALIZACAO DOS NA MODAL
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo $this->url(array('controller' => 'recurso', 'action' => 'alterar-item')); ?>',
+                        url: '<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'alterar-item')); ?>',
                         data: {
                             idPlanilha: idPlanilha
                         },
@@ -529,7 +529,7 @@
                                             if (erros == 0) {
                                                 $.ajax({
                                                     type: 'POST',
-                                                    url: '<?php echo $this->url(array('controller' => 'recurso', 'action' => 'salvar-avaliacao-do-item')); ?>',
+                                                    url: '<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'salvar-avaliacao-do-item')); ?>',
                                                     data: {
                                                         idPlanilha: idPlanilha,
                                                         Quantidade: Quantidade,
@@ -797,7 +797,7 @@
                 </table>
                 <div id="div_p_<?php echo $produto->idProduto; ?>" class="sumir">
                     <form name="form_<?php echo $produto->idProduto; ?>"
-                          action="<?php echo $this->baseUrl(); ?>/recurso/salvar-analise-de-conteudo" method="post">
+                          action="<?php echo $this->baseUrl(); ?>/recursos/salvar-analise-de-conteudo" method="post">
                         <table class="tabela">
                             <tr>
                                 <td>
@@ -1253,7 +1253,7 @@
 
         <?php if ($this->dados->tpSolicitacao != 'OR') : ?>
             <form name="form_enquadramento" id="form_enquadramento"
-                  action="<?php echo $this->baseUrl(); ?>/recurso/salvar-enquadramento" method="post">
+                  action="<?php echo $this->baseUrl(); ?>/recursos/salvar-enquadramento" method="post">
                 <table class="tabela">
                     <tr>
                         <td colspan="4" class="bold centro fundo_linha2">Enquadramento</td>
@@ -1334,7 +1334,7 @@
     <?php //***** ENQUADRAMENTO *****// ?>
     <?php if ($this->dados->tpSolicitacao == 'EN' || $this->dados->tpSolicitacao == 'OR') : ?>
         <form name="form_enquadramento" id="form_enquadramento"
-              action="<?php echo $this->baseUrl(); ?>/recurso/salvar-enquadramento" method="post">
+              action="<?php echo $this->baseUrl(); ?>/recursos/salvar-enquadramento" method="post">
             <table class="tabela">
                 <tr>
                     <th colspan="4">Parecer T&eacute;cnico</th>

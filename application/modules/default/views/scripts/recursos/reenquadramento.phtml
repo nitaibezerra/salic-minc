@@ -15,7 +15,7 @@
 <div id="breadcrumb">
     <ul>
         <li class="first"><a href="<?php echo $this->baseUrl(); ?>" title="Ir para Início">Início</a></li>
-        <li><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'recurso')); ?>" title="Ir para Recurso">Recurso</a></li>
+        <li><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'recurso')); ?>" title="Ir para Recurso">Recurso</a></li>
         <li class="last">Projetos Deferidos - Reenquadramento</li>
     </ul>
 </div>
@@ -69,7 +69,7 @@
 
     <!-- ========== INÍCIO FORMULÁRIO JUSTIFICATIVA ========== -->
     <div id="dialog-alert" class="sumir">Por favor, digite sua justificativa!</div>
-    <form name="form" id="form" action="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'reenquadramento')); ?>?idPronac=<?php echo $this->escape($tbreenquadramento->IdPRONAC);?>" method="post">
+    <form name="form" id="form" action="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'reenquadramento')); ?>?idPronac=<?php echo $this->escape($tbreenquadramento->IdPRONAC);?>" method="post">
         <table class="tabela">
             <tr>
                 <th>Justificativa</th>
@@ -158,7 +158,7 @@
                     <p>
                         <input type="button" class="btn" value=" Análise do Projeto " onclick="redirecionar('<?php echo $this->url(array('controller' => 'realizaranaliseprojeto', 'action' => 'parecerconsolidado', 'idpronac' => $_GET['idPronac'])); ?>');" onkeypress=" " /> &nbsp;
                         <input type="submit" class="btn" value=" Salvar " /> &nbsp;
-                        <input type="reset" class="btn" value=" Cancelar " onclick="redirecionar('<?php echo $this->url(array('controller' => 'recurso', 'action' => 'index')); ?>?idPronac=<?php echo $_GET['idPronac']; ?>');" onkeypress=" " /> &nbsp;
+                        <input type="reset" class="btn" value=" Cancelar " onclick="redirecionar('<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'index')); ?>?idPronac=<?php echo $_GET['idPronac']; ?>');" onkeypress=" " /> &nbsp;
                     </p>
                 </td>
             </tr>

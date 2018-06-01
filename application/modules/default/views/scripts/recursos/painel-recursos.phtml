@@ -14,7 +14,7 @@
         
         $('.btn_ver').click(function(){
             var id = $(this).attr('idRecurso');
-            window.location = "<?php echo $this->url(array('controller' => 'recurso', 'action' => 'visualizar-recurso')); ?>?id="+id;
+            window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'visualizar-recurso')); ?>?id="+id;
         });
         
         $('.enviarRecurso').click(function(){
@@ -40,7 +40,7 @@
             } else {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo $this->url(array('controller' => 'recurso', 'action' => 'encaminhar-recurso'), '', true); ?>',
+                    url: '<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'encaminhar-recurso'), '', true); ?>',
                     data: {
                         parecerista: parecerista,
                         idDistProj: idDistProj,
@@ -85,7 +85,7 @@
                     'Sim' : function(){
                         $.ajax({
                             type: 'POST',
-                            url: '<?php echo $this->url(array('controller' => 'recurso', 'action' => 'coord-parecer-finalizar-recurso'), '', true); ?>',
+                            url: '<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'coord-parecer-finalizar-recurso'), '', true); ?>',
                             data: {
                                 idDistProj: idDistProj,
                                 idRecurso: idRecurso
@@ -117,7 +117,7 @@
         
         $('.avaliacaoParecerista').click(function(){
             var id = $(this).attr('idRecurso');
-            window.location = "<?php echo $this->url(array('controller' => 'recurso', 'action' => 'form-avaliar-recurso')); ?>?id="+id;
+            window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'form-avaliar-recurso')); ?>?id="+id;
         });
         
     });
@@ -145,7 +145,7 @@
 <!-- ========== INÍCIO CONTEÚDO ========== -->
 <div id="conteudo">
     <?php if($this->idPerfil == 93){ ?>
-    <form name="formPesquisa" id="formPesquisa" action="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos'));?>" method="get">
+    <form name="formPesquisa" id="formPesquisa" action="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos'));?>" method="get">
         <table class="tabela">
             <tr>
                 <th colspan="8">Filtro de Pesquisa</th>
@@ -178,25 +178,25 @@
         <tbody>
             <tr>
                 <td align="center">
-                <form name="form1" id="form1" action="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos'));?>" method="get">
+                <form name="form1" id="form1" action="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos'));?>" method="get">
                     <?php if($this->paginacao['pag']>1) { ?>
                     <input class="btn_inicio" id="btn_inicio" type="button" class="btn_inicio"
-                           onclick="location.href='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag=1'."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'">
+                           onclick="location.href='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag=1'."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'">
                     <?php } ?>
                     <input id="btn_p_anterior" type="button"
                     <?php if($this->paginacao['pag']<=1) { ?> class="btn_p_anterior-off"
                     <?php }else { ?>
-                           class="btn_p_anterior" onclick="location.href='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['pag'] - 1)."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'"
+                           class="btn_p_anterior" onclick="location.href='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['pag'] - 1)."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'"
                     <?php } ?>>
                     <input id="btn_p_proximo" type="button"
                            <?php if($this->paginacao['pag']+1 > $this->paginacao['totalPag']) { ?>
                            class="btn_p_proximo-off"
                     <?php }else { ?>
-                           class="btn_p_proximo" onclick="location.href='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['pag'] + 1)."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'"
+                           class="btn_p_proximo" onclick="location.href='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['pag'] + 1)."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'"
                     <?php } ?>>
                     <?php if($this->paginacao['pag'] < $this->paginacao['totalPag']) { ?>
                     <input class="btn_ultimo" id="btn_ultimo" type="button"
-                           onclick="location.href='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['totalPag'])."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'">
+                           onclick="location.href='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['totalPag'])."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'">
                     <?php } ?>
                     Pág.:<select name="pag" id="pag" onchange="$('#form1').submit()" class="input_simples">
                         <?php for($i=1; $i<=$this->paginacao['totalPag']; $i++):?>
@@ -229,9 +229,9 @@
     <table class="tabela tablesorter">
         <thead>
             <tr class="titulo_tabela">
-                <th style="width: 80px;"><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag=1&qtde='.$this->paginacao['qtde'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac.'&campo=3&ordem='.$this->paginacao['novaOrdem'];?>">PRONAC</a></th>
-                <th><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag=1&qtde='.$this->paginacao['qtde'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac.'&campo=4&ordem='.$this->paginacao['novaOrdem'];?>">Nome do Projeto</a></th>
-                <th style="width: 100px;"><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag=1&qtde='.$this->paginacao['qtde'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac.'&campo=5&ordem='.$this->paginacao['novaOrdem'];?>">Dt. Envio</a></th>
+                <th style="width: 80px;"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag=1&qtde='.$this->paginacao['qtde'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac.'&campo=3&ordem='.$this->paginacao['novaOrdem'];?>">PRONAC</a></th>
+                <th><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag=1&qtde='.$this->paginacao['qtde'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac.'&campo=4&ordem='.$this->paginacao['novaOrdem'];?>">Nome do Projeto</a></th>
+                <th style="width: 100px;"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag=1&qtde='.$this->paginacao['qtde'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac.'&campo=5&ordem='.$this->paginacao['novaOrdem'];?>">Dt. Envio</a></th>
                 
                 <?php if($this->idPerfil == 94 || $this->idPerfil == 110){ //FUNÇÃO CRIADA APENAS PARA O PARECERISTA E TECNICO DE ANALISE ?>
                 <th>Diligência</th>
@@ -356,25 +356,25 @@
             <tbody>
                 <tr>
                     <td align="center">
-                    <form name="form2" id="form2" action="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos'));?>" method="get">
+                    <form name="form2" id="form2" action="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos'));?>" method="get">
                         <?php if($this->paginacao['pag']>1) { ?>
                         <input class="btn_inicio" id="btn_inicio" type="button" class="btn_inicio"
-                               onclick="location.href='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag=1'."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'">
+                               onclick="location.href='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag=1'."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'">
                         <?php } ?>
                         <input id="btn_p_anterior" type="button"
                         <?php if($this->paginacao['pag']<=1) { ?> class="btn_p_anterior-off"
                         <?php }else { ?>
-                               class="btn_p_anterior" onclick="location.href='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['pag'] - 1)."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'"
+                               class="btn_p_anterior" onclick="location.href='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['pag'] - 1)."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'"
                         <?php } ?>>
                         <input id="btn_p_proximo" type="button"
                                <?php if($this->paginacao['pag']+1 > $this->paginacao['totalPag']) { ?>
                                class="btn_p_proximo-off"
                         <?php }else { ?>
-                               class="btn_p_proximo" onclick="location.href='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['pag'] + 1)."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'"
+                               class="btn_p_proximo" onclick="location.href='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['pag'] + 1)."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'"
                         <?php } ?>>
                         <?php if($this->paginacao['pag'] < $this->paginacao['totalPag']) { ?>
                         <input class="btn_ultimo" id="btn_ultimo" type="button"
-                               onclick="location.href='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['totalPag'])."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'">
+                               onclick="location.href='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos')).'?pag='.($this->paginacao['totalPag'])."&qtde=".$this->paginacao['qtde'].$this->paginacao['ordenacao'].'&tipoFiltro='.$this->filtro.'&pronac='.$this->pronac; ?>'">
                         <?php } ?>
                         Pág.:<select name="pag" id="pag" onchange="$('#form2').submit()" class="input_simples">
                             <?php for($i=1; $i<=$this->paginacao['totalPag']; $i++):?>
@@ -406,7 +406,7 @@
     <?php } ?>
     <br clear="all" />
 
-<!--    <form target="_blank" class="form" name="formImpressao" id="formImpressao" method="post" action='<?php echo $this->url(array('controller' => 'recurso', 'action' => 'imprimir-recursos')); ?>'>
+<!--    <form target="_blank" class="form" name="formImpressao" id="formImpressao" method="post" action='<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'imprimir-recursos')); ?>'>
         <input type="hidden" name="campo" value="<?php echo $this->paginacao['campo'];?>">
         <input type="hidden" name="ordem" value="<?php echo $this->paginacao['ordem'];?>">
         <input type="hidden" name="tipoFiltro" value="<?php echo $this->filtro;?>">

@@ -2,7 +2,7 @@
     $(document).ready(function(){
         
         $('#btn_voltar_enquadramento').click(function(){
-            window.location = "<?php echo $this->url(array('controller' => 'recurso', 'action' => 'analisar-recursos-cnic')); ?>";
+            window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'analisar-recursos-cnic')); ?>";
         });
         
         $('#btn_finalizar_enquadramento').click(function(){
@@ -273,7 +273,7 @@
 <div id="breadcrumb">
     <ul>
         <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => '')); ?>" title="Ir para Inï¿½cio">Início</a></li>
-        <li><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'analisar-recursos-cnic'), '', true); ?>" title="Avaliar de Recurso">Avaliar de Recurso</a></li>
+        <li><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'analisar-recursos-cnic'), '', true); ?>" title="Avaliar de Recurso">Avaliar de Recurso</a></li>
         <li class="last">Avalia&ccedil;&atilde;o de Recurso</li>
     </ul>
 </div>
@@ -282,7 +282,7 @@
 
 <!-- ========== INÍCIO TÍTULO ========== -->
 <div id="titulo">
-    <div>Avalia&ccedil;&atilde;o de Recurso - <?php echo $this->nmPagina; ?> <span class="voltar"><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'analisar-recursos-cnic'), '', true); ?>">Voltar</a></span></div>
+    <div>Avalia&ccedil;&atilde;o de Recurso - <?php echo $this->nmPagina; ?> <span class="voltar"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'analisar-recursos-cnic'), '', true); ?>">Voltar</a></span></div>
 </div>
 
 <!-- ========== INÍCIO CONTEÚDO ========== -->
@@ -464,7 +464,7 @@
                     //BUSCA OS DADOS DO ITEM PARA VISUALIZAÇÃO DOS NA MODAL
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo $this->url(array('controller' => 'recurso', 'action' => 'cnic-alterar-item')); ?>',
+                        url: '<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'cnic-alterar-item')); ?>',
                         data: {
                             idPlanilha: idPlanilha
                         },
@@ -548,7 +548,7 @@
                                             if(erros == 0){
                                                 $.ajax({
                                                     type: 'POST',
-                                                    url: '<?php echo $this->url(array('controller' => 'recurso', 'action' => 'cnic-salvar-avaliacao-do-item')); ?>',
+                                                    url: '<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'cnic-salvar-avaliacao-do-item')); ?>',
                                                     data: {
                                                         idPlanilha: idPlanilha,
                                                         Quantidade: Quantidade,
@@ -847,7 +847,7 @@
             </tr>
         </table>
         <div id="div_p_<?php echo $produto->idProduto; ?>" class="sumir">
-            <form name="form_<?php echo $produto->idProduto; ?>" action="<?php echo $this->baseUrl(); ?>/recurso/cnic-salvar-analise-de-conteudo" method="post">
+            <form name="form_<?php echo $produto->idProduto; ?>" action="<?php echo $this->baseUrl(); ?>/recursos/cnic-salvar-analise-de-conteudo" method="post">
                 <table class="tabela">
                     <tr>
                         <td>
@@ -1200,7 +1200,7 @@
         <?php } ?>
     
         <?php if($this->dados->tpSolicitacao != 'OR'){ ?>
-        <form name="form_enquadramento" id="form_enquadramento" action="<?php echo $this->baseUrl(); ?>/recurso/componente-comissao-salvar-enquadramento" method="post">
+        <form name="form_enquadramento" id="form_enquadramento" action="<?php echo $this->baseUrl(); ?>/recursos/componente-comissao-salvar-enquadramento" method="post">
             <table class="tabela">
                 <tr>
                     <td colspan="4" class="bold centro fundo_linha2">Enquadramento</td>
@@ -1270,7 +1270,7 @@
         
     <?php //***** ENQUADRAMENTO *****// ?>
     <?php if($this->dados->tpSolicitacao == 'EN' || $this->dados->tpSolicitacao == 'OR'){ ?>
-    <form name="form_enquadramento" id="form_enquadramento" action="<?php echo $this->baseUrl(); ?>/recurso/cnic-salvar-enquadramento" method="post">
+    <form name="form_enquadramento" id="form_enquadramento" action="<?php echo $this->baseUrl(); ?>/recursos/cnic-salvar-enquadramento" method="post">
         <table class="tabela">
             <tr>
                 <th colspan="4">Consolidação do Parecer Técnico</th>

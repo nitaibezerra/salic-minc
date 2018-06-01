@@ -119,12 +119,12 @@ $arrMenu['analise']['menu'][] = array('label' => 'Aprova&ccedil;&atilde;o FNC', 
     'grupo' => array(141,142)
 );
 $arrMenu['analise']['menu'][] = array('label' => 'Recurso', 'title' => 'Ir para Recurso',
-    'url' => $this->url(array('controller' => 'recurso', 'action' => 'index'), '', true),
+    'url' => $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'index'), '', true),
     'grupo' => array(Autenticacao_Model_Grupos::COORDENADOR_ANALISE,Autenticacao_Model_Grupos::COORDENADOR_ATENDIMENTO)
 );
 
 $arrMenu['analise']['menu'][] = array('label' => 'Avaliar Recursos', 'title' => 'Ir para Avaliar Recursos',
-    'url' => $this->url(array('controller' => 'recurso', 'action' => 'painel-recursos'), '', true),
+    'url' => $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos'), '', true),
     'grupo' => array( Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA, Autenticacao_Model_Grupos::PARECERISTA, Autenticacao_Model_Grupos::TECNICO_ANALISE)
 );
 $arrMenu['analise']['menu'][] = array('label' => 'Avaliar Readequa&ccedil;&otilde;es', 'title' => 'Ir para Avaliar Readequa&ccedil;&otilde;es',
@@ -137,7 +137,7 @@ $arrMenu['analise']['menu'][] = array('label' => 'Avaliar Readequa&ccedil;&otild
     'grupo' => array(118)
 );
 $arrMenu['analise']['menu'][] = array('label' => 'Avaliar Recursos', 'title' => 'Ir para Avaliar Recursos',
-    'url' => $this->url(array('controller' => 'recurso', 'action' => 'analisar-recursos-cnic'), '', true),
+    'url' => $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'analisar-recursos-cnic'), '', true),
     'grupo' => array(118)
 );
 

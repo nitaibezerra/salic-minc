@@ -74,7 +74,7 @@
                 $('.asterisco_dinamico').removeClass('sumir');
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo $this->url(array('controller' => 'recurso', 'action' => 'buscar-destinatarios')); ?>',
+                    url: '<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'buscar-destinatarios')); ?>',
                     data: {
                         vinculada: vinculada,
                         idPronac: <?php echo $this->projeto->IdPRONAC; ?>
@@ -120,7 +120,7 @@
 <div id="breadcrumb">
     <ul>
         <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => '')); ?>" title="Ir para Inï¿½cio">Início</a></li>
-        <li><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'index'), '', true); ?>" title="Recurso">Recurso</a></li>
+        <li><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'index'), '', true); ?>" title="Recurso">Recurso</a></li>
         <li>Aguardando Análise</li>
         <li class="last">Avalia&ccedil;&atilde;o de Recurso</li>
     </ul>
@@ -136,7 +136,7 @@
 
 <!-- ========== INÍCIO CONTEÚDO ========== -->
 <div id="conteudo">           
-    <form name="formAvaliacao" id="formAvaliacao" action="<?php echo $this->baseUrl(); ?>/recurso/salvar-avaliacao" method="post">
+    <form name="formAvaliacao" id="formAvaliacao" action="<?php echo $this->baseUrl(); ?>/recursos/salvar-avaliacao" method="post">
         <table class="tabela">
             <tr>
                 <td class="destacar bold centro" width="20%">PRONAC</td>

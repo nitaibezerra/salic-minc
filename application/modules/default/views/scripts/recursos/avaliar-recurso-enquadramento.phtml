@@ -31,7 +31,7 @@
         </table>
     </div>
     <div class="row">
-        <form name="formAvaliacao" id="formAvaliacao" action="<?php echo $this->Url(array('module' => 'default', 'controller' => 'recurso', 'action' => 'salvar-avaliacao-enquadramento')); ?>" method="post">
+        <form name="formAvaliacao" id="formAvaliacao" action="<?php echo $this->Url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'salvar-avaliacao-enquadramento')); ?>" method="post">
             <p>RESPOSTA</p>
             <p>
                 <input id="stAtendimento1" type="radio" class="" value="D" name="stAtendimento" checked="checked">
@@ -56,7 +56,7 @@
                     <button name="btn_salvar" id="btn_salvar" class="tooltipped btn waves-effect waves-light" data-tooltip="Salvar Avaliação" type="submit" >Salvar
                         <i class="material-icons right">send</i>
                     </button>
-                    <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recurso', 'action' => 'recurso-enquadramento'))?>" id="btn_voltar" class="red-text btn waves-effect waves-dark white tooltipped" data-tooltip="Cancelar Avaliação" type="reset" name="action">Cancelar
+                    <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'recurso-enquadramento'))?>" id="btn_voltar" class="red-text btn waves-effect waves-dark white tooltipped" data-tooltip="Cancelar Avaliação" type="reset" name="action">Cancelar
                     </a>
                 </div>
             </div>

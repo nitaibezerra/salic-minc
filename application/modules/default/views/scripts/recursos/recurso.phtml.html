@@ -70,7 +70,7 @@
         </tr>
   <tr> 			  <?php foreach($this->recursoindeferidos as $tbinferidos): ?>
      
-		<td><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'indeferidos')); ?>?idPronac=<?php echo $this->escape($tbinferidos->IdPRONAC);?>"><?php echo $this->escape($tbinferidos->pronac);?></a></td>				
+		<td><a href="<?php echo $this->url(array('controller' => 'recursos', 'action' => 'indeferidos')); ?>?idPronac=<?php echo $this->escape($tbinferidos->IdPRONAC);?>"><?php echo $this->escape($tbinferidos->pronac);?></a></td>				
 		<td><?php echo $this->escape($tbinferidos->NomeProjeto);?></td>
 		<td align="center"><?php echo $this->escape($tbinferidos->Area);?> - <?php echo $this->escape($tbinferidos->Segmento);?></td>
 		<td align="center"><?php echo $this->escape($tbinferidos->DataInicio);?></td>
@@ -115,7 +115,7 @@
 			  
 
 						
-<td><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'reenquadramento')); ?>?idPronac=<?php echo $this->escape($tbreenquadramento->IdPRONAC);?>"><?php echo $this->escape($tbreenquadramento->pronac);?></a></td>				
+<td><a href="<?php echo $this->url(array('controller' => 'recursos', 'action' => 'reenquadramento')); ?>?idPronac=<?php echo $this->escape($tbreenquadramento->IdPRONAC);?>"><?php echo $this->escape($tbreenquadramento->pronac);?></a></td>				
 
 						<td><?php echo $this->escape($tbreenquadramento->NomeProjeto);?></td>
 						<td align="center"><?php echo $this->escape($tbreenquadramento->Area);?> - <?php echo $this->escape($tbreenquadramento->Segmento);?></td>
@@ -155,7 +155,7 @@
 			<th>Cidade</th>
 		</tr>
 		<tr > <?php foreach($this->recursoorcamento as $tborcamento): ?>
-			<td><a href="<?php echo $this->url(array('controller' => 'recurso', 'action' => 'orcamento')); ?>?idPronac=<?php echo $this->escape($tborcamento->IdPRONAC);?>&idRecurso=<?php echo $this->escape($tborcamento->idRecurso);?>"><?php echo $this->escape($tborcamento->pronac);?></a></td>				
+			<td><a href="<?php echo $this->url(array('controller' => 'recursos', 'action' => 'orcamento')); ?>?idPronac=<?php echo $this->escape($tborcamento->IdPRONAC);?>&idRecurso=<?php echo $this->escape($tborcamento->idRecurso);?>"><?php echo $this->escape($tborcamento->pronac);?></a></td>				
 			<td><?php echo $this->escape($tborcamento->NomeProjeto);?></td>
 			<td align="center"><?php echo $this->escape($tborcamento->Area);?> - <?php echo $this->escape($tborcamento->Segmento);?></td>
 			<td align="center"><?php echo $this->escape($tborcamento->DataInicio);?></td>
