@@ -32,8 +32,11 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
                 return $this->orcamentariaProponente($idPronac);
                 break;
             case 2:
+                return $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
             case 3:
+                return $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
             case 4:
+                return $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
             case 5:
                 if ($params['link'] || $params['view_edicao']) {
                     $planilhaOrcamentaria = $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
