@@ -289,6 +289,7 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
                         unset($detalhamento['idPronac']);
                         unset($detalhamento['idDetalhaPlanoDistribuicao']);
                         unset($detalhamento['idReadequacao']);
+                        unset($detalhamento['idDetalhaOriginal']);
                         $tbDetalhaPlanoDistribuicao->inserir($detalhamento);
                     }
                 }

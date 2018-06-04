@@ -2755,7 +2755,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             && $this->idPerfil != Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO
             && $this->idPerfil != Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO
             && $this->idPerfil != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO) {
-            parent::message("Você não tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
+            parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
         }
 
         // TODO: quando finalizar, mantem filtro de pronac caso estiver marca

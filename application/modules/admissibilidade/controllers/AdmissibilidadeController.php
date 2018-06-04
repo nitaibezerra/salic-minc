@@ -901,18 +901,18 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     {
         try {
 
-            $recursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
-            $recursoAtual = $recursoPropostaDbTable->obterRecursoAtual($rsProjeto->idProjeto);
             $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
             $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($rsProjeto->idProjeto);
             $ultimaSugestaoEnquadramento = $sugestaoEnquadramentoDbTable->obterUltimaSugestaoEnquadramentoProposta();
             $observacao = $ultimaSugestaoEnquadramento['descricao_motivacao'];
             $tpEnquadramento = $ultimaSugestaoEnquadramento['tp_enquadramento'];
+            $recursoPropostaDbTable = new Recurso_Model_DbTable_TbRecursoProposta();
+            $recursoAtual = $recursoPropostaDbTable->obterRecursoAtual($rsProjeto->idProjeto);
             if (count($recursoAtual) > 0 && (string) $recursoAtual['tpSolicitacao'] == (string) Recurso_Model_TbRecursoProposta::TIPO_SOLICITACAO_ENQUADRAMENTO) {
                 $planoDistribuicaoProdutoDbTable = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
                 $enquadramentoInicialProponente = $planoDistribuicaoProdutoDbTable->obterEnquadramentoInicialProponente($rsProjeto->idProjeto);
-                $tpEnquadramento = $enquadramentoInicialProponente['tp_enquadramento'];
                 if (!empty($recursoAtual['dsAvaliacaoTecnica']))  {
+                    $tpEnquadramento = $enquadramentoInicialProponente['tp_enquadramento'];
                     $observacao = $recursoAtual['dsAvaliacaoTecnica'];
                 }
             }
