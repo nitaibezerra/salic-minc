@@ -7,24 +7,26 @@
         factory(global.numeral);
     }
 }(this, function (numeral) {
-    numeral.register('locale', 'pt-br', {
-        delimiters: {
-            thousands: '.',
-            decimal: ','
-        },
-        abbreviations: {
-            thousand: 'mil',
-            million: 'milhões',
-            billion: 'b',
-            trillion: 't'
-        },
-        ordinal: function (number) {
-            return 'º';
-        },
-        currency: {
-            symbol: 'R$'
-        }
-    });
+    if (numeral.locales['pt-br'] === undefined) {
+        numeral.register('locale', 'pt-br', {
+            delimiters: {
+                thousands: '.',
+                decimal: ','
+            },
+            abbreviations: {
+                thousand: 'mil',
+                million: 'milhões',
+                billion: 'b',
+                trillion: 't'
+            },
+            ordinal: function (number) {
+                return 'º';
+            },
+            currency: {
+                symbol: 'R$'
+            }
+        });
+    }
 }));
 
 // switch between locales
