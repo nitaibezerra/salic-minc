@@ -287,7 +287,7 @@ class RecursosController extends MinC_Controller_Action_Abstract
             $this->view->recurso = $r;
             $this->view->projeto = $p;
         } else {
-            parent::message('Nenhum registro encontrado.', "recurso", "ERROR");
+            parent::message('Nenhum registro encontrado.', "recursos", "ERROR");
         }
     }
 
@@ -378,9 +378,9 @@ class RecursosController extends MinC_Controller_Action_Abstract
                 );
                 $tb = $tbDistribuirProjeto->inserir($dados);
             }
-            parent::message('Dados salvos com sucesso!', "recurso", "CONFIRM");
+            parent::message('Dados salvos com sucesso!', "recursos", "CONFIRM");
         } else {
-            parent::message('Nenhum registro encontrado.', "recurso", "ERROR");
+            parent::message('Nenhum registro encontrado.', "recursos", "ERROR");
         }
     }
 
@@ -1898,7 +1898,7 @@ class RecursosController extends MinC_Controller_Action_Abstract
                     }
                     $alterarAtendimento = RecursoDAO::avaliarRecurso($dados, $idRecurso);
                     if ($alterarAtendimento) { // caso tenha sido alterado com sucesso
-                        parent::message("Solicita&ccedil;&atilde;o enviada com sucesso!", "recurso", "CONFIRM");
+                        parent::message("Solicita&ccedil;&atilde;o enviada com sucesso!", "recursos", "CONFIRM");
                     } else {
                         throw new Exception("Erro ao $msg recurso!");
                     }
@@ -1974,7 +1974,7 @@ class RecursosController extends MinC_Controller_Action_Abstract
                     $alterarEnquadramento = RecursoDAO::recursoReenquadramento($dadosEnquadramento, $idEnquadramento);
 
                     if ($alterarAtendimento && $alterarEnquadramento) { // caso tenha sido alterado com sucesso
-                        parent::message("Solicita&ccedil;&atilde;o enviada com sucesso!", "recurso", "CONFIRM");
+                        parent::message("Solicita&ccedil;&atilde;o enviada com sucesso!", "recursos", "CONFIRM");
                     } else {
                         throw new Exception("Erro ao $msg recurso!");
                     }
@@ -2037,7 +2037,7 @@ class RecursosController extends MinC_Controller_Action_Abstract
             // altera a situacao do projeto
             $alterarSituacao = ProjetoDAO::alterarSituacao($idPronac, $situacao);
 
-            parent::message("Projeto consolidado com sucesso!", "recurso", "CONFIRM");
+            parent::message("Projeto consolidado com sucesso!", "recursos", "CONFIRM");
         } else {
             $tborcamento = RecursoDAO::buscarRecursoOrcamento($idPronac, $idRecurso);
             $this->view->tbrecurso = $tborcamento;
@@ -2199,7 +2199,7 @@ class RecursosController extends MinC_Controller_Action_Abstract
             $this->view->recurso = $r;
             $this->view->projeto = $p;
         } else {
-            parent::message('Nenhum registro encontrado.', "recurso", "ERROR");
+            parent::message('Nenhum registro encontrado.', "recursos", "ERROR");
         }
     }
 
@@ -2322,7 +2322,7 @@ class RecursosController extends MinC_Controller_Action_Abstract
             $this->view->recurso = $r;
             $this->view->projeto = $p;
         } else {
-            parent::message('Nenhum registro encontrado.', "recurso", "ERROR");
+            parent::message('Nenhum registro encontrado.', "recursos", "ERROR");
         }
     }
 
@@ -2333,10 +2333,10 @@ class RecursosController extends MinC_Controller_Action_Abstract
         $dsAvaliacao = $this->getRequest()->getParam('dsAvaliacao');
 
         if (empty($dsAvaliacao)) {
-            parent::message('Avaliação não preenchida!', "recurso", "ERROR");
+            parent::message('Avaliação não preenchida!', "recursos", "ERROR");
         }
         if (empty($idRecurso)) {
-            parent::message('Recurso não encontrado!', "recurso", "ERROR");
+            parent::message('Recurso não encontrado!', "recursos", "ERROR");
         }
 
         $tbRecurso = new tbRecurso();
