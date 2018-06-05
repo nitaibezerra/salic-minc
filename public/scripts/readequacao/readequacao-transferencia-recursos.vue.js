@@ -43,8 +43,6 @@ Vue.component('readequacao-transferencia-recursos', {
       </li>
       <li>
 	  <div class="collapsible-header"><i class="material-icons">list</i>Projetos recebedores</div>
-<template v-if="disponivelAdicionarRecebedores()">
-
 	  <div class="collapsible-body card" >
 		<div class="card-content">
 		    <span class="card-title">Projetos recebedores</span>
@@ -122,12 +120,6 @@ Vue.component('readequacao-transferencia-recursos', {
 		    </form>
 		</div>
 	    </div>
-         </template>
-         <template v-else>
-             <div class="collapsible-body card">
-                 <span>N&atilde;o h&aacute; projetos dispon&iacute;veis a receber recursos deste projeto.</span>
-             </div>
-         </template>
       </li>
       <div class="card">
       	   <div class="right-align padding20 col s12">
@@ -201,7 +193,6 @@ Vue.component('readequacao-transferencia-recursos', {
 	this.projetoRecebedor = this.defaultProjetoRecebedor();
 	this.obterDadosReadequacao();
 	this.obterDadosProjetoTransferidor();
-	this.obterProjetosRecebedores();
     },
     mounted: function() {
     },
@@ -320,6 +311,7 @@ Vue.component('readequacao-transferencia-recursos', {
 		    dsSolicitacao: readequacao.dsSolicitacao
 		}
             }).done(function (response) {
+		self.obterProjetosDisponiveis();
 		$3('.collapsible').collapsible('close', 0);
 		$3('.collapsible').collapsible('open', 1);
 		self.readequacao = readequacao;
@@ -339,7 +331,12 @@ Vue.component('readequacao-transferencia-recursos', {
 		    idReadequacao: self.readequacao.idReadequacao
 		}
 	    }).done(function (response) {
-		console.log(response);
+		if (response.error) {
+		    self.mensagemAlerta("Ocorreu um erro na finaliza&ccedil;&atilde;o da readequa&ccedil;&atilde;o.");
+		} else {
+		    self.mensagemSucesso("Solicita&ccedil;&atilde;o de transfer&ecirc;ncia de recursos finalizada.");
+		    voltar();
+		}
 	    });
 	},
         obterDadosReadequacao: function () {
@@ -353,8 +350,9 @@ Vue.component('readequacao-transferencia-recursos', {
 		    siEncaminhamento: self.siEncaminhamento
                 }
             }).done(function (response) {
-		if (response.readequacao != null) {
+		if (_.isObject(response.readequacao)) {
                     self.readequacao = response.readequacao;
+	    	    self.obterProjetosDisponiveis();
 		}
             });
         },	
