@@ -41,7 +41,7 @@
             }
             ?>
             <input type="hidden" value="<?php echo $idVinculoProposta; ?>" name="idVinculoProposta"/>
-            <input type="hidden" value="<?php echo $idPreProjeto; ?>" name="idPreProjeto"/>
+            <input type="hidden" value="<?php echo $this->idPreProjeto; ?>" name="idPreProjeto"/>
             <input type="hidden" value="1" name="mecanismo"/>
             <table class="tabela">
                 <tr>
@@ -106,7 +106,7 @@
                     $(this).dialog('close');
                 },
                 'OK': function () {
-                    window.location = "<?php echo $this->baseUrl(); ?>/proposta/manterpropostaedital/exluirproposta/?idPreProjeto=<?php echo $idPreProjeto; ?>";
+                    window.location = "<?php echo $this->baseUrl(); ?>/proposta/manterpropostaedital/exluirproposta/?idPreProjeto=<?php echo $this->idPreProjeto; ?>";
                     $(this).dialog('close');
                 }
             }
@@ -158,7 +158,7 @@
             modal: true,
             buttons: {
                 'OK': function () {
-                    window.location = "<?php echo $this->baseUrl(); ?>/proposta/manterorcamento/produtoscadastrados/idPreProjeto/<?php echo $idPreProjeto; ?>";
+                    window.location = "<?php echo $this->baseUrl(); ?>/proposta/manterorcamento/produtoscadastrados/idPreProjeto/<?php echo $this->idPreProjeto; ?>";
                     $(this).dialog('close');
                 }
             }
