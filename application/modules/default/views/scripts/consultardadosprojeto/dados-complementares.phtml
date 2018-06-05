@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    
+
     $(document).ready(function(){
         //ATUALIZA TITULO DA PAGINA
         window.parent.$("#titulo").html("<div>Dados complementares do projeto</div>");
@@ -37,27 +37,16 @@
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar" id="periodo_realizacao" onclick="mostraOcultaElemento('periodo_realizacao');" />  <b>Per&iacute;odo de realiza&ccedil;&atilde;o</b>
+                <input type="button" class="btn_adicionar"
+                  id="justificativa"
+                    onclick="mostraOcultaElemento('justificativa');" />
+                <b>Per&iacute;odo de realiza&ccedil;&atilde;o</b>
             </td>
         </tr>
-        <tr class="periodo_realizacao sumir" align="left" style="padding: 5px">
+        <tr class="justificativa sumir" align="left" style="padding: 5px">
             <td>
                 <table class="tabela">
-                <tr class="destacar">
-                    <td align="center"><b>Data de In&iacute;cio</b></td>
-                    <td align="center"><b>Data de T&eacute;rmino</b></td>
-                </tr>
-                <?php  if(isset($this->projeto->DtInicioExecucao) && !empty($this->projeto->DtInicioExecucao)): ?>
-                <tr>
-                    <td align="center"><?php echo date("d/m/Y",strtotime($this->projeto->DtInicioExecucao));?></td>
-                    <td align="center"><?php echo date("d/m/Y",strtotime($this->projeto->DtFimExecucao));?></td>
-                </tr>
-                <?php else: ?>
-                    <tr>
-                        <td align="center"><em>Dados n&atilde;o informados!</em></td>
-                        <td align="center"><em>Dados n&atilde;o informados!</em></td>
-                    </tr>
-                <?php endif; ?>
+                  <?php echo($this->proposta->Justificativa); ?>
                 </table>
             </td>
         </tr>
@@ -77,7 +66,7 @@
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar" id="democratizacao" onclick="mostraOcultaElemento('democratizacao');" />  <b>Democratizaç&atilde;o de acesso</b>
+                <input type="button" class="btn_adicionar" id="democratizacao" onclick="mostraOcultaElemento('democratizacao');" />  <b>Democratizaï¿½&atilde;o de acesso</b>
             </td>
         </tr>
         <tr class="democratizacao sumir" align="left" style="padding: 5px">
@@ -101,7 +90,7 @@
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar"  id="fichatecnica" onclick="mostraOcultaElemento('fichatecnica');" />  <b>Ficha técnica</b>
+                <input type="button" class="btn_adicionar"  id="fichatecnica" onclick="mostraOcultaElemento('fichatecnica');" />  <b>Ficha tï¿½cnica</b>
             </td>
         </tr>
         <tr class="fichatecnica sumir" align="left" style="padding: 5px">
@@ -137,7 +126,7 @@
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar" id="especificacao" onclick="mostraOcultaElemento('especificacao');" />  <b>Especificaç&otilde;es técnicas do produto</b>
+                <input type="button" class="btn_adicionar" id="especificacao" onclick="mostraOcultaElemento('especificacao');" />  <b>Especificaï¿½&otilde;es tï¿½cnicas do produto</b>
             </td>
         </tr>
         <tr class="especificacao sumir" align="left" style="padding: 5px">
@@ -149,7 +138,7 @@
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar" id="outras" onclick="mostraOcultaElemento('outras');" />  <b>Outras informaç&otilde;es</b>
+                <input type="button" class="btn_adicionar" id="outras" onclick="mostraOcultaElemento('outras');" />  <b>Outras informaï¿½&otilde;es</b>
             </td>
         </tr>
         <tr class="outras sumir" align="left" style="padding: 5px">
@@ -170,7 +159,7 @@
                 </table>
             </fieldset>-->
             <!--<fieldset>
-                <legend>Democratizaç&atilde;o de Acesso</legend>
+                <legend>Democratizaï¿½&atilde;o de Acesso</legend>
                 <table class="tabela">
                     <tr align="left">
                         <td>
@@ -178,7 +167,7 @@
                     </tr>
                 </table>
             </fieldset>
-            
+
          </td>
     </tr>
 </table>-->
