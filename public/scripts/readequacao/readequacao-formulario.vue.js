@@ -1,69 +1,84 @@
 Vue.component('readequacao-formulario', {
     template: `
     <div class="card">
-        <div class="card-content">
-            <span class="card-title">Solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o</span>
-            <input type="hidden" v-model="readequacao.idReadequacao"/>
-            <div class="row">
-                <div class="input-field col s12">
-                        <textarea
-                            :disabled="disabled"
-                            id="textarea1"
-                            class="materialize-textarea"
-                            ref="readequacaoJustificativa"
-                            v-model="readequacao.justificativa"></textarea>
-                    <label for="textarea1">Justificativa *</label>
-                </div>
-            </div>
-            <component
-                v-bind:is="componenteDsSolicitacao"
-                :ds-solicitacao="readequacao.dsSolicitacao"
-                v-on:eventoAtualizarDsSolicitacao="readequacao.dsSolicitacao=$event"
-            ></component>
-            <div class="row">
-                <div class="col s12">
-                    <div v-if="!disabled" class="file-field input-field">
-                        <div class="btn">
-                            <span>Selecionar arquivo</span>
-                            <input type="file"
-                                   name="arquivo"
-                                   id="arquivo"
-                                   @change="subirDocumento">
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                        <input type="hidden" v-model="readequacao.idDocumento"/>
-                    </div>
-                    <div id="carregando-arquivo" class="progress sumir">
-                      <div class="indeterminate"></div>
-                    </div>
-                    <div v-if="readequacao.idDocumento" class="col s12">
-                        Arquivo anexado: <a v-bind:href="'/readequacao/readequacoes/abrir-documento-readequacao?id=' + readequacao.idDocumento">
-                            {{readequacao.nomeArquivo }}
-                        </a>
-                        <a
-                            v-if="!disabled"
-                            v-show="readequacao.idDocumento"
-                            v-on:click="excluirDocumento"
-                            title="Remover aquivo"
-                            class=" small waves-effect waves-light red-text lighten-2">
-                            <i class="material-icons">delete</i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div v-if="!disabled" class="row">
-                <div class="right-align padding20 col s12">
-                    <button
-                        v-on:click="salvarReadequacao"
-                        class="waves-effect waves-light btn btn-primary">
-                        <i class="material-icons right">save</i>Salvar
-                    </button>
-                </div>
-            </div>
+      <div v-if="!disabled" class="card-content">
+        <span class="card-title">Solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o</span>
+        <input type="hidden" v-model="readequacao.idReadequacao"/>
+        <div class="row">
+          <div class="input-field col s12">
+            <textarea
+              :disabled="disabled"
+              id="textarea1"
+              class="materialize-textarea"
+              ref="readequacaoJustificativa"
+              v-model="readequacao.justificativa"></textarea>
+            <label for="textarea1">Justificativa *</label>
+          </div>
         </div>
-    </div>
+        <component
+          v-bind:is="componenteDsSolicitacao"
+          :ds-solicitacao="readequacao.dsSolicitacao"
+          :disabled="disabled"
+          v-on:eventoAtualizarDsSolicitacao="readequacao.dsSolicitacao=$event"
+          ></component>
+        <div class="row">
+          <div class="col s12">
+            <div v-if="!disabled" class="file-field input-field">
+              <div class="btn">
+                <span>Selecionar arquivo</span>
+                <input type="file"
+                       name="arquivo"
+                       id="arquivo"
+                                   @change="subirDocumento">
+              </div>
+              <div class="file-path-wrapper">
+                <input class="file-path validate" type="text">
+              </div>
+              <input type="hidden" v-model="readequacao.idDocumento"/>
+            </div>
+            <div id="carregando-arquivo" class="progress sumir">
+              <div class="indeterminate"></div>
+            </div>
+            <div v-if="readequacao.idDocumento" class="col s12">
+              Arquivo anexado: <a v-bind:href="'/readequacao/readequacoes/abrir-documento-readequacao?id=' + readequacao.idDocumento">
+                            {{readequacao.nomeArquivo }}
+              </a>
+              <a
+                v-if="!disabled"
+                v-show="readequacao.idDocumento"
+                v-on:click="excluirDocumento"
+                title="Remover aquivo"
+                class=" small waves-effect waves-light red-text lighten-2">
+                <i class="material-icons">delete</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div v-if="!disabled" class="row">
+          <div class="right-align padding20 col s12">
+            <button
+              v-on:click="salvarReadequacao"
+              class="waves-effect waves-light btn btn-primary">
+              <i class="material-icons right">save</i>Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+			<template v-else>
+				<div class="card-content">
+					<span class="card-title">Solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o</span>
+					<p>
+						{{readequacao.justificativa}}
+					</p>
+				</div>
+				<div class="card-content" v-if="readequacao.idDocumento">
+					<span class="card-title">Arquivo anexado></span>
+					<a v-bind:href="'/readequacao/readequacoes/abrir-documento-readequacao?id=' + readequacao.idDocumento">
+            {{readequacao.nomeArquivo }}
+          </a>
+				</div>
+			</template>
+		</div>
     `,
     data: function () {
         return {

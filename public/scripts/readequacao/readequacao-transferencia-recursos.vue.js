@@ -1,142 +1,189 @@
 Vue.component('readequacao-transferencia-recursos', {
     template: `
 <div class='readequacao-transferencia-recursos'>
-
-            <div class="card">
-                <div class="card-content">
-		    <span class="card-title">Projeto transferidor</span>
+	<div class="card">
+    <div class="card-content">
+		  <span class="card-title">Projeto transferidor</span>
 			<div class="row">
-                            <div class="col s2">
-                            <b>Pronac: </b>{{ projetoTransferidor.pronac }}<br>
-                        </div>
-                        <div class="col s4">
-                            <b>Projeto: </b><span v-html="projetoTransferidor.nome"></span>
-                        </div>
-                        <div class="col s2">
-                            <b>&Aacute;rea: </b><span v-html="projetoTransferidor.area"></span>
-                        </div>
-                        <div class="col s2">
-                            <b>Vl. a Comprovar: </b>{{ projetoTransferidor.valorComprovar }}
-                        </div>
-                        <div class="col s2">
-                            <b>Saldo dispon&iacute;vel: </b>R$ {{ saldoDisponivel }}
-                        </div>
-                    </div>
+        <div class="col s2">
+          <b>Pronac: </b>{{ projetoTransferidor.pronac }}<br>
+        </div>
+        <div class="col s4">
+          <b>Projeto: </b><span v-html="projetoTransferidor.nome"></span>
+        </div>
+        <div class="col s2">
+          <b>&Aacute;rea: </b><span v-html="projetoTransferidor.area"></span>
+        </div>
+        <div class="col s2">
+          <b>Vl. a Comprovar: </b>{{ projetoTransferidor.valorComprovar }}
+        </div>
+        <div class="col s2">
+          <b>Saldo dispon&iacute;vel: </b>R$ {{ saldoDisponivel }}
+        </div>
+      </div>
 		</div>
-            </div>
-
-  <ul class="collapsible">
-      <li id="collapsible-first">
-          <div class="collapsible-header active"><i class="material-icons">assignment</i>Solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o</div>
-          <div class="collapsible-body">
+  </div>
+	
+  <ul v-if="!disabled"  class="collapsible">
+    <li id="collapsible-first">
+      <div class="collapsible-header active"><i class="material-icons">assignment</i>Solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o</div>
+      <div class="collapsible-body">
 	      <readequacao-formulario
-		  ref="formulario"
-		  :id-pronac="idPronac"
-		  :id-tipo-readequacao="idTipoReadequacao"
-		  :componente-ds-solicitacao='componente'
-                  :objReadequacao="readequacao"
-                  v-on:eventoAtualizarReadequacao="atualizarReadequacao"
-                  v-on:eventoSalvarReadequacao="salvarReadequacao"
-		  >
+					ref="formulario"
+					:id-pronac="idPronac"
+					:disabled="disabled"
+					:id-tipo-readequacao="idTipoReadequacao"
+					:componente-ds-solicitacao='componente'
+					:objReadequacao="readequacao"
+					v-on:eventoAtualizarReadequacao="atualizarReadequacao"
+					v-on:eventoSalvarReadequacao="salvarReadequacao"
+					>
 	      </readequacao-formulario>
-          </div>
-      </li>
-      <li>
-	  <div class="collapsible-header"><i class="material-icons">list</i>Projetos recebedores</div>
-	  <div class="collapsible-body card" >
-		<div class="card-content">
-		    <span class="card-title">Projetos recebedores</span>
-		    <table v-show="exibeProjetosRecebedores()" class="animated fadeIn">
-			<thead>
-			    <th>Pronac</th>
-			    <th>Nome do projeto</th>
-			    <th>Vl. transfer&ecirc;ncia</th>
-			</thead>
-			<tbody>
-			    <tr v-for="(projeto, index) in projetosRecebedores" class="animated fadeIn">
-				<td>{{ projeto.pronac }}</td>
-				<td>{{ projeto.nome}}</td>
-				<td colspan="2">R$ {{ projeto.vlRecebido}}</td>
-				<td class="right">
-				    <a href="javascript:void(0)"
-				       v-on:click="excluirRecebedor(index)"
-				       class="btn small">
-					<i class="material-icons">delete</i>					
-				    </a>
-				</td>
-			    </tr>
-			</tbody>
-			<tfoot>
-			    <tr>
-				<td colspan="2"></td>
-				<td class="right">Total transferido: </td>
-				<td>R$ {{ totalRecebido }} </td>
-			    </tr>
-			</tfoot>
-		    </table>
-		<form class="row">
+      </div>
+    </li>
+    <li>
+			<div class="collapsible-header"><i class="material-icons">list</i>Projetos recebedores</div>
+			<div class="collapsible-body card" >
+				<div class="card-content">
+					<span class="card-title">Projetos recebedores</span>
+					<table v-show="exibeProjetosRecebedores()" class="animated fadeIn">
+						<thead>
+							<th>Pronac</th>
+							<th>Nome do projeto</th>
+							<th>Vl. transfer&ecirc;ncia</th>
+						</thead>
+						<tbody>
+							<tr v-for="(projeto, index) in projetosRecebedores" class="animated fadeIn">
+								<td>{{ projeto.pronac }}</td>
+								<td>{{ projeto.nome}}</td>
+								<td colspan="2">R$ {{ projeto.vlRecebido}}</td>
+								<td class="right">
+									<a href="javascript:void(0)"
+										 v-on:click="excluirRecebedor(index)"
+										 class="btn small">
+										<i class="material-icons">delete</i>					
+									</a>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="2"></td>
+								<td class="right">Total transferido: </td>
+								<td>R$ {{ totalRecebido }} </td>
+							</tr>
+						</tfoot>
+					</table>
+					<form class="row">
 		    <div class="col s6">
-			<div v-if="areasEspeciais()">
-			    <label>Pronac recebedor</label>
-			    <input type="text" 
-			    ref="pronacProjetoRecebedor"
-			    v-model="projetoRecebedor.pronac" 
-			    @blur="verificarPronacDisponivelReceber"
-			    />
-			    <span>{{ projetoRecebedor.nome }}</span>
-				<br/>
-			    <span class="green-text"
-				v-show="projetoRecebedor.disponivel"
-				>dispon&iacute;vel
-				<i class="material-icons green-text">check</i>
-			    </span>
-           		</div>
-			<div v-else>
-			    <label>Projeto recebedor</label>
-			    <select class="browser-default"
-				    v-model="projetoRecebedor.idPronac"
-				    ref="projetoRecebedorIdPronac"
-                                    @change="updateRecebedor"
-				    :disabled="!disponivelAdicionarRecebedor()">
-				<option v-for="(projeto, index) in projetosDisponiveis" v-bind:value="projeto.idPronac" v-bind:data-nome="projeto.nome">{{ projeto.pronac }} - {{ projeto.nome}}</option>
-			    </select>
-			</div>
-			</div>
- 			<div class="input-field col s3">
+					<div v-if="areasEspeciais()">
+						<label>Pronac recebedor</label>
+						<input type="text" 
+									 ref="pronacProjetoRecebedor"
+									 v-model="projetoRecebedor.pronac" 
+									 @blur="verificarPronacDisponivelReceber"
+									 />
+						<span>{{ projetoRecebedor.nome }}</span>
+						<br/>
+						<span class="green-text"
+									v-show="projetoRecebedor.disponivel"
+									>dispon&iacute;vel
+							<i class="material-icons green-text">check</i>
+						</span>
+          </div>
+					<div v-else>
+						<label>Projeto recebedor</label>
+						<select class="browser-default"
+										v-model="projetoRecebedor.idPronac"
+										ref="projetoRecebedorIdPronac"
+                    @change="updateRecebedor"
+										:disabled="!disponivelAdicionarRecebedor()">
+							<option v-for="(projeto, index) in projetosDisponiveis" v-bind:value="projeto.idPronac" v-bind:data-nome="projeto.nome">{{ projeto.pronac }} - {{ projeto.nome}}</option>
+						</select>
+					</div>
+				</div>
+ 				<div class="input-field col s3">
 			    <input-money
-				ref="projetoRecebedorValorRecebido"
-                                v-on:ev="projetoRecebedor.vlRecebido = $event"
-                                v-bind:value="projetoRecebedor.valorComprovar"
-				:disabled="!disponivelAdicionarRecebedor()">
+						ref="projetoRecebedorValorRecebido"
+            v-on:ev="projetoRecebedor.vlRecebido = $event"
+            v-bind:value="projetoRecebedor.valorComprovar"
+						:disabled="!disponivelAdicionarRecebedor()">
 			    </input-money>
 			    <label for="valor_recebido">Valor recebido</label>
-			</div>		
-			<div class="center-align padding20 col s3">
+				</div>		
+				<div class="center-align padding20 col s3">
 			    <a href="javascript:void(0)"
 			       v-on:click="incluirRecebedor"
 			       :disabled="!disponivelAdicionarRecebedor()"
 			       class="btn">Adicionar recebedor</a>
-			</div>
-		    </form>
-		</div>
+				</div>
+					</form>
+				</div>
 	    </div>
-      </li>
-      <div class="card">
-      	   <div class="right-align padding20 col s12">
-	       <button
-	            v-on:click="finalizarReadequacao"
-		    :disabled="!disponivelFinalizar()"
-		    class="btn">Finalizar</button>
-	   </div>
-      </div>
+    </li>
+    <div class="card">
+      <div class="right-align padding20 col s12">
+	      <button
+	        v-on:click="finalizarReadequacao"
+					:disabled="!disponivelFinalizar()"
+					class="btn">Finalizar</button>
+			</div>
+    </div>
   </ul>
+  <template v-if="disabled">
+		<div class="card">
+			<readequacao-formulario
+				ref="formulario"
+				:id-pronac="idPronac"
+        :disabled="disabled"
+				:id-tipo-readequacao="idTipoReadequacao"
+				:componente-ds-solicitacao='componente'
+        :objReadequacao="readequacao"
+        v-on:eventoAtualizarReadequacao="atualizarReadequacao"
+        v-on:eventoSalvarReadequacao="salvarReadequacao"
+				>
+	    </readequacao-formulario>
+		</div>
+		
+		<div class="card">
+			<div class="card-content">
+				<div class="card">
+					<span class="card-title">Projetos recebedores</span>
+					<div class="card-content">
+						<table v-show="exibeProjetosRecebedores()">
+							<thead>
+								<th>Pronac</th>
+								<th>Nome do projeto</th>
+								<th>Vl. transfer&ecirc;ncia</th>
+							</thead>
+							<tbody>
+								<tr v-for="(projeto, index) in projetosRecebedores" class="animated fadeIn">
+									<td>{{ projeto.pronac }}</td>
+									<td>{{ projeto.nome}}</td>
+									<td>R$ {{ projeto.vlRecebido}}</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td></td>
+									<td class="right">Total transferido: </td>
+									<td>R$ {{ totalRecebido }} </td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
 </div>
 	    `,
-    props: [
-	'idPronac',
-	'idTipoReadequacao',
-	'siEncaminhamento'
-    ],
+    props: {
+	'idPronac': '',
+	'idTipoReadequacao': '',
+	'siEncaminhamento': '',
+	'disabled': false
+    },
     mixins: [utils],
     data: function() {
 	var readequacao = {
