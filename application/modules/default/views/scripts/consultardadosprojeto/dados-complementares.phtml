@@ -79,7 +79,20 @@
         <tr class="custosVinculados sumir" align="left" style="padding: 5px">
             <td>
                 <table class="tabela">
-                  <!---->
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>Percentual</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($this->itensCustosVinculados as $key => $value) { ?>
+                      <tr>
+                        <td><?php echo($value["Descricao"]); ?></td>
+                        <td><?php echo($value["percentualPadrao"]); ?></td>
+                      </tr>
+                    <?php } ?>
+                  </tbody>
                 </table>
             </td>
         </tr>
