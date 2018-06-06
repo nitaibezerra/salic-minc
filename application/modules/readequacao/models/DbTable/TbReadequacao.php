@@ -54,35 +54,45 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
         return $this->update($dados, $where);
     }
 
-    public function readequacoesCadastradasProponente($where = array(), $order = array())
+    public function readequacoesCadastradasProponente($where = array(), $order = array(), $obterDocumentos = true)
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
             array('a' => $this->_name),
             array(
-                new Zend_Db_Expr("a.idReadequacao, a.idPronac, a.dtSolicitacao, CAST(a.dsSolicitacao AS TEXT) AS dsSolicitacao, CAST(a.dsJustificativa AS TEXT) AS dsJustificativa, b.dsReadequacao, c.idArquivo, d.nmArquivo, a.idTipoReadequacao"),
+                new Zend_Db_Expr("
+                    a.idReadequacao,
+                    a.idPronac,
+                    a.dtSolicitacao,
+                    CAST(a.dsSolicitacao AS TEXT) AS dsSolicitacao,
+                    CAST(a.dsJustificativa AS TEXT) AS dsJustificativa,
+                    a.idTipoReadequacao"
+                )
             )
         );
 
         $select->joinInner(
             array('b' => 'tbTipoReadequacao'),
             'a.idTipoReadequacao = b.idTipoReadequacao',
-            array(''),
+            array('b.dsReadequacao'),
             'SAC.dbo'
         );
-        $select->joinLeft(
-            array('c' => 'tbDocumento'),
-            'a.idDocumento = c.idDocumento',
-            array(''),
-            'BDCORPORATIVO.scCorp'
-        );
-        $select->joinLeft(
-            array('d' => 'tbArquivo'),
-            'c.idArquivo = d.idArquivo',
-            array(''),
-            'BDCORPORATIVO.scCorp'
-        );
+
+        if ($obterDocumentos) {
+            $select->joinLeft(
+                array('c' => 'tbDocumento'),
+                'a.idDocumento = c.idDocumento',
+                array('c.idArquivo'),
+                'BDCORPORATIVO.scCorp'
+            );
+            $select->joinLeft(
+                array('d' => 'tbArquivo'),
+                'c.idArquivo = d.idArquivo',
+                array('d.nmArquivo'),
+                'BDCORPORATIVO.scCorp'
+            );
+        }
 
         foreach ($where as $coluna => $valor) {
             $select->where($coluna, $valor);
