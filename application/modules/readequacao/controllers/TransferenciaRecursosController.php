@@ -322,7 +322,9 @@ class Readequacao_TransferenciaRecursosController extends Readequacao_GenericCon
             // soma dos valores dos projetos recebedores não pode ultrapassar o valor a comprovar do projeto transferidor
             
             $status = $tbReadequacaoMapper->finalizarSolicitacaoReadequacao(
-                $this->idPronac, $params['idTipoReadequacao']
+                $this->idPronac,
+                Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_TRANSFERENCIA_RECURSOS,
+                $params['idReadequacao']
             );
 
             if ($status == false) {
