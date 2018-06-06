@@ -37,9 +37,26 @@
         <tr>
             <td align="left">
                 <input type="button" class="btn_adicionar"
+                  id="objetivos"
+                    onclick="mostraOcultaElemento('objetivos');" />
+                <b>Objetivos</b>
+            </td>
+        </tr>
+        <tr class="objetivos sumir" align="left" style="padding: 5px">
+            <td>
+                <table class="tabela">
+                  <?php echo($this->proposta->Objetivos); ?>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table class="tabela">
+        <tr>
+            <td align="left">
+                <input type="button" class="btn_adicionar"
                   id="justificativa"
                     onclick="mostraOcultaElemento('justificativa');" />
-                <b>Per&iacute;odo de realiza&ccedil;&atilde;o</b>
+                <b>Justificativa</b>
             </td>
         </tr>
         <tr class="justificativa sumir" align="left" style="padding: 5px">
