@@ -320,38 +320,6 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=".Seguranca::encrypt($this->i
                 </tr>
             </table>
         </fieldset>
-
-        <?php if($this->projeto->idMecanismo != 2 && $this->projeto->idMecanismo != 6) { ?>
-        <fieldset>
-            <legend>Objetivo</legend>
-            <table class="tabela">
-                <?php if(is_array($this->itensGeral) and isset($this->itensGeral[0]->Objetivos)){ ?>
-                <tr align="left">
-                    <td><?php echo (trim(strip_tags($this->itensGeral[0]->Objetivos)) != "")?strip_tags($this->itensGeral[0]->Objetivos,"<b></b><ul></ul><li></li><strong></strong><i></i><p></p><br>"):"<em>N&atilde;o informado</em>"; ?></td>
-                </tr>
-                <?php }else{?>
-                <tr>
-                    <td><em>N&atilde;o informado</em></td>
-                </tr>
-                <?php }?>
-            </table>
-        </fieldset>
-
-        <fieldset>
-            <legend>Justificativa</legend>
-            <table class="tabela">
-                <?php if(is_array($this->itensGeral) and isset($this->itensGeral[0]->Justificativa)){ ?>
-                <tr align="left">
-                    <td><?php echo (trim(strip_tags($this->itensGeral[0]->Justificativa)) != "")?strip_tags($this->itensGeral[0]->Justificativa,"<b></b><ul></ul><li></li><strong></strong><i></i><p></p><br>"):"<em>N&atilde;o informado</em>";  ?></td>
-                </tr>
-                <?php }else{?>
-                <tr>
-                    <td><em>N&atilde;o informado</em></td>
-                </tr>
-                <?php }?>
-            </table>
-        </fieldset>
-        <?php } ?>
     </div>
 
     <!--<table class="tabela">
