@@ -52,8 +52,8 @@
                 <tr id="row-<?php echo $captacao->idTmpCaptacao; ?>">
                     <td rowspan="<?php echo count($this->inconsistencias[$captacao->idTmpCaptacao]) + 1; ?>"><?php echo isset($index) ? ++$index : $index = 1; ?></td>
                     <td class="nomeIncentivador"><?php echo $captacao->nomeIncentivador; ?></td>
-                    <td><?php echo Validacao::mascaraCPFCNPJ($captacao->nrCpfCnpjProponente); ?></td>
-                    <td class="cpfcnpjIncentivador"><?php echo Validacao::mascaraCPFCNPJ($captacao->nrCpfCnpjIncentivador); ?></td>
+                    <td><?php echo Validacao::mascaraCPFCNPJ($captacao->nrCpfCnpjProponente); ?></td> <!-- esta está ok -->
+                    <td class="cpfcnpjIncentivador"><?php echo Validacao::mascaraCPFCNPJ($captacao->nrCpfCnpjIncentivador); ?></td> <!-- esta NÃO está ok -->
                     <td><?php echo $captacao->dtCredito; ?></td>
                     <td><?php echo $this->formatarReal($captacao->vlValorCredito); ?></td>
                     <td align="center">
