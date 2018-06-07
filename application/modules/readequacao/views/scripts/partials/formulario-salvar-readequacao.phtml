@@ -38,11 +38,16 @@
             id="IncluirReadequacao" class="waves-effect waves-light btn btn-primary">
             <i class="material-icons right">save</i>Salvar
         </a>
+
         <a
             href="javascript:void(0)"
-            id="btn_finalizar"
-            readequacao="<?php echo $this->readequacao['idReadequacao']; ?>"
-            class="waves-effect waves-light btn btn-secondary">
+            <?php if ($this->readequacao['idReadequacao']) : ?>
+                id="btn_finalizar"
+                readequacao="<?php echo $this->readequacao['idReadequacao']; ?>"
+            <?php else: ?>
+                disabled="disabled"
+            <?php endif; ?>
+                class="waves-effect waves-light btn btn-secondary">
             <i class="material-icons right">send</i>Finalizar
         </a>
 
