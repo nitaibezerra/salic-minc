@@ -633,6 +633,8 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
                 $tblProposta = new Proposta_Model_DbTable_PreProjeto();
                 $rsProposta = $tblProposta->buscar(array('idPreProjeto=?'=>$rsProjeto->idProjeto))->current();
                 $this->view->proposta = $rsProposta;
+                $tbCustosVinculadosMapper = new Proposta_Model_TbCustosVinculadosMapper();
+                $this->view->itensCustosVinculados = $tbCustosVinculadosMapper->obterCustosVinculados($rsProjeto->idProjeto);
             }
         }
     }

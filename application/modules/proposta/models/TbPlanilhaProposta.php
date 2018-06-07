@@ -342,8 +342,4 @@ class Proposta_Model_TbPlanilhaProposta extends MinC_Db_Model
     {
         $this->_stCustoPraticado = $stCustoPraticado;
     }
-
-
-
-
 }
