@@ -112,12 +112,12 @@
 
                                         <?php if(in_array($this->grupoAtivo, array(93, 94, 110))){ ?>
                                             <li><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'painel-recursos'), '', true); ?>" title="Avaliar Recursos">Avaliar Recursos</a></li>
-                                            <li><a href="<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'painel-readequacoes'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
+                                            <li><a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'painel-readequacoes'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
                                         <?php } ?>
 
                                         <?php if(in_array($this->grupoAtivo, array(118))){ ?>
-                                            <li><a href="<?php echo $this->url(array('controller' => 'recursos', 'action' => 'analisar-recursos-cnic'), '', true); ?>" title="Avaliar Recursos">Avaliar Recursos</a></li>
-                                            <li><a href="<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'analisar-readequacoes-cnic'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
+                                            <li><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'recursos', 'action' => 'analisar-recursos-cnic'), '', true); ?>" title="Avaliar Recursos">Avaliar Recursos</a></li>
+                                            <li><a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'analisar-readequacoes-cnic'), '', true); ?>" title="Avaliar Readequa&ccedil;&otilde;es">Avaliar Readequa&ccedil;&otilde;es</a></li>
                                         <?php } ?>
 
                                         <?php if(in_array($this->grupoAtivo, array(128))){ ?>
