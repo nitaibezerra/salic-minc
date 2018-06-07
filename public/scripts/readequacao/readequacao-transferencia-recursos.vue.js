@@ -15,7 +15,7 @@ Vue.component('readequacao-transferencia-recursos', {
           <b>&Aacute;rea: </b><span v-html="projetoTransferidor.area"></span>
         </div>
         <div class="col s2">
-          <b>Vl. a Comprovar: </b>{{ projetoTransferidor.valorComprovar }}
+          <b>Vl. a Comprovar: </b>R$ {{ vlAComprovar }}
         </div>
         <div class="col s2">
           <b>Saldo dispon&iacute;vel: </b>R$ {{ saldoDisponivel }}
@@ -557,14 +557,18 @@ Vue.component('readequacao-transferencia-recursos', {
     },
     computed: {
 	totalRecebido: function() {
+	    self = this;
 	    return this.projetosRecebedores.reduce(function (total, projeto) {
                 var resultado = parseFloat(total) + parseFloat(projeto.vlRecebido);
 		return resultado.toFixed(2);
-            }, 0);
+            }, 2);
+	},
+	vlAComprovar: function() {
+	    return this.converterParaMoedaPontuado(this.projetoTransferidor.valorComprovar);
 	},
 	saldoDisponivel: function() {
 	    var saldo = parseFloat(this.projetoTransferidor.valorComprovar) - parseFloat(this.totalRecebido);
-	    return saldo.toFixed(2);
+	    return this.converterParaMoedaPontuado(saldo);
 	}
     }
 })
