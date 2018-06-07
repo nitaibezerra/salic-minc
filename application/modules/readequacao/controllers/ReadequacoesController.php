@@ -1911,7 +1911,13 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             foreach($projetosRecebedores as $projetoRecebedor) {
                 $arrData = [];
                 $arrData['idSolicitacaoTransferenciaRecursos'] = $projetoRecebedor['idSolicitacao'];
-                $arrData['siAnaliseTecnica'] = $parecerProjeto;
+                if ($parecerProjeto == 2) {
+                    $arrData['siAnaliseTecnica'] = 'D';
+                } else if ($parecerProjeto == 1) {
+                    $arrData['siAnaliseTecnica'] = 'D';
+                } else {
+                    $arrData['siAnaliseTecnica'] = 'N';
+                }                
                 
                 $statusSolicitacaoTransferenciaRecursos = $tbSolicitacaoTransferenciaRecursosMapper->salvarParecerTecnico($arrData);
                 
