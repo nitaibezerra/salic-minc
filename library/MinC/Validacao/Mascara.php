@@ -30,9 +30,7 @@ class Mascara
 		$fone = str_replace(".", "", $fone);
 
 		return $fone;
-	} // fecha m�todo delMaskFone()
-
-
+	}
 
 	/**
 	 * deleta do email
@@ -53,9 +51,7 @@ class Mascara
 		$email = str_replace(";", ".", $email);
 
 		return $email;
-	} // fecha m�todo delMaskEmail()
-
-
+	}
 
 	/**
 	 * deleta do cep
@@ -75,9 +71,7 @@ class Mascara
 		$cep = str_replace("/", "", $cep);
 
 		return $cep;
-	} // fecha m�todo delMaskCEP()
-
-
+	}
 
 	/**
 	 * deleta do cpf
@@ -97,9 +91,7 @@ class Mascara
 		$cpf = str_replace("/", "", $cpf);
 
 		return $cpf;
-	} // fecha m�todo delMaskCPF()
-
-
+	}
 
 	/**
 	 * deleta do cnpj
@@ -119,9 +111,7 @@ class Mascara
 		$cnpj = str_replace("/", "", $cnpj);
 
 		return $cnpj;
-	} // fecha m�todo delMaskCNPJ()
-
-
+	}
 
 	/**
 	 * deleta do cpf e cnpj
@@ -137,9 +127,7 @@ class Mascara
 		$cpfcnpj = self::delMaskCNPJ($cpfcnpj);
 
 		return $cpfcnpj;
-	} // fecha m�todo delMaskCPFCNPJ()
-
-
+	}
 
 	/**
 	 * deleta da moeda e adiciona
@@ -172,8 +160,6 @@ class Mascara
 		return number_format($valor, 2, ',', '.');
 	}
 
-
-
 	/**
 	 * adiciona no telefone
 	 *
@@ -188,9 +174,7 @@ class Mascara
 		$s2 = substr($fone, 4, 4);
 
 		return $s1 . "-" . $s2;
-	} // fecha m�todo addMaskFone()
-
-
+	}
 
 	/**
 	 * adiciona no cep
@@ -241,17 +225,16 @@ class Mascara
 	 * @return string
 	 */
 	public static function addMaskCPF($cpf)
-	{ 
+	{
 		$s1 = substr($cpf, 0, 3);
 		$s2 = substr($cpf, 3, 3);
 		$s3 = substr($cpf, 6, 3);
 		$s4 = substr($cpf, 9, 2);
 
 		return $s1 . "." . $s2 . "." . $s3 . "-" . $s4;
-	} // fecha m�todo addMaskCPF()
+	}
 
-
-        public static function addMaskProcesso($processo)
+  public static function addMaskProcesso($processo)
 	{
 		$s1 = substr($processo, 0, 5);
 		$s2 = substr($processo, 5, 6);
@@ -259,10 +242,9 @@ class Mascara
 		$s4 = substr($processo, 15, 2);
 
 		return $s1 . "." . $s2 . "/" . $s3 . "-" . $s4;
-	} // fecha m�todo addMaskCPF()
+	}
 
-        
-        public static function delMaskProcesso($processo)
+	public static function delMaskProcesso($processo)
 	{
             // 01400.123456/2014-77
             $processo = str_replace(" ", "", $processo);
@@ -271,10 +253,8 @@ class Mascara
             $processo = str_replace("-", "", $processo);
 
             return $processo;
-                
-	} // fecha m�todo delMaskProcesso()
 
-
+	}
 
 	/**
 	 * adiciona no cnpj
@@ -293,9 +273,7 @@ class Mascara
 		$s5 = substr($cnpj, 12, 2);
 
 		return $s1 . "." . $s2 . "." . $s3 . "/" . $s4 . "-" . $s5;
-	} // fecha m�todo addMaskCNPJ()
-
-
+	}
 
 	/**
 	 * adiciona na data brasileira
@@ -321,7 +299,7 @@ class Mascara
 	 *
 	 * @author Ruy Ferreira <ruyjfs@gmail.com>
 	 * @since 04/12/2017
-	 * 
+	 *
 	 * @todo Verificar o por que a data no servidor de hmg nao esta ficando com a mesma formatacao da maquina local.
 	 */
 	public static function convertDateToView($strDate)
