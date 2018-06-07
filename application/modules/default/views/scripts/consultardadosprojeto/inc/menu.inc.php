@@ -247,7 +247,12 @@
 
                     <?php if ($this->fnLiberarLinks['ReadequacaoPlanilha']) {
                 ?>
-			<a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'planilha-orcamentaria'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Solicita&ccedil;&otilde;es Gerais">Planilha orçament&aacute;ria</a>
+			<a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'planilha-orcamentaria'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Planilha or&cedil;&aacute;ria">Planilha orçament&aacute;ria</a>
+		    <?php
+		    } ?>
+                    <?php if ($this->fnLiberarLinks['ReadequacaoSaldoAplicacao']) {
+                    ?>
+			<a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'saldo-aplicacao'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Saldo de aplica&ccedil;&atilde;o">Saldo de aplica&ccedil;&atilde;o</a>
 		    <?php
 		    } ?>
 		    <?php if ($this->fnLiberarLinks['Readequacao']) {

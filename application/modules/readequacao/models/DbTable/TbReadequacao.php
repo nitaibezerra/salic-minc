@@ -37,11 +37,18 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
     const TIPO_READEQUACAO_DEMOCRATIZACAO_ACESSO = 19;
     const TIPO_READEQUACAO_ETAPAS_TRABALHO = 20;
     const TIPO_READEQUACAO_FICHA_TECNICA = 21;
+    const TIPO_READEQUACAO_SALDO_APLICACAO = 23;
     const TIPO_READEQUACAO_TRANSFERENCIA_RECURSOS = 23;
     
     const PERCENTUAL_REMANEJAMENTO = 50;
     const ST_ESTADO_EM_ANDAMENTO = 0;
     const ST_ESTADO_FINALIZADO = 1;
+
+    const TIPOS_READEQUACOES_ORCAMENTARIAS = [
+        self::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
+        self::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA,
+        self::TIPO_READEQUACAO_SALDO_APLICACAO
+    ];
     
     /**
      * @param array $dados
@@ -1170,10 +1177,7 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
         if ($idTipoReadequacao) {
             $tiposReadequacoes = array($idTipoReadequacao);
         } else {
-            $tiposReadequacoes = array(
-                self::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
-                self::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
-            );
+            $tiposReadequacoes = self::TIPOS_READEQUACOES_ORCAMENTARIAS;
         }
         
         $select->where('r.idTipoReadequacao IN(?)', $tiposReadequacoes);
@@ -1197,8 +1201,13 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
      */    
     public function existeReadequacaoEmEdicao(
         $idPronac,
-        $idTipoReadequacao)
+        $idTipoReadequacao = '')
     {
+        $tiposSiEncaminhamentoProponente = [
+            Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE,
+            Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_NAO_ENVIA_MINC
+        ];
+        
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
@@ -1206,8 +1215,11 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
             'r.idReadequacao'
         );
         $select->where('r.idPronac = ?', $idPronac);
-        $select->where('r.siEncaminhamento = ?', Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE);
-        $select->where('r.idTipoReadequacao = ?', $idTipoReadequacao);
+        $select->where('r.siEncaminhamento IN (?)', $tiposSiEncaminhamentoProponente);
+
+        if ($idTipoReadequacao) {
+            $select->where('r.idTipoReadequacao = ?', $idTipoReadequacao);
+        }
         $select->where('r.stEstado=?', self::ST_ESTADO_EM_ANDAMENTO);
         
         $result = $this->fetchAll($select);
@@ -1261,6 +1273,35 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
         }
     }    
 
+    /** 
+     * Método para obter a readequacao em andamento
+     * @access public
+     * @param integer $idPronac
+     * @return boolean
+     */
+    public function obterReadequacaoOrcamentariaEmAndamento($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            ['r' => $this->_name],
+            [
+                'r.idReadequacao',
+                'r.idTipoReadequacao'
+                ]
+        );
+        $select->where('r.idPronac = ?', $idPronac);
+        $select->where('r.idTipoReadequacao IN (?)', self::TIPOS_READEQUACOES_ORCAMENTARIAS);
+        
+        $result = $this->fetchAll($select);
+        
+        if (count($result) > 0) {
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Método para verificar se está o projeto está disponivel para edição da readequacao de planilha
      * @access public

@@ -47,6 +47,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
         $Marcas = 0;
         $ReadequacaoPlanilha = 0;
         $ReadequacaoTransferenciaRecursos = 0;
+        $ReadequacaoSaldoAplicacao = 0;
 
         # Verificar permiss�o
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -341,23 +342,35 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
 
             $objTbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
             $existeReadequacaoEmAndamento = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoEmAndamento($idPronac);
-            $existeReadequacaoPlanilhaEmEdicao = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoPlanilhaEmEdicao($idPronac);
-            $existeReadequacaoParcialEmEdicao = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoParcialEmEdicao($idPronac);
-
-            if (!$existeReadequacaoEmAndamento && !$existeReadequacaoEmAndamento) {
+            $existeReadequacaoEmEdicao = $Readequacao_Model_DbTable_TbReadequacao->existeReadequacaoEmEdicao($idPronac);
+            
+            if ($existeReadequacaoEmAndamento) {
+                $readequacaoAndamento = $Readequacao_Model_DbTable_TbReadequacao->obterReadequacaoOrcamentariaEmAndamento($idPronac);
+                
+                if ($existeReadequacaoEmEdicao) {
+                    switch ($readequacaoAndamento['idTipoReadequacao']) {
+                    case Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL:
+                        $Readequacao_50 = 1;
+                        break;
+                    case Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA:
+                        $ReadequacaoPlanilha = 1;
+                        break;
+                    case Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_SALDO_APLICACAO:
+                        $ReadequacaoSaldoAplicacao = 1;
+                        break;
+                    }
+                } else {
+                    $Readequacao_50 = 0;
+                    $ReadequacaoPlanilha = 0;
+                    $ReadequacaoSaldoAplicacao = 0;
+                }
+                
+            } else {
                 $Readequacao_50 = 1;
                 $ReadequacaoPlanilha = 1;
-            } else if ($existeReadequacaoEmAndamento && $existeReadequacaoPlanilhaEmEdicao) {
-                $ReadequacaoPlanilha = 1;
-                $Readequacao_50 = 0;
-            } else if ($existeReadequacaoEmAndamento && $existeReadequacaoParcialEmEdicao) {
-                $ReadequacaoPlanilha = 0;
-                $Readequacao_50 = 1;
-            } else if ($existeReadequacaoEmAndamento && !$existeReadequacaoPlanilhaEmEdicao)  {
-                $Readequacao_50 = 0;
-                $ReadequacaoPlanilha = 0;
+                $ReadequacaoSaldoAplicacao = 1;
             }
-
+            
             $tbCumprimentoObjeto = new tbCumprimentoObjeto();
             $possuiRelatorioDeCumprimento = $tbCumprimentoObjeto->possuiRelatorioDeCumprimento($idPronac);
 
@@ -468,8 +481,8 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
         }else{
             $Analise = 1;
         }
-
-        $permissao = array('links'=>"$Permissao - $Fase - $Diligencia - $Recursos - $Readequacao - $ComprovacaoFinanceira - $RelatorioTrimestral - $RelatorioFinal - $Analise - $Execucao - $PrestacaoDeContas - $Readequacao_50 - $Marcas - $SolicitarProrrogacao - $ReadequacaoPlanilha - $ReadequacaoTransferenciaRecursos");
+        
+        $permissao = array('links'=>"$Permissao - $Fase - $Diligencia - $Recursos - $Readequacao - $ComprovacaoFinanceira - $RelatorioTrimestral - $RelatorioFinal - $Analise - $Execucao - $PrestacaoDeContas - $Readequacao_50 - $Marcas - $SolicitarProrrogacao - $ReadequacaoPlanilha - $ReadequacaoTransferenciaRecursos - $ReadequacaoSaldoAplicacao");
 
         return (object) $permissao;
     }

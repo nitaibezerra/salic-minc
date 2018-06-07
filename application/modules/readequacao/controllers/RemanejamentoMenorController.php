@@ -562,7 +562,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 $this->_helper->json(array('resposta'=>false, 'msg'=>$msg));
             }
         } catch (Zend_Exception $e) {
-            $this->_helper->json(array('resposta'=>false, 'msg'=>'Ocorreu um erro durante o processo.'));
+            $this->_helper->json(array('resposta'=>false, 'msg'=>'Ocorreu um erro durante o processo: ' . $e->getMessage()));
         }
         $this->_helper->viewRenderer->setNoRender(true);
     }
