@@ -1,0 +1,234 @@
+<!--<div id="app" class="container-fluid">-->
+<!--    <v-app>-->
+<!--        <v-content>-->
+<!--            <page-title></page-title>-->
+<!--            <v-container>-->
+<!--                <router-view></router-view>-->
+<!--            </v-container>-->
+<!--        </v-content>-->
+<!--    </v-app>-->
+<!--</div>-->
+
+<div class="row" id="app">
+    <div class="col s12 m12">
+        <div class="card">
+            <div class="card-content">
+                <div class="card">
+                    <div class="center-align card-content grey lighten-4">
+                        <span class="card-title">PLANILHA DE ORÇAMENTO APROVADA</span>
+                    </div>
+                    <dados idpronac="<?php echo $this->idpronac ?>"></dados>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- vendor -->
+<script src="/public/js/vue.js"></script>
+<!-- vendor -->
+
+<!-- views -->
+<script>
+    Vue.component('produtos-pagamento', {
+        props: ['produtos', 'idpronac'],
+        template: `<ul class="collapsible no-margin" data-collapsible="expandable" id="produtos-collapsible">
+                        <li class="active" v-for="produto in produtos">
+                            <div class="collapsible-header green-text active">
+                                <i class="material-icons">perm_media</i>
+                                {{ produto.produto }}
+                            </div>
+                            <div class="collapsible-body no-padding">
+                                <ul class="collapsible no-margin no-border" data-collapsible="expandable">
+                                    <etapas-pagamento
+                                            :etapa="etapa"
+                                            v-for="(etapa, index) in produto.etapa"
+                                            :idpronac="idpronac"
+                                            :cdProduto="produto.cdProduto"
+                                            :key="index"
+                                    ></etapas-pagamento>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>`,
+        mounted: function () {
+            this.iniciarCollapsible();
+        },
+        methods: {
+            iniciarCollapsible: function () {
+                $3('#produtos-collapsible.collapsible').each(function() {
+                    $3(this).collapsible();
+                });
+            }
+        }
+    })
+    Vue.component('etapas-pagamento', {
+        props: ['etapa', 'cdProduto', 'idpronac'],
+        template: `<li class="active">
+                        <div class="collapsible-header orange-text active" style="padding-left: 30px;">
+                            <i class="material-icons">label</i>
+                            {{ etapa.etapa }}
+                        </div>
+                        <div class="collapsible-body no-padding">
+                            <ul class="collapsible no-margin no-border" data-collapsible="expandable">
+                                    <ufs-pagamento
+                                        v-for="(estado, index) in etapa.UF"
+                                        :idpronac="idpronac"
+                                        :estado="estado"
+                                        :cdEtapa="etapa.cdEtapa"
+                                        :cdProduto="cdProduto"
+                                        :key="index"
+                                    ></ufs-pagamento>
+                            </ul>
+                        </div>
+                    </li>
+                   `,
+        mounted: function () {
+            this.iniciarCollapsible();
+        },
+        methods: {
+            iniciarCollapsible: function () {
+                $3('.collapsible').each(function() {
+                    $3(this).collapsible();
+                    console.log(this);
+                });
+            }
+        }
+    })
+    Vue.component('ufs-pagamento', {
+        props: ['estado', 'cdEtapa', 'cdProduto', 'idpronac'],
+        template: ` <li class="active">
+                        <div class="collapsible-header blue-text active" style="padding-left: 50px;">
+                            <i class="material-icons">place</i>
+                            {{ estado.Uf }}
+                        </div>
+                        <div class="collapsible-body no-padding">
+                            <ul class="collapsible no-margin no-border" data-collapsible="expandable">
+                                    <cidades-pagamento
+                                        v-for="(cidade, index) in estado.cidade"
+                                        :cidade="cidade"
+                                        :idpronac="idpronac"
+                                        :uf="estado.Uf"
+                                        :cdEtapa="cdEtapa"
+                                        :cdProduto="cdProduto"
+                                        :key="estado.cdUf"
+                                        :id="estado.cdUf"
+                                    ></cidades-pagamento>
+                            </ul>
+                        </div>
+                    </li>
+                     `,
+        methods: {
+            iniciarCollapsible: function () {
+                $3('.collapsible').each(function() {
+                    $3(this).collapsible();
+                    console.log(this);
+                });
+            }
+        }
+    })
+    Vue.component('cidades-pagamento', {
+        props: ['cidade', 'cdEtapa', 'uf', 'cdProduto', 'idpronac'],
+        template: ` <li class="active">
+                        <div class="collapsible-header blue-text active" style="padding-left: 70px;">
+                            <i class="material-icons">place</i>
+                            {{ cidade.cidade }}
+                        </div>
+                        <div class="collapsible-body no-padding margin20 scroll-x">
+                            <table class="bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Item de Custo</th>
+                                        <th>Valor Aprovado</th>
+                                        <th>Valor Comprovado</th>
+                                        <th>Valor a Comprovar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr :item="item"
+                                       v-for="(item, index) in cidade.itens"
+                                       :key="index"
+                                       v-if="isObject(item)">
+                                        <td>
+                                           <a :href="'/comprovarexecucaofinanceira/comprovacaopagamento'
+                                               + '/idpronac/' + idpronac
+                                               + '/uf/' + uf
+                                               + '/produto/' + cdProduto
+                                               + '/cidade/' + cidade.cdCidade
+                                               + '/etapa/' + cdEtapa
+                                               + '/idPlanilhaAprovacao/' + item.idPlanilhaAprovacao
+                                               + '/idPlanilhaItens/' + item.idPlanilhaItens"
+                                           >{{ item.item }}</a>
+                                        </td>
+                                        <td> R$ {{ item.varlorAprovado }} </td>
+                                        <td> R$ {{ item.varlorComprovado }} </td>
+                                        <td> R$ {{ item.comprovacaoValidada }} </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                     `,
+        methods: {
+            iniciarCollapsible: function () {
+                $3('.collapsible').each(function() {
+                    $3(this).collapsible();
+                    console.log(this);
+                });
+            },
+            isObject: function (el) {
+
+                return typeof el === "object";
+
+            },
+            converterParaReal: function (value) {
+                value = parseFloat(value);
+                return numeral(value).format('0,0.00');
+            }
+        }
+    })
+    Vue.component('dados', {
+        props: ['idpronac'],
+        template: `<div>
+                            <produtos-pagamento :produtos="produtos" :idpronac="idpronac"></produtos-pagamento>
+                    </div>`,
+        created: function () {
+                // this.iniciarCollapsible();
+        },
+        mounted: function () {
+            let vue = this;
+            $3.ajax({
+                url: "/prestacao-contas/pagamento/planilha-pagamento/idpronac/" + this.idpronac
+            }).done(function( data ) {
+                    vue.$data.produtos = data;
+                });
+        },
+        data: function () {
+            return {
+                produtos: []
+            };
+        },
+        methods: {
+            iniciarCollapsible: function () {
+                $3('.collapsible').each(function() {
+                    $3(this).collapsible();
+                    console.log(this);
+                });
+            }
+        }
+
+    })
+
+    var app = new Vue({
+        el: '#app',
+        methods: {
+            iniciarCollapsible: function () {
+                $3('.collapsible').each(function () {
+                    $3(this).collapsible();
+                    console.log(this);
+                });
+            }
+        }
+    })
+
+</script>
+<!-- views -->

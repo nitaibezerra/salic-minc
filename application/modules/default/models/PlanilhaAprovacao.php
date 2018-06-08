@@ -2699,7 +2699,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             i.AnoProjeto+i.Sequencial AS Pronac,
             i.NomeProjeto,
             ISNULL(d.Codigo,0) as cdProduto,
-            ISNULL(d.Descricao,'Administração do Projeto') AS Produto,
+            ISNULL(d.Descricao,'Administra&ccedil;&atilde;o do Projeto') AS Produto,
             b.tpCusto,
             b.idPlanilhaEtapa as cdEtapa,
             b.Descricao AS Etapa,
