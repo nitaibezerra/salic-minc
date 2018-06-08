@@ -91,9 +91,7 @@ class Projeto_HomologacaoController extends Proposta_GenericController
             $this->_helper->viewRenderer->setNoRender(true);
             $mapper = new Projeto_Model_TbHomologacaoMapper();
             $arrPost = $this->getRequest()->getPost();
-
-            $arrPost['stDecisao'] = (isset($arrPost['stDecisao'])) ? 1 : 0;
-
+            $arrPost['stDecisao'] = (isset($arrPost['stDecisao'])) ? 2 : 1;
             $this->_helper->json(array('status' => $mapper->save($arrPost), 'msg' => $mapper->getMessages(), 'close' => 1));
         } else {
             $arrValue = [];
