@@ -228,8 +228,7 @@ function validaAgenteNovo()
     {
         alertar("Dados obrigat&oacute;rios n&atilde;o informados:\nPor favor, informe o Telefone!", "fone");
         exibirMsgErro('fone','erroFone');
-    }
-    debugger;
+    };
 
     if (
         $3('#exibirTelefone').val() == 's'
@@ -252,7 +251,6 @@ function validaAgenteNovo()
         exibirMsgErro('fone','erroFone');
         return;
     }
-    debugger;
 
     // valida&ccedil;&atilde;o para emails
     if (
@@ -536,8 +534,3 @@ function validaEndereco()
         return true;
     }
 }
-
-
-
-
-
