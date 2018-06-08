@@ -252,7 +252,7 @@
 		    } ?>
                     <?php if ($this->fnLiberarLinks['ReadequacaoSaldoAplicacao']) {
                     ?>
-			<a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'saldo-aplicacao'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Saldo de aplica&ccedil;&atilde;o">Saldo de aplica&ccedil;&atilde;o</a>
+			<a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'saldo-aplicacao', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>" title="Ir para Saldo de aplica&ccedil;&atilde;o">Saldo de aplica&ccedil;&atilde;o</a>
 		    <?php
 		    } ?>
 		    <?php if ($this->fnLiberarLinks['Readequacao']) {

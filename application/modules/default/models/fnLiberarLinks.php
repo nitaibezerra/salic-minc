@@ -368,7 +368,9 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             } else {
                 $Readequacao_50 = 1;
                 $ReadequacaoPlanilha = 1;
-                $ReadequacaoSaldoAplicacao = 1;
+                if ($PercentualCaptado >= 100) {
+                    $ReadequacaoSaldoAplicacao = 1;
+                }
             }
             
             $tbCumprimentoObjeto = new tbCumprimentoObjeto();
