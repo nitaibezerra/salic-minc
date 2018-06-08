@@ -27,12 +27,6 @@ function remarcarferias(id, diasmarcados)
 
     CKEDITOR.replace('justificativa');
 
-
-
-
-
-
-
     $("#idferias").val(id);
     $("#diasmarcados").val(diasmarcados);
 
