@@ -76,12 +76,13 @@
                         $cont=0;
                         $cont2=0;
                         $cont3=0;
-                        $urlComprovarItemArray = array(
-                            'controller' => 'comprovarexecucaofinanceira',
-                            'action' => 'comprovacaopagamento',
+                        $urlComprovarItemArray = [
+                            'module' => 'prestacao-contas',
+                            'controller' => 'gerenciar',
+                            'action' => 'comprovar',
                             'idusuario' => $this->idusuario,
                             'idpronac' => $this->idpronac,
-                            );
+                        ];
                         foreach($this->incFiscaisA as $titulo => $item) {
                             $html .= '<div style="margin-left: 15px;">';
                             $html .= "<span>{$titulo}</span>";
