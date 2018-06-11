@@ -19,15 +19,13 @@
             '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'tramitacao-projeto')); ?><?php echo "?idPronac=" . $this->idPronac; ?>', '', 'resultTramitacaoProjeto'
         );
 
-        setTimeout(function () {
-            $("#resultTramitacaoDocumento").html(
-                '<br><center>Aguarde, carregando dados...<br><img src="<?php echo $this->baseUrl(); ?>/public/img/ajax.gif" /></center><br>'
-            );
+        $("#resultTramitacaoDocumento").html(
+            '<br><center>Aguarde, carregando dados...<br><img src="<?php echo $this->baseUrl(); ?>/public/img/ajax.gif" /></center><br>'
+        );
 
-            jqAjaxLinkSemLoading(
-                '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'tramitacao-documento')); ?><?php echo "?idPronac=" . $this->idPronac; ?>', '', 'resultTramitacaoDocumento'
-            );
-        }, 1000);
+        jqAjaxLinkSemLoading(
+            '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'tramitacao-documento')); ?><?php echo "?idPronac=" . $this->idPronac; ?>', '', 'resultTramitacaoDocumento'
+        );
     });
 </script>
 
