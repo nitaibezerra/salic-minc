@@ -29,6 +29,17 @@ class PrestacaoContas_PagamentoController extends MinC_Controller_Action_Abstrac
         $idpronac = $this->_request->getParam('idpronac');
 
         $this->view->idpronac = $idpronac;
+
+        $planilhaAprovacaoModel = new PlanilhaAprovacao();
+        $resposta = $planilhaAprovacaoModel->planilhaAprovada($idpronac);
+
+        foreach ($resposta as $item) {
+            $vlComprovar = $item->vlAprovado - $item->vlComprovado;
+            $vlTotalComprovar += $vlComprovar;
+        }
+
+        $this->view->vlTotalComprovar = $vlTotalComprovar;
+
     }
 
     public function planilhaPagamentoAction()
