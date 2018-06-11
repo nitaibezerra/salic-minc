@@ -488,6 +488,9 @@ class Proposta_DiligenciarController extends Proposta_GenericController
      */
     private function situacaoProjeto($situacoes, $idPronac, $texto = '')
     {
+        $diligencia = new Diligencia();
+        $diligencia = $diligencia->aberta($idPronac);
+
         $ProjetoDAO             = new Projetos();
         $SituacaoDAO            = new Situacao();
         $HistoricoSituacaoDAO   = new HistoricoSituacao();
@@ -524,8 +527,10 @@ class Proposta_DiligenciarController extends Proposta_GenericController
                     'ProvidenciaTomada' => $texto
                 );
 
-                $projeto = new Projetos();
-                $projeto->alterarSituacao($idPronac, null, 'E30', 'An&aacute;lise de resposta de dilig&ecirc;ncia');
+                if ($diligencia->idTipoDiligencia == 645) {
+                    $projeto = new Projetos();
+                    $projeto->alterarSituacao($idPronac, null, 'E30', 'An&aacute;lise de resposta de dilig&ecirc;ncia');
+                }
             }
         }
     }
@@ -537,7 +542,6 @@ class Proposta_DiligenciarController extends Proposta_GenericController
         $AvaliacaoPropostaDAO = new AvaliacaoProposta();
         $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
         $tblProjeto = new Projetos();
-
 
         $idArquivo = '';
         $Mensagem = '';
@@ -650,14 +654,11 @@ class Proposta_DiligenciarController extends Proposta_GenericController
             if ($resp) {
                 if ($post->verificaEnviado == 'S') {
                     parent::message("Mensagem enviada com sucesso!", "/proposta/diligenciar/listardiligenciaproponente{$aux}", "CONFIRM");
-                    //$this->view->mensagem = 'Mensagem enviada com sucesso!';
                 } else {
                     parent::message("Mensagem salva com sucesso!", "/proposta/diligenciar/listardiligenciaproponente{$aux}", "CONFIRM");
-                    //$this->view->mensagem = 'Mensagem salva com sucesso!';
                 }
             } else {
                 parent::message('N&atildeo foi possivel realizar a opera&ccedil;&atildeo solicitada!', "/proposta/diligenciar/listardiligenciaproponente{$aux}", "ERROR");
-                //$this->view->mensagem = 'N&atildeo foi possivel tente mais tarde!';
             }
         } else {
             parent::message($retorno['Mensagem'], "/proposta/diligenciar/cadastrarrespostadiligencia{$aux}", "ERROR");

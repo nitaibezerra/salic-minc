@@ -64,7 +64,7 @@ Vue.component('readequacao-formulario', {
           </div>
         </div>
       </div>
-			<template v-else>
+			<template v-if="disabled && exibirInfo">
 				<div class="card-content">
 					<span class="card-title">Solicita&ccedil;&atilde;o de readequa&ccedil;&atilde;o</span>
 					<p>
@@ -72,7 +72,7 @@ Vue.component('readequacao-formulario', {
 					</p>
 				</div>
 				<div class="card-content" v-if="readequacao.idDocumento">
-					<span class="card-title">Arquivo anexado></span>
+					<span class="card-title">Arquivo anexado</span>
 					<a v-bind:href="'/readequacao/readequacoes/abrir-documento-readequacao?id=' + readequacao.idDocumento">
             {{readequacao.nomeArquivo }}
           </a>
@@ -92,6 +92,7 @@ Vue.component('readequacao-formulario', {
                 'idDocumento': '',
                 'nomeArquivo': ''
             },
+	    exibirInfo: false,
             arquivo: {
                 tamanhoMaximo: 500000,
                 tiposAceitos: ['pdf']

@@ -1122,7 +1122,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             }
         } // fecha try
         catch (Exception $e) {
-            parent::message($e->getMessage(), "readequacoes?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
+            parent::message($e->getMessage(), "readequacao/readequacoes?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
         }
     }
 
@@ -1199,7 +1199,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             }
         }
         catch (Exception $e) {
-            parent::message($e->getMessage(), "/readequacao/readequacoes?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
+            parent::message($e->getMessage(), "readequacao/readequacoes?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
         }
     }
 
@@ -1900,6 +1900,33 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
             $tbPlanoDistribuicaoMapper->atualizarAnaliseTecnica($this->idPronac, $idReadequacao, $this->idPerfil, $parecerProjeto);
         }
 
+        if ($dadosRead->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_TRANSFERENCIA_RECURSOS) {
+            $TbSolicitacaoTransferenciaRecursos = new Readequacao_Model_DbTable_TbSolicitacaoTransferenciaRecursos();
+            $tbSolicitacaoTransferenciaRecursosMapper = new Readequacao_Model_TbSolicitacaoTransferenciaRecursosMapper();
+            $projetos = new Projetos();
+            
+            $projetosRecebedores = $TbSolicitacaoTransferenciaRecursos->obterProjetosRecebedores($dadosRead->idReadequacao);
+            $projetoTransferidor = $projetos->buscarProjetoTransferidor($dadosRead->idPronac);
+            
+            foreach($projetosRecebedores as $projetoRecebedor) {
+                $arrData = [];
+                $arrData['idSolicitacaoTransferenciaRecursos'] = $projetoRecebedor['idSolicitacao'];
+                if ($parecerProjeto == 2) {
+                    $arrData['siAnaliseTecnica'] = 'D';
+                } else if ($parecerProjeto == 1) {
+                    $arrData['siAnaliseTecnica'] = 'D';
+                } else {
+                    $arrData['siAnaliseTecnica'] = 'N';
+                }                
+                
+                $statusSolicitacaoTransferenciaRecursos = $tbSolicitacaoTransferenciaRecursosMapper->salvarParecerTecnico($arrData);
+                
+                if (!$statusSolicitacaoTransferenciaRecursos) {
+                    throw new Exception("N&atilde;o foi poss&iacute;vel incluir os projetos recebedores da solicita&ccedil;&atilde;o");
+                }
+            }
+        }
+        
         try {
             //ATUALIZA A SITUAÇÃO, ÁREA E SEGMENTO DO PROJETO
             $d = array();
@@ -2740,7 +2767,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
 
                     parent::message("A avalia&ccedil;&atilde;o da readequa&ccedil;&atilde;o foi finalizada com sucesso!", "readequacao/readequacoes/analisar-readequacoes-cnic", "CONFIRM");
                 } else {
-                    parent::message("Erro ao avaliar a readequa&ccedil;&atilde;o!", "form-avaliar-readequacao-cnic?id=$idReadequacao", "ERROR");
+                    parent::message("Erro ao avaliar a readequa&ccedil;&atilde;o!", "readequacao/readequacoes/form-avaliar-readequacao-cnic?id=$idReadequacao", "ERROR");
                 }
             }
             $idReadequacao = Seguranca::encrypt($idReadequacao);
@@ -3117,6 +3144,40 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                 $dadosPreProjeto = $PrePropojeto->find(array('idPreProjeto=?'=>$dadosPrj->idProjeto))->current();
                 $dadosPreProjeto->FichaTecnica = $read->dsSolicitacao;
                 $dadosPreProjeto->save();
+            } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_TRANSFERENCIA_RECURSOS) {
+                
+                $TbSolicitacaoTransferenciaRecursos = new Readequacao_Model_DbTable_TbSolicitacaoTransferenciaRecursos();
+                $tbProjetoRecebedorRecursoMapper = new Readequacao_Model_TbProjetoRecebedorRecursoMapper();
+                $tbSolicitacaoTransferenciaRecursosMapper = new Readequacao_Model_TbSolicitacaoTransferenciaRecursosMapper();
+                $projetos = new Projetos();
+            
+                $projetosRecebedores = $TbSolicitacaoTransferenciaRecursos->obterProjetosRecebedores($dadosRead->idReadequacao);
+                $projetoTransferidor = $projetos->buscarProjetoTransferidor($dadosRead->idPronac);
+            
+                foreach($projetosRecebedores as $projetoRecebedor) {
+                
+                    $arrData = [];
+                    $arrData['idSolicitacaoTransferenciaRecursos'] = $projetoRecebedor['idSolicitacao'];
+                    $arrData['idPronacTransferidor'] = $projetoTransferidor['idPronac'];
+                    $arrData['idPronacRecebedor'] = $projetoRecebedor['idPronacRecebedor'];
+                    $arrData['tpTransferencia'] = $projetoRecebedor['tpTransferencia'];
+                    $arrData['dtRecebimento'] = new Zend_Db_Expr('GETDATE()');
+                    $arrData['vlRecebido'] = $projetoRecebedor['vlRecebido'];
+                
+                    $statusProjetoRecebedorRecurso = $tbProjetoRecebedorRecursoMapper->finalizarSolicitacaoReadequacao($arrData);
+
+                    $arrData = [];
+                    $arrData['stEstado'] = 1;
+                    $arrData['idSolicitacaoTransferenciaRecursos'] = $projetoRecebedor['idSolicitacao'];
+                    // TODO: dando pau aqui
+                    $statusSolicitacaoTransferenciaRecursos = $tbSolicitacaoTransferenciaRecursosMapper->save($arrData);
+                
+                    if ($statusProjetoRecebedorRecurso == false
+                        || $statusSolicitacaoTransferenciaRecursos == false
+                    ) {
+                        throw new Exception("N&atilde;o foi poss&iacute;vel incluir os projetos recebedores da solicita&ccedil;&atilde;o");
+                    }
+                }
             }
         }
 
@@ -3791,7 +3852,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
         $r = $tbReadequacao->buscarDadosReadequacoes(array('idReadequacao = ?'=>$idReadequacao))->current();
 
         if($r->siEncaminhamento <> '10') {
-            parent::message("Este projeto n&atilde;o pode ser encaminhado!", "/readequacao/readequacoes/painel", "ERROR");
+            parent::message("Este projeto n&atilde;o pode ser encaminhado!", "readequacao/readequacoes/painel", "ERROR");
         }
 
         if ($r) {

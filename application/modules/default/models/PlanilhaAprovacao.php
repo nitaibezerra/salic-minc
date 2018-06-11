@@ -2699,7 +2699,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             i.AnoProjeto+i.Sequencial AS Pronac,
             i.NomeProjeto,
             ISNULL(d.Codigo,0) as cdProduto,
-            ISNULL(d.Descricao,'Administração do Projeto') AS Produto,
+            ISNULL(d.Descricao,'Administra&ccedil;&atilde;o do Projeto') AS Produto,
             b.tpCusto,
             b.idPlanilhaEtapa as cdEtapa,
             b.Descricao AS Etapa,
@@ -2714,18 +2714,18 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             c.Descricao AS Item,
             c.Descricao AS descItem,
             d.Descricao ,
-            sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
+            CONVERT(DECIMAL(38,2), sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
-                    a.idMunicipioDespesa,a.idPlanilhaItem) as vlAprovado,
-            sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item
+                    a.idMunicipioDespesa,a.idPlanilhaItem)) as vlAprovado,
+            CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
-                    a.idMunicipioDespesa,a.idPlanilhaItem) as vlComprovado,
-            sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
+                    a.idMunicipioDespesa,a.idPlanilhaItem)) as vlComprovado,
+            CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
-                    a.idMunicipioDespesa,a.idPlanilhaItem)  as ComprovacaoValidada,
-            sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
+                    a.idMunicipioDespesa,a.idPlanilhaItem))  as ComprovacaoValidada,
+            CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
-                    a.idMunicipioDespesa,a.idPlanilhaItem) as Total
+                    a.idMunicipioDespesa,a.idPlanilhaItem)) as Total
         ");
 
         $select = $this->select()->distinct();

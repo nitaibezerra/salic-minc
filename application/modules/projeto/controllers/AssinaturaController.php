@@ -4,6 +4,10 @@ class Projeto_AssinaturaController extends Assinatura_GenericController
 {
     private $idTipoDoAtoAdministrativo;
 
+    private $idResponsavel;
+    private $idUsuario;
+    private $idAgente;
+
     private function validarPerfis()
     {
         $auth = Zend_Auth::getInstance();

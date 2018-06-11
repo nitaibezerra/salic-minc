@@ -4,7 +4,7 @@
             $buscarFornecedorHref = $this->url(array(
                 'module' => 'default',
                 'controller' => 'comprovarexecucaofinanceira',
-                        'action' => 'buscarfornecedor')) . '?idusuario=' . $this->idusuario;
+                'action' => 'buscarfornecedor'), null, true) . '?idusuario=' . $this->idusuario;
 
         $urlArray = array(
             'controller' => 'comprovarexecucaofinanceira',
@@ -105,20 +105,17 @@
                             <input type='hidden' name='idComprovantePagamento' id='idComprovantePagamento'
                                    value='<?php echo $this->idComprovantePagamento; ?>'/>
                             <input type='hidden' name='idpronac' id='idpronac' value='<?php echo $this->idpronac; ?>'/>
+                            <input type='hidden'
+                                   id='buscarFornecedorComprovacaoHref'
+                                   value='<?php echo $buscarFornecedorHref; ?>'/>
 
                             <?php if ($this->idComprovantePagamento): ?>
-                                <!--input type='hidden' name='paginaRedirecionar' id='paginaRedirecionar'
-                                       value='comprovacaopagamento'/-->
                                 <input type='hidden' name='paginaRedirecionar' id='paginaRedirecionar'
                                        value='gerenciar'/>
                             <?php endif; ?>
-                            <!--input type='hidden' name='valorAprovado' id='valorAprovado'
-                                   value='<?php echo $this->itemPlanilhaAprovacao->valorAprovado; ?>'/-->
                             <input type='hidden' name='valorAprovado' id='valorAprovado'
                                    value='<?php echo $this->valores->vlAprovado; ?>'/>
 
-                            <!--input type='hidden' name='totalComprovado' id='totalComprovado'
-                                   value='<?php echo $this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'; ?>'/-->
                             <input type='hidden' name='totalComprovado' id='totalComprovado'
                                    value='<?php echo $this->valores->vlComprovado; ?>'/>
 
@@ -140,8 +137,6 @@
                                         <td><?php echo $this->produto->Sintese; ?></td>
                                         <td><?php echo $this->etapa->Descricao; ?></td>
                                         <td><?php echo $this->item->Descricao; ?></td>
-                                        <!--td><?php echo $this->currency($this->itemPlanilhaAprovacao->valorAprovado); ?></td>
-                                        <td><?php echo $this->currency($this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'); ?></td-->
                                         <td>
                                             <?php echo $this->currency($this->valores->vlAprovado ? $this->valores->vlAprovado : '0'); ?>
                                         </td>
@@ -312,7 +307,7 @@
                                             <div class="row">
                                                 <div class="input-field col s3">
                                                     <input type="hidden" name="vlComprovadoAntigo" size="10" id="vlComprovadoAntigo"
-                                                           value="<?php echo $this->vlComprovacao; ?>"/>
+                                                           value="<?php echo $this->vlComprovacao ? $this->vlComprovacao : 0 ; ?>"/>
                                                     <input type="text" name="vlComprovado" size="10" id="vlComprovado"
                                                            value="<?php echo $this->vlComprovacao; ?>"/>
                                                     <label>Valor do Item <?php echo $this->vlComprovacao ? '(' . $this->vlComprovacao . ')' : ''; ?><span style='color:red'>*</span></label>
@@ -449,8 +444,6 @@
                                                             style='color:red'>*</span></label>
                                                 </div>
                                                 <div class="file-field input-field col s4">
-                                                    <!-- input type="file" id="arquivoInternacional" name="arquivoInternacional" value=""/>
-                                                    <label>Anexar comprovante<span style='color:red'>*</span></label-->
                                                     <div class="btn">
                                                         <span>Anexar comprovante</span>
                                                         <input id="arquivoInternacional" name="arquivoInternacional"
@@ -492,19 +485,16 @@
                                 <div class="row">
                                     <div class="col s12 center-align">
                                         <?php if (!$this->vrSituacao || !$this->pagCompRecusado) : ?>
-                                            <!--a href="<?php echo $voltarHref; ?>" id="btnVoltar" style="text-decoration:none;"><input type="button" class="btn_voltar" /></a-->
                                             <a class="btn" href="<?php echo $voltarHref; ?>" id="btnVoltar"><i
                                                     class="material-icons left">arrow_back</i>voltar</a>
                                         <?php endif; ?>
                                         <?php if ($this->idComprovantePagamento): ?>
-                                            <!-- input type="submit" name="frComprovarPagamentoSubmit" id="frComprovarPagamentoSubmit" value="" class="btn_salvar" /-->
                                             <button type="submit" name="frComprovarPagamentoSubmit"
                                                     id="frComprovarPagamentoSubmit" value="" class="btn">salvar
                                             </button>
                                             <button type="button" name="incluirNovo" id="incluirNovo" value="" class="btn">novo
                                             </button>
                                         <?php else: ?>
-                                            <!--input type="submit" name="frComprovarPagamentoSubmit" id="frComprovarPagamentoSubmit" value="" class="btn_incluir" /-->
                                             <button type="submit" name="frComprovarPagamentoSubmit"
                                                     id="frComprovarPagamentoSubmit" value="" class="btn">
                                                 <i class="material-icons left ">add</i>incluir
@@ -516,7 +506,6 @@
                     </div>
                 </div>
             </div>
-
             <div id="desc_item"></div>
         </div>
     </div>
@@ -549,518 +538,25 @@
         $('#vlComprovado').priceFormat({limit: 8});
         $('#vlComprovadoInternacional').priceFormat({limit: 8});
     });
+    <?php if ($this->idComprovantePagamento): ?>
+        $3("#incluirNovo").on('click', function () {
+            window.location = "<?php echo $this->url(
+                array(
+                'module' => 'prestacao-contas',
+                'controller' => 'gerenciar',
+                'action' => 'comprovar',
+                'idusuario' => $this->idusuario,
+                'idpronac' => $this->idpronac,
+                'idPlanilhaAprovacao' => $this->idPlanilhaAprovacao,
+                'cidade' => $this->cdcidade,
+                'produto' => $this->cdproduto,
+                'etapa' => $this->cdetapa,
+                'idPlanilhaItens' => $this->idplanilhaitens,
+            ),
+            null,
+            true
+        ); ?>";
+        });
+    <?php endif; ?>
 </script>
-
-<script type="text/javascript" src="/public/scripts/prestacao-contas/comprovacaopagamento.js">
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        // tratamento comum
-        var form = '#incluircomprovacaoAjax';
-        /* $('input[type!=button][type!=submit]').addClass('input_simples'); */
-        /* $('textarea').addClass('textarea_simples'); */
-        /* $('select[id!=perfilXgrupo]').addClass('select_simples'); */
-
-        $(form).find('[data=true]').each(function () {
-            $(this).keyup(function () {
-                mascara(this, format_data);
-                var este = this;
-                setTimeout(function () {
-                    $(este).val($(este).val().substr(0, 10));
-                }, 2);
-                if ($(este).val().length == 10) {
-                    validaDataCorreta(este, $(este).val().substr(6, 4), $(este).val().substr(3, 2), $(este).val().substr(0, 2));
-                }
-            });
-            $(this).datepicker({
-                showOn: 'button',
-                buttonImage: '<?php echo $this->baseUrl(); ?>/public/img/ico/calendar.gif',
-                buttonImageOnly: true,
-                dateFormat: 'dd/mm/yy',
-                maxDate: '0'
-            });
-        });
-        $(form).find('[sonumero=true]').keyup(function () {
-            mascara(this, format_num);
-        });
-        $(form).find('[dinheiro=true]').keyup(function () {
-            mascara(this, format_moeda);
-        });
-
-        $(form).find('[cnpjcpf=true]').each(function () {
-            console.log('teste1:');
-            var este = this;
-            /* $('.' + $(este).attr('classaux')).click(function () { */
-            $('.' + $(este).prop('classaux')).click(function () {
-                mascaraCNPJCPF(este);
-                buscarFornecedor(este);
-            });
-            /* $('#' + $(este).prop('idDescricao')).attr('readonly', true); */
-            $('#' + $(este).prop('idDescricao')).prop('readonly', true);
-        });
-
-        $(form).find('[cnpjcpf=true]').keyup(function () {
-            mascaraCNPJCPF(this);
-            buscarFornecedor(this);
-        });
-
-        function mascaraCNPJCPF(este) {
-            var marcado = buscarRadioMarcado(este);
-            console.log('teste');
-            switch (marcado) {
-                case 'cpf':
-                    $(este).val($(este).val().slice(0, 14));
-                    $(este).attr('maxlength', 14);
-                    mascara(este, format_cpf);
-                    break;
-                case 'cnpj':
-                    $(este).attr('maxlength', 18);
-                    mascara(este, format_cnpj);
-                    break;
-                default:
-                    janelaAlerta('Selecione o Tipo do Fornecedor');
-                    $(este).val('');
-            }
-        }
-
-        function buscarRadioMarcado(este) {
-            console.log('teste:');
-            var marcado = '';
-            $('.' + $(este).attr('classaux')).each(function () {
-                /* if ($(this).attr('checked')) { */
-                if ($(this).prop('checked')) {
-                    marcado = $(this).val();
-                }
-            });
-            return marcado;
-        }
-
-        function buscarFornecedor(este) {
-            if ($(este).attr('idAgente') != undefined && $(este).attr('idAgente') && $(este).attr('idDescricao') != undefined && $(este).attr('idDescricao')) {
-                var marcado = buscarRadioMarcado(este);
-                if ((marcado == 'cpf' && $(este).val().length == 14) || (marcado == 'cnpj' && $(este).val().length == 18)) {
-                    var fornecedor = buscarJson('<?php echo $buscarFornecedorHref;?>', {cnpjcpf: $(este).val()});
-                    if (fornecedor.retorno) {
-                        $('#' + $(este).attr('idAgente')).val(fornecedor.idAgente);
-                        $('#' + $(este).attr('idDescricao')).val(fornecedor.descricao).attr('readonly', true);
-
-                    } else {
-                        $('html').css('overflow', 'hidden');
-                        $("body").append("<div id='divDinamicaAgentes'></div>");
-                        $("#divDinamicaAgentes").html("");
-                        $('#divDinamicaAgentes').html("<br><br><center>Carregando dados...</center>");
-                        $.ajax({
-                            url: '<?php echo $this->url(array('module' => 'agente', 'controller' => 'agentes', 'action' => 'incluirfornecedor')); ?>',
-                            data: {
-                                cpf: fornecedor.CNPJCPF,
-                                caminho: "",
-                                modal: "s"
-                            },
-                            success: function (data) {
-                                if (data.error) {
-                                    $('#divDinamicaAgentes').html(data.msg);
-                                } else {
-                                    $('#divDinamicaAgentes').html(data);
-                                }
-                            },
-                            complete: function () {
-                                $("#resultadoFinalizar").html("");
-                            },
-                            type: 'post'
-
-                        });
-
-                        $("#divDinamicaAgentes").dialog({
-                            resizable: true,
-                            width: $(window).width() - 100,
-                            height: $(window).height() - 100,
-                            modal: true,
-                            autoOpen: true,
-                            draggable: false,
-                            title: 'Cadastrar Fornecedor',
-                            buttons: {
-                                'Fechar': function () {
-                                    $("#divDinamicaAgentes").remove();
-                                    $('#' + $(este).attr('idAgente')).val('');
-                                    $('#' + $(este).attr('idDescricao')).val('');
-                                    $(this).dialog('close');
-                                    $('html').css('overflow', 'auto');
-                                    outroFornecedor(este);
-                                }
-                            }
-                        });
-                        $('.ui-dialog-titlebar-close').remove();
-                    }
-                }
-                else {
-                    $('#' + $(este).attr('idAgente')).val('');
-                    $('#' + $(este).attr('idDescricao')).val('');
-                }
-            }
-            fornecedores();
-        }
-
-        //Mensagem para Utilizar este fornecedor para Comprova¿¿o Financeira, sim ou n¿o.
-        function outroFornecedor(este) {
-            $("#divPerguntaFornecedor").dialog('close');
-            $("#divPerguntaFornecedor").html('Deseja utilizar este fornecedor na comprova&ccedil;&atilde;o do pagamento?');
-            $("#divPerguntaFornecedor").dialog('open');
-            $("#divPerguntaFornecedor").dialog({
-                resizable: false,
-                width: 320,
-                height: 180,
-                modal: true,
-                draggable: false,
-                title: 'Alerta!',
-                buttons: {
-                    'N\xE2o': function () {
-                        $('#' + $(este).attr('idAgente')).val('');
-                        $('#' + $(este).attr('idDescricao')).val('');
-                        $('#CNPJCPF').val('');
-                        $("#divPerguntaFornecedor").dialog('close');
-                    },
-                    'Sim': function () {
-                        $(this).dialog('close');
-                        buscarFornecedor(este);
-                    }
-                }
-            });
-            $('.ui-dialog-titlebar-close').remove();
-        }
-
-        function fornecedores() {
-            var conteudo = '<option value="">Selecione</option>';
-            conteudo += montagem(1);
-            conteudo += montagem(2);
-            conteudo += montagem(3);
-            $('#fornecedor').html(conteudo);
-        }
-
-        function montagem(nr) {
-            var conteudo = '';
-            if ($('#Descricao' + nr).val() != undefined) {
-                if ($('#Descricao' + nr).val().replace(/\s+/g, '')) {
-                    var idAgente = '';
-                    if ($('#idAgente' + nr).val() == '')
-                        idAgente = '-' + nr;
-                    else
-                        idAgente = $('#idAgente' + nr).val();
-                    conteudo += '<option value="' + idAgente + '">' + $('#Descricao' + nr).val() + '</option>';
-                    $('.fornecedor' + nr).each(function () {
-                        $(this).val(idAgente);
-                    });
-                    $('.td_fornecedor' + nr).each(function () {
-                        $(this).html($('#Descricao' + nr).val());
-                    });
-                }
-            }
-            return conteudo;
-        }
-
-        function buscarJson(pagina, dados) {
-            var retorno = '';
-            var select = requisicaoAjaxObj();
-            select.executar({
-                pagina: pagina,
-                parametros: dados,
-                resposta: undefined,
-                async: false,
-                funcaoRetorno: function (resposta) {
-                    retorno = resposta;
-                }
-                , dataType: 'json'
-            });
-            return retorno;
-        }
-
-        function requisicaoAjaxObj() {
-            var ajaxObj = {
-                pagina: '',
-                parametros: {},
-                type: 'post',
-                dataType: '',
-                resposta: '#conteudo',
-                async: true,
-                funcaoRetorno: function (resposta) {
-                    $(this.resposta).html(resposta);
-                },
-                executar: function (dados) {
-                    this.refineParametrosObj(dados);
-                    var esteObj = this;
-                    if (this.resposta != undefined && this.resposta != '')
-                        $(this.resposta).html('<img src="<?php echo $this->baseUrl(); ?>/public/img/ajax.gif" alt="carregando"><br/><br/>Carregando...<br>Por Favor, aguarde!!');
-                    $.ajax({
-                        type: esteObj.type,
-                        url: esteObj.pagina,
-                        data: esteObj.parametros,
-                        async: esteObj.async,
-                        success: function (resp) {
-                            esteObj.funcaoRetorno(resp);
-                        }
-                        , dataType: esteObj.dataType
-                    });
-                },
-                refineParametrosObj: function (data) {
-                    if (data != undefined)
-                        for (var j in data) {
-
-                            this[j] = data[j];
-                        }
-                }
-            };
-            return ajaxObj;
-        }
-
-        // quando selecionar cheque, limita n&uacute;mero de caracteres do nrDocumentoDePagamento
-        $('#tpFormaDePagamento').change(function () {
-            if ($(this).val() == 1) {
-                $('#nrDocumentoDePagamento').attr('maxlength', 6);
-            } else {
-                $('#nrDocumentoDePagamento').attr('maxlength', 10)
-            }
-        });
-
-        $('#itens').change(function () {
-            // Recupera o fornecedor e preenche os dados do mesmo.
-            $.ajax({
-                url: '<?php echo $this->baseUrl();?>/fornecedor/pesquisar-fornecedor-item/format/json',
-                type: 'get',
-                data: {'item': $(this).val()},
-                dataType: 'json',
-                success: function (result) {
-                    if (undefined != result.fornecedor) {
-                        if (11 == result.fornecedor.CNPJCPF.length) {
-                            var mask = '999.999.999-99';
-                        } else {
-                            var mask = '99.999.999/9999-99';
-                        }
-                        $("#tabelaComprovante tbody:nth-child(1) tr:nth-child(2)").attr('style', 'display:none');
-                        $("#idAgente").val(result.fornecedor.idAgente);
-                        $("#CNPJCPF").val(result.fornecedor.CNPJCPF).mask(mask).attr('disabled', 'true');
-                        $("#Descricao").val(result.fornecedor.Fornecedor).attr('disabled', 'true');
-                    }
-                }
-            });
-        });
-
-        <?php if ($this->idComprovantePagamento): ?>
-
-            $("#incluirNovo").click(function () {
-                window.location = "<?php echo $this->url(array(
-                    'module' => 'default',
-                    'controller' => 'comprovarexecucaofinanceira',
-                    'action' => 'comprovacaopagamento',
-                    'idusuario' => $this->idusuario,
-                    'idpronac' => $this->idpronac,
-                    'idPlanilhaAprovacao' => $this->idPlanilhaAprovacao,
-                    'cidade' => $this->cdcidade,
-                    'produto' => $this->cdproduto,
-                    'idPlanilhaItens' => $this->idplanilhaitens,
-                    'etapa' => $this->cdetapa,
-                ), null, true); ?>";
-            });
-
-        <?php endif; ?>
-
-        $("#frComprovarPagamentoSubmit").click(function () {
-            var msg = ';'
-            if (isInvoice()) {
-                msg = validarParametrosDeComprovacaoDePagamentoInvoice();
-            } else {
-                console.log('invoice');
-                msg = validarParametrosDeComprovacaoDePagamento();
-            }
-            valorComprovado = 0;
-            if (isInvoice()) {
-                valorComprovado = $('#vlComprovadoInternacional').val();
-            } else {
-                valorComprovado = $('#vlComprovado').val();
-            }
-
-            var valorItem = parseFloat(valorComprovado.replace(".", "").replace(".", "").replace(",", "."));
-            var valorAprovado = parseFloat($("#valorAprovado").val());
-            var valorComprovado = parseFloat($("#totalComprovado").val());
-            /* var valorComprovadoAntigo = parseFloat($('#vlComprovadoAntigo').val()); */
-            var valorComprovadoAntigo = parseFloat($('#vlComprovadoAntigo').val()) ?parseFloat($('#vlComprovadoAntigo').val()) : 0 ;
-            var valorAtualComprovado = (valorItem + valorComprovado).toFixed(2) - valorComprovadoAntigo ;
-            console.log('total:', $3("#idComprovantePagamento").val());
-
-            /* if (!$("#idComprovantePagamento").val()) { */
-            /*     msg += 'Sem Valor comprovado.<br />'; */
-            /* } */
-
-            if (valorAtualComprovado > valorAprovado) {
-                msg += 'O valor comprovado total com esse item ('+ valorAtualComprovado +') maior que o valor aprovado('+valorAprovado+') passando em: ' + (valorAtualComprovado-valorAprovado).toFixed(2) + '<br />';
-            } else if (valorItem > valorAprovado) {
-                msg += 'Valor comprovado maior que o valor aprovado.<br />';
-            }
-
-            if ('' != msg) {
-                $("#msgAlerta").dialog("destroy");
-                $("#msgAlerta").html('<center><p>' + msg + '</p></center>');
-                $("#msgAlerta").dialog({
-                    resizable: false,
-                    title: 'Alerta!',
-                    width: 500,
-                    height: 300,
-                    modal: true,
-                    buttons: {
-                        'OK': function () {
-                            $(this).dialog('close');
-                        }
-                    }
-                });
-                $('.ui-dialog-titlebar-close').remove();
-                return false;
-            }
-        });
-
-        function validarParametrosDeComprovacaoDePagamento() {
-            var msg = '';
-            if (!$("#vlComprovado").val()) {
-                msg += 'Informe o valor do item.<br />';
-            }
-            if (parseFloat($("#vlComprovado").val()) === 0) {
-                msg += 'O valor do item n&atilde;o pode ser igual a zero.<br />';
-            }
-            if (!$("#idAgente").val()) {
-                msg += 'Informe um fornecedor.<br />';
-            }
-            if (!$("#tpDocumento").val() || 0 == $("#tpDocumento").val()) {
-                msg += 'Selecione o tipo de comprovante.<br />';
-            }
-            if (!$("#nrComprovante").val()) {
-                msg += 'Informe o n&uacute;mero do comprovante.<br />';
-            }
-            if (!$("#dtEmissao").val()) {
-                msg += 'Informe a data de emiss&atilde;o do comprovante de despesa.<br />';
-            }
-            if (!$("#tpFormaDePagamento").val() || 0 == $("#tpFormaDePagamento").val()) {
-                msg += 'Selecione a forma de pagamento.<br />';
-            }
-            if (!$("#nrDocumentoDePagamento").val()) {
-                msg += 'Informe o n&uacute;mero do Documento de pagamento.<br />';
-            }
-            if (!$("#dtPagamento").val()) {
-                msg += 'Informe o n&uacute;mero do Data de pagamento.<br />';
-            }
-
-            if ($("#idComprovantePagamento").val()) {
-                if (!$("#arquivo_edit").val()) {
-                    msg += 'Selecione um arquivo comprovante para envio.<br />';
-                }
-            } else {
-                if (!$("#arquivo").val()) {
-                    msg += 'Selecione um arquivo comprovante para envio.<br />';
-                }
-            }
-            return msg;
-        }
-
-        function validarParametrosDeComprovacaoDePagamentoInvoice() {
-            var msg = '';
-            if (!$("#vlComprovadoInternacional").val()) {
-                msg += 'Informe o valor do item.<br />';
-            }
-            if (!$("#nomeRazaoSocialInternacional").val()) {
-                msg += 'Informe o Nome/Raz&atilde;o Social.<br />';
-            }
-            if (!$("#nif").val()) {
-                msg += 'Informe o NIF.<br />';
-            }
-            if (!$("#dtEmissaoInternacional").val()) {
-                msg += 'Informe a data de emiss&atilde;o do comprovante.<br />';
-            }
-            if ($("#arquivoInternacional").val() == '') {
-                if (!$("#arquivo_edit").val()) {
-                    msg += 'Selecione um arquivo comprovante para envio.<br />';
-                }
-            } else {
-                if (!$("#arquivoInternacional").val()) {
-                    msg += 'Selecione um arquivo comprovante para envio.<br />';
-                }
-            }
-            return msg;
-        }
-
-        $('#tabelaComprovantePagamento tbody tr td a.exclusao').closest('a').each(function () {
-            $(this).unbind('click').click(function (event) {
-                event.preventDefault();
-                $("#alerta").dialog("destroy");
-                $("#alerta").html('Deseja realmente excluir esse comprovante?');
-                $("#alerta").dialog({
-                    resizable: false,
-                    title: 'Alerta!',
-                    width: 340,
-                    modal: true,
-                    buttons: {
-                        'OK': function () {
-                            deletarItem($(event.target).parent());
-                            $(this).dialog('close');
-                        },
-                        'Cancelar': function () {
-                            $(this).dialog('close');
-                        }
-                    }
-                });
-                $('.ui-dialog-titlebar-close').remove();
-            });
-        });
-
-        deletarItem = function (elementLink) {
-            $.ajax({
-                url: elementLink.attr('href') + '/format/json',
-                dataType: 'json',
-                success: function (result) {
-                    // remove a linha
-                    elementLink.closest('tr').remove();
-                    // atualiza as informacoes do item
-                    $("campoValorAprovado").html('000').toNumber().formatCurrency({region: 'pt-BR'});
-                    /* $("#campoValorComprovado").html('000').toNumber().formatCurrency({region: 'pt-BR'}); */
-                    // Recupera o item e preenche os valores aprovado e comprovado.
-                    $.ajax({
-                        url: '<?php echo $this->baseUrl();?>/planilha-item/pesquisar/format/json',
-                        type: 'get',
-                        data: {'item': planilhaItem},
-                        dataType: 'json',
-                        success: function (result) {
-                            if (result.item) {
-                                planilhaItem = result.item;
-                                $("campoValorAprovado").html(result.item.valorAprovado).toNumber().formatCurrency({region: 'pt-BR'});
-                                $("campoValorComprovado").html(result.item.valorComprovado).toNumber().formatCurrency({region: 'pt-BR'});
-                            }
-                            message('Exclus&atilde;o realizada com sucesso!', 'CONFIRM');
-                            location.reload();
-                        }
-                    });
-                }
-            });
-        };
-    });
-
-    function toggleTabelaComprovacaoPagamentoInvoice() {
-        if (isInvoice()) {
-            $('#bodyTabelaComprovante').hide();
-            $('#bodyTabelaComprovanteInternacional').show();
-        } else {
-            $('#bodyTabelaComprovante').show();
-            $('#bodyTabelaComprovanteInternacional').hide();
-        }
-    }
-
-    function isInvoice() {
-        return 'Brasil' !== $('#pais').val();
-    }
-
-    toggleTabelaComprovacaoPagamentoInvoice();
-    if (!isInvoice()) {
-        var cnpjcpf = document.getElementById('CNPJCPF');
-        mascaraCNPJCPF(cnpjcpf);
-    }
-</script>
-<script>
-  $(document).ready(function() {
-   console.log($3('#tpFornecedorCpf :checked').val());
-  });
-</script>
+<script type="text/javascript" src="/public/scripts/prestacao-contas/comprovacaopagamento.js"></script>

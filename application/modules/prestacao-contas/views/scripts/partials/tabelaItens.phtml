@@ -46,7 +46,7 @@
                                         <?php echo ($comprovante->tpDocumento == 6) ? 'Invoice' : 'Outros'; ?>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo $comprovante->dtEmissao; ?></td>
+                                <td><?php echo (new DateTime($comprovante->dtEmissao))->format('d/m/Y'); ?></td>
                                 <td>
                                     <a href=" <?php echo $this->url(
                                         array('module' => 'default',

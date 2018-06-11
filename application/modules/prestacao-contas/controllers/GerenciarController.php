@@ -454,28 +454,19 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
     {
         $comprovante = new PrestacaoContas_Model_ComprovantePagamento();
 
-        /* var_dump($this->getRequest()->getPost()); */
-        /* die; */
-        $comprovante->preencher($this->getRequest()->getPost());
+        $comprovante->preencher($this->getRequest()->getPost()['comprovante']);
 
-            /* $request->getParam('idAgente'), */
-            /* $request->getParam('itemId'), */
-            /* $request->getParam('tpDocumento'), */
-            /* $request->getParam('nrComprovante'), */
-            /* $request->getParam('nrSerie'), */
-            /* $request->getParam('dtEmissao') ? new DateTime(data::dataAmericana($request->getParam('dtEmissao'))) : null, */
-            /* $arquivoModel->getId(), */
             /* $request->getParam('tpFormaDePagamento'), */
-            /* $dtPagamento, */
             /* str_replace(',', '.', str_replace('.', '', $request->getParam('vlComprovado'))), */
             /* $request->getParam('nrDocumentoDePagamento'), */
-            /* $request->getParam('dsJustificativa') */
-
+        $data = [];
         try {
-            $comprovante->cadastrar();
+            $id = $comprovante->cadastrar();
+            $data = ['success' => true, 'idComprovantePagamento' => $id];
         } catch (Exception $e) {
             $this->view->message = $e->getMessage();
         }
+        $this->_helper->json($data);
     }
 
     public function fornecedorAction()
@@ -508,7 +499,6 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
         $pais = new Pais();
 
         $paises = $pais->buscar();
-        /* var_dump($paises);die; */
         $data = [];
         foreach($paises as $key => $pais) {
             $data[$key]['id']  = $pais['idPais'];

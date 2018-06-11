@@ -143,18 +143,18 @@ class PrestacaoContas_PrestacaoContasController extends MinC_Controller_Action_A
             ];
 
             $planilhaJSON[$item->cdProduto]['etapa'][$item->cdEtapa] += [
-                utf8_encode($item->Etapa),
-                $item->cdEtapa
+               'etapa' => utf8_encode($item->Etapa),
+                'cdEtapa' =>  $item->cdEtapa
             ];
 
             $planilhaJSON[$item->cdProduto]['etapa'][$item->cdEtapa]['UF'][$item->cdUF] += [
-                $item->cdUF,
-                $item->Uf
+                'Uf' => $item->Uf,
+              'cdUF' => $item->cdUF
             ];
 
             $planilhaJSON[$item->cdProduto]['etapa'][$item->cdEtapa]['UF'][$item->cdUF]['cidade'][$item->cdCidade] += [
-                $item->cdCidade,
-                utf8_encode($item->Cidade),
+               'cidade' => utf8_encode($item->Cidade),
+               'cdCidade' => $item->cdCidade
             ];
         }
 

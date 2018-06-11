@@ -283,16 +283,6 @@ header .dropdown-content li > a, .dropdown-content li > span {
     padding: 14px 16px;
 }
 
-@media only screen and (max-width: 1200px) {
-    header nav {
-        /*z-index: 998;*/
-    }
-
-    header nav .nav-wrapper {
-        width: 100%;
-    }
-}
-
 header .menu-apoio {
     margin-right: 30px;
 }
