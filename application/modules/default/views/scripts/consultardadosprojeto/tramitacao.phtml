@@ -19,13 +19,15 @@
             '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'tramitacao-projeto')); ?><?php echo "?idPronac=" . $this->idPronac; ?>', '', 'resultTramitacaoProjeto'
         );
 
-        $("#resultTramitacaoDocumento").html(
-            '<br><center>Aguarde, carregando dados...<br><img src="<?php echo $this->baseUrl(); ?>/public/img/ajax.gif" /></center><br>'
-        );
+        setTimeout(function () {
+            $("#resultTramitacaoDocumento").html(
+                '<br><center>Aguarde, carregando dados...<br><img src="<?php echo $this->baseUrl(); ?>/public/img/ajax.gif" /></center><br>'
+            );
 
-        jqAjaxLinkSemLoading(
-            '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'tramitacao-documento')); ?><?php echo "?idPronac=" . $this->idPronac; ?>', '', 'resultTramitacaoDocumento'
-        );
+            jqAjaxLinkSemLoading(
+                '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'tramitacao-documento')); ?><?php echo "?idPronac=" . $this->idPronac; ?>', '', 'resultTramitacaoDocumento'
+            );
+        }, 1000);
     });
 </script>
 
@@ -55,7 +57,7 @@
 </table>
 <fieldset>
     <legend>
-        Ultima Tramita&ccedil;&atilde;o
+        &Uacute;ltima Tramita&ccedil;&atilde;o
     </legend>
     <div id="resultUltimaTramitacao">
     </div>
