@@ -307,7 +307,7 @@
                                             <div class="row">
                                                 <div class="input-field col s3">
                                                     <input type="hidden" name="vlComprovadoAntigo" size="10" id="vlComprovadoAntigo"
-                                                           value="<?php echo $this->vlComprovacao; ?>"/>
+                                                           value="<?php echo $this->vlComprovacao ? $this->vlComprovacao : 0 ; ?>"/>
                                                     <input type="text" name="vlComprovado" size="10" id="vlComprovado"
                                                            value="<?php echo $this->vlComprovacao; ?>"/>
                                                     <label>Valor do Item <?php echo $this->vlComprovacao ? '(' . $this->vlComprovacao . ')' : ''; ?><span style='color:red'>*</span></label>

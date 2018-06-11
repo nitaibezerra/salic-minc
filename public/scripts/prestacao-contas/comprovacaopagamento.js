@@ -270,17 +270,13 @@ $3("#frComprovarPagamentoSubmit").on('click', function (e) {
     var valorComprovado = parseFloat($("#totalComprovado").val());
     var valorComprovadoAntigo = parseFloat($('#vlComprovadoAntigo').val()) ? parseFloat($('#vlComprovadoAntigo').val()) : 0 ;
     var valorAtualComprovado = (valorItem + valorComprovado) - (valorComprovadoAntigo);
+    valorAtualComprovado = parseFloat((valorAtualComprovado).toFixed(2)) ;
 
     if (valorAtualComprovado > valorAprovado) {
         msg += 'O valor comprovado total com esse item ('+ valorAtualComprovado.toFixed(2) +') maior que o valor aprovado('+valorAprovado.toFixed(2)+') passando em: ' + (valorAtualComprovado-valorAprovado).toFixed(2) + '<br />';
     } else if (valorItem > valorAprovado) {
         msg += 'Valor comprovado maior que o valor aprovado.<br />';
     }
-
-    // if ((valorComprovado + valorItem) > valorAprovado) {
-    //     msg += 'Valor comprovado maior que o valor aprovado.<br />';
-    // }
-    // debugger;
 
     if ('' != msg) {
         $("#msgAlerta").dialog("destroy");
