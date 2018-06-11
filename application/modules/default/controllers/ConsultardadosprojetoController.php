@@ -1092,9 +1092,19 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
         }
     }
 
+    public function ultimaTramitacaoAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $idPronac = $this->_request->getParam("idPronac");
+        
+        $tblProjetos = new Projetos();
+        $rst = $tblProjetos->buscarDadosUC75($idPronac);
+        $this->view->projeto = $rst[0];
+    }
+
     public function tramitacaoAction()
     {
-        $this->_helper->layout->disableLayout();        // Desabilita o Zend Layout
+        $this->_helper->layout->disableLayout(); // Desabilita o Zend Layout
         $idPronac = $this->_request->getParam("idPronac");
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
