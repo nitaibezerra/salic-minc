@@ -1,14 +1,36 @@
-<div class="row" id="app">
-    <div class="col s12 m12">
-        <div class="card">
-            <div class="card-content">
-                <div class="card">
-                    <div class="center-align card-content grey lighten-4">
-                        <span class="card-title">COMPROVAÇÃO FINANCEIRA</span>
-                        <span class="voltar"><a href="javascript:voltar();" title="Ir para p&aacute;gina anterior">Voltar</a></span>
+<div class="container-fluid">
+
+    <div class="page-title">
+        <div class="row">
+            <div class="col s12 m9 l10">
+                <h1>Prestação de Contas: Comprovação Financeira</h1>
+            </div>
+            <div class="col s12 m3 l2 right-align">
+                <a href="javascript:voltar();" title="Página Anterior" class="btn small grey lighten-3 grey-text z-depth-0 chat-toggle">
+                    <i class="material-icons">keyboard_return</i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="app">
+        <div class="col s12 m12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card">
+                        <div class="center-align card-content grey lighten-4">
+                            <span class="card-title"><?php echo $this->pronac . " - " . $this->nomeProjeto ?></span>
+                        </div>
+                        <dados idpronac="<?php echo $this->idpronac ?>"></dados>
+                        <div class="row">
+                            <div class="col s6 m12">
+                                <div class="card-panel teal">
+                                    <span class="white-text" style="font-weight: bold; font-size: medium">
+                                        Valor total a Comprovar: R$ <?php echo number_format($this->vlTotalComprovar, 2, ',', '.') ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <dados idpronac="<?php echo $this->idpronac ?>"></dados>
-                    <span class="card-content">Valor total a Comprovar: <?php echo $this->vlTotalComprovar ?></span>
                 </div>
             </div>
         </div>
@@ -51,6 +73,11 @@
     }));
 
     numeral.locale('pt-br');
+
+    function converteParaReal(value) {
+        value = parseFloat(value);
+        return numeral(value).format('0,0.00');
+    }
 
     Vue.component('produtos-pagamento', {
         props: ['produtos', 'idpronac'],
@@ -164,7 +191,7 @@
                                         <th style="text-align: right">Valor Aprovado</th>
                                         <th style="text-align: right">Valor Comprovado</th>
                                         <th style="text-align: right">Valor a Comprovar</th>
-                                        <th style="text-align: center">#</th>
+                                        <th style="text-align: center"> </th>
                                     </tr>
                                 </thead>
                                 <tbody>
