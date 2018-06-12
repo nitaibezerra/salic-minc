@@ -106,7 +106,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
         $idAvaliador = $this->auth->getIdentity()->usu_codigo;
         $idPreProjeto = $this->getRequest()->getParam("idPreProjeto");
-        $MotivoArquivamento = $this->getRequest()->getParam("MotivoArquivamento");
+        $motivoArquivamento = $this->getRequest()->getParam("MotivoArquivamento");
 
         $arquivar = new Proposta_Model_PreProjetoArquivado();
 
@@ -131,7 +131,6 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
                 $arquivar->update($data, ["idPreProjeto = ?" => $idPreProjeto]);
             }
-
         } catch(Exception $e){
             $message = $e->getMessage();
             $success = false;
@@ -141,7 +140,8 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $agente = $agente->buscaCompleta(['a.idPreProjeto = ? ' => $idPreProjeto]);
 
         $email = new StdClass();
-        $email->text = 'Motivo Arquivamento: '. utf8_decode(html_entity_decode($MotivoArquivamento));
+
+        $email->text = 'Motivo Arquivamento: '. $this->montarEmail($motivoArquivamento));
         $email->to = $agente->current()->EmailAgente;
         $email->subject = 'SALIC - Arquivamento Proposta: ' . $idPreProjeto;
 
@@ -154,6 +154,22 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
                 'message' => $message
             ]
         );
+    }
+
+    private function montarEmail($texto)
+    {
+        $textoQuebraDeLinha = converterQuebraDeLinha($texto);
+
+        $textoUtf8Decode = utf8_decode(
+           html_entity_decode($textoQuebraDeLinha)
+        );
+
+        return $textoUtf8Decode;
+    }
+
+    private function converterQuebraDeLinha($texto)
+    {
+      return str_replace(array("\r\n", "\n", "\r"), "<br/>", $texto);
     }
 
     public function updateAction()

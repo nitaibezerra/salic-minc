@@ -103,7 +103,7 @@ class Proposta_PreProjetoController extends Proposta_GenericController
 
         $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
         $rsPreProjeto = $tblPreProjeto->find($idPreProjeto)->current();
-        
+
         if ($DtArquivamento) {
             $rsPreProjeto->DtArquivamento = $DtArquivamento;
         }
