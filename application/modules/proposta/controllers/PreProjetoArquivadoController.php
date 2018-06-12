@@ -140,8 +140,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $agente = $agente->buscaCompleta(['a.idPreProjeto = ? ' => $idPreProjeto]);
 
         $email = new StdClass();
-
-        $email->text = 'Motivo Arquivamento: '. $this->montarEmail($motivoArquivamento));
+        $email->text = 'Motivo Arquivamento: '. $this->montarEmail($motivoArquivamento);
         $email->to = $agente->current()->EmailAgente;
         $email->subject = 'SALIC - Arquivamento Proposta: ' . $idPreProjeto;
 
@@ -158,11 +157,8 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
     private function montarEmail($texto)
     {
-        $textoQuebraDeLinha = converterQuebraDeLinha($texto);
-
-        $textoUtf8Decode = utf8_decode(
-           html_entity_decode($textoQuebraDeLinha)
-        );
+        $textoQuebraDeLinha = $this->converterQuebraDeLinha($texto);
+        $textoUtf8Decode = utf8_decode(html_entity_decode($textoQuebraDeLinha));
 
         return $textoUtf8Decode;
     }
