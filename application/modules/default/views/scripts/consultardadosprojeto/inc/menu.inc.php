@@ -306,7 +306,12 @@
 
                 <!-- ======================= SOLICITAR RECURSO  =======================   -->
                 <?php if ($this->fnLiberarLinks['Recursos']): ?>
-                    <?php if ($this->codSituacao == 'B02'): ?>
+                    <?php if ($this->codSituacao == 'B02'):
+                        /**
+                         * @dreprecated: a rotina de recurso do enquadramento foi substituida,
+                         * atualmente é feita na proposta, remover controllers e scripts utilizados.
+                         */
+                        ?>
                         <div class="sanfonaDiv" style="display:none;"></div>
                         <a href="#" title="Recurso" class="ancoraRecurso" onclick="return false;">Recurso</a>
                         <div class="sanfonaDiv" style="width: 90%; margin-left: 20px;">

@@ -4,6 +4,7 @@ class Projeto_HomologacaoController extends Proposta_GenericController
 {
 
     private $arrBreadCrumb = [];
+    private $situacaoParaHomologacao = Projeto_Model_Situacao::PROJETO_APRECIADO_PELA_CNIC;
 
     public function init()
     {
@@ -53,10 +54,12 @@ class Projeto_HomologacaoController extends Proposta_GenericController
 
     public function listarAction()
     {
-        $dbTable = new Projeto_Model_DbTable_VwPainelDeHomologacaoDeProjetos();
         $this->_helper->layout->disableLayout();
-        $this->view->arrResult = $dbTable->findAll(['idUnidade' => $_SESSION['GrupoAtivo']['codOrgao']], ['NrReuniao', 'Pronac']);
-        // $this->view->arrResult = $dbTable->findAll([], ['NrReuniao', 'Pronac']);
+        $dbTableEnquadramento = new Projeto_Model_DbTable_Enquadramento();
+
+        $this->view->arrResult = $dbTableEnquadramento->obterProjetosApreciadosCnic(
+            ['a.Orgao = ?' => (int) $_SESSION['GrupoAtivo']['codOrgao']], ['NrReuniao', 'Pronac']
+        );
     }
 
     public function visualizarAction()
@@ -94,19 +97,22 @@ class Projeto_HomologacaoController extends Proposta_GenericController
             $arrPost['stDecisao'] = (isset($arrPost['stDecisao'])) ? 2 : 1;
             $this->_helper->json(array('status' => $mapper->save($arrPost), 'msg' => $mapper->getMessages(), 'close' => 1));
         } else {
-            $arrValue = [];
-            $dbTableEnquadramentoProjeto = new Projeto_Model_DbTable_VwVisualizarHomologacao();
+            $dbTableEnquadramento = new Projeto_Model_DbTable_Enquadramento();
             $this->view->urlAction = '/projeto/homologacao/homologar';
             $intId = $this->getRequest()->getParam('id');
             $dbTable = new Projeto_Model_DbTable_TbHomologacao();
+
             $arrValue = $dbTable->getBy(['idPronac' => $intId, 'tpHomologacao' => '1']);
             if (empty($arrValue)) {
-                $dbTable = new Projeto_Model_DbTable_VwPainelDeHomologacaoDeProjetos();
-                $arrValue = $dbTable->findBy(['idPronac' => $intId]);
+                $arrValue = $dbTableEnquadramento->obterProjetosApreciadosCnic(['a.IdPRONAC = ?' => $intId])->current()->toArray();
                 $arrValue['idPronac'] = $arrValue['IdPRONAC'];
                 $arrValue['tpHomologacao'] = 1;
             }
-            $arrValue['enquadramentoProjeto'] = $dbTableEnquadramentoProjeto->findBy($intId);
+
+            $arrValue['enquadramentoProjeto'] = $dbTableEnquadramento->obterProjetoAreaSegmento(
+                [ 'a.IdPRONAC = ?' => $intId, 'a.Situacao = ?' => $this->situacaoParaHomologacao]
+            )->current()->toArray();
+
             $this->view->dataForm = $arrValue;
         }
     }
@@ -117,16 +123,21 @@ class Projeto_HomologacaoController extends Proposta_GenericController
     private function prepareData($intIdPronac)
     {
         # PARTE 1
-        $dbTablePainelHomologacao = new Projeto_Model_DbTable_VwPainelDeHomologacaoDeProjetos();
-        $dbTableEnquadramentoProjeto = new Projeto_Model_DbTable_VwVisualizarHomologacao();
         # PARTE 2 # PARTE 4
         $dbTableParecer = new Parecer();
         # PARTE 3
         $dbTableAcaoProjeto = new tbAcaoAlcanceProjeto();
         # PARTE 5
         $dbTableHomologacao = new Projeto_Model_DbTable_TbHomologacao();
-        $arrValue = $dbTablePainelHomologacao->findBy($intIdPronac);
-        $arrValue['enquadramentoProjeto'] = $dbTableEnquadramentoProjeto->findBy($intIdPronac);
+        $dbTableEnquadramento = new Projeto_Model_DbTable_Enquadramento();
+        $arrValue = $dbTableEnquadramento->obterProjetosApreciadosCnic(['a.IdPRONAC = ?' => $intIdPronac])->current()->toArray();
+        $arrValue['enquadramentoProjeto'] = $dbTableEnquadramento->obterProjetoAreaSegmento(
+            [
+                'a.IdPRONAC = ?' => $intIdPronac,
+                'a.Situacao = ?' => $this->situacaoParaHomologacao
+            ]
+        )->current()->toArray();
+
         $arrValue['parecer'] = $dbTableParecer->findBy(['TipoParecer' => '1', 'idTipoAgente' => '1', 'IdPRONAC' => $intIdPronac]);
         $arrValue['acaoProjeto'] = $dbTableAcaoProjeto->findBy(['tpAnalise' => '1', 'idPronac' => $intIdPronac]); # 3
         $arrValue['aparicaoComissario'] = $dbTableParecer->findBy(['TipoParecer' => '1', 'idTipoAgente' => '6', 'IdPRONAC' => $intIdPronac]); # 4

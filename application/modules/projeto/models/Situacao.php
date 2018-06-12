@@ -15,4 +15,5 @@ class Projeto_Model_Situacao extends MinC_Db_Table_Abstract
     const PROJETO_APROVADO_AGUARDANDO_ANALISE_DOCUMENTAL = 'D03';
     const PROJETO_LIBERADO_PARA_AJUSTES = 'E90';
     const ANALISE_TECNICA = 'D51';
+    const PROJETO_APRECIADO_PELA_CNIC = 'D50';
 }
