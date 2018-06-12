@@ -10,11 +10,6 @@
                 <th colspan="2" data-field="teste2" class="center-align">Per&iacute;odo de Execu&ccedil;&atilde;o</th>
                 <th rowspan="2" data-field="teste3" class="center-align">Nr.Reuni&atilde;o</th>
                 <th rowspan="2" data-field="teste3" class="center-align">Vl.Homologado</th>
-                <!-- <th rowspan="2" data-field="teste3" class="center-align">Visualizar pareceres</th>
-                <th rowspan="2" data-field="teste3" class="center-align">t</th>
-                <th rowspan="2" data-field="teste3" class="center-align">Dilig&ecirc;nciar</th>
-                <th rowspan="2" data-field="teste3" class="center-align">Gerar documento</th>
-                <th rowspan="2" data-field="teste3" class="center-align">Encaminhar</th> -->
                 <th rowspan="2" data-field="teste3" class="center-align" style="width: 220px;">A&ccedil;&otilde;es</th>
             </tr>
             <tr>
@@ -46,14 +41,17 @@
                            data-ajax-modal-full="true"
                            class="btn small waves-effect waves-light tooltipped btn-secondary" data-position="top"
                            data-delay="50" data-tooltip="Visualizar pareceres"><i class="material-icons">visibility</i></a>
-                        <a href="<?php echo $this->url(array('module' => 'proposta', 'controller' => 'diligenciar', 'action' => 'listardiligenciaanalista', 'idPronac' => $this->idPronac, 'situacao' => 'D25', 'tpDiligencia' => '181', 'idProduto' => ''), null, true); ?>"
+                        <a href="<?php echo $this->url(
+                            array(
+                                'module' => 'proposta',
+                                'controller' => 'diligenciar',
+                                'action' => 'listardiligenciaanalista',
+                                'idPronac' => $arrValue['IdPRONAC'],
+                                'situacao' => 'D25',
+                                'tpDiligencia' => '181'), null, true); ?>"
                            target="_blank"
                            class="btn small waves-effect waves-light tooltipped" data-position="top"
                            data-delay="50" data-tooltip="Dilig&ecirc;nciar"><i class="material-icons">warning</i></a>
-                        <!--                        <a href="javascript:$3.redirect('-->
-                        <?php //echo $this->url(arr76ay('module' => 'admissibilidade', 'controller' => 'mensagem', 'action' => 'responder', 'id' => $arrValue['idMensagemProjeto'], 'idPronac' => $this->idPronac), null, true); ?><!--');"-->
-                        <!--                            class="btn small waves-effect waves-light tooltipped" data-position="top"-->
-                        <!--                            data-delay="50" data-tooltip="Gerar documento"><i class="material-icons">insert_drive_file</i></a>-->
                         <a data-ajax-modal="<?php echo $this->url(array('module' => 'projeto', 'controller' => 'homologacao', 'action' => 'encaminhar', 'id' => $arrValue['IdPRONAC']), null, true); ?>"
                            data-ajax-modal-full="true"
                            class="btn small waves-effect waves-light tooltipped btn-info" data-position="top"
@@ -62,7 +60,6 @@
                     </td>
                 </tr>
             <?php endforeach; ?>
-            <!--                                                                                                                                                        /?idPronac=203042&idProduto=62&situacao=B11&tpDiligencia=124-->
             </tbody>
         </table>
     </div>
