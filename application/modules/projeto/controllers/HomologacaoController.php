@@ -1,6 +1,6 @@
 <?php
 
-class Projeto_HomologacaoController extends Proposta_GenericController
+class Projeto_HomologacaoController extends Projeto_GenericController
 {
 
     private $arrBreadCrumb = [];
@@ -8,40 +8,6 @@ class Projeto_HomologacaoController extends Proposta_GenericController
 
     public function init()
     {
-        $auth = Zend_Auth::getInstance(); // pega a autenticacao
-        $idPreProjeto = $this->getRequest()->getParam('idPreProjeto');
-
-        $arrIdentity = array_change_key_case((array)Zend_Auth::getInstance()->getIdentity());
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
-
-        /*********************************************************************************************************/
-
-        $cpf = isset($arrIdentity['usu_codigo']) ? $arrIdentity['usu_identificacao'] : $arrIdentity['cpf'];
-
-        if (is_null($cpf)) {
-            $this->redirect('/');
-        }
-
-        // Busca na SGCAcesso
-        $modelSgcAcesso = new Autenticacao_Model_Sgcacesso();
-        $arrAcesso = $modelSgcAcesso->findBy(array('cpf' => $cpf));
-
-        // Busca na Usuarios
-        //Excluir ProposteExcluir Proposto
-        $usuarioDAO = new Autenticacao_Model_DbTable_Usuario();
-        $arrUsuario = $usuarioDAO->findBy(array('usu_identificacao' => $cpf));
-
-        // Busca na Agentes
-        $tableAgentes = new Agente_Model_DbTable_Agentes();
-        $arrAgente = $tableAgentes->findBy(array('cnpjcpf' => trim($cpf)));
-
-        if ($arrAcesso) $this->idResponsavel = $arrAcesso['idusuario'];
-        if ($arrAgente) $this->idAgente = $arrAgente['idagente'];
-        if ($arrUsuario) $this->idUsuario = $arrUsuario['usu_codigo'];
-        if ($this->idAgente != 0) $this->usuarioProponente = "S";
-        $this->cpfLogado = $cpf;
-
-
         $this->arrBreadCrumb[] = array('url' => '/principal', 'title' => 'In&iacute;cio', 'description' => 'Ir para in&iacute;cio');
         parent::init();
     }
@@ -122,12 +88,8 @@ class Projeto_HomologacaoController extends Proposta_GenericController
      */
     private function prepareData($intIdPronac)
     {
-        # PARTE 1
-        # PARTE 2 # PARTE 4
         $dbTableParecer = new Parecer();
-        # PARTE 3
         $dbTableAcaoProjeto = new tbAcaoAlcanceProjeto();
-        # PARTE 5
         $dbTableHomologacao = new Projeto_Model_DbTable_TbHomologacao();
         $dbTableEnquadramento = new Projeto_Model_DbTable_Enquadramento();
         $arrValue = $dbTableEnquadramento->obterProjetosApreciadosCnic(['a.IdPRONAC = ?' => $intIdPronac])->current()->toArray();
