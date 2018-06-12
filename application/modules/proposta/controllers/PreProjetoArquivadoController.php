@@ -165,7 +165,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
     private function converterQuebraDeLinha($texto)
     {
-      return str_replace(array("\r\n", "\n", "\r"), "<br/>", $texto);
+        return str_replace(array("\r\n", "\n", "\r"), "<br/>", $texto);
     }
 
     public function updateAction()
