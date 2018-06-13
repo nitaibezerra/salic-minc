@@ -635,7 +635,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
                 $rsProposta = $tblProposta->buscar(array('idPreProjeto=?'=>$rsProjeto->idProjeto))->current();
                 $this->view->proposta = $rsProposta;
                 $tbCustosVinculadosMapper = new Proposta_Model_TbCustosVinculadosMapper();
-                $this->view->itensCustosVinculados = $tbCustosVinculadosMapper->obterCustosVinculados($idPronac);
+                $this->view->itensCustosVinculados = $tbCustosVinculadosMapper->obterCustosVinculados($rsProjeto->idProjeto);
             }
         }
     }
@@ -1096,7 +1096,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
     {
         $this->_helper->layout->disableLayout();
         $idPronac = $this->_request->getParam("idPronac");
-        
+
         $tblProjetos = new Projetos();
         $rst = $tblProjetos->buscarDadosUC75($idPronac);
         $this->view->projeto = $rst[0];
