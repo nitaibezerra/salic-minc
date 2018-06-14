@@ -1,59 +1,65 @@
 <div class="container-fluid">
-    <div class="row">
+    <?php $this->PageTitle('Projetos', array(
+        array('Lista de projetos' => '')
+    )); ?>
 
-        <?php $this->PageTitle('Projetos', array(
-            array('Lista de projetos' => '')
-        )); ?>
-
-        <div class="content">
-            <div class="row card-panel">
-                <div class="col s12 m12 l3">
-                    <label for="mecanismo"><b>Mecanismo</b></label></br>
-                    <select name="mecanismo" id="mecanismo" class="browser-default">
-                        <option value="1">Incentivo Fiscal Federal</option>
-                    </select>
-                </div>
-                <div class="col s12 m12 l9">
-                    <label><b>CPF/CNPJ Proponente:</b></label></br>
-                    <select name="idProponente" id="idProponente" class="browser-default">
-                        <option value="">Selecione</option>
-                        <?php foreach ($this->proponentes as $proponente) : ?>
-                            <option
-                                class="proponente"
-                                value="<?= $proponente['idAgenteProponente'] ?>"
-                                <?= ($this->idAgente == $proponente['idAgenteProponente']) ? 'selected="selected"' : ''; ?>
-                            ><?= "[" . Validacao::mascaraCPFCNPJ($proponente['CPF']) . "] - " . $proponente['Nome'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+    <div class="content">
+        <div class="row card-panel">
+            <div class="col s12 m12 l3">
+                <label for="mecanismo"><b>Mecanismo</b></label></br>
+                <select name="mecanismo" id="mecanismo" class="browser-default">
+                    <option value="1">Incentivo Fiscal Federal</option>
+                </select>
             </div>
-            <div class="row card-panel padding10">
-                <div class="col s12 m12 l12">
-                    <div id="listar-projetos-cadastrados">
-                        <table
-                            class="bordered striped conteudoImprimivel"
-                            id="lista-de-projetos"
-                            style="width: 100%"
-                        >
-                            <thead>
-                            <tr>
-                                <th>Pronac</th>
-                                <th>Projeto</th>
-                                <th>Situação</th>
-                                <th>Período de Execução</th>
-                                <th>Mecanismo</th>
-                                <th class="right-align">A&ccedil;&otilde;es</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="col s12 m12 l9">
+                <label><b>CPF/CNPJ Proponente:</b></label></br>
+                <select name="idProponente" id="idProponente" class="browser-default">
+                    <option value="">Selecione</option>
+                    <?php foreach ($this->proponentes as $proponente) : ?>
+                        <option
+                            class="proponente"
+                            value="<?= $proponente['idAgenteProponente'] ?>"
+                            <?= ($this->idAgente == $proponente['idAgenteProponente']) ? 'selected="selected"' : ''; ?>
+                        ><?= "[" . Validacao::mascaraCPFCNPJ($proponente['CPF']) . "] - " . $proponente['Nome'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="row card-panel padding10">
+            <div class="col s12 m12 l12">
+                <div id="listar-projetos-cadastrados">
+                    <table
+                        class="bordered striped conteudoImprimivel"
+                        id="lista-de-projetos"
+                        style="width: 100%"
+                    >
+                        <thead>
+                        <tr>
+                            <th>Pronac</th>
+                            <th>Projeto</th>
+                            <th>Situação</th>
+                            <th>Período de Execução</th>
+                            <th>Mecanismo</th>
+                            <th class="right-align">A&ccedil;&otilde;es</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<style type="text/css">
+    select {
+        height: 35px;
+        font-size: 15px;
+        color: #212121;
+    }
+</style>
 
 <div id="conteudoRelatorio" class="sumir"></div>
 <div id="mensagem-modal" class="sumir"></div>
