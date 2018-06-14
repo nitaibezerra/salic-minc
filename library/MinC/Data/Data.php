@@ -471,4 +471,14 @@ class Data
 
     }
 
+    public static function mostrarPeriodoDeDatas($dataInicial, $dataFinal)
+    {
+
+        $dataInicialStr = self::tratarDataZend($dataInicial, 'brasileiro');
+        $dataFinal = self::tratarDataZend($dataFinal, 'brasileiro');
+        $output = sprintf('%s a %s', $dataInicialStr, $dataFinal);
+
+        return $output;
+    }
+
 } // fecha class

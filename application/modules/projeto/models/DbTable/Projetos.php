@@ -220,4 +220,215 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
             EmailDAO::enviarEmail($email->Descricao, $verificacao['Descricao'], $textoEmail['dsTexto']);
         }
     }
+
+    public function obterProjetosPorProponente(
+        $idResponsavel,
+        $idProponente,
+        $mecanismo,
+        $where = [],
+        $order = [],
+        $start = 0,
+        $limit = 20,
+        $search = null,
+        $total = false)
+    {
+        $a = $this->select();
+        $a->setIntegrityCheck(false);
+        $a->from(
+            array('a' => $this->_name),
+            array(
+                new Zend_Db_Expr('0 as Ordem'),
+                'IdPRONAC',
+                'NomeProjeto',
+                'CgcCpf',
+                'Situacao',
+                new Zend_Db_Expr('DtInicioExecucao as DtInicioDeExecucao'),
+                new Zend_Db_Expr('DtFimExecucao as DtFinalDeExecucao'),
+                'Mecanismo',
+                'idProjeto',
+                new Zend_Db_Expr('a.AnoProjeto + a.Sequencial as Pronac'),
+            )
+        );
+        $a->joinInner(
+            array('b' => 'Agentes'),
+            "a.CgcCpf = b.CNPJCPF",
+            array('idAgente', new Zend_Db_Expr('sac.dbo.fnNome(b.idAgente) AS NomeProponente')),
+            $this->getSchema('agentes')
+        );
+        $a->joinInner(
+            array('c' => 'SGCacesso'),
+            "a.CgcCpf = c.Cpf",
+            array(),
+            'CONTROLEDEACESSO.dbo'
+        );
+        $a->joinInner(
+            array('d' => 'Situacao'),
+            "a.Situacao = d.Codigo",
+            array('Descricao', new Zend_Db_Expr('0 AS idSolicitante')),
+            'SAC.dbo'
+        );
+        $a->where('c.IdUsuario = ?', $idResponsavel);
+        if (!empty($mecanismo)) {
+            $a->where('a.Mecanismo = ?', $mecanismo);
+        }
+        if (!empty($idProponente)) {
+            $a->where('b.idAgente = ?', $idProponente);
+        }
+
+        $b = $this->select();
+        $b->setIntegrityCheck(false);
+        $b->from(
+            array('a' => $this->_name),
+            array(
+                new Zend_Db_Expr('1 as Ordem'),
+                'IdPRONAC',
+                'NomeProjeto',
+                'CgcCpf',
+                'Situacao',
+                new Zend_Db_Expr('DtInicioExecucao as DtInicioDeExecucao'),
+                new Zend_Db_Expr('DtFimExecucao as DtFinalDeExecucao'),
+                'Mecanismo',
+                'idProjeto',
+                new Zend_Db_Expr('a.AnoProjeto + a.Sequencial as Pronac'),
+            )
+        );
+        $b->joinInner(
+            array('b' => 'Agentes'),
+            "a.CgcCpf = b.CNPJCPF",
+            array('idAgente', new Zend_Db_Expr('sac.dbo.fnNome(b.idAgente) AS NomeProponente')),
+            $this->getSchema('agentes')
+        );
+        $b->joinInner(
+            array('c' => 'tbProcuradorProjeto'),
+            "a.IdPRONAC = c.idPronac",
+            array(),
+            $this->getSchema('agentes')
+        );
+        $b->joinInner(
+            array('d' => 'tbProcuracao'),
+            "c.idProcuracao = d.idProcuracao",
+            array(),
+            $this->getSchema('agentes')
+        );
+        $b->joinInner(
+            array('f' => 'Agentes'),
+            "d.idAgente = f.idAgente",
+            array(),
+            $this->getSchema('agentes')
+        );
+        $b->joinInner(
+            array('e' => 'SGCacesso'),
+            "f.CNPJCPF = e.Cpf",
+            array(),
+            'CONTROLEDEACESSO.dbo'
+        );
+        $b->joinInner(
+            array('g' => 'Situacao'),
+            "a.Situacao = g.Codigo",
+            array('Descricao', new Zend_Db_Expr('d.idSolicitante')),
+            'SAC.dbo'
+        );
+        $b->where('c.siEstado = ?', 2);
+        $b->where('e.IdUsuario = ?', $idResponsavel);
+        if (!empty($mecanismo)) {
+            $b->where('a.Mecanismo = ?', $mecanismo);
+        }
+        if (!empty($idProponente)) {
+            $b->where('b.idAgente = ?', $idProponente);
+        }
+
+        $c = $this->select();
+        $c->setIntegrityCheck(false);
+        $c->from(
+            array('a' => $this->_name),
+            array(
+                new Zend_Db_Expr('2 as Ordem'),
+                'IdPRONAC',
+                'NomeProjeto',
+                'CgcCpf',
+                'Situacao',
+                new Zend_Db_Expr('DtInicioExecucao as DtInicioDeExecucao'),
+                new Zend_Db_Expr('DtFimExecucao as DtFinalDeExecucao'),
+                'Mecanismo',
+                'idProjeto',
+                new Zend_Db_Expr('a.AnoProjeto + a.Sequencial as Pronac'),
+            )
+        );
+        $c->joinInner(
+            array('b' => 'Agentes'),
+            "a.CgcCpf = b.CNPJCPF",
+            array('idAgente', new Zend_Db_Expr('sac.dbo.fnNome(b.idAgente) AS NomeProponente')),
+            $this->getSchema('agentes')
+        );
+        $c->joinInner(
+            array('c' => 'Vinculacao'),
+            "b.idAgente = c.idVinculoPrincipal",
+            array(),
+            $this->getSchema('agentes')
+        );
+        $c->joinInner(
+            array('d' => 'Agentes'),
+            "c.idAgente = d.idAgente",
+            array(),
+            $this->getSchema('agentes')
+        );
+        $c->joinInner(
+            array('e' => 'SGCacesso'),
+            "d.CNPJCPF = e.Cpf",
+            array(),
+            'CONTROLEDEACESSO.dbo'
+        );
+        $c->joinInner(
+            array('f' => 'Situacao'),
+            "a.Situacao = f.Codigo",
+            array('Descricao', new Zend_Db_Expr('0 AS idSolicitante')),
+            'SAC.dbo'
+        );
+        $c->where('e.IdUsuario = ?', $idResponsavel);
+        if (!empty($mecanismo)) {
+            $c->where('a.Mecanismo = ?', $mecanismo);
+        }
+        if (!empty($idProponente)) {
+            $c->where('b.idAgente = ?', $idProponente);
+        }
+
+//        $slctUnion = $this->select()
+//            ->union(array('(' . $a . ')', '(' . $b . ')', '(' . $c . ')'))
+//            ->order('Ordem')
+//            ->order('CgcCpf')
+//            ->order('NomeProjeto')
+//            ->order('idProjeto');
+//        return $this->fetchAll($slctUnion);
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->setFetchMode(Zend_DB::FETCH_OBJ);
+
+        $sql = $db->select()->union(array($a , $b,  $c), Zend_Db_Select::SQL_UNION);
+
+        if ($total) {
+            $sqlFinal = $db->select()->from(array("p" => $sql), array('count(distinct IdPRONAC)'));
+            return $db->fetchOne($sqlFinal);
+        }
+
+        $sqlFinal = $db->select()->from(array("p" => $sql));
+
+        foreach ($where as $coluna => $valor) {
+            $sqlFinal->where($coluna, $valor);
+        }
+
+        if (!empty($search['value']) && count($search['value']) > 5) {
+            $sqlFinal->where('a.AnoProjeto + a.Sequencial like ?', '%'.$search['value']);
+        }
+
+        if(count($order) > 0 && !empty(trim($order[0]))) {
+            $sqlFinal->order($order);
+        }
+
+        if (!is_null($start) && $limit) {
+            $start = (int) $start;
+            $limit = (int) $limit;
+            $sqlFinal->limit($limit, $start);
+        }
+
+        return $db->fetchAll($sqlFinal);
+    }
 }

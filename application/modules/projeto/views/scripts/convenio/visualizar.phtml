@@ -1,0 +1,80 @@
+<style>
+    .rTable {
+        display: table;
+        width: 100%;
+    }
+    .rTableRow {
+        display: table-row;
+    }
+    .rTableHeading {
+        display: table-header-group;
+        background-color: #ddd;
+    }
+    .rTableCell, .rTableHead {
+        display: table-cell;
+        padding: 3px 10px;
+        border: 1px solid #999999;
+    }
+    .rTableHeading {
+        display: table-header-group;
+        background-color: #ddd;
+        font-weight: bold;
+    }
+    .rTableFoot {
+        display: table-footer-group;
+        font-weight: bold;
+        background-color: #ddd;
+    }
+    .rTableBody {
+        display: table-row-group;
+    }
+
+
+    /*********/
+    
+    /*.rTable {*/
+        /*display: block;*/
+        /*width: 100%;*/
+    /*}*/
+    /*.rTableHeading, .rTableBody, .rTableFoot, .rTableRow{*/
+        /*clear: both;*/
+    /*}*/
+    /*.rTableHead, .rTableFoot{*/
+        /*background-color: #DDD;*/
+        /*font-weight: bold;*/
+    /*}*/
+    /*.rTableCell, .rTableHead {*/
+        /*border: 1px solid #999999;*/
+        /*float: left;*/
+        /*height: 17px;*/
+        /*overflow: hidden;*/
+        /*padding: 3px 1.8%;*/
+        /*width: 28%;*/
+    /*}*/
+    /*.rTable:after {*/
+        /*visibility: hidden;*/
+        /*display: block;*/
+        /*font-size: 0;*/
+        /*content: " ";*/
+        /*clear: both;*/
+        /*height: 0;*/
+    /*}*/
+</style>
+
+<div class="container-fluid">
+    <?php $this->PageTitle('Dados do Projeto', array(
+        array('Dados do Projeto' => '')
+    )); ?>
+    <div class="card-panel">
+        <div class="rTable">
+            <div class="rTableRow">
+                <div class="rTableHead"><b>Pronac</b></div>
+                <div class="rTableHead"><b>Nome Projeto</b></div>
+            </div>
+            <div class="rTableRow">
+                <div class="rTableCell">John</div>
+                <div class="rTableCell"><a href="tel:0123456785">0123 456 785</a></div>
+            </div>
+        </div>
+    </div>
+</div>
