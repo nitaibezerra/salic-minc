@@ -104,6 +104,12 @@
             window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>";
         });
 
+        String.fromHtmlEntities = function(string) {
+            return (string+"").replace(/&#\d+;/gm,function(s) {
+                return String.fromCharCode(s.match(/\d+/gm)[0]);
+            })
+        };
+
         $('#IncluirReadequacao').click(function () {
             var descJustificativa = CKEDITOR.instances['descJustificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, ''),
                 texto = CKEDITOR.instances['descJustificativa'].getData(),
@@ -118,7 +124,7 @@
                 erro++;
             }
 
-            if (texto.length > 6000) {
+            if (texto.replace(/&[^&]*;|\s/g, 'x').replace(/<[^>]*>|\s/g, '').length > 5000) {
                 erro++;
                 msg = 'O campo s\u00F3 permite 5.000 caracteres!';
             }
@@ -170,7 +176,7 @@
                         textoSolicitacao = CKEDITOR.instances['descSolicitacao'].getData();
                     if (campoRead == '') {
                         erro++;
-                    } else if (textoSolicitacao.length > 1000) {
+                    } else if (textoSolicitacao.replace(/&[^&]*;|\s/g, 'x').replace(/<[^>]*>|\s/g, '').length > 1000) {
                         erro++;
                         msg = 'O campo s\u00F3 permite 1.000 caracteres!';
                     }
