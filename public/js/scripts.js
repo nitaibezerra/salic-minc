@@ -1,23 +1,21 @@
-<
-!--
-    /**
-     * M�scaras, efeitos din�micos e etc
-     * @author Emanuel Sampaio <contato@emanuelsampaio.com.br>
-     * @since 24/03/2010
-     * @version 1.0
-     * @copyright � 2010 Politec - Todos os direitos reservados.
-     * @package js
-     * @link http://www.politec.com.br
-     */
+/**
+ * M�scaras, efeitos din�micos e etc
+ * @author Emanuel Sampaio <contato@emanuelsampaio.com.br>
+ * @since 24/03/2010
+ * @version 1.0
+ * @copyright � 2010 Politec - Todos os direitos reservados.
+ * @package js
+ * @link http://www.politec.com.br
+ */
 
-    /**
-     * M�scaras para formatar DATA, VALOR E ETC
-     */
+/**
+ * M�scaras para formatar DATA, VALOR E ETC
+ */
 
-    function selecionartodos(field) {
-        for (i = 0; i < field.length; i++)
-            field[i].checked = true;
-    }
+function selecionartodos(field) {
+    for (i = 0; i < field.length; i++)
+        field[i].checked = true;
+}
 
 function deselecionartodos(field) {
     for (i = 0; i < field.length; i++)
