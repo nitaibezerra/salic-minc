@@ -476,7 +476,16 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
     }
 
     public function comprovarPagamentoAction()
-    { }
+    {
+        $this->view->idpronac = $this->getRequest()->getParam('idpronac');
+        $this->view->idPlanilhaAprovacao = $this->getRequest()->getParam('idPlanilhaAprovacao');
+        $this->view->idPlanilhaItens = $this->getRequest()->getParam('idPlanilhaItens');
+        $this->view->idComprovantePagamento = $this->getRequest()->getParam('idComprovantePagamento');
+        $this->view->uf = $this->getRequest()->getParam('uf');
+        $this->view->cdproduto = $this->getRequest()->getParam('produto');
+        $this->view->cdcidade = $this->getRequest()->getParam('cidade');
+        $this->view->cdetapa = $this->getRequest()->getParam('etapa');
+    }
 
     public function cadastrarAction()
     {
