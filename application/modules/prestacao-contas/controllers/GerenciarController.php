@@ -493,6 +493,7 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
             $data = ['success' => true, 'idComprovantePagamento' => $id];
         } catch (Exception $e) {
             $this->view->message = $e->getMessage();
+            echo $e->getMessage();die;
         }
         $this->_helper->json($data);
     }

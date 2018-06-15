@@ -36,11 +36,17 @@ class PrestacaoContas_PagamentoController extends MinC_Controller_Action_Abstrac
         foreach ($resposta as $item) {
             $vlComprovar = $item->vlAprovado - $item->vlComprovado;
             $vlTotalComprovar += $vlComprovar;
+
+            $vlAprovado += $item->vlAprovado;
+            $vlComprovado += $item->vlComprovado;
+
             $nomeProjeto = $item->NomeProjeto;
             $pronac = $item->Pronac;
         }
 
         $this->view->vlTotalComprovar = $vlTotalComprovar;
+        $this->view->vlAprovado = $vlAprovado;
+        $this->view->vlComprovado = $vlComprovado;
         $this->view->pronac = $pronac;
         $this->view->nomeProjeto = $nomeProjeto;
 

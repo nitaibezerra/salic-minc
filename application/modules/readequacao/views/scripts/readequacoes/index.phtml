@@ -118,7 +118,7 @@
                 erro++;
             }
 
-            if (texto.length > 6000) {
+            if (texto.replace(/&[^&]*;|\s/g, 'x').replace(/<[^>]*>|\s/g, '').length > 5000) {
                 erro++;
                 msg = 'O campo s\u00F3 permite 5.000 caracteres!';
             }
@@ -170,7 +170,7 @@
                         textoSolicitacao = CKEDITOR.instances['descSolicitacao'].getData();
                     if (campoRead == '') {
                         erro++;
-                    } else if (textoSolicitacao.length > 1000) {
+                    } else if (textoSolicitacao.replace(/&[^&]*;|\s/g, 'x').replace(/<[^>]*>|\s/g, '').length > 1000) {
                         erro++;
                         msg = 'O campo s\u00F3 permite 1.000 caracteres!';
                     }

@@ -237,6 +237,16 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
 
         $this->view->incFiscaisA   = array('Administra&ccedil;&atilde;o do Projeto' =>$arrayA);
         $this->view->incFiscaisP   = array('Custo por Produto' =>$arrayP);
+
+
+        $this->_helper->getHelper('Redirector')
+            ->setGotoSimple(
+                'index',
+                'pagamento',
+                'prestacao-contas',
+                array('idpronac' => $this->getRequest()->getParam('idpronac')
+            )
+        );
     }
 
     public function vincularcomprovacaoAction()

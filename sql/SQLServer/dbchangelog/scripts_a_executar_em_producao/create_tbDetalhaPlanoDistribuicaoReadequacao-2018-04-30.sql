@@ -28,10 +28,8 @@ CREATE TABLE SAC.dbo.tbDetalhaPlanoDistribuicaoReadequacao (
 	stAtivo char(1) DEFAULT ('S') NOT NULL,
 	idPronac int NOT NULL,
 	idDetalhaOriginal int DEFAULT ((0)),
-
 	CONSTRAINT PK_tbDetalhaPlanoDistribuicaoReadequacao PRIMARY KEY (idDetalhaPlanoDistribuicao),
-  CONSTRAINT FK_Detalha_tbPlanoDistribuicao FOREIGN KEY (idPlanoDistribuicao) REFERENCES SAC.dbo.tbPlanoDistribuicao(idPlanoDistribuicao) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT FK_Detalha_tbReadequacao FOREIGN KEY (idReadequacao) REFERENCES SAC.dbo.tbReadequacao(idReadequacao) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT FK_Detalha_tbReadequacao FOREIGN KEY (idReadequacao) REFERENCES SAC.dbo.tbReadequacao(idReadequacao)
 );
 
 ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD canalAberto bit DEFAULT 0;
@@ -42,8 +40,6 @@ ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD precoUnitarioNormal money DEFAULT 0;
 ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD receitaPopularPromocional money DEFAULT 0;
 ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD receitaPopularNormal money DEFAULT 0;
 ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD vlReceitaTotalPrevista money DEFAULT 0;
-
 ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD idPlanoDistribuicaoOriginal int DEFAULT 0;
 ALTER TABLE SAC.dbo.tbPlanoDistribuicao ADD CONSTRAINT tbPlanoDistribuicao_PlanoDistribuicaoProduto_FK FOREIGN KEY (idPlanoDistribuicaoOriginal) REFERENCES SAC.dbo.PlanoDistribuicaoProduto(idPlanoDistribuicao)
-
 ALTER TABLE sac.dbo.tbPlanoDistribuicao DROP CONSTRAINT tbPlanoDistribuicao_Verificacao_FK;
