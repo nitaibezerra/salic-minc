@@ -158,6 +158,8 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                 }
             }            
         }
+        // Future Flag
+        $ReadequacaoTransferenciaRecursos = false;
         
         # Verificar se h� dilig�ncia para responder
         $vDiligencia = $db->select()
