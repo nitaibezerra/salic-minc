@@ -1,4 +1,5 @@
 <?php
+
 class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 {
     private $blnPossuiDiligencias = 0;
@@ -114,7 +115,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
             'idPreProjeto' => $idPreProjeto,
             'MotivoArquivamento' => $MotivoArquivamento,
             'idAvaliadorArquivamento' => $idAvaliador,
-            'stEstado' =>  1, // arquivamento ativo.
+            'stEstado' => 1, // arquivamento ativo.
             'dtArquivamento' => date('Y-m-d h:i'),
         ];
 
@@ -131,7 +132,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
                 $arquivar->update($data, ["idPreProjeto = ?" => $idPreProjeto]);
             }
-        } catch(Exception $e){
+        } catch (Exception $e) {
             $message = $e->getMessage();
             $success = false;
         }
@@ -140,7 +141,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $agente = $agente->buscaCompleta(['a.idPreProjeto = ? ' => $idPreProjeto]);
 
         $email = new StdClass();
-        $email->text = 'Motivo Arquivamento: '. $this->montarEmail($motivoArquivamento);
+        $email->text = 'Motivo Arquivamento: ' . $this->montarEmail($motivoArquivamento);
         $email->to = $agente->current()->EmailAgente;
         $email->subject = 'SALIC - Arquivamento Proposta: ' . $idPreProjeto;
 
@@ -165,7 +166,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
     private function converterQuebraDeLinha($texto)
     {
-      return str_replace(array("\r\n", "\n", "\r"), "<br/>", $texto);
+        return str_replace(array("\r\n", "\n", "\r"), "<br/>", $texto);
     }
 
     public function updateAction()
@@ -183,33 +184,33 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
         $arquivar = new Proposta_Model_PreProjetoArquivado();
 
-        if($SolicitacaoDesarquivamento){
+        if ($SolicitacaoDesarquivamento) {
             $data['SolicitacaoDesarquivamento'] = $SolicitacaoDesarquivamento;
             $data['dtSolicitacaoDesarquivamento'] = new Zend_Db_Expr('GETDATE()');
         }
 
-        if($avaliacaoFinal) {
+        if ($avaliacaoFinal) {
             if ($Avaliacao != null) {
                 $data['Avaliacao'] = $Avaliacao;
                 $data['dtAvaliacao'] = new Zend_Db_Expr('GETDATE()');
                 $data['idAvaliadorAnaliseDesarquivamento'] = $this->auth->getIdentity()->usu_codigo;
-            }else{
+            } else {
                 throw new Exception("É necessário preencher a Avaliação!");
             }
         }
 
-        if($stEstado !== null) {
+        if ($stEstado !== null) {
             $data['stEstado'] = $stEstado;
         }
 
-        if($stDecisao != null) {
+        if ($stDecisao != null) {
             $data['stDecisao'] = $stDecisao;
         }
 
         try {
             $arquivar->update($data, array('idPreProjeto = ?' => $idPreProjeto));
             $message = 'Solicitação enviada!' . $idPreProjeto;
-        } catch(Exception $e){
+        } catch (Exception $e) {
             $message = $e->getMessage();
             $success = false;
         }
@@ -263,7 +264,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $data = array_merge($data, $data2);
 
         try {
-            if($success){
+            if ($success) {
                 $where = ['idPreProjeto = ?' => $idPreProjeto];
 
                 (new Proposta_Model_PreProjetoArquivado)->update($data, $where);
@@ -276,12 +277,13 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
                 $agente = $agente->buscaCompleta(['a.idPreProjeto = ? ' => $idPreProjeto]);
 
                 $corpoEmail = '<p>Senhor(a) Proponente,</p></br>';
-                if($stDecisao == 1){
+                if ($stDecisao == 1) {
                     $corpoEmail = '<p>O pedido de desarquivamento referente à proposta supracitada foi aceito.  A proposta será desarquivada e seguirá em análise. Dessa forma, acompanhe diariamente a proposta no sistema em virtude de novas diligências e comunicados</p>';
 
                 } else {
                     $corpoEmail .= '<p>O pedido de desarquivamento referente à proposta supracitada não foi aceito pelo seguinte motivo:<p/></br>';
-                    $corpoEmail .= "<p>{$Avaliacao}</p></br>";
+                    $corpoEmail .= "<p>{
+        $Avaliacao}</p></br>";
                     $corpoEmail .= '<p>Salientamos que o proponente poderá inscrever e enviar novamente a mesma proposta ao MinC desde que observada a restrição contida na alínea "c", inciso I do artigo 23 da Instrução Normativa nº 05/2017 do Ministério da Cultura.</p></br>';
                 }
 
@@ -292,7 +294,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
                 $this->events->trigger('email', $this, $email);
             }
-        } catch(Exception $e){
+        } catch (Exception $e) {
             $message = $e->getMessage();
             $success = false;
         }
@@ -308,9 +310,9 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
     private function email($texto)
     {
-        return function($e) {
+        return function ($e) {
             $email = $e->getParams();
-            $config = new Zend_Config_Ini(APPLICATION_PATH .'/configs/application.ini', APPLICATION_ENV);
+            $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
             $emailDefault = $config->mail->default->toArray();
             $config = $config->mail->transport->toArray();
 

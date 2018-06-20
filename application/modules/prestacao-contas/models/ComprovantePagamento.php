@@ -44,7 +44,6 @@ final class PrestacaoContas_Model_ComprovantePagamento extends MinC_Db_Table_Abs
         } else {
             $this->fornecedorNacional($obj);
         }
-        die('t');
     }
 
     protected function fornecedorNacional($obj) {
@@ -63,13 +62,14 @@ final class PrestacaoContas_Model_ComprovantePagamento extends MinC_Db_Table_Abs
     protected function fornecedorInternacional($obj) {
         $this->fornecedor['nome'] = $obj->fornecedor->nome;
         $this->fornecedor['endereco'] = $obj->fornecedor->endereco;
+        $this->fornecedor['pais'] = $obj->fornecedor->nacionalidade;
         $this->nrDocumentoDePagamento = $obj->numeroDocumento;
         $this->setTipoDocumento($obj->tipo);
         $this->setDataEmissao($obj->dataEmissao, 'd/m/Y');
+        $this->setDataPagamento($obj->dataPagamento, 'd/m/Y');
         $this->vlComprovacao = $obj->valor; // not null
         $this->dsJustificativa = $obj->justificativa;
-
-        /* var_dump($this->fornecedor); */
+        $this->serie = $obj->serie;
     }
 
     public function cadastrar()
@@ -82,26 +82,38 @@ final class PrestacaoContas_Model_ComprovantePagamento extends MinC_Db_Table_Abs
         }
 
         if($this->eInternacional) {
-            $fornecedorInternacional = new PrestacaoContas_
-            $this->nome = $nome;
-            $this->endereco = $endereco;
-            $this->pais = $pais;
+            $fornecedorInternacional = new PrestacaoContas_Model_FornecedorInternacional();
 
+            $fornecedorInternacional->nome = $this->fornecedor['nome'];
+            $fornecedorInternacional->endereco = $this->fornecedor['endereco'];
+            $fornecedorInternacional->pais = $this->fornecedor['pais'];
+
+            $this->idFornecedorExterior =  $fornecedorInternacional->save();
         }
 
         $dados = [
-            'idFornecedor' => $this->idFornecedor,
             'tpDocumento' => $this->tipoDocumento,
-            'nrComprovante' => $this->nrComprovante,
-            'nrSerie' => $this->serie,
             'dtEmissao' => $this->dataEmissao->format('Y-m-d h:i:s'),
             'idArquivo' => $arquivoId,
             'vlComprovacao' => $this->vlComprovacao,
             'dtPagamento' => $this->dataPagamento->format('Y-m-d h:i:s'),
             'dsJustificativa' => $this->dsJustificativa,
-            'tpFormaDePagamento' => $this->tpFormaDePagamento,
             'nrDocumentoDePagamento' => $this->nrDocumentoDePagamento,
+            'nrSerie' => $this->serie,
         ];
+
+        if(!$this->eInternacional) {
+            $dados += [
+                'nrComprovante' => $this->nrComprovante,
+                'tpFormaDePagamento' => $this->tpFormaDePagamento,
+                'idFornecedor' => $this->idFornecedor,
+            ];
+        } else {
+            $dados += [
+                'idFornecedorExterior' => $this->idFornecedorExterior,
+            ];
+        }
+        /* var_dump($dados);die; */
 
         /* $this->comprovarPlanilhaCadastrar(); */
         return $this->insert($dados);

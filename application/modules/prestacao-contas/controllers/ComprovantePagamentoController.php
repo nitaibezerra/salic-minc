@@ -54,7 +54,7 @@ class PrestacaoContas_ComprovantePagamentoController extends Zend_Rest_Controlle
         }
 
         if (!$observacao) {
-            throw new Exception('Falta pronac');
+            throw new Exception('Falta observacao');
         }
 
         if (!$idComprovantePagamento) {
@@ -76,6 +76,7 @@ class PrestacaoContas_ComprovantePagamentoController extends Zend_Rest_Controlle
             $this->getResponse()->setHttpResponseCode(200);
         } catch (Exception $e) {
             $tblComprovantePag->getAdapter()->rollBack();
+            $this->view->assign('data',['message' => $e->getMessage()]);
         }
     }
 

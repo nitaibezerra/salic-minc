@@ -1,12 +1,6 @@
 <?php
-class FornecedorInternacional extends MinC_Db_Table_Abstract
+class PrestacaoContas_Model_FornecedorInternacional extends MinC_Db_Table_Abstract
 {
-    private $id = null;
-    private $nome = null;
-    private $endereco = null;
-    private $pais = null;
-
-    protected $_banco = 'bdcorporativo';
     protected $_schema = 'bdcorporativo.scSAC';
     protected $_name = 'tbFonecedorExterior';
 
@@ -57,5 +51,23 @@ class FornecedorInternacional extends MinC_Db_Table_Abstract
     public function setPais($pais)
     {
         $this->pais = $pais;
+    }
+
+    public function save()
+    {
+        $dados = [
+            'dsNome' => $this->nome,
+            'dsEndereco' => $this->endereco,
+            'dsPais' => $this->pais
+        ];
+
+        $result = null;
+        try{
+            $result = $this->insert($dados);
+            return $result;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
     }
 }

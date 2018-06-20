@@ -36,11 +36,17 @@ class PrestacaoContas_PagamentoController extends MinC_Controller_Action_Abstrac
         foreach ($resposta as $item) {
             $vlComprovar = $item->vlAprovado - $item->vlComprovado;
             $vlTotalComprovar += $vlComprovar;
+
+            $vlAprovado += $item->vlAprovado;
+            $vlComprovado += $item->vlComprovado;
+
             $nomeProjeto = $item->NomeProjeto;
             $pronac = $item->Pronac;
         }
 
         $this->view->vlTotalComprovar = $vlTotalComprovar;
+        $this->view->vlAprovado = $vlAprovado;
+        $this->view->vlComprovado = $vlComprovado;
         $this->view->pronac = $pronac;
         $this->view->nomeProjeto = $nomeProjeto;
 
@@ -97,5 +103,37 @@ class PrestacaoContas_PagamentoController extends MinC_Controller_Action_Abstrac
 
         $this->_helper->json($planilhaJSON);
     }
-
+    public function dadosProjetoAction()
+    {
+        $idpronac = $this->_request->getParam('idpronac');
+        $this->view->idpronac = $idpronac;
     }
+    public function planilhaDadosProjetoAction()
+    {
+        $idpronac = (int)$this->_request->getParam('idpronac');
+
+        $planilhaAprovacaoModel = new PlanilhaAprovacao();
+        $resposta = $planilhaAprovacaoModel->planilhaAprovada($idpronac);
+
+        $planilhaJSON = null;
+
+
+        foreach($resposta as $item) {
+            $vlComprovar = $item->vlAprovado - $item->vlComprovado;
+            $vlTotalComprovar += $vlComprovar;
+
+            $vlAprovado += $item->vlAprovado;
+            $vlComprovado += $item->vlComprovado;
+
+            $planilhaJSON = [
+                'NomeProjeto' => html_entity_decode(utf8_encode($item->NomeProjeto)),
+                'Pronac' => $item->Pronac,
+                'vlAprovado' => $vlAprovado,
+                'vlComprovado' => $vlComprovado,
+                'vlComprovar' => $vlTotalComprovar
+            ];
+        }
+        $this->_helper->json($planilhaJSON);
+    }
+
+}
