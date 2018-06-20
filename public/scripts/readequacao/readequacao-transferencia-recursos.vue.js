@@ -123,6 +123,8 @@ Vue.component('readequacao-transferencia-recursos', {
     </li>
     <div class="card">
       <div class="right-align padding20 col s12">
+				<a v-show="readequacao.idReadequacao" class="waves-light waves-effect btn red modal-trigger" href="#modalExcluir">Excluir</a>
+				
 	      <button
 	        v-on:click="finalizarReadequacao"
 					:disabled="!disponivelFinalizar()"
@@ -176,6 +178,20 @@ Vue.component('readequacao-transferencia-recursos', {
 			</div>
 		</div>
 	</template>
+
+	<div id="modalExcluir" class="modal">
+		<div class="modal-content center-align">
+			<h4>Tem certeza que deseja excluir a redequa&ccedil;&atilde;o?</h4>
+		</div>
+		<div class="modal-footer">
+			<a class="waves-effect waves-green btn-flat red white-text"
+				 v-on:click="excluirReadequacao">Excluir
+			</a>
+			<a class="modal-close waves-effect waves-green btn-flat"
+				 href="#!">Cancelar
+			</a>												
+		</div>
+	</div>							
 </div>
 	    `,
     props: {
@@ -386,6 +402,40 @@ Vue.component('readequacao-transferencia-recursos', {
 		}
 	    });
 	},
+	excluirReadequacao: function() {
+	    $3('#modalExcluir .modal-content h4').html('');
+	    $3('#modalExcluir .modal-footer').html('<h5>Removendo os dados, aguarde...</h5>');
+	    
+	    let self = this;
+	    
+	    $3.ajax({
+		type: "GET",
+		url: "/readequacao/transferencia-recursos/excluir-readequacao",
+		data: {
+		    idPronac: self.idPronac,
+		    idReadequacao: self.readequacao.idReadequacao
+		}
+	    }).done(function (response) {
+                self.mensagemSucesso(response.msg);
+		$3('#modalExcluir').modal('close');
+		self.projetoRecebedor = self.defaultProjetoRecebedor();
+		self.readequacao = {
+		    'idPronac': null,
+		    'idReadequacao': null,
+		    'justificativa': '',
+		    'arquivo': null,
+		    'idTipoReadequacao': null,
+		    'dsSolicitacao': '',
+		    'idArquivo' : null,
+		    'nomeArquivo': null
+		};
+		$3('.collapsible').collapsible('open', 0);
+		$3('.collapsible').collapsible('close', 1);
+	    }).fail(function (response) {
+                self.mensagemErro(response.msg)
+		$3('#modalExcluir').modal('close');
+	    });  
+	},
         obterDadosReadequacao: function () {
             let self = this;
             $3.ajax({
@@ -405,15 +455,6 @@ Vue.component('readequacao-transferencia-recursos', {
         },	
 	obterDadosProjetoTransferidor: function() {	    
 	    let self = this;
-	    /*
-	    this.projetoTransferidor = {
-		pronac: 164783,
-		idPronac: 166121,
-		nome: 'Expedição gastronimica',
-		area: '7',
-		valorComprovar: 5234.00,
-		saldoDisponivel: 5234.00
-	    }*/
 	    
 	    $3.ajax({
                 type: "GET",
@@ -493,13 +534,6 @@ Vue.component('readequacao-transferencia-recursos', {
 		return;
 	    }
 	},
-	possuiReadequacaoCriada: function() {
-	    if (this.readequacao.idReadequacao != null) {
-		return true;
-	    } else {
-		return;
-	    }
-	},
 	disponivelAdicionarRecebedores: function() {
 	    if (this.areasEspeciais()) {
 		return true;
@@ -548,7 +582,9 @@ Vue.component('readequacao-transferencia-recursos', {
     watch: {
 	readequacao: function() {
 	    if (this.readequacao.idReadequacao != null) {
-	    	this.obterProjetosRecebedores();
+		$3('#modalExcluir').modal();
+		$3('#modalExcluir').css('height', '20%');		
+		this.obterProjetosRecebedores();
 	    }
 	},
 	projetosRecebedores: function() {
