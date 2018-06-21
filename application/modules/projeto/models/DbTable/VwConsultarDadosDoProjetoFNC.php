@@ -11,7 +11,7 @@ class Projeto_Model_DbTable_VwConsultarDadosDoProjetoFNC extends MinC_Db_Table_A
         parent::init();
     }
 
-    public function obterDadosConvenio($idPronac, array $arrayWhere = array())
+    public function obterDadosFnc($idPronac, array $arrayWhere = array())
     {
         $db = Zend_Db_Table::getDefaultAdapter();
         $objQuery = $db->select();
@@ -66,6 +66,6 @@ class Projeto_Model_DbTable_VwConsultarDadosDoProjetoFNC extends MinC_Db_Table_A
 
         $db->setFetchMode(Zend_DB::FETCH_ASSOC);
 
-        return $db->fetchAll($objQuery);
+        return $db->fetchRow($objQuery);
     }
 }

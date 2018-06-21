@@ -1,6 +1,6 @@
 <?php
 
-class Projeto_ConvenioController extends Projeto_GenericController
+class Projeto_FncController extends Projeto_GenericController
 {
     private $idPronac;
 
@@ -10,7 +10,6 @@ class Projeto_ConvenioController extends Projeto_GenericController
         $this->validarPerfis();
 
         $this->idPronac = $this->_request->getParam("idPronac");
-
         if (strlen($this->idPronac) > 7) {
             $this->idPronac = Seguranca::dencrypt($this->idPronac);
         }
@@ -40,10 +39,20 @@ class Projeto_ConvenioController extends Projeto_GenericController
         $this->redirect("/projeto/index/listar");
     }
 
-    public function visualizarAction()
+    public function visualizarNovoAction()
     {
        $vwDadosProjeto = new Projeto_Model_DbTable_VwConsultarDadosDoProjetoFNC();
-       $this->view->dados = $vwDadosProjeto->obterDadosConvenio($this->idPronac);
+       $this->view->dados = $vwDadosProjeto->obterDadosFnc($this->idPronac);
+    }
+
+    public function visualizarAction()
+    {
+        $vwDadosProjeto = new Projeto_Model_DbTable_VwConsultarDadosDoProjetoFNC();
+        $this->view->dados = $vwDadosProjeto->obterDadosFnc($this->idPronac);
+
+        $dbTableInabilitado = new Inabilitado();
+        $proponenteInabilitado = $dbTableInabilitado->BuscarInabilitado($projeto->CgcCPf);
+        $this->view->ProponenteInabilitado = ($proponenteInabilitado->Habilitado == 'I');
     }
 
     public function obterMenuAction() {

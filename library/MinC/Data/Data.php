@@ -234,7 +234,10 @@ class Data
      */
     public static function tratarDataZend($data, $tipo, $hora=null)
     {
-        
+        if (empty($data)) {
+            return '';
+        }
+
         if(is_object($data)){
             $data = $data->format('Y-m-d H:i:s');
         }

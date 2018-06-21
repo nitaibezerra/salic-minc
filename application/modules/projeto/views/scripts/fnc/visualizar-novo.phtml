@@ -1,0 +1,181 @@
+<div class="container-fluid">
+    <?php $this->PageTitle('Dados do Projeto', array(
+        array('Dados do Projeto' => '')
+    )); ?>
+    <div class="card-panel">
+        <div class="row">
+            <div class="col s12 m12 l2">
+                <b>Pronac</b>
+                <div class=""><?= $this->dados['Pronac']; ?></div>
+            </div>
+            <div class="col s12 m12 l10">
+                <b>Nome Projeto</b>
+                <div class=""><?= $this->dados['NomeProjeto']; ?></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m12 l2">
+                <div class=""><b>CNPJ / CPF</b></div>
+                <div class=""><?= $this->dados['CNPJ_CPF']; ?></div>
+            </div>
+            <div class="col s12 m12 l10">
+                <div class=""><b>Convenente</b></div>
+                <div class=""><?= $this->dados['Proponente']; ?></div>
+            </div>
+        </div>
+    </div>
+    <div class="row card no-padding no-margin">
+        <div class="col s12 no-padding no-margin">
+            <ul class="tabs">
+                <li class="tab col s3"><a href="#dados_basicos" class="active">Dados b&aacute;sicos</a></li>
+                <li class="tab col s3"><a href="#sintese_objeto">S&iacute;ntese e Objeto</a></li>
+                <li class="tab col s3"><a href="#situacao">Situa&ccedil;&atilde;o</a></li>
+                <li class="tab col s3"><a href="#valores">Valores</a></li>
+            </ul>
+        </div>
+        <div id="dados_basicos" class="col s12 margin20">
+            <fieldset>
+                <div class="row">
+                    <div class="col s12 m12 l2">
+                        <div><b>UF</b></div>
+                        <div><?= $this->dados['UfProjeto']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l2">
+                        <div><b>Mecanismo</b></div>
+                        <div><?= $this->dados['Mecanismo']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l2">
+                        <div><b>Área Cultural</b></div>
+                        <div><?= $this->dados['Area']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l2">
+                        <div><b>Segmento Cultural</b></div>
+                        <div><?= $this->dados['Segmento']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l2">
+                        <div><b>Processo</b></div>
+                        <div><?= $this->dados['Processo']; ?></div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <div class="row">
+                    <legend>Conv&ecirc;nio</legend>
+                    <div class="col s12 m12 l3">
+                        <div><b>Período de vigência</b></div>
+                        <div><?= Data::mostrarPeriodoDeDatas($this->dados['DtConvenioPrimeiraVigencia'], $this->dados['DtConvenioUltimaVigencia']); ?></div>
+                    </div>
+                    <div class="col s12 m12 l3">
+                        <div><b>Nº Conv&ecirc;nio</b></div>
+                        <div><?= $this->dados['NrConvenio']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l3">
+                        <div><b>Dt. Conv&ecirc;nio</b></div>
+                        <div><?= $this->dados['DtConvenio']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l3">
+                        <div><b>Dt. Publica&ccedil;&atilde;o</b></div>
+                        <div><?= $this->dados['DtConvenioPublicacao']; ?></div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div id="sintese_objeto" class="col s12">
+            <div class="row">
+                <fieldset>
+                    <legend><b>Síntese do projeto</b></legend>
+                    <div><?= $this->dados['ResumoProjeto']; ?></div>
+                </fieldset>
+            </div>
+            <div class="row">
+                <fieldset>
+                    <legend><b>Objeto</b></legend>
+                    <div><?= $this->dados['Objeto']; ?></div>
+                </fieldset>
+            </div>
+        </div>
+        <div id="situacao" class="col s12">
+            <div class="row padding20">
+                <div class="col s12 m12 l3">
+                    <div><b>Dt. Situa&ccedil;&atilde;o</b></div>
+                    <div><?= $this->dados['DtSituacao']; ?></div>
+                </div>
+                <div class="col s12 m12 l3">
+                    <div><b>Situa&ccedil;&atilde;o</b></div>
+                    <div><?= $this->dados['Situacao']; ?></div>
+                </div>
+                <div class="col s12 m12 l3">
+                    <div><b>Provid&ecirc;ncia Tomada</b></div>
+                    <div><?= $this->dados['ProvidenciaTomada']; ?></div>
+                </div>
+                <div class="col s12 m12 l3">
+                    <div><b>Localização Atual</b></div>
+                    <div><?= $this->dados['LocalizacaoAtual']; ?></div>
+                </div>
+            </div>
+            <?php //if ($this->dados['DtArquivamento']) : ?>
+            <div class="card-panel red-text lighten-2 center-align paddin10">
+                <b>Arquivado definitivamente</b>
+            </div>
+            <div class="row padding20">
+                <div class="col s12 m12 l4">
+                    <div><b>Dt. Arquivamento</b></div>
+                    <div><?= $this->dados['DtArquivamento']; ?></div>
+                </div>
+                <div class="col s12 m12 l4">
+                    <div><b>Nº inicial da caixa</b></div>
+                    <div><?= $this->dados['CaixaInicio']; ?></div>
+                </div>
+                <div class="col s12 m12 l4">
+                    <div><b>Nº final da caixa</b></div>
+                    <div><?= $this->dados['CaixaFinal']; ?></div>
+                </div>
+            </div>
+            <?php //endif; ?>
+        </div>
+        <div id="valores" class="col s12">
+            <div class="row">
+                <fieldset>
+                    <legend>Solicitado</legend>
+                    <div class="col s12 m12 l4">
+                        <div><b>Custeio(A)</b></div>
+                        <div><?= $this->dados['SolicitadoCusteio']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l4">
+                        <div><b>Capital(B)</b></div>
+                        <div><?= $this->dados['SolicitadoCapital']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l4">
+                        <div><b>Solicitado(C=A+B)</b></div>
+                        <div><?= $this->dados['vlTotalSolicitado']; ?></div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row">
+                <fieldset>
+                    <legend>Aprovado</legend>
+                    <div class="col s12 m12 l4">
+                        <div><b>Custeio(D)</b></div>
+                        <div><?= $this->dados['ConcedidoCusteio']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l4">
+                        <div><b>Capital(E)</b></div>
+                        <div><?= $this->dados['ConcedidoCapital']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l4">
+                        <div><b>Contrapartida(F)</b></div>
+                        <div><?= $this->dados['Contrapartida']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l4">
+                        <div><b>Aprovado(G=D+E+F)</b></div>
+                        <div><?= $this->dados['vlTotalAprovado']; ?></div>
+                    </div>
+                    <div class="col s12 m12 l4">
+                        <div><b>Conveniado(H=G+F)</b></div>
+                        <div><?= $this->dados['ValorConvenio']; ?></div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
