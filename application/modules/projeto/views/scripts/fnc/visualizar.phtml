@@ -1,3 +1,7 @@
+<aside id="sidebar-vue">
+    <projeto-menu-contexto :id="idPronac"></projeto-menu-contexto>
+</aside>
+
 <div class="container-fluid">
     <?php $this->PageTitle('Dados do Projeto', array(
         array('Dados do Projeto' => '')
@@ -166,3 +170,15 @@
         </table>
     </div>
 </div>
+
+<script src="/public/js/vue.js" type="text/javascript"></script>
+<script src="/public/scripts/projeto/menu/projeto-menu-contexto.vue.js" type="text/javascript"></script>
+
+<script>
+    new Vue({
+        el: '#sidebar-vue',
+        data: {
+            idPronac: <?= $this->dados['idPronac']; ?>
+        }
+    })
+</script>

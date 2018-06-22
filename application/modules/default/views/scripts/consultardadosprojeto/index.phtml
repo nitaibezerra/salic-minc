@@ -323,7 +323,7 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                         <b><?= @number_format($this->projeto->vlSaldoACaptar, 2, ",", "."); ?></b>
                     </td>
                     <td align="center">
-                        <b><?= $this->projeto->PercentualCaptado; ?></b>
+                        <b><?= (double) $this->projeto->PercentualCaptado; ?></b>
                     </td>
                 </tr>
             </table>
@@ -358,7 +358,7 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                         <b><?= @number_format($this->projeto->vlAComprovar, 2, ",", "."); ?></b>
                     </td>
                     <td align="center">
-                        <b><?= $this->projeto->PercentualComprovado; ?></b>
+                        <b><?=  (double) $this->projeto->PercentualComprovado; ?></b>
                     </td>
                 </tr>
             </table>
