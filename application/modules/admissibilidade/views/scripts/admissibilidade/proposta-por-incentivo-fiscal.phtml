@@ -261,15 +261,15 @@
                                         data-id-pre-projeto="<?php echo $this->itensGeral[0]->idPreProjeto ?>">
                                     <i class="material-icons right ">transform</i> Transformar em Projeto
                                 </button>
-                                <?php if (Autenticacao_Model_Grupos::COMPONENTE_COMISSAO != $this->codGrupo) { ?>
+                                <?php if (Autenticacao_Model_Grupos::COMPONENTE_COMISSAO != $this->codGrupo &&
+                                    !(isset($this->itensGeral[0]->stEstado) && $this->itensGeral[0]->stEstado == 0)): ?>
                                     <a class="btn black white-text" 
                                     title="Arquivar Proposta" 
                                     alt="Arquivar Proposta"
                                        href="/admissibilidade/admissibilidade/confirmararquivarproposta?idPreProjeto=<?php echo $this->itensGeral[0]->idPreProjeto ?>">
                                         <i class="material-icons right">archive</i>Arquivar
                                     </a>
-                                <?php 
-                            } ?>
+                                <?php endif; ?>
                             <?php 
                         } ?>
                             <button title="Imprimir"
@@ -295,7 +295,7 @@
                         <div class="header">
                             <h5 class="center">Proposta Cultural - <?php echo $this->itensGeral[0]->NomeProjeto ?></h5>
                         </div>
-                        <?php if (isset($this->itensGeral[0]->stEstado) && $this->itensGeral[0]->stEstado == 0) { ?>
+                        <?php if (isset($this->itensGeral[0]->stEstado) && $this->itensGeral[0]->stEstado == 0): ?>
                             <table class="tabela" style="border: solid 1px red;">
                                 <tr>
                                     <td class="centro"
@@ -305,8 +305,7 @@
                                     </td>
                                 </tr>
                             </table>
-                        <?php 
-                    } ?>
+                        <?php  endif; ?>
                         <fieldset>
                             <legend>Identifica&ccedil;&atilde;o</legend>
                             <table class="">
