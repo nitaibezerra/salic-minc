@@ -1,6 +1,6 @@
 <?php
 
-class Projeto_FncController extends Projeto_GenericController
+class Projeto_ConvenioController extends Projeto_GenericController
 {
     private $idPronac;
 
@@ -17,6 +17,9 @@ class Projeto_FncController extends Projeto_GenericController
         if (empty($this->idPronac)) {
             throw new Exception("idPronac não informado");
         }
+
+        $modelProjeto = new Projeto_Model_Menu();
+        $this->view->menu = json_encode($modelProjeto->obterMenu($this->idPronac));
     }
 
     private function validarPerfis()
@@ -48,10 +51,10 @@ class Projeto_FncController extends Projeto_GenericController
     public function visualizarAction()
     {
         $vwDadosProjeto = new Projeto_Model_DbTable_VwConsultarDadosDoProjetoFNC();
-        $this->view->dados = $vwDadosProjeto->obterDadosFnc($this->idPronac);
-
+        $projeto = $vwDadosProjeto->obterDadosFnc($this->idPronac);
+        $this->view->dados = $projeto;
         $dbTableInabilitado = new Inabilitado();
-        $proponenteInabilitado = $dbTableInabilitado->BuscarInabilitado($projeto->CgcCPf);
+        $proponenteInabilitado = $dbTableInabilitado->BuscarInabilitado($projeto['CNPJ_CPF']);
         $this->view->ProponenteInabilitado = ($proponenteInabilitado->Habilitado == 'I');
     }
 

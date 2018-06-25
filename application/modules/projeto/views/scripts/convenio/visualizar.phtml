@@ -1,6 +1,4 @@
-<aside id="sidebar-vue">
-    <projeto-menu-contexto :id="idPronac"></projeto-menu-contexto>
-</aside>
+<?php $this->Sidebar($this->menu); ?>
 
 <div class="container-fluid">
     <?php $this->PageTitle('Dados do Projeto', array(
@@ -65,23 +63,25 @@
             </tr>
         </table>
 
-        <table class="tabela">
-            <tr class="destacar">
-                <th align="center" rowspan="2"><b>Período de vigência</b></th>
-                <th align="center" colspan="3"><b>Conv&ecirc;nio</b></th>
-            </tr>
-            <tr class="destacar">
-                <th align="center"><b>Nº Conv&ecirc;nio</b></th>
-                <th align="center"><b>Dt. Conv&ecirc;nio</b></th>
-                <th align="center"><b>Dt. Publica&ccedil;&atilde;o</b></th>
-            </tr>
-            <tr>
-                <td align="center"><?= Data::mostrarPeriodoDeDatas($this->dados['DtConvenioPrimeiraVigencia'], $this->dados['DtConvenioUltimaVigencia']); ?></td>
-                <td align="center"><?= $this->dados['NrConvenio']; ?></td>
-                <td align="center"><?= Data::tratarDataZend($this->dados['DtConvenio'], 'brasileiro'); ?></td>
-                <td align="center"><?= Data::tratarDataZend($this->dados['DtConvenioPublicacao'], 'brasileiro'); ?></td>
-            </tr>
-        </table>
+        <?php if (!empty($this->dados['DtConvenio'])) : ?>
+            <table class="tabela">
+                <tr class="destacar">
+                    <th align="center" rowspan="2"><b>Período de vigência</b></th>
+                    <th align="center" colspan="3"><b>Conv&ecirc;nio</b></th>
+                </tr>
+                <tr class="destacar">
+                    <th align="center"><b>Nº Conv&ecirc;nio</b></th>
+                    <th align="center"><b>Dt. Conv&ecirc;nio</b></th>
+                    <th align="center"><b>Dt. Publica&ccedil;&atilde;o</b></th>
+                </tr>
+                <tr>
+                    <td align="center"><?= Data::mostrarPeriodoDeDatas($this->dados['DtConvenioPrimeiraVigencia'], $this->dados['DtConvenioUltimaVigencia']); ?></td>
+                    <td align="center"><?= $this->dados['NrConvenio']; ?></td>
+                    <td align="center"><?= Data::tratarDataZend($this->dados['DtConvenio'], 'brasileiro'); ?></td>
+                    <td align="center"><?= Data::tratarDataZend($this->dados['DtConvenioPublicacao'], 'brasileiro'); ?></td>
+                </tr>
+            </table>
+        <?php endif; ?>
 
         <table class="tabela">
             <tr class="destacar">
@@ -90,12 +90,14 @@
             <tr>
                 <td align="justify"><?= $this->dados['ResumoProjeto']; ?></td>
             </tr>
-            <tr class="destacar">
-                <th align="center">Objeto</th>
-            </tr>
-            <tr>
-                <td align="center"><?= $this->dados['Objeto']; ?></td>
-            </tr>
+            <?php if (!empty($this->dados['Objeto'])) : ?>
+                <tr class="destacar">
+                    <th align="center">Objeto</th>
+                </tr>
+                <tr>
+                    <td align="justify"><?= $this->dados['Objeto']; ?></td>
+                </tr>
+            <?php endif; ?>
         </table>
 
         <table class="tabela">
@@ -116,23 +118,23 @@
             </tr>
         </table>
 
-        <?php //if ($this->dados['DtArquivamento']) : ?>
-        <table class="tabela">
-            <tr class="destacar">
-                <th align="center" colspan="4" class="red-text"><b>Arquivado definitivamente</b></th>
-            </tr>
-            <tr class="destacar">
-                <th>Dt. Arquivamento</th>
-                <th>Nº inicial da caixa</th>
-                <th>Nº final da caixa</th>
-            </tr>
-            <tr>
-                <td align="center"><?= Data::tratarDataZend($this->dados['DtArquivamento'], 'brasileiro'); ?></td>
-                <td align="center"><?= $this->dados['CaixaInicio']; ?></td>
-                <td align="center"><?= $this->dados['CaixaFinal']; ?></td>
-            </tr>
-        </table>
-        <?php //endif; ?>
+        <?php if ($this->dados['DtArquivamento']) : ?>
+            <table class="tabela">
+                <tr class="destacar">
+                    <th align="center" colspan="4" class="red-text"><b>Arquivado definitivamente</b></th>
+                </tr>
+                <tr class="destacar">
+                    <th>Dt. Arquivamento</th>
+                    <th>Nº inicial da caixa</th>
+                    <th>Nº final da caixa</th>
+                </tr>
+                <tr>
+                    <td align="center"><?= Data::tratarDataZend($this->dados['DtArquivamento'], 'brasileiro'); ?></td>
+                    <td align="center"><?= $this->dados['CaixaInicio']; ?></td>
+                    <td align="center"><?= $this->dados['CaixaFinal']; ?></td>
+                </tr>
+            </table>
+        <?php endif; ?>
 
         <table class="tabela">
             <tr class="destacar">
@@ -144,9 +146,9 @@
                 <th>Solicitado(C=A+B)</th>
             </tr>
             <tr>
-                <td class="right-align"><?= $this->dados['SolicitadoCusteio']; ?></td>
-                <td class="right-align"><?= $this->dados['SolicitadoCapital']; ?></td>
-                <td class="right-align"><?= $this->dados['vlTotalSolicitado']; ?></td>
+                <td class="right-align"><?= @number_format($this->dados['SolicitadoCusteio'], 2, ",", "."); ?></td>
+                <td class="right-align"><?= @number_format($this->dados['SolicitadoCapital'], 2, ",", "."); ?></td>
+                <td class="right-align"><?= @number_format($this->dados['vlTotalSolicitado'], 2, ",", "."); ?></td>
             </tr>
         </table>
 
@@ -162,24 +164,27 @@
                 <th><b>Conveniado(H=G+F)</b></th>
             </tr>
             <tr>
-                <td class="right-align"><?= $this->dados['ConcedidoCusteio']; ?></td>
-                <td class="right-align"><?= $this->dados['ConcedidoCapital']; ?></td>
-                <td class="right-align"><?= $this->dados['Contrapartida']; ?></td>
-                <td class="right-align"><?= $this->dados['vlTotalAprovado']; ?></td>
-                <td class="right-align"><?= $this->dados['ValorConvenio']; ?></td>
+                <td class="right-align"><?= @number_format($this->dados['ConcedidoCusteio'], 2, ",", "."); ?></td>
+                <td class="right-align"><?= @number_format($this->dados['ConcedidoCapital'], 2, ",", "."); ?></td>
+                <td class="right-align"><?= @number_format($this->dados['Contrapartida'], 2, ",", "."); ?></td>
+                <td class="right-align"><b>
+                        <?php if (!$this->isProponente) : ?>
+                            <a href="<?php echo $this->url(
+                                array(
+                                    'module' => 'default',
+                                    'controller' => 'consultardadosprojeto',
+                                    'action' => 'dados-convenio'
+                                )
+                            ); ?>?idPronac=<?php echo $this->idPronac; ?>"
+                               style="color: blue !important;"
+                            ><?= @number_format($this->dados['vlTotalAprovado'], 2, ",", "."); ?></a>
+                        <?php else : ?>
+                            <?= @number_format($this->dados['vlTotalAprovado'], 2, ",", "."); ?>
+                        <?php endif; ?>
+                    </b>
+                </td>
+                <td class="right-align"><?= @number_format($this->dados['ValorConvenio'], 2, ",", "."); ?></td>
             </tr>
         </table>
     </div>
 </div>
-
-<script src="/public/js/vue.js" type="text/javascript"></script>
-<script src="/public/scripts/projeto/menu/projeto-menu-contexto.vue.js" type="text/javascript"></script>
-
-<script>
-    new Vue({
-        el: '#sidebar-vue',
-        data: {
-            idPronac: <?= $this->dados['idPronac']; ?>
-        }
-    })
-</script>

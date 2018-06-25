@@ -75,6 +75,7 @@ class Projeto_IndexController extends Projeto_GenericController
                 'draw' => 0,
                 'recordsFiltered' => 0));
         }
+
         $tbProjetos = new Projeto_Model_DbTable_Projetos();
         $projetos = $tbProjetos->obterProjetosPorProponente(
             $this->idUsuarioExterno,

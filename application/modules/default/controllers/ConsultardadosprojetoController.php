@@ -182,7 +182,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
             }
 
             if($projeto->idMecanismo != 1) { #incentivo fiscal
-                $this->redirect('/projeto/fnc/visualizar/idPronac/' . $idPronac);
+                $this->redirect('/projeto/convenio/visualizar/idPronac/' . $idPronac);
             }
 
             $dbTableInabilitado = new Inabilitado();
