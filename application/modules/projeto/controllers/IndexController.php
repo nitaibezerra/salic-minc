@@ -43,6 +43,9 @@ class Projeto_IndexController extends Projeto_GenericController
 
         $this->view->buscaProponente = $proponentes;
 
+        $tbMecanismo = new Mecanismo();
+        $this->view->mecanismos = $tbMecanismo->buscar(['status = ?' => 1]);
+
         $this->view->proponentes = $proponentes;
         $this->view->idResponsavel = $this->idUsuarioExterno;
         $this->view->idUsuario = $this->idUsuarioExterno;
@@ -87,6 +90,7 @@ class Projeto_IndexController extends Projeto_GenericController
         $recordsTotal = 0;
         $recordsFiltered = 0;
         $dados = array();
+        $tbMecanismo = new Mecanismo();
         if (!empty($projetos)) {
             foreach ($projetos as $key => $projeto) {
                 $novoProjeto = new stdClass();
@@ -94,10 +98,11 @@ class Projeto_IndexController extends Projeto_GenericController
                 $novoProjeto->idPronac = $projeto->IdPRONAC;
                 $novoProjeto->idProjeto = $projeto->idProjeto;
                 $novoProjeto->idPronacHash = Seguranca::encrypt($projeto->IdPRONAC);
-                $novoProjeto->mecanismo = utf8_encode($this->obterMecanismo($projeto->Mecanismo));
+                $novoProjeto->idMecanismo = $projeto->Mecanismo;
+                $novoProjeto->mecanismo = utf8_encode($tbMecanismo->obterLabelMecanismo($projeto->Mecanismo));
                 $novoProjeto->nomeprojeto = utf8_encode($projeto->NomeProjeto);
                 $novoProjeto->periodo = Data::mostrarPeriodoDeDatas($projeto->DtInicioDeExecucao, $projeto->DtFinalDeExecucao);
-                $novoProjeto->situacao = utf8_encode($projeto->Situacao) . ' ' . utf8_encode($projeto->Descricao);
+                $novoProjeto->situacao = utf8_encode($projeto->Situacao) . ' - ' . utf8_encode($projeto->Descricao);
                 $novoProjeto->podeClonarProjeto = !empty($projeto->idProjeto) ? true : false;
                 $novoProjeto->podeAdequarProjeto = (boolean) $tbProjetos->fnChecarLiberacaoDaAdequacaoDoProjeto($projeto->IdPRONAC);
                 $dados[$key] = $novoProjeto;
@@ -124,26 +129,6 @@ class Projeto_IndexController extends Projeto_GenericController
             'draw' => $draw,
             'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0
         ));
-    }
-
-    public function obterMecanismo($id)
-    {
-        switch ($id) {
-            case 1:
-                $mecanismo = "Incentivo Fiscal Federal";
-                break;
-            case 2:
-                $mecanismo = "FNC";
-                break;
-            case 3:
-                $mecanismo = "Recurso do Tesouro";
-                break;
-            default:
-                $mecanismo = "Não definido";
-                break;
-        }
-
-        return $mecanismo;
     }
 
     public function gerarpdfAction()

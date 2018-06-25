@@ -60,7 +60,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
             'link' => '/default/consultardadosprojeto/index/idPronac/' . $idPronacHash,
             'ajax' => false,
             'icon' => 'home',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
 
@@ -71,7 +71,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
             'link' => '/default/consultardadosprojeto/dados-proponente/idPronac/' . $idPronacHash,
             'ajax' => true,
             'icon' => 'person',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
 
@@ -86,7 +86,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                 'idPreProjeto' => $idPronac
             ),
             'icon' => 'pin_drop',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
 
@@ -101,7 +101,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                 'idPreProjeto' => $idPronac
             ),
             'icon' => 'multiline_chart',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
 
@@ -111,10 +111,10 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
             'title' => '',
             'link' => '',
             'icon' => 'insert_chart',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
-        $menu['planilhaorcamentaria']['menu_nivel_1'][] = array(
+        $menu['planilhaorcamentaria']['submenu'][] = array(
             'label' => 'Custos Vinculados',
             'title' => '',
             'link' => array(
@@ -125,7 +125,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
             ),
             'grupo' => []
         );
-        $menu['planilhaorcamentaria']['menu_nivel_1'][] = array(
+        $menu['planilhaorcamentaria']['submenu'][] = array(
             'label' => 'Custos por produtos',
             'title' => '',
             'link' => array('module' => 'proposta',
@@ -135,7 +135,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
             ),
             'grupo' => []
         );
-        $menu['planilhaorcamentaria']['menu_nivel_1'][] = array(
+        $menu['planilhaorcamentaria']['submenu'][] = array(
             'label' => 'Visualizar planilha',
             'title' => '',
             'link' => array('module' => 'proposta',
@@ -152,10 +152,10 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
             'title' => '',
             'link' => '',
             'icon' => 'show_chart',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
-        $menu['itensorcamentario']['menu_nivel_1'][] = array(
+        $menu['itensorcamentario']['submenu'][] = array(
             'label' => 'Solicitar inclus&atilde;o de itens',
             'title' => 'Ir para Solicitar inclus&atilde;o de itens',
             'link' => array(
@@ -166,7 +166,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
             ),
             'grupo' => []
         );
-        $menu['itensorcamentario']['menu_nivel_1'][] = array(
+        $menu['itensorcamentario']['submenu'][] = array(
             'label' => 'Minhas solicita&ccedil;&otilde;es',
             'title' => 'Ir para Minhas solicita&ccedil;&otilde;es',
             'link' => array(
@@ -190,7 +190,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                 'idPreProjeto' => $idPronac
             ),
             'icon' => 'attachment',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
 
@@ -205,7 +205,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                 'idPreProjeto' => $idPronac
             ),
             'icon' => 'picture_as_pdf',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
 
@@ -220,7 +220,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                 'idPreProjeto' => $idPronac
             ),
             'icon' => 'announcement',
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
 
@@ -235,7 +235,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                 'action' => 'index',
                 'idPreProjeto' => $idPronac
             ),
-            'menu_nivel_1' => [],
+            'submenu' => '',
             'grupo' => []
         );
 
@@ -265,7 +265,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                     'title' => '',
                     'link' => '',
                     'icon' => 'delete_forever',
-                    'menu_nivel_1' => [],
+                    'submenu' => '',
                     'grupo' => []
                 );
 
@@ -280,7 +280,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                         'idPreProjeto' => $idPronac
                     ),
                     'icon' => 'send',
-                    'menu_nivel_1' => [],
+                    'submenu' => '',
                     'grupo' => []
                 );
             } else {
@@ -295,7 +295,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                         'idPreProjeto' => $idPronac
                     ),
                     'icon' => 'send',
-                    'menu_nivel_1' => [],
+                    'submenu' => '',
                     'grupo' => []
                 );
             }

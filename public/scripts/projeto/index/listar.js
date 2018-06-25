@@ -148,9 +148,9 @@ $(document).ready(function () {
                         data: null,
                         "name": "actions",
                         render: function (data, type, row) {
-                            var botaoClonar = '', botaoAdequar = '';
+                            let botaoClonar = '', botaoAdequar = '';
 
-                            if (data.podeClonarProjeto) {
+                            if (data.podeClonarProjeto && data.idMecanismo == 1) {
                                 botaoClonar = '<li>'
                                     + '<a class="clonar-projeto btn btn-floating btn-primary" '
                                     + 'title="Clonar Projeto" '
@@ -163,7 +163,7 @@ $(document).ready(function () {
                                     + '</li>';
                             }
 
-                            if (data.podeAdequarProjeto) {
+                            if (data.podeAdequarProjeto && data.idMecanismo == 1) {
                                 botaoAdequar = '<li>'
                                     + '<a class="btn btn-floating waves-effect waves-light tooltipped btn-default" '
                                     + 'title="Ir para solicita&ccedil;&otilde;es" '
@@ -193,7 +193,15 @@ $(document).ready(function () {
             }
         );
 
-        $("#idProponente").change(function () {
+        $("#idProponente, #mecanismo").change(function () {
+            let idMecanismo = parseInt($("#mecanismo").val());
+
+            var column = table.column(3);
+            column.visible(true);
+            if (idMecanismo != 1) {
+                column.visible(false);
+            }
+
             table.ajax.reload();
         });
 

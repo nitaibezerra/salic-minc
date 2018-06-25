@@ -67,6 +67,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
 
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
+            $this->view->idPronac = $idPronac;
         }
 
         if (empty($idPronac)) {

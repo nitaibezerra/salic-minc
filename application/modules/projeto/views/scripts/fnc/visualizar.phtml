@@ -26,6 +26,7 @@
                     <?php if ($this->dados['CNPJ_CPF']) : ?>
                         <?php if (!$this->isProponente) : ?>
                             <a href="<?php echo $this->url(array(
+                                    'module' => 'default',
                                     'controller' => 'relatorio',
                                     'action' => 'resultado-projeto'
                                 )) . "?cnpfcpf=" . $this->dados['CNPJ_CPF']; ?>">

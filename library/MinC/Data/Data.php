@@ -477,6 +477,10 @@ class Data
     public static function mostrarPeriodoDeDatas($dataInicial, $dataFinal)
     {
 
+        if (empty($dataInicial)) {
+            return "N&atilde;o informado";
+        }
+
         $dataInicialStr = self::tratarDataZend($dataInicial, 'brasileiro');
         $dataFinal = self::tratarDataZend($dataFinal, 'brasileiro');
         $output = sprintf('%s a %s', $dataInicialStr, $dataFinal);
