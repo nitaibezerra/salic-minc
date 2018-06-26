@@ -879,8 +879,7 @@
 	 type: 'POST',
 	 data: {
 	     idPronac: <?php echo $this->idPronac; ?>,
-	     idReadequacao: idReadequacao,
-	     idTipoReadequacao: 6,
+	     idReadequacao: idReadequacao
 	 },
 	 
 	 // ap�s carregar a planilha, monta planilha
@@ -906,7 +905,7 @@
     <ul>
         <li class="first"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'principalproponente', 'action' => ''), null, true); ?>" title="Ir para p&aacute;gina inicial" onclick="carregandoModal();">In&iacute;cio</a></li>
         <li class="second"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index'), null, true); ?><?php echo '?idPronac='. Seguranca::encrypt($this->idPronac); ?>" title="Ir para In&iacute;cio">Consultar dados do Projeto</a></li>
-        <li class="last">Solicitar Readequa&ccedil;&atilde;o</li>
+        <li class="last">Readequa&ccedil;&atilde;o de Planilha Or&ccedil;ament&aacute;ria</li>
     </ul>
 </div>
 <!-- ========== FIM BREADCRUMB (LINKS TOPO) ========== -->
@@ -914,7 +913,7 @@
 
 <!-- ========== IN�CIO T�TULO ========== -->
 <div id="titulo">
-    <div>Solicitar Readequa&ccedil;&atilde;o<span class="voltar"><a href="javascript:voltar();" title="Ir para p&aacute;gina anterior">Voltar</a></span></div>
+    <div>Readequa&ccedil;&atilde;o de Planilha Or&ccedil;ament&aacute;ria<span class="voltar"><a href="javascript:voltar();" title="Ir para p&aacute;gina anterior">Voltar</a></span></div>
 </div>
 <!-- ========== FIM T�TULO ========== -->
 

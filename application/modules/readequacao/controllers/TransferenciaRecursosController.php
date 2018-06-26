@@ -69,6 +69,30 @@ class Readequacao_TransferenciaRecursosController extends Readequacao_GenericCon
     
     public function salvarReadequacaoAction()
     {
+        $dados = $this->getRequest()->getPost();
+
+        try {
+            
+            if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+                throw new Exception("Acesso negado!");
+            }
+            
+            $dados['idTipoReadequacao'] = Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_TRANSFERENCIA_RECURSOS;
+            $dados['stAtendimento'] = 'D';
+            $dados['idDocumento'] = null;
+            
+            $detalhamentoMapper = new Readequacao_Model_TbReadequacaoMapper();
+            $dados = $detalhamentoMapper->salvarDetalhamento($dados);
+
+            $this->_helper->json(array('readequacao' => $dados, 'success' => 'true', 'msg' => 'Readequa&ccedil;&atilde;o salva com sucesso!'));
+        } catch (Exception $e) {
+            $this->getResponse()->setHttpResponseCode(412);
+            $this->_helper->json(array('data' => $dados, 'success' => 'false', 'msg' => $e->getMessage()));
+        }
+    }
+
+    public function salvarReadequacaoActionAntiga()
+    {
         $this->_helper->layout->disableLayout();
 
         $mensagem = '';

@@ -29,6 +29,10 @@ class Readequacao_Model_TbReadequacaoMapper extends MinC_Db_Mapper
             $objReadequacao->setSiEncaminhamento(Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE);
             $objReadequacao->setStEstado(0);
 
+            if (isset($arrData['stAtendimento'])) {
+                $objReadequacao->setStAtendimento($arrData['stAtendimento']);
+            }
+            
             if (isset($arrData['idTipoReadequacao'])) {
                 $objReadequacao->setIdTipoReadequacao($arrData['idTipoReadequacao']);
             }

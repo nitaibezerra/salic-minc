@@ -467,8 +467,7 @@ Vue.component('readequacao-transferencia-recursos', {
             });
 	},
 	obterProjetosDisponiveis: function(idPronac) {
-	    
-	    var self = this;
+	    let self = this;
 	    $3.ajax({
 		type: "GET",
 		url: "/readequacao/transferencia-recursos/listar-projetos-recebedores-disponiveis",
@@ -525,7 +524,7 @@ Vue.component('readequacao-transferencia-recursos', {
 	    });
 	},
 	areasEspeciais: function() {    
-	    self = this;
+	    let self = this;
 	    if (_.find(this.areasRecebedoresMultiplos, function(i) {
 		if (i.id == self.projetoTransferidor.idArea) { return true }
 	    })) {

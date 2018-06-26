@@ -553,4 +553,55 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
         
         return $valoresItem;
     }
+
+    /**
+     * Método que copia planilha associando a um idReadequacao
+     * @access private
+     * @param integer $idPronac
+     * @param integer $idReadequacao
+     * @return Bool
+     */
+    public function copiarPlanilhas($idPronac, $idReadequacao)
+    {
+        $planilhaSR = array();
+        
+        $planilhaAtiva = $this->buscarPlanilhaAtivaNaoExcluidos($idPronac);
+        
+        foreach ($planilhaAtiva as $value) {
+            $planilhaSR['tpPlanilha'] = 'SR';
+            $planilhaSR['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
+            $planilhaSR['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
+            $planilhaSR['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
+            $planilhaSR['IdPRONAC'] = $value['IdPRONAC'];
+            $planilhaSR['idProduto'] = $value['idProduto'];
+            $planilhaSR['idEtapa'] = $value['idEtapa'];
+            $planilhaSR['idPlanilhaItem'] = $value['idPlanilhaItem'];
+            $planilhaSR['dsItem'] = $value['dsItem'];
+            $planilhaSR['idUnidade'] = $value['idUnidade'];
+            $planilhaSR['qtItem'] = $value['qtItem'];
+            $planilhaSR['nrOcorrencia'] = $value['nrOcorrencia'];
+            $planilhaSR['vlUnitario'] = $value['vlUnitario'];
+            $planilhaSR['qtDias'] = $value['qtDias'];
+            $planilhaSR['tpDespesa'] = $value['tpDespesa'];
+            $planilhaSR['tpPessoa'] = $value['tpPessoa'];
+            $planilhaSR['nrContraPartida'] = $value['nrContraPartida'];
+            $planilhaSR['nrFonteRecurso'] = $value['nrFonteRecurso'];
+            $planilhaSR['idUFDespesa'] = $value['idUFDespesa'];
+            $planilhaSR['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
+            $planilhaSR['dsJustificativa'] = null;
+            $planilhaSR['idAgente'] = 0;
+            $planilhaSR['idPlanilhaAprovacaoPai'] = $value['idPlanilhaAprovacao'];
+            $planilhaSR['idReadequacao'] = $idReadequacao;
+            $planilhaSR['tpAcao'] = 'N';
+            $planilhaSR['idRecursoDecisao'] = $value['idRecursoDecisao'];
+            $planilhaSR['stAtivo'] = 'N';
+            
+            $idPlanilhaAprovacao = $this->inserir($planilhaSR);
+            
+            if (!$idPlanilhaAprovacao) {
+                throw new Exception("Houve um erro na c&oacute;pia das planilhas");                
+            }
+        }
+        return true;
+    }
 }

@@ -36,7 +36,7 @@ const utils = {
 		cents = "0" + cents;
 	    }
 	    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
-	        num = num.substring(0,num.length-(4*i+3))+'.'
+        num = num.substring(0,num.length-(4*i+3))+'.'
 	        +num.substring(num.length-(4*i+3));
 	
 	    var ret = num + ',' + cents;
@@ -65,6 +65,13 @@ const utils = {
             }
 
             return 'N\xE3o';
+        },
+	isObject: function (el) {
+            return typeof el === "object";
+        },
+	converterParaReal: function (value) {
+            value = parseFloat(value);
+            return numeral(value).format('0,0.00');
         }
     }
 }

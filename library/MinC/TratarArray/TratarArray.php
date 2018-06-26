@@ -68,5 +68,29 @@ class TratarArray {
 
         return $dados;
     }
+    
+    
+    // Based on https://secure.php.net/manual/en/function.utf8-encode.php#109965
+    public static function utf8EncodeArray($input) {
+        
+        if (is_string($input)) {
+            return utf8_encode($input);
+        } else if (is_array($input)) {
+            
+            $arrIter = [];
+            
+            foreach ($input as $key => $value) {
+                $key = utf8_encode($key);
+                
+                if (is_string($value)) {
+                    $value = utf8_encode($value);
+                } else if (is_array($value)) {
+                    $value = self::utf8EncodeArray($value);
+                }
+                $arrIter[$key] = $value;
+            }
+            return $arrIter;
+        }
+    }
 }
 ?>

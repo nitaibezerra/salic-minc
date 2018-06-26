@@ -271,6 +271,7 @@
                         } ?>
 
                         <a href="<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'index'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>"
+
                            title="Ir para Solicita&ccedil;&otilde;es Gerais"
                         >Diversas</a>
                     </div>

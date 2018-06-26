@@ -808,7 +808,7 @@ abstract class MinC_Controller_Action_Abstract extends Zend_Controller_Action
                 $count++;
                 $seq++;
             }
-        } else if ($tipoPlanilha == 6) {
+        } else if ($tipoPlanilha == 6 || $tipoPlanilha == 7) {
             foreach ($planilhaOrcamentaria as $resuplanilha) {
                 $produto = $resuplanilha->Produto == null ? 'Administra&ccedil;&atilde;o do Projeto' : $resuplanilha->Produto;
                 $planilha[$resuplanilha->FonteRecurso][$produto][$resuplanilha->idEtapa . ' - ' . $resuplanilha->Etapa][$resuplanilha->UF . ' - ' . $resuplanilha->Municipio][$count]['Seq'] = $seq;
