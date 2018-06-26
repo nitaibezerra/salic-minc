@@ -347,7 +347,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             $dadosPlanilha = array();
             $dadosPlanilha['dadosPlanilhaAtivaA'] = $PlanilhaAtivaGrupoA->Total;
             $dadosPlanilha['dadosPlanilhaRemanejadaA'] = $PlanilhaRemanejadaGrupoA->Total;
-
+            
             if ($PlanilhaAtivaGrupoA->Total == $PlanilhaRemanejadaGrupoA->Total) {
                 $dadosPlanilha['GrupoA'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoA, 2, ',', '.')).'</span>';
             } elseif ($PlanilhaAtivaGrupoA->Total < $PlanilhaRemanejadaGrupoA->Total) {
@@ -360,6 +360,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 $dadosPlanilha['GrupoB'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoB, 2, ',', '.')).'</span>';
             } elseif ($PlanilhaAtivaGrupoB->Total < $PlanilhaRemanejadaGrupoB->Total) {
                 $dadosPlanilha['GrupoB'] = utf8_encode('<span class="red bold">R$ '.number_format($valorTotalGrupoB, 2, ',', '.')).'</span>';
+                $valorTotalGrupoASoma += $valorTotalGrupoB;
             } elseif (!empty($PlanilhaRemanejadaGrupoB->Total)) {
                 $dadosPlanilha['GrupoB'] = utf8_encode('<span class="blue bold">R$ '.number_format($valorTotalGrupoB, 2, ',', '.')).'</span>';
                 $valorTotalGrupoASoma += $valorTotalGrupoB;
@@ -369,6 +370,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 $dadosPlanilha['GrupoC'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoC, 2, ',', '.')).'</span>';
             } elseif ($PlanilhaAtivaGrupoC->Total < $PlanilhaRemanejadaGrupoC->Total) {
                 $dadosPlanilha['GrupoC'] = utf8_encode('<span class="red bold">R$ '.number_format($valorTotalGrupoC, 2, ',', '.')).'</span>';
+                $valorTotalGrupoASoma += $valorTotalGrupoC;
             } elseif (!empty($PlanilhaRemanejadaGrupoC->Total)) {
                 $dadosPlanilha['GrupoC'] = utf8_encode('<span class="blue bold">R$ '.number_format($valorTotalGrupoC, 2, ',', '.')).'</span>';
                 $valorTotalGrupoASoma += $valorTotalGrupoC;
@@ -378,6 +380,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 $dadosPlanilha['GrupoD'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoD, 2, ',', '.')).'</span>';
             } elseif ($PlanilhaAtivaGrupoD->Total < $PlanilhaRemanejadaGrupoD->Total) {
                 $dadosPlanilha['GrupoD'] = utf8_encode('<span class="red bold">R$ '.number_format($valorTotalGrupoD, 2, ',', '.')).'</span>';
+                $valorTotalGrupoASoma += $valorTotalGrupoD;
             } elseif (!empty($PlanilhaRemanejadaGrupoC->Total)) {
                 $dadosPlanilha['GrupoD'] = utf8_encode('<span class="blue bold">R$ '.number_format($valorTotalGrupoD, 2, ',', '.')).'</span>';
                 $valorTotalGrupoASoma += $valorTotalGrupoD;
@@ -461,7 +464,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             $PlanilhaRemanejada->Total = 0;
             $statusPlanilha = 'neutro';
         }
-
+        
         $this->montaTela(
             'remanejamento-menor/carregar-valor-entre-planilhas.phtml',
             array(
