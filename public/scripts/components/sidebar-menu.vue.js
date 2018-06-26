@@ -99,6 +99,8 @@ Vue.component('sidebar-menu', {
 
             let divRetorno = this.configs.idDivRetorno;
             $3("#" + divRetorno).html('carregando...');
+            $3(".page-title h1").html(item.label);
+            $3("#migalhas .last").html(item.label);
             $3.ajax({
                 url: item.link,
                 success: function (data) {
