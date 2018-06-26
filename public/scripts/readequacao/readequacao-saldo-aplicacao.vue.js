@@ -58,9 +58,15 @@ Vue.component('readequacao-saldo-aplicacao', {
 				</div>
 				<div class="row center-align" v-show="valorSaldoDisponivelParaUsoNegativo">
 					<div class="col s12 center-align">
-						<span style="font-weight:bold" class="">Diminua os valores da planilha em R$ {{valorSaldoDisponivelParaUsoMensagem}}</span>
+						<span style="font-weight:bold" class="">Diminua os valores da planilha em R$ {{valorSaldoDisponivelParaUsoMensagem}} para poder finalizar a solicita&ccedil;&atilde;o.</span>
 					</div>
 				</div>
+				<div class="row center-align" v-show="valorSaldoUtilizadoNegativo">
+					<div class="col s12 center-align">
+						<span style="font-weight:bold" class="">O total da planilha &eacute; menor que o valor original; saldo de aplica&ccedil;&atilde;o n&atilde;o utilizado.</span>
+					</div>
+				</div>							
+				
 				<div class="card-content">
 					<planilha-orcamentaria
 						:id-pronac="idPronac"
@@ -93,7 +99,12 @@ Vue.component('readequacao-saldo-aplicacao', {
 				</div>
 				<div class="row center-align" v-show="valorSaldoDisponivelParaUsoNegativo">
 					<div class="col s12 center-align">
-						<span style="font-weight:bold" class="">Diminua os valores da planilha em R$ {{valorSaldoDisponivelParaUsoMensagem}}</span>
+						<span style="font-weight:bold" class="">Diminua os valores da planilha em R$ {{valorSaldoDisponivelParaUsoMensagem}} para poder finalizar a solicita&ccedil;&atilde;o.</span>
+					</div>
+				</div>
+				<div class="row center-align" v-show="valorSaldoUtilizadoNegativo">
+					<div class="col s12 center-align">
+						<span style="font-weight:bold" class="">O total da planilha &eacute; menor que o valor original; saldo de aplica&ccedil;&atilde;o n&atilde;o utilizado.</span>
 					</div>
 				</div>				
 			</div>
@@ -427,8 +438,10 @@ Vue.component('readequacao-saldo-aplicacao', {
 	    return numeral(this.valorSaldoUtilizado).format();
 	},
 	podeFinalizarReadequacao: function() {
-	    if (this.valorSaldoDisponivelParaUsoPositivo
-		|| this.valorSaldoDisponivelParaUsoNeutro) {
+	    if ((this.valorSaldoDisponivelParaUsoPositivo
+		 || this.valorSaldoDisponivelParaUsoNeutro)
+		&& this.valorSaldoUtilizadoPositivo
+	       ) {
 		return true;
 	    } else {
 		return false;

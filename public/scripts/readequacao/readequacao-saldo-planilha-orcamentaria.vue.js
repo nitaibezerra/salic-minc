@@ -336,7 +336,8 @@ Vue.component('readequacao-saldo-planilha-orcamentaria', {
 		    }
 		}).done(function() {
 		    item.tpAcao = 'E';
-		    self.mensagemSucesso("Item exlui&iacute;do com sucesso");
+		    self.atualizarSaldoEntrePlanilhas();
+		    self.mensagemSucesso("Item exclu&iacute;do com sucesso");
 		});
 	    }
 	},
@@ -351,6 +352,7 @@ Vue.component('readequacao-saldo-planilha-orcamentaria', {
 		},
 	    }).done(function(){
 		item.tpAcao = 'N';
+		self.atualizarSaldoEntrePlanilhas();
 		self.mensagemSucesso("Item restaurado com sucesso");
             });
 	},
