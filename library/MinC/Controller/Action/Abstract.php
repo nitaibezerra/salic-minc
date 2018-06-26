@@ -963,11 +963,13 @@ abstract class MinC_Controller_Action_Abstract extends Zend_Controller_Action
         }
     }
 
-    function getBodyClass($class = '') {
-        return join(' ', $this->getArrayBodyClass( $class ));
+    function getBodyClass($class = '')
+    {
+        return join(' ', $this->getArrayBodyClass($class));
     }
 
-    function getArrayBodyClass( $class = '' ) {
+    function getArrayBodyClass($class = '')
+    {
         $classes = array();
 
         $classes[] = $this->getRequest()->getCookie('menu');
@@ -980,16 +982,13 @@ abstract class MinC_Controller_Action_Abstract extends Zend_Controller_Action
 
         if (!empty($class)) {
 
-            if (!is_array( $class)) {
-                $class = preg_split( '#\s+#', $class );
+            if (!is_array($class)) {
+                $class = preg_split('#\s+#', $class);
             }
 
-            $classes = array_merge( $classes, $class );
-        } else {
-            $class = array();
+            $classes = array_merge($classes, $class);
         }
-
-        return array_unique( $classes );
+        return array_unique($classes);
 
     }
 }

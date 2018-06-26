@@ -25,4 +25,24 @@ class Mecanismo extends MinC_Db_Table_Abstract
         $slct->from(array('mec' => $this->_name), array('*'));
         return $this->fetchAll($slct);
     }
+
+    public function obterLabelMecanismo($id)
+    {
+        switch ($id) {
+            case 1:
+                $mecanismo = "Mecenato";
+                break;
+            case 2:
+                $mecanismo = "FNC";
+                break;
+            case 6:
+                $mecanismo = "Recurso do Tesouro";
+                break;
+            default:
+                $mecanismo = "Outro";
+                break;
+        }
+
+        return $mecanismo;
+    }
 }

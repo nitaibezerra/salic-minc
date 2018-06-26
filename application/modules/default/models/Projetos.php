@@ -6809,6 +6809,9 @@ class Projetos extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
+    /**
+     * @todo remover apos utilizar nova tela de listar projetos
+     */
     public function listarProjetosConsulta($idResponsavel, $idProponente, $mecanismo)
     {
         $a = $this->select();

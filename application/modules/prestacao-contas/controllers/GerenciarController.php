@@ -493,12 +493,26 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
 
         $comprovante->preencher($this->getRequest()->getPost()['comprovante']);
 
-            /* $request->getParam('tpFormaDePagamento'), */
-            /* str_replace(',', '.', str_replace('.', '', $request->getParam('vlComprovado'))), */
-            /* $request->getParam('nrDocumentoDePagamento'), */
         $data = [];
         try {
             $id = $comprovante->cadastrar();
+            $data = ['success' => true, 'idComprovantePagamento' => $id];
+        } catch (Exception $e) {
+            $this->view->message = $e->getMessage();
+            echo $e->getMessage();die;
+        }
+        $this->_helper->json($data);
+    }
+
+    public function atualizarAction()
+    {
+        $comprovante = new PrestacaoContas_Model_ComprovantePagamento();
+
+        $comprovante->preencher($this->getRequest()->getPost()['comprovante']);
+
+        $data = [];
+        try {
+            $id = $comprovante->atualizar();
             $data = ['success' => true, 'idComprovantePagamento' => $id];
         } catch (Exception $e) {
             $this->view->message = $e->getMessage();

@@ -55,7 +55,7 @@ $arrMenuProponente['projeto'] = array(
     'grupo' => array(),
 );
 $arrMenuProponente['projeto']['menu'][] = array('label' => 'Listar Projetos', 'title' => 'Ir para Listar Projetos',
-    'url' => $this->url(array('controller' => 'listarprojetos', 'action' => 'index'), '', true),
+    'url' => $this->url(array('module' => 'projeto', 'controller' => 'index', 'action' => 'listar'), '', true),
     'grupo' => array()
 );
 $arrMenuProponente['solicitacoes'] = array(

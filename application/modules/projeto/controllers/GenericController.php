@@ -40,6 +40,7 @@ abstract class Projeto_GenericController extends MinC_Controller_Action_Abstract
                 $this->idAgente = $this->agente['idagente'];
                 $this->view->idAgente = $this->idAgente;
                 $this->isProponente = true;
+                $this->view->isProponente = $this->isProponente;
             }
         }
 
