@@ -373,7 +373,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                 if ($PercentualCaptado >= 100) {
                     $ReadequacaoSaldoAplicacao = 1;
                 }
-            }$ReadequacaoSaldoAplicacao = 1;
+            }
             
             $tbCumprimentoObjeto = new tbCumprimentoObjeto();
             $possuiRelatorioDeCumprimento = $tbCumprimentoObjeto->possuiRelatorioDeCumprimento($idPronac);
