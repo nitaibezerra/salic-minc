@@ -2704,19 +2704,18 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             b.idPlanilhaEtapa as cdEtapa,
             b.Descricao AS Etapa,
             b.Descricao AS descEtapa,
+            b.nrOrdenacao,
             a.idUFDespesa AS cdUF,
             e.Sigla AS Uf,
             e.Sigla AS uf,
             a.idMunicipioDespesa as cdCidade,
             f.Descricao AS Cidade,
-            f.Descricao AS cidade,
+            f.Descricao AS cidade,               
             c.idPlanilhaItens,
             c.Descricao AS Item,
             c.Descricao AS descItem,
             d.Descricao ,
-            CONVERT(DECIMAL(38,2), sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
-                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
-                    a.idMunicipioDespesa,a.idPlanilhaItem)) as vlAprovado,
+            CONVERT(DECIMAL(38,2), ISNULL((a.qtItem * a.nrOcorrencia * a.vlUnitario),0)) as vlAprovado,
             CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
                     a.idMunicipioDespesa,a.idPlanilhaItem)) as vlComprovado,
@@ -2803,7 +2802,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->where('a.IdPRONAC = ?', $idpronac);
         $select->where('a.nrFonteRecurso = 109');
         $select->where('a.stAtivo = ? ', 'S');
- 
+
 
         if ($uf) {
             $select->where('sigla = ?', $uf);
@@ -2826,7 +2825,8 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         } else if($codigoProduto == 0 && !is_null($codigoProduto)){
             $select->where('d.codigo is null');
         }
-        $select->order('c.Descricao');
+        
+        $select->order(['Produto DESC', 'e.Sigla', 'f.Descricao', 'b.nrOrdenacao', 'c.Descricao']);
 
         return $this->fetchAll($select);
     }
