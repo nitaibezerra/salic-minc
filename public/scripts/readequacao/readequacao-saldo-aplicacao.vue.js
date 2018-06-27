@@ -40,73 +40,55 @@ Vue.component('readequacao-saldo-aplicacao', {
 		</li>
 		<li>
 			<div class="collapsible-header"><i class="material-icons">list</i>Editar planilha or&ccedil;ament&aacute;ria</div>
-			<div class="collapsible-body card" v-if="solicitacaoIniciada">
-				<div class="row center-align">
-					<h4>Saldo</h4>
-					<div class="col s4 center-align green lighten-3">
-						<h6>Rendimento declarado</h6>
-						<span style="font-weight:bold">R$ {{valorSaldoAplicacaoFormatado}}</span>
-					</div>					
-					<div class="col s4 center-align" v-bind:class="{ 'blue lighten-3': valorSaldoDisponivelParaUsoPositivo, 'red lighten-3': valorSaldoDisponivelParaUsoNegativo }">
-						<h6>Dispon&iacute;vel</h6>
-						<span style="font-weight:bold">R$ {{valorSaldoDisponivelParaUsoFormatado}}</span>
-					</div>
-					<div class="col s4 center-align" v-bind:class="{ 'blue lighten-3': valorSaldoUtilizadoPositivo, 'red lighten-3': valorSaldoUtilizadoNegativo }">
-						<h6>Utilizado</h6>
-						<span style="font-weight:bold">R$ {{valorSaldoUtilizadoFormatado}}</span>
-					</div>
-				</div>
-				<div class="row center-align" v-show="valorSaldoDisponivelParaUsoNegativo">
-					<div class="col s12 center-align">
-						<span style="font-weight:bold" class="">Diminua os valores da planilha em R$ {{valorSaldoDisponivelParaUsoMensagem}} para poder finalizar a solicita&ccedil;&atilde;o.</span>
-					</div>
-				</div>
-				<div class="row center-align" v-show="valorSaldoUtilizadoNegativo">
-					<div class="col s12 center-align">
-						<span style="font-weight:bold" class="">O total da planilha &eacute; menor que o valor original; saldo de aplica&ccedil;&atilde;o n&atilde;o utilizado.</span>
-					</div>
-				</div>							
-				
-				<div class="card-content">
-					<planilha-orcamentaria
-						:id-pronac="idPronac"
-						:tipo-planilha="tipoPlanilha"
-						:link="1"
-						:id-readequacao="readequacao.idReadequacao"
-						:componente-planilha="componentePlanilha"
-						:perfil="perfil"
-						:disponivelParaAdicaoItensReadequacaoPlanilha="disponivelParaAdicaoItensReadequacaoPlanilha"
-						:disponivelParaEdicaoReadequacaoPlanilha="disponivelParaEdicaoReadequacaoPlanilha"
-						v-on:atualizarSaldoEntrePlanilhas="carregarValorEntrePlanilhas"
-						>
-					</planilha-orcamentaria>
-				</div>
+			<div class="collapsible-body" v-if="solicitacaoIniciada">
 
-				<div class="row center-align">
-					<h4>Saldo</h4>
-					<div class="col s4 center-align">
-						<h6>Rendimento declarado</h6>
-						<span style="font-weight:bold">R$ {{valorSaldoAplicacaoFormatado}}</span>
-					</div>					
-					<div class="col s4 center-align" v-bind:class="{ 'blue lighten-3': valorSaldoDisponivelParaUsoPositivo, 'red lighten-3': valorSaldoDisponivelParaUsoNegativo }">
-						<h6>Dispon&iacute;vel</h6>
-						<span style="font-weight:bold">R$ {{valorSaldoDisponivelParaUsoFormatado}}</span>
-					</div>
-					<div class="col s4 center-align" v-bind:class="{ 'blue lighten-3': valorSaldoUtilizadoPositivo, 'red lighten-3': valorSaldoUtilizadoNegativo }">
-						<h6>Utilizado</h6>
-						<span style="font-weight:bold">R$ {{valorSaldoUtilizadoFormatado}}</span>
-					</div>
-				</div>
-				<div class="row center-align" v-show="valorSaldoDisponivelParaUsoNegativo">
-					<div class="col s12 center-align">
-						<span style="font-weight:bold" class="">Diminua os valores da planilha em R$ {{valorSaldoDisponivelParaUsoMensagem}} para poder finalizar a solicita&ccedil;&atilde;o.</span>
-					</div>
-				</div>
-				<div class="row center-align" v-show="valorSaldoUtilizadoNegativo">
-					<div class="col s12 center-align">
-						<span style="font-weight:bold" class="">O total da planilha &eacute; menor que o valor original; saldo de aplica&ccedil;&atilde;o n&atilde;o utilizado.</span>
-					</div>
-				</div>				
+			  <div class="card">
+			    <div class="card-content">
+				<readequacao-saldo-resumo
+				  :valorSaldoAplicacao="valorSaldoAplicacao"
+				  :valorEntrePlanilhasLimpo="valorEntrePlanilhasLimpo"
+				  :valorSaldoDisponivelParaUso="valorSaldoDisponivelParaUso"
+				  :valorSaldoUtilizado="valorSaldoUtilizado"
+				  :valorSaldoDisponivelParaUsoNegativo="valorSaldoDisponivelParaUsoNegativo"
+				  :valorSaldoDisponivelParaUsoPositivo="valorSaldoDisponivelParaUsoPositivo"
+				  :valorSaldoUtilizadoPositivo="valorSaldoUtilizadoPositivo"
+				  :valorSaldoUtilizadoNegativo="valorSaldoUtilizadoNegativo">
+				</readequacao-saldo-resumo>
+			    </div>
+			  </div>
+				
+			  <div class="card">
+			    <div class="card-content">
+			      <planilha-orcamentaria
+				:id-pronac="idPronac"
+				:tipo-planilha="tipoPlanilha"
+				:link="1"
+				:id-readequacao="readequacao.idReadequacao"
+				:componente-planilha="componentePlanilha"
+				:perfil="perfil"
+				:disponivelParaAdicaoItensReadequacaoPlanilha="disponivelParaAdicaoItensReadequacaoPlanilha"
+				:disponivelParaEdicaoReadequacaoPlanilha="disponivelParaEdicaoReadequacaoPlanilha"
+				v-on:atualizarSaldoEntrePlanilhas="carregarValorEntrePlanilhas"
+				>
+			      </planilha-orcamentaria>
+			    </div>
+			  </div>
+
+			  <div class="card">
+			    <div class="card-content">
+				<readequacao-saldo-resumo
+				  :valorSaldoAplicacao="valorSaldoAplicacao"
+				  :valorEntrePlanilhasLimpo="valorEntrePlanilhasLimpo"
+				  :valorSaldoDisponivelParaUso="valorSaldoDisponivelParaUso"
+				  :valorSaldoUtilizado="valorSaldoUtilizado"
+				  :valorSaldoDisponivelParaUsoNegativo="valorSaldoDisponivelParaUsoNegativo"
+				  :valorSaldoDisponivelParaUsoPositivo="valorSaldoDisponivelParaUsoPositivo"
+				  :valorSaldoUtilizadoPositivo="valorSaldoUtilizadoPositivo"
+				  :valorSaldoUtilizadoNegativo="valorSaldoUtilizadoNegativo">
+				</readequacao-saldo-resumo>
+			    </div>
+			  </div>
+
 			</div>
 			<div class="collapsible-body card" v-else>
 				<span>Preencha o valor do saldo dispon&iacute;vel para poder iniciar as altera&ccedil;&atilde;oes na planilha or&ccedil;ament&aacute;ria.</span>
@@ -357,7 +339,7 @@ Vue.component('readequacao-saldo-aplicacao', {
 	},
 	finalizarReadequacao: function() {
 	    let self = this;
-
+	    
 	    $3.ajax({
 		type: "POST",
 		url: "/readequacao/saldo-aplicacao/finalizar-readequacao",
@@ -367,12 +349,11 @@ Vue.component('readequacao-saldo-aplicacao', {
 		}
 	    }).done(function (response) {
 		self.mensagemSucesso(response.msg);
-
 		self.exibirPaineis = false;
 		self.exibirBotaoIniciar = false;
 		self.mostrarMensagemFinal = true;
 		self.readequacao.idReadequacao = '';
-		$3('#modalFinalizar').close();
+		$3('#modalFinalizar').modal('close');
 		
             }).fail(function (response) {
                 self.mensagemErro(response.responseJSON.msg)
@@ -432,11 +413,11 @@ Vue.component('readequacao-saldo-aplicacao', {
 	    let valorSaldoAplicacao = parseFloat(this.readequacao.dsSolicitacao);
 	    return valorSaldoAplicacao;
 	},
-	valorSaldoAplicacaoFormatado: function() {
-	    return numeral(this.valorSaldoAplicacao).format();
-	},
 	valorSaldoDisponivelParaUso: function() {
 	    return this.valorSaldoAplicacao  + parseFloat(this.valorEntrePlanilhasLimpo);
+	},
+	valorSaldoUtilizado: function() {
+	    return this.valorEntrePlanilhas.PlanilhaReadequadaTotal - this.valorEntrePlanilhas.PlanilhaAtivaTotal;
 	},
 	valorSaldoDisponivelParaUsoPositivo: function() {
 	    if (this.valorSaldoDisponivelParaUso > 0) {
@@ -453,15 +434,6 @@ Vue.component('readequacao-saldo-aplicacao', {
 		return true;
 	    }
 	},
-	valorSaldoDisponivelParaUsoMensagem: function() {
-	    return numeral(this.valorSaldoDisponivelParaUso * -1).format();
-	},
-	valorSaldoDisponivelParaUsoFormatado: function() {
-	    return numeral(this.valorSaldoDisponivelParaUso).format();
-	},
-	valorSaldoUtilizado: function() {
-	    return this.valorEntrePlanilhas.PlanilhaReadequadaTotal - this.valorEntrePlanilhas.PlanilhaAtivaTotal;
-	},
 	valorSaldoUtilizadoPositivo: function() {
 	    if (this.valorSaldoUtilizado > 0) {
 		return true;
@@ -475,9 +447,6 @@ Vue.component('readequacao-saldo-aplicacao', {
 	    } else {
 		return false;
 	    }
-	},
-	valorSaldoUtilizadoFormatado: function() {
-	    return numeral(this.valorSaldoUtilizado).format();
 	},
 	podeFinalizarReadequacao: function() {
 	    if ((this.valorSaldoDisponivelParaUsoPositivo

@@ -26,13 +26,13 @@
         <div class="content" id="readequacao-saldo-aplicacao">
 	    <readequacao-saldo-aplicacao
                 id-pronac="<?= $this->idPronac; ?>"
-		nome-projeto="<?= $this->projeto->NomeProjeto; ?>"
-		pronac="<?= $this->projeto->AnoProjeto . $this->projeto->Sequencial ?>"
-		id-tipo-readequacao="<?= $this->idTipoReadequacao ?>"
-		si-encaminhamento="<?= Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE; ?>"
-		perfil="<?= $this->idPerfil; ?>"
-		disponivel-para-adicao-itens-readequacao-planilha = "<?= $this->DisponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac); ?>"
-		></readequacao-saldo-aplicacao>
+			   nome-projeto="<?= $this->projeto->NomeProjeto; ?>"
+			   pronac="<?= $this->projeto->AnoProjeto . $this->projeto->Sequencial ?>"
+			   id-tipo-readequacao="<?= $this->idTipoReadequacao ?>"
+			   si-encaminhamento="<?= Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE; ?>"
+			   perfil="<?= $this->idPerfil; ?>"
+			   disponivel-para-adicao-itens-readequacao-planilha = "<?= $this->DisponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac); ?>"
+	    ></readequacao-saldo-aplicacao>
         </div>
     </div>
 </div>
@@ -48,6 +48,7 @@
 <script src="/public/scripts/readequacao/planilha-orcamentaria.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/readequacao/planilha-orcamentaria-incluir-item.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/readequacao/planilha-orcamentaria-alterar-item.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/readequacao/readequacao-saldo-resumo.vue.js" type="text/javascript"></script>                                                          
 <script src="/public/scripts/readequacao/readequacao-saldo-aplicacao-saldo.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/readequacao/readequacao-saldo-aplicacao.vue.js" type="text/javascript"></script>
 <script>
