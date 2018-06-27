@@ -160,6 +160,42 @@ class Readequacao_SaldoAplicacaoController extends Readequacao_GenericController
         }
     }
 
+    public function finalizarReadequacaoAction()
+    {
+        if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+            parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
+        }
+        
+        $params = $this->getRequest()->getParams();
+        
+        try {
+            if (empty($params['idReadequacao'])) {
+                throw new Exception('Readequa&ccedil;&atilde;o n&atilde;o encontrada');
+            }
+            
+            $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+            $readequacao = $tbReadequacao->obterDadosReadequacao(
+                Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_SALDO_APLICACAO,
+                $params['idPronac'],
+                $params['idReadequacao']
+            );
+
+            $tbReadequacaoMapper = new Readequacao_Model_TbReadequacaoMapper();
+            $status = $tbReadequacaoMapper->finalizarSolicitacaoReadequacao(
+                $this->idPronac,
+                Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_SALDO_APLICACAO,
+                $params['idReadequacao']
+            );
+            $this->_helper->json([
+                'data' => $status,
+                'success' => 'true',
+                'msg' => 'Readequa&ccedil;&atilde;o finalizada com sucesso!'
+            ]);
+        } catch (Exception $e) {
+            parent::message($e->getMessage(), "readequacao/readequacoes?idPronac=".Seguranca::encrypt($idPronac), "ERROR");
+        }
+    }
+
     public function excluirReadequacaoAction()
     {
         $this->_helper->layout->disableLayout();

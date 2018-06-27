@@ -113,7 +113,7 @@ Vue.component('readequacao-saldo-aplicacao', {
 			</div>
 		</li>
 	</ul>
-	<div class="card" v-show="readequacao.idReadequacao">
+	<div class="card" v-if="mostrarBotoes">
 		<div class="card-content">
 			<div class="row">
 				<div class="right-align padding20 col s12">
@@ -157,6 +157,20 @@ Vue.component('readequacao-saldo-aplicacao', {
 		</div>
 	</div>						
 
+  <div v-if="mostrarMensagemFinal" class="card">
+    <div class="card-content">
+      <div class="row">
+        <div class="col s1 right-align"><i class="medium green-text material-icons">check_circle</i></div>
+        <div class="col s11">
+          <p><b>Solicita&ccedil;&atilde;o enviada com sucesso!</b></p>
+          <p>Sua solicita&ccedil;&atilde;o agora est&aacute; para an&aacute;lise t&eacute;cnica do MinC.</p>
+          <p>Para acompanhar, acesse o menu lateral "Execu&ccedil;&atilde;o -> Dados das readequa&ccedil;&otilde;es" 
+            em <a :href="'/default/consultardadosprojeto/index?idPronac=' + idPronac">consultar dados do projeto</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
     `,
     props: {
@@ -187,6 +201,7 @@ Vue.component('readequacao-saldo-aplicacao', {
 	    exibirBotaoIniciar: false,
 	    exibirPaineis: false,
 	    solicitacaoIniciada: false,
+	    mostrarMensagemFinal: false,
 	    valorEntrePlanilhas: [],
 	    tipoPlanilha: 7,
 	    componenteFormulario: 'readequacao-saldo-aplicacao-saldo',
@@ -196,6 +211,13 @@ Vue.component('readequacao-saldo-aplicacao', {
     },
     created: function() {
 	this.obterDadosReadequacao();
+	
+        $3(document).ajaxStart(function () {
+	    $3('#container-loading').fadeIn('slow');
+        });
+        $3(document).ajaxComplete(function () {
+	    $3('#container-loading').fadeOut('slow');
+        });
     },
     mounted: function() {
     },
@@ -334,7 +356,27 @@ Vue.component('readequacao-saldo-aplicacao', {
             });
 	},
 	finalizarReadequacao: function() {
-	    // TODO
+	    let self = this;
+
+	    $3.ajax({
+		type: "POST",
+		url: "/readequacao/saldo-aplicacao/finalizar-readequacao",
+		data: {
+		    idPronac: self.idPronac,
+		    idReadequacao: self.readequacao.idReadequacao
+		}
+	    }).done(function (response) {
+		self.mensagemSucesso(response.msg);
+
+		self.exibirPaineis = false;
+		self.exibirBotaoIniciar = false;
+		self.mostrarMensagemFinal = true;
+		self.readequacao.idReadequacao = '';
+		$3('#modalFinalizar').close();
+		
+            }).fail(function (response) {
+                self.mensagemErro(response.responseJSON.msg)
+            });
 	},
 	restaurarFormulario: function() {
 	    this.readequacao = {
@@ -442,6 +484,13 @@ Vue.component('readequacao-saldo-aplicacao', {
 		 || this.valorSaldoDisponivelParaUsoNeutro)
 		&& this.valorSaldoUtilizadoPositivo
 	       ) {
+		return true;
+	    } else {
+		return false;
+	    }
+	},
+	mostrarBotoes: function() {
+	    if (this.readequacao.idReadequacao) {
 		return true;
 	    } else {
 		return false;
