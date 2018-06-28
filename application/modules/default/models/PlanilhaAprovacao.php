@@ -2858,7 +2858,6 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             c.idPlanilhaItens,
             c.Descricao AS Item,
             d.Descricao,
-            g.stItemAvaliado,
             CONVERT(DECIMAL(38,2), sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
                     a.idMunicipioDespesa,a.idPlanilhaItem)) as vlAprovado,
@@ -2918,19 +2917,19 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             'AGENTES.dbo'
         );
 
-        $select->joinLeft(
-            ['g' => 'tbComprovantePagamentoxPlanilhaAprovacao'],
-            "(a . idPlanilhaAprovacao = g . idPlanilhaAprovacao)",
-            [],
-            'BDCORPORATIVO.scSAC'
-        );
+//        $select->joinLeft(
+//            ['g' => 'tbComprovantePagamentoxPlanilhaAprovacao'],
+//            "(a . idPlanilhaAprovacao = g . idPlanilhaAprovacao)",
+//            [],
+//            'BDCORPORATIVO.scSAC'
+//        );
 
-        $select->joinLeft(
-            ['h' => 'tbComprovantePagamento'],
-            "(g . idComprovantePagamento = h . idComprovantePagamento)" ,
-            [],
-            'BDCORPORATIVO.scSAC'
-        );
+//        $select->joinLeft(
+//            ['h' => 'tbComprovantePagamento'],
+//            "(g . idComprovantePagamento = h . idComprovantePagamento)" ,
+//            [],
+//            'BDCORPORATIVO.scSAC'
+//        );
 
         $select->join(
             ['i' => 'Projetos'],
@@ -2941,7 +2940,16 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         $select->where('a.nrFonteRecurso = 109');
         $select->where('a.stAtivo = ? ', 'S');
-        $select->where("a.tpacao <> 'E'");
+        $select->where(new Zend_Db_Expr("sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item(
+            a.idPronac,
+            a.nrFonteRecurso,
+            a.idProduto,
+            a.idEtapa,
+            a.idUFDespesa,
+            a.idMunicipioDespesa,
+            a.idPlanilhaItem) > 0")
+        );
+
         $select->where('a.IdPRONAC = ?', $idPronac);
 
         foreach ($where as $coluna => $valor) {
