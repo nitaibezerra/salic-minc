@@ -50,24 +50,27 @@
         <div id="divExcluirComprovantes" class="sumir"></div>
         <div id="msgAlerta" class="sumir"></div>
 
-        <div class="col s10">
+        <div class="col s12">
             <?php if (!$this->vrSituacao) : ?>
-                <div class="row" id="breadcrumb">
-                    <div class="col s12">
+                <div id="breadcrumb">
+<!--                    <div class="col s12">-->
                         <ul>
                             <li class="first"><a
-                                    href="<?php echo $this->url(array('controller' => 'principalproponente', 'action' => ''), null, true); ?>"
+                                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'principalproponente', 'action' => ''), null, true); ?>"
                                     title="Ir para p&aacute;gina inicial" onclick="carregandoModal();">In&iacute;cio</a>
                             </li>
                             <li class="second"><a
-                                    href="<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => '')) . '?idPronac=' . Seguranca::encrypt($this->idpronac); ?>"
+                                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index', 'idPronac' => Seguranca::encrypt($this->idpronac)));  ?>"
                                     title="Ir para In&iacute;cio">Consultar dados do Projeto</a></li>
-                            <li>Comprovar Execu&ccedil;&atilde;o Financeira</li>
-                            <li><a href="<?php echo $pagamentoHref; ?>" title="Pagamento" onclick="carregandoModal();">Pagamento</a>
+                            <li>
+                                <a
+                                    href="<?php echo $this->url(array('module' => 'prestacao-contas', 'controller' => 'pagamento', 'action' => 'index')) . '?idPronac=' . Seguranca::encrypt($this->idpronac); ?>"
+                                    title="Ir para Comprova&ccedil;&atilde;o Financeira">Comprova&ccedil;&atilde;o Financeira</a>
+                                </li>
                             </li>
                             <li class="last">Comprovar Pagamento</li>
                         </ul>
-                    </div>
+<!--                    </div>-->
                 </div>
             <?php endif; ?>
 
@@ -76,16 +79,16 @@
                     <h5>
                         Comprovar Pagamento
                         <?php if ($this->idComprovantePagamento): ?>
-                            - editando item
+                            - Editando item
                         <?php else: ?>
-                            - cadastrar item
+                            - Cadastrar item
                         <?php endif; ?>
                     </h5>
                 </div>
-                <div class="col s4 align-right">
+                <div class="col s4">
                     <?php if (!$this->vrSituacao || !$this->pagCompRecusado) : ?>
-                        <span class="voltar"><a class="btn" href="<?php echo $voltarHref; ?>"
-                                                title="Ir para p&aacute;gina anterior">
+                        <span class="voltar right">
+                            <a class="btn small" href="<?php echo $voltarHref; ?>" title="Ir para p&aacute;gina anterior">
                     <i class="material-icons left">arrow_back</i>Voltar</a>
                 </span>
                     <?php endif; ?>
@@ -148,13 +151,13 @@
                             </table>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col s12">
+<!--                    <div class="row">-->
+<!--                        <div class="col s12">-->
                             <?php if (!$this->vrSituacao) : ?>
                                 <?php echo $this->partial('partials/tabelaItens.phtml', 'prestacao-contas', $this) ?>
                             <?php endif; ?>
-                        </div>
-                    </div>
+<!--                        </div>-->
+<!--                    </div>-->
 
                       <div class="card ">
                         <div class="card-content">
