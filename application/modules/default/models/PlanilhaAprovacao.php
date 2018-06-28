@@ -2831,8 +2831,13 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    public function obterItensAprovados($idPronac, $where = [])
-    {
+    public function obterItensAprovados($idPronac,
+        $uf = null,
+        $idPlanilhaEtapa = null,
+        $codigoProduto = null,
+        $idMunicipio = null,
+        $idPlanilhaItem = null
+    ){
         $cols = new Zend_Db_Expr("
             a.IdPRONAC,
             i.AnoProjeto+i.Sequencial AS Pronac,
@@ -2952,8 +2957,26 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         $select->where('a.IdPRONAC = ?', $idPronac);
 
-        foreach ($where as $coluna => $valor) {
-            $select->where($coluna, $valor);
+        if ($uf) {
+            $select->where('e.sigla = ?', $uf);
+        }
+
+        if ($idMunicipio) {
+            $select->where('f.idMunicipioIBGE = ?', $idMunicipio);
+        }
+
+        if ($idPlanilhaEtapa) {
+            $select->where('b.idPlanilhaEtapa = ?', $idPlanilhaEtapa);
+        }
+
+        if ($idPlanilhaItem) {
+            $select->where('c.idPlanilhaItens = ?', $idPlanilhaItem);
+        }
+
+        if ($codigoProduto != 0 && !is_null($codigoProduto)) {
+            $select->where('d.codigo = ?', $codigoProduto);
+        } else if($codigoProduto == 0 && !is_null($codigoProduto)){
+            $select->where('d.codigo is null');
         }
 
         $select->order(['Produto DESC', 'e.Sigla', 'f.Descricao', 'b.nrOrdenacao', 'c.Descricao']);
