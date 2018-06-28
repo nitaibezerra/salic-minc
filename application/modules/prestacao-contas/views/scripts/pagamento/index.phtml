@@ -183,7 +183,6 @@
             iniciarCollapsible: function () {
                 $3('.collapsible').each(function() {
                     $3(this).collapsible();
-                    console.log(this);
                 });
             }
         }
@@ -215,7 +214,6 @@
             iniciarCollapsible: function () {
                 $3('.collapsible').each(function() {
                     $3(this).collapsible();
-                    console.log(this);
                 });
             }
         }
@@ -269,7 +267,6 @@
             iniciarCollapsible: function () {
                 $3('.collapsible').each(function() {
                     $3(this).collapsible();
-                    console.log(this);
                 });
             },
             isObject: function (el) {
@@ -286,10 +283,15 @@
     Vue.component('dados', {
         props: ['idpronac'],
         template: `<div>
-                            <produtos-pagamento :produtos="produtos" :idpronac="idpronac"></produtos-pagamento>
+                        <produtos-pagamento :produtos="produtos" :idpronac="idpronac"></produtos-pagamento>
                     </div>`,
         created: function () {
-                // this.iniciarCollapsible();
+            $3(document).ajaxStart(function () {
+                $3('#container-loading').fadeIn('slow');
+            });
+            $3(document).ajaxComplete(function () {
+                $3('#container-loading').fadeOut('slow');
+            });
         },
         mounted: function () {
             let vue = this;
@@ -308,7 +310,6 @@
             iniciarCollapsible: function () {
                 $3('.collapsible').each(function() {
                     $3(this).collapsible();
-                    console.log(this);
                 });
             }
         }
@@ -321,7 +322,6 @@
             iniciarCollapsible: function () {
                 $3('.collapsible').each(function () {
                     $3(this).collapsible();
-                    console.log(this);
                 });
             }
         }
