@@ -1,7 +1,7 @@
 Vue.component('readequacao-saldo-aplicacao', {
     template: `
 <div class='readequacao-saldo-aplicacao'>
-	<div class="card">
+	<div class="card" v-if="!disabled">
 		<div class="card-content">
 		  <div class="col s2">
 				<b>Pronac: </b>{{ pronac }}<br>
@@ -60,16 +60,17 @@ Vue.component('readequacao-saldo-aplicacao', {
 			  <div class="card">
 			    <div class="card-content">
 			      <planilha-orcamentaria
-				:id-pronac="idPronac"
-				:tipo-planilha="tipoPlanilha"
-				:link="1"
-				:id-readequacao="readequacao.idReadequacao"
-				:componente-planilha="componentePlanilha"
-				:perfil="perfil"
-				:disponivelParaAdicaoItensReadequacaoPlanilha="disponivelParaAdicaoItensReadequacaoPlanilha"
-				:disponivelParaEdicaoReadequacaoPlanilha="disponivelParaEdicaoReadequacaoPlanilha"
-				v-on:atualizarSaldoEntrePlanilhas="carregarValorEntrePlanilhas"
-				>
+							:id-pronac="idPronac"
+							:tipo-planilha="tipoPlanilha"
+							:link="1"
+							:id-readequacao="readequacao.idReadequacao"
+							:componente-planilha="componentePlanilha"
+							:perfil="perfil"
+							:disabled="disabled"
+							:disponivelParaAdicaoItensReadequacaoPlanilha="disponivelParaAdicaoItensReadequacaoPlanilha"
+							:disponivelParaEdicaoReadequacaoPlanilha="disponivelParaEdicaoReadequacaoPlanilha"
+							v-on:atualizarSaldoEntrePlanilhas="carregarValorEntrePlanilhas"
+							>
 			      </planilha-orcamentaria>
 			    </div>
 			  </div>
@@ -95,6 +96,32 @@ Vue.component('readequacao-saldo-aplicacao', {
 			</div>
 		</li>
 	</ul>
+	<div v-if="disabled">
+		<div class="card">
+			<div class="card-content">
+				<h4>Saldo de aplica&ccedil;&atildeo declarado</h4>
+				<h6 class="blue-text lighten-1">R$ {{valorSaldoAplicacaoFormatado}}</h6>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-content">
+			  <planilha-orcamentaria
+					:id-pronac="idPronac"
+					:tipo-planilha="tipoPlanilha"
+					:link="1"
+					:id-readequacao="readequacao.idReadequacao"
+					:componente-planilha="componentePlanilha"
+					:perfil="perfil"
+					:disabled="disabled"
+					:disponivelParaAdicaoItensReadequacaoPlanilha="disponivelParaAdicaoItensReadequacaoPlanilha"
+					:disponivelParaEdicaoReadequacaoPlanilha="disponivelParaEdicaoReadequacaoPlanilha"
+					v-on:atualizarSaldoEntrePlanilhas="carregarValorEntrePlanilhas"
+					>
+			  </planilha-orcamentaria>
+			</div>
+		</div>
+  </div>
+        
 	<div class="card" v-if="mostrarBotoes">
 		<div class="card-content">
 			<div class="row">
@@ -413,6 +440,9 @@ Vue.component('readequacao-saldo-aplicacao', {
 	    let valorSaldoAplicacao = parseFloat(this.readequacao.dsSolicitacao);
 	    return valorSaldoAplicacao;
 	},
+	valorSaldoAplicacaoFormatado: function() {
+	    return numeral(this.valorSaldoAplicacao).format();
+	},
 	valorSaldoDisponivelParaUso: function() {
 	    return this.valorSaldoAplicacao  + parseFloat(this.valorEntrePlanilhasLimpo);
 	},
@@ -459,7 +489,8 @@ Vue.component('readequacao-saldo-aplicacao', {
 	    }
 	},
 	mostrarBotoes: function() {
-	    if (this.readequacao.idReadequacao) {
+	    if (this.readequacao.idReadequacao
+	       && !this.disabled) {
 		return true;
 	    } else {
 		return false;

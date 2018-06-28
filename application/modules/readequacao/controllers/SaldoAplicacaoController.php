@@ -249,7 +249,11 @@ class Readequacao_SaldoAplicacaoController extends Readequacao_GenericController
         $idPronac = $this->_request->getParam("idPronac");
         
         if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
-            parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
+            $this->_helper->json([
+                'success' => 'true',
+                'disponivelParaEdicaoReadequacaoPlanilha' => false,
+                'msg' => 'Dispon&iacute;vel para edi&ccedil;&atilde;o de itens.'
+            ]);
         }
         
         try {
