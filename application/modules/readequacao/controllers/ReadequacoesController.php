@@ -3154,6 +3154,22 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                         throw new Exception("N&atilde;o foi poss&iacute;vel incluir os projetos recebedores da solicita&ccedil;&atilde;o");
                     }
                 }
+            } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_SALDO_APLICACAO) {
+                $Projetos = new Projetos();
+                $dadosPrj = $Projetos->find(array('IdPRONAC=?'=>$read->idPronac))->current();
+
+                $tbAprovacao = new Aprovacao();
+                $dadosAprovacao = array(
+                    'IdPRONAC' => $read->idPronac,
+                    'AnoProjeto' => $dadosPrj->AnoProjeto,
+                    'Sequencial' => $dadosPrj->Sequencial,
+                    'TipoAprovacao' => Aprovacao::TIPO_APROVACAO_COMPLEMENTACAO,
+                    'DtAprovacao' => new Zend_Db_Expr('GETDATE()'),
+                    'ResumoAprovacao' => $parecerTecnico->ResumoParecer,
+                    'Logon' => $auth->getIdentity()->usu_codigo,
+                    'idReadequacao' => $idReadequacao
+                );
+                $idAprovacao = $tbAprovacao->inserir($dadosAprovacao);
             }
         }
 
