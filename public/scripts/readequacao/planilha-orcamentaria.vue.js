@@ -2,17 +2,18 @@ Vue.component('planilha-orcamentaria', {
     template: `
 	<div id="planilhaOrcamentariaMontada">
 	    <component
-		v-bind:is="componentePlanilha"
-		:idPronac="idPronac"
-		:objPlanilha="planilhaOrcamentaria"
-		:perfil="perfil"
-		:link="link"
-		:idReadequacao="idReadequacao"
-		:disponivelParaAdicaoItensReadequacaoPlanilha="disponivelParaAdicaoItensReadequacaoPlanilha"
-		:disponivelParaEdicaoReadequacaoPlanilha="disponivelParaEdicaoReadequacaoPlanilha"
-		v-on:atualizarSaldoEntrePlanilhas="atualizarSaldoEntrePlanilhas"
-		v-on:atualizarPlanilha="montarPlanilhaOrcamentaria"
-		>
+				v-bind:is="componentePlanilha"
+				:idPronac="idPronac"
+				:objPlanilha="planilhaOrcamentaria"
+				:perfil="perfil"
+				:link="link"
+				:idReadequacao="idReadequacao"
+				:disabled="disabled"
+				:disponivelParaAdicaoItensReadequacaoPlanilha="disponivelParaAdicaoItensReadequacaoPlanilha"
+				:disponivelParaEdicaoReadequacaoPlanilha="disponivelParaEdicaoReadequacaoPlanilha"
+				v-on:atualizarSaldoEntrePlanilhas="atualizarSaldoEntrePlanilhas"
+				v-on:atualizarPlanilha="montarPlanilhaOrcamentaria"
+				>
 	    </component>
 	</div>
     `,
@@ -23,6 +24,7 @@ Vue.component('planilha-orcamentaria', {
 	link: false,
 	componentePlanilha: '',
 	perfil: '',
+	disabled: false,
 	disponivelParaAdicaoItensReadequacaoPlanilha: '',
 	disponivelParaEdicaoReadequacaoPlanilha: ''
     },

@@ -48,7 +48,7 @@ Vue.component('readequacao-saldo-planilha-orcamentaria', {
                                 <th class="center-align">Vl. Aprovado</th>
                                 <th class="center-align">Vl. Comprovado</th>
                                 <th class="center-align">Justificativa</th>
-                                <th class="center-align">A&ccedil;&atilde;o</th>
+                                <th class="center-align" v-if="!disabled">A&ccedil;&atilde;o</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -78,7 +78,7 @@ Vue.component('readequacao-saldo-planilha-orcamentaria', {
                                 <td>{{converterParaReal(row.vlAprovado)}}</td>
                                 <td>{{converterParaReal(row.vlComprovado)}}</td>
                                 <td>{{row.dsJustificativa}}</td>
-                                <td class="center-align">
+                                <td v-if="!disabled" class="center-align">
 																	<template v-if="itemExcluido(row)">
 																		<span class="grey-text lighten-3">restaurar</span><br/>
 																		<a
@@ -115,7 +115,7 @@ Vue.component('readequacao-saldo-planilha-orcamentaria', {
 	<div class="card-action">
 		<span><b>Valor total do projeto:</b> R$ {{planilhaCompleta.total}}</span>			
 	</div>
-	<div id="modalEditar" class="modal">
+	<div id="modalEditar" class="modal" v-if="disponivelParaEdicaoReadequacaoPlanilha">
 		<div class="modal-header margin20">
 			<h4 class="center-align">Alterar item</h4>
 		</div>
@@ -131,7 +131,7 @@ Vue.component('readequacao-saldo-planilha-orcamentaria', {
 		    </planilha-orcamentaria-alterar-item>
 		</div>
 	</div>
-	<div id="modalIncluir" class="modal">
+	<div id="modalIncluir" class="modal" v-if="disponivelParaAdicaoItensReadequacaoPlanilha">
 		<div class="modal-header margin20">
 			<h4 class="center-align">Incluir item</h4>
 		</div>
@@ -157,6 +157,7 @@ Vue.component('readequacao-saldo-planilha-orcamentaria', {
 	objPlanilha: {},
 	perfil: '',
 	link: '',
+	disabled: '',
 	disponivelParaAdicaoItensReadequacaoPlanilha: '',
 	disponivelParaEdicaoReadequacaoPlanilha: ''
     },
