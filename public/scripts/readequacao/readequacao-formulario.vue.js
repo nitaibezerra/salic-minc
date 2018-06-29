@@ -19,7 +19,7 @@ Vue.component('readequacao-formulario', {
           v-bind:is="componenteDsSolicitacao"
           :ds-solicitacao="readequacao.dsSolicitacao"
           :disabled="disabled"
-          v-on:eventoAtualizarDsSolicitacao="readequacao.dsSolicitacao=$event"
+          v-on:eventoAtualizarDsSolicitacao="atualizarDsSolicitacao($event)"
           ></component>
         <div class="row">
           <div class="col s12">
@@ -207,7 +207,8 @@ Vue.component('readequacao-formulario', {
                 self.mensagemAlerta(response.mensagem);
                 $3('#carregando-arquivo').fadeOut('slow');
             });
-        }, validarDocumento: function (arquivo) {
+        },
+	validarDocumento: function (arquivo) {
             if (!this.arquivo.tiposAceitos.includes(arquivo.name.split(".").pop().toLowerCase())) {
                 this.mensagemAlerta("Extens\xE3o de arquivo inv\xE1lida. Envie arquivos nos tipos: " + this.arquivo.tiposAceitos.join(','));
                 return;
@@ -218,6 +219,10 @@ Vue.component('readequacao-formulario', {
                 return;
             }
             return true;
-        }
+        },
+	atualizarDsSolicitacao: function(valor) {
+	    this.readequacao.dsSolicitacao = valor;
+	    this.$emit('eventoAtualizarReadequacao', this.readequacao);
+	}
     }
 });

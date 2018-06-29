@@ -3166,6 +3166,22 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     'idReadequacao' => $idReadequacao
                 );
                 $idAprovacao = $tbAprovacao->inserir($dadosAprovacao);
+
+                $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+                $dadosReadequacaoAnterior = ['stAtivo' => 'N'];
+                $whereReadequacaoAnterior = [
+                    'IdPRONAC = ?' => $idPronac,
+                    'stAtivo = ?' => 'S'
+                ];
+                $update = $tbPlanilhaAprovacao->update($dadosReadequacaoAnterior, $whereReadequacaoAnterior);
+                
+                $dadosReadequacaoNova = ['stAtivo' => 'S'];
+                $whereReadequacaoNova = [
+                    'IdPRONAC = ?' => $idPronac,
+                    'stAtivo = ?' => 'N',
+                    'idReadequacao=?' => $idReadequacao
+                ];
+                $tbPlanilhaAprovacao->update($dadosReadequacaoNova, $whereReadequacaoNova);                
             }
         }
 

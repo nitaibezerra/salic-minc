@@ -22,7 +22,7 @@ template: `
 			<span style="font-weight:bold" class="">Diminua os valores da planilha em R$ {{valorSaldoDisponivelParaUsoMensagem}} para poder finalizar a solicita&ccedil;&atilde;o.</span>
 		</div>
 	</div>
-	<div class="row center-align" v-show="!valorSaldoDisponivelParaUsoNegativo">
+	<div class="row center-align" v-show="exibeMensagemFinalizar">
 		<div class="col s12 center-align">
 			<i class="medium green-text material-icons" style="vertical-align: middle">check_circle</i>
 			<span style="font-weight:bold" class="">J&aacute; &eacute; poss&iacute;vel finalizar a solicita&ccedil;&atilde;o.</span>
@@ -34,6 +34,12 @@ template: `
 			<span style="font-weight:bold" class="">O total da planilha &eacute; menor que o valor original; saldo de aplica&ccedil;&atilde;o n&atilde;o utilizado.</span>
 		</div>
 	</div>
+	<div class="row center-align" v-show="readequacaoAlterada">
+		<div class="col s12 center-align">
+			<i class="medium red-text material-icons" style="vertical-align: middle">warning</i>
+			<span style="font-weight:bold" class="">As informa&ccedil;&otilde;es da readequa&ccedil;&atilde;o foram alteradas. Salve para poder finalizar.</span>
+		</div>
+	</div>
 </div>
 `,
     props: {
@@ -42,9 +48,12 @@ template: `
 	valorSaldoDisponivelParaUso: 0,
 	valorSaldoUtilizado: 0,
 	valorSaldoDisponivelParaUsoNegativo: false,
+	valorSaldoDisponivelParaUsoNeutro: false,
 	valorSaldoDisponivelParaUsoPositivo: false,
 	valorSaldoUtilizadoPositivo: false,
-	valorSaldoUtilizadoNegativo: false
+	valorSaldoUtilizadoNeutro: false,
+	valorSaldoUtilizadoNegativo: false,
+	readequacaoAlterada: false
     },
     computed: {
 	valorSaldoAplicacaoFormatado: function() {
@@ -58,6 +67,14 @@ template: `
 	},
 	valorSaldoUtilizadoFormatado: function() {
 	    return numeral(this.valorSaldoUtilizado).format();
+	},
+	exibeMensagemFinalizar: function() {
+	    if (!this.valorSaldoUtilizadoNeutro
+		&& !this.valorSaldoDisponivelParaUsoNegativo
+		&& !this.readequacaoAlterada
+	       ) {
+		return true;
+	    }
 	}
     }
 });

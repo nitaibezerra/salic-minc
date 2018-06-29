@@ -50,8 +50,11 @@ Vue.component('readequacao-saldo-aplicacao', {
 				  :valorSaldoDisponivelParaUso="valorSaldoDisponivelParaUso"
 				  :valorSaldoUtilizado="valorSaldoUtilizado"
 				  :valorSaldoDisponivelParaUsoNegativo="valorSaldoDisponivelParaUsoNegativo"
+				  :valorSaldoDisponivelParaUsoNeutro="valorSaldoDisponivelParaUsoNeutro"
 				  :valorSaldoDisponivelParaUsoPositivo="valorSaldoDisponivelParaUsoPositivo"
 				  :valorSaldoUtilizadoPositivo="valorSaldoUtilizadoPositivo"
+					:valorSaldoUtilizadoNeutro="valorSaldoUtilizadoNeutro"
+					:readequacaoAlterada="readequacaoAlterada"					
 				  :valorSaldoUtilizadoNegativo="valorSaldoUtilizadoNegativo">
 				</readequacao-saldo-resumo>
 			    </div>
@@ -85,6 +88,8 @@ Vue.component('readequacao-saldo-aplicacao', {
 				  :valorSaldoDisponivelParaUsoNegativo="valorSaldoDisponivelParaUsoNegativo"
 				  :valorSaldoDisponivelParaUsoPositivo="valorSaldoDisponivelParaUsoPositivo"
 				  :valorSaldoUtilizadoPositivo="valorSaldoUtilizadoPositivo"
+					:valorSaldoUtilizadoNeutro="valorSaldoUtilizadoNeutro"
+					:readequacaoAlterada="readequacaoAlterada"
 				  :valorSaldoUtilizadoNegativo="valorSaldoUtilizadoNegativo">
 				</readequacao-saldo-resumo>
 			    </div>
@@ -215,7 +220,8 @@ Vue.component('readequacao-saldo-aplicacao', {
 	    tipoPlanilha: 7,
 	    componenteFormulario: 'readequacao-saldo-aplicacao-saldo',
 	    componentePlanilha: 'readequacao-saldo-planilha-orcamentaria',
-	    disponivelParaEdicaoReadequacaoPlanilha: ''
+	    disponivelParaEdicaoReadequacaoPlanilha: '',
+	    readequacaoAlterada: false
 	}
     },
     created: function() {
@@ -306,10 +312,12 @@ Vue.component('readequacao-saldo-aplicacao', {
             }).done(function (response) {
 		self.readequacao = readequacao;
 		self.solicitacaoIniciada = true;
+		self.readequacaoAlterada = false;
                 self.mensagemSucesso(response.msg);
             });
 	},
 	atualizarReadequacao: function (readequacao) {
+	    this.readequacaoAlterada = true;
             this.readequacao = readequacao;
         },
 	verificarDisponivelParaEdicaoReadequacaoPlanilha: function() {
@@ -397,7 +405,8 @@ Vue.component('readequacao-saldo-aplicacao', {
 		'idArquivo' : null,
 		'nomeArquivo': null
 	    };
-	},
+	    this.readequacaoAlterada = false;
+	},	
 	corValor: function(valor) {
 	    let cor = '';
 	    if (valor > 0) {
@@ -452,11 +461,15 @@ Vue.component('readequacao-saldo-aplicacao', {
 	valorSaldoDisponivelParaUsoPositivo: function() {
 	    if (this.valorSaldoDisponivelParaUso > 0) {
 		return true;
+	    } else {
+		return false;
 	    }
 	},
 	valorSaldoDisponivelParaUsoNeutro: function() {
-	    if (this.valorSaldoDisponivelParaUso == 0) {
+	    if (this.valorSaldoDisponivelParaUso === 0) {
 		return true;
+	    } else {
+		return false;
 	    }
 	},
 	valorSaldoDisponivelParaUsoNegativo: function() {
@@ -471,6 +484,13 @@ Vue.component('readequacao-saldo-aplicacao', {
 		return false;
 	    }
 	},
+	valorSaldoUtilizadoNeutro: function() {
+	    if (this.valorSaldoUtilizado == 0) {
+		return true;
+	    } else {
+		return false;
+	    }
+	},
 	valorSaldoUtilizadoNegativo: function() {
 	    if (this.valorSaldoUtilizado < 0) {
 		return true;
@@ -480,9 +500,10 @@ Vue.component('readequacao-saldo-aplicacao', {
 	},
 	podeFinalizarReadequacao: function() {
 	    if ((this.valorSaldoDisponivelParaUsoPositivo
-		 || this.valorSaldoDisponivelParaUsoNeutro)
+	      || this.valorSaldoDisponivelParaUsoNeutro)
 		&& this.valorSaldoUtilizadoPositivo
-	       ) {
+		&& !this.readequacaoAlterada
+	    ) {
 		return true;
 	    } else {
 		return false;
