@@ -222,6 +222,23 @@ class Readequacao_Model_TbPlanoDistribuicaoMapper extends MinC_Db_Mapper
             $idPlanoDistribuicaoOriginal = $planoReadequado['idPlanoDistribuicaoOrignal'];
 
             /**
+             * if temporario para corrigir bug, remover quando esse select retornar zero em prod:
+             * select b.* from sac.dbo.tbReadequacao as a
+             * inner JOIN sac.dbo.tbPlanoDistribuicao as b on a.idReadequacao = b.idReadequacao
+             * where a.stEstado = 0 and b.vlUnitarioNormal > 0;
+             */
+            if (!empty($idPlanoDistribuicaoOriginal)
+                && $planoReadequado['vlUnitarioNormal'] > 0
+                && empty($planoReadequado['precoUnitarioNormal'])
+            ) {
+                $planoReadequado['precoUnitarioNormal'] = $planoReadequado['vlUnitarioNormal'];
+                $planoReadequado['vlUnitarioNormal'] = 0;
+                $copiaPlanoReadequado = $planoReadequado;
+                unset($copiaPlanoReadequado['idPlanoDistribuicao']);
+                $tbPlanoDistribuicao->update($planoReadequado, ['idPlanoDistribuicao = ?' => $planoReadequado['idPlanoDistribuicao']]);
+            }
+
+            /**
              * if temporario, ate que esse select retorne zero em prod:
              * select * from sac.dbo.tbPlanoDistribuicao
              * where idPlanoDistribuicaoOriginal is null and stAtivo = 'S';

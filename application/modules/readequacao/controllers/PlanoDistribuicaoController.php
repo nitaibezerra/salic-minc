@@ -260,7 +260,8 @@ class Readequacao_PlanodistribuicaoController extends Readequacao_GenericControl
             $dadosInclusao['qtOutros'] = $_POST['newQntdPopulacaoBaixaRenda'];
             $dadosInclusao['qtVendaNormal'] = $_POST['newQntdNormal'];
             $dadosInclusao['qtVendaPromocional'] = $_POST['newQntdPromocional'];
-            $dadosInclusao['vlUnitarioNormal'] = $preconormal;
+            $dadosInclusao['vlUnitarioNormal'] = 0;
+            $dadosInclusao['PrecoUnitarioNormal'] = $preconormal;
             $dadosInclusao['vlUnitarioPromocional'] = $precopromocional;
             $dadosInclusao['tpSolicitacao'] = 'A'; # N - nenhuma, I - inclusao, A - alteracao
             $dadosInclusao['stAtivo'] = 'S';
