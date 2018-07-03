@@ -1,0 +1,172 @@
+<table id="tabelaProjetosAguardandoAnalise" class="bordered striped">
+    <thead>
+    <tr>
+        <th>PRONAC</a></th>
+        <th>Nome do Projeto</a></th>
+        <th>Situação</a></th>
+        <th>Área / Segmento</a></th>
+        <th>Mecanismo</a></th>
+        <th>Encaminhar para Análise</a></th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<div id="encaminharProjetoModal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h4>Encaminhar Projeto para An&aacute;lise</h4>
+        <div class="row">
+            <div class=" col s12">
+                <h2 id="dadosProjeto">12312313 - PEdro projeto testes</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s4">
+                <i class="material-icons prefix">supervisor_account</i>
+                <input required="required" type="text" value="SEFIC/ARQ" disabled>
+                <label>Área de Encaminhamento</label>
+            </div>
+
+            <div class="col s4">
+                <label class="input-field">Destinatário</label>
+                <select class="browser-default" id="selecionarTecnicos"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">mode_edit</i>
+                <label for="dsJustificativa">Justificativa de encaminhamento para an&aacute;lise t&eacute;cnica</label>
+                <textarea  class="materialize-textarea" id="dsJustificativa" name="dsJustificativa"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" id="enviarAnalise" class="modal-action waves-effect waves-green btn-flat green white-text">Enviar</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat red-text">Cancelar</a>
+    </div>
+</div>
+
+<script src="http://172.20.0.3/public/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="http://172.20.0.3/public/scripts/layout/datatables.min.js"></script>
+<script type="text/javascript">
+    (function ($) {
+        $(document).ready(function () {
+            var tabelaProjetosAguardandoAnalise = $('#tabelaProjetosAguardandoAnalise').DataTable({
+                // "language": {
+                //     "url": "https://cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+                // },
+                "ajax": {
+                    url: "/prestacao-contas/prestacao-contas/obter-projetos-analise-financeira-virtual",
+                    data: {},
+                    type: "POST"
+                },
+                "processing": true,
+                "serverSide": true,
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "data": null,
+                        render: (data) => {
+                            return '<a class="btn modal-trigger pre-visualizar" data-idpronac="' + data[5] + '" >' + data[0] + '</a>'
+                        }
+                    },
+                    {
+                        "targets": 4,
+                        "data": null,
+                        render: () => {
+                            return 'Incentivo Fiscal';
+                        }
+                    },
+                    {
+                        "targets": 3,
+                        "data": null,
+                        render: (data) => {
+                            return data[4] + ' / ' + data[3];
+                        }
+                    },
+                    {
+                        "targets": 5,
+                        "data": null,
+                        "defaultContent": '<button class="btn encaminharAnalise modal-trigger" href="#encaminharProjetoModal" alt="Encaminhar"><i class=" tiny material-icons">assignment_ind</i></button>'
+                    }
+                ]
+            });
+
+
+
+            $('#enviarAnalise').on('click', console.log('teste'));
+            $("tbody").on('click', 'button#enviarAnalise', function () {
+                let idPronac = $(this).closest('tr').find('a').data('idpronac');
+                console.log(idPronac);
+                //$.ajax({
+                //    url : '<?php //echo $this->url(array ('module' => 'default', 'controller' => 'realizarprestacaodecontas', 'action' => 'encaminharprestacaodecontas' )); ?>//',
+                //    data : {
+                //        idPronac : idPronac,
+                //        passaValor : <?//= (new Zend_Session_Namespace('GrupoAtivo'))->codOrgao; ?>//,
+                //        recebeValor: $('#selecionarTecnicos').val(),
+                //        idSituacaoPrestContas : 2,
+                //        dsjustificativa: $('#dsJustificativa').val()
+                //    },
+                //    success: function(data){
+                //        console.log(data);
+                //    },
+                //    type : 'post'
+                //});
+            });
+
+
+            $("tbody").on('click', 'button.encaminharAnalise', function () {
+                let pronac = $(this).closest('tr').find('td')[0].innerText;
+                let nomeProjeto = $(this).closest('tr').find('td')[1].innerText;
+
+                $3('#dadosProjeto').html(pronac + ' - ' + nomeProjeto);
+
+                $3('#encaminharProjetoModal').modal();
+
+                $3.ajax({
+                    url: '<?= $this->url(array('module'=> 'default', 'controller' => 'realizarprestacaodecontas', 'action' => 'carregar-destinatarios' ) );?>',
+                    data: {
+                        idorgao : <?= (new Zend_Session_Namespace('GrupoAtivo'))->codOrgao; ?>,
+                        verifica : 'a', //@TODO verificar a necessidade desse 'a'
+                        idPerfilDestino : 124
+                    },
+                    type: "POST"
+                }).done((data)=>{
+                    $3('#selecionarTecnicos').append("<option value='' disabled selected>Selecione um técnico</option>");
+                    data.conteudo.forEach( (tecnico) => {
+                        let codigo = tecnico.usu_codigo + '/' + tecnico.idperfil;
+                        let nome = tecnico.usu_nome;
+
+                        $3('#selecionarTecnicos').append("<option value='"+ codigo +"'>"+ nome +"</option>");
+                    });
+                    $3('#selecionarTecnicos').material_select();
+                });
+
+
+//                $3.ajax({
+//                    url: '/prestacao-contas/prestacao-contas/obter-projetos-analise-financeira-virtual',
+//                    data: {},
+//                    type: "POST"
+//                }).done((data)=>{
+//                    console.log(data);
+//                });
+//                $3.ajax({
+//                    url:'/prestacao-contas/prestacao-contas/update',
+//                    data: {
+//                        idpreprojeto: $3('#idpreprojeto').val(),
+//                        SolicitacaoDesarquivamento: $3('#SolicitacaoDesarquivamento').val()
+//                    },
+//                    method:'POST'
+//                }).
+//                done(function(data) {
+//                    $3('#modal_solicitar').modal('close');
+//                    table.ajax.reload();
+//                    console.log(data);
+//                });
+            });
+
+        });
+    }($.noConflict(true)));
+</script>
+<link rel="stylesheet" type="text/css" href="http://172.20.0.3/public/css/layout/datatables.min.css"/>

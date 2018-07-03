@@ -65,7 +65,6 @@
     );
 
     function JSEncaminharParaAnalise(idPronac,idOrgaoDestino,tipoFiltro,ocultarJustificativa){
-        console.log('teste');
         $('html').css('overflow', 'hidden');
         $("body").append("<div id='divDinamica'></div>");
         $("#divDinamica").html("");
@@ -78,7 +77,7 @@
                 idSituacaoPrestContas : 2,
                 tipoFiltro : tipoFiltro,
                 ocultarJustificativa : true,
-		idPerfilDestino: 124
+		        idPerfilDestino: 124
             },
             success: function(data){
                 $('#divDinamica').html(data);
@@ -250,15 +249,15 @@
     });
 </script>
 
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.13/datatables.min.css"/>
+<script type="text/javascript" src="http://172.20.0.3/public/scripts/layout/datatables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://172.20.0.3/public/css/layout/datatables.min.css"/>
 <script type="text/javascript" >
         $(document).ready(function () {
             $('table').DataTable(
                 {
-                    "language": {
-                        "url": "https://cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
-                    }
+                    // "language": {
+                    //     "url": "https://cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+                    // }
                 }
             );
         });

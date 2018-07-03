@@ -62,6 +62,12 @@ $arrMenu['prestacao-contas']['menu'][] = array(
     'label' => 'Analisar Presta&ccedil;&atilde;o de Contas'
 );
 $arrMenu['prestacao-contas']['menu'][] = array(
+    'grupo' => array(125,126),
+    'url' => $this->url(array('module'=>'prestacao-contas', 'controller' => 'prestacao-contas', 'action' => 'analise-financeira-virtual'), '', true),
+    'title' => 'Ir para An&aacute;lise Financeira Virtual',
+    'label' => 'Análise Financeira Virtual'
+);
+$arrMenu['prestacao-contas']['menu'][] = array(
     'grupo' => array(126,148,151),
     'url' => $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'analisar-laudo-final'), '', true),
     'title' => 'Ir para Analisar Laudo Final',

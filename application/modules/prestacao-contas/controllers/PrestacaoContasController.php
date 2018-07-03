@@ -6,7 +6,8 @@ class PrestacaoContas_PrestacaoContasController extends MinC_Controller_Action_A
     {
         $PermissoesGrupo = [
             Autenticacao_Model_Grupos::TECNICO_PRESTACAO_DE_CONTAS,
-            Autenticacao_Model_Grupos::COORDENADOR_PRESTACAO_DE_CONTAS
+            Autenticacao_Model_Grupos::COORDENADOR_PRESTACAO_DE_CONTAS,
+            Autenticacao_Model_Grupos::COORDENADOR_GERAL_PRESTACAO_DE_CONTAS
         ];
 
         $auth = Zend_Auth::getInstance();
@@ -159,5 +160,22 @@ class PrestacaoContas_PrestacaoContasController extends MinC_Controller_Action_A
         }
 
         $this->_helper->json($planilhaJSON);
+    }
+
+    public function analiseFinanceiraVirtualAction(){}
+
+    public function obterProjetosAnaliseFinanceiraVirtualAction(){
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+        $projetos = $tbPlanilhaAprovacao->obterProjetosAnaliseFinanceiraVirtual($this->codOrgao);
+
+        foreach($projetos->toArray() as $coluna => $item){
+            foreach($item as $key => $value){
+                $projetosAnaliseFinanceiraVirtual[$coluna][] = utf8_encode($value);
+            }
+        }
+
+        $this->_helper->json([
+            'data' => $projetosAnaliseFinanceiraVirtual
+        ]);
     }
 }
