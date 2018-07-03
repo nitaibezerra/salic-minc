@@ -192,7 +192,7 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                     <td align="center"><b>Dt.Situa&ccedil;&atilde;o</b></td>
                     <td align="center"><b>Situa&ccedil;&atilde;o</b></td>
                     <td align="center"><b>Provid&ecirc;ncia Tomada</b></td>
-                    <td align="center"><b>Localiza&ccedil;&atilde;o atual do projeto</b></td>
+                    <td align="center"><b>Localiza&ccedil;&atilde;o atual</b></td>
                 </tr>
                 <tr>
                     <td align="center"><?= $this->projeto->DtSituacao; ?></td>
@@ -202,6 +202,20 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                 </tr>
             </table>
         <?php endif; ?>
+
+        <table class="tabela">
+            <tr class="destacar">
+                <td align="center" colspan="2"><b>Fase do projeto</b></td>
+            </tr>
+            <tr class="destacar">
+                <td align="center"><b>Fase</b></td>
+                <td align="center"><b>Dt. início</b></td>
+            </tr>
+            <tr>
+                <td align="center"><?= $this->projeto->FaseProjeto; ?></td>
+                <td align="center"><?= Data::tratarDataZend($this->projeto->dtInicioFase, 'Brasileira'); ?></td>
+            </tr>
+        </table>
 
         <?php if (!empty($this->projeto->DtArquivamento)) : ?>
             <table class="tabela">
@@ -236,7 +250,7 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                                 color="#009900"><?= @number_format($this->projeto->vlSolicitadoOriginal, 2, ",", "."); ?></font></b>
                     </td>
                     <td align="center"><b><font
-                                color="#CC0000"><?= @number_format($this->projeto->vlOutrasFontes, 2, ",", "."); ?></font></b>
+                                color="#CC0000"><?= @number_format($this->projeto->vlOutrasFontesPropostaOriginal, 2, ",", "."); ?></font></b>
                     </td>
                     <td align="center">
                         <b>
@@ -244,7 +258,7 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                                 'module' => 'default',
                                 'controller' => 'consultardadosprojeto',
                                 'action' => 'planilha-orcamentaria'
-                            )) . "?idPronac=" . $this->idPronac . "','conteudo'); return false\" title=\"Ir para Planilha or&ccedil;ament&aacute;ria\"> <font color=\"#0000FF\">" . @number_format(($this->projeto->vlProposta), 2, ",", ".") . "</font></a>"; ?>
+                            )) . "?idPronac=" . $this->idPronac . "','conteudo'); return false\" title=\"Ir para Planilha or&ccedil;ament&aacute;ria\"> <font color=\"#0000FF\">" . @number_format(($this->projeto->vlTotalPropostaOriginal), 2, ",", ".") . "</font></a>"; ?>
                         </b>
                     </td>
                 </tr>
@@ -252,20 +266,51 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
 
             <table class="tabela">
                 <tr class="destacar">
-                    <td align="center" colspan="2"><b>Homologado p/ Captar</b></td>
-                    <td align="center" rowspan="2"><b>Proponente </br>Adequado &agrave; execu&ccedil;&atilde;o (F)</b>
-                    </td>
-                    <td align="center" colspan="2"><b>Homologado p/ Executar</b></td>
+                    <td align="center" colspan="3"><b>Autorizado p/ Captar</b></td>
                 </tr>
                 <tr class="destacar">
-                    <td align="center"><b>Vl. Aprovado (D)</b></td>
-                    <td align="center"><b>Vl.Projeto (E = B + D)</b></td>
-                    <td align="center"><b>Homologado (G)</b></td>
-                    <td align="center"><b>A Executar(H=G+B)</b></td>
+                    <td align="center"><b>Autorizado (D)</b></td>
+                    <td align="center"><b>Outras fontes (E)</b></td>
+                    <td align="center"><b>Total Autorizado (F=D+E)</b></td>
+                </tr>
+                <tr>
+                    <td align="center"><b><?= @number_format(($this->projeto->vlAutorizado), 2, ",", "."); ?></b>
+                    </td>
+                    <td align="center">
+                        <b><?= @number_format(($this->projeto->vlAutorizadoOutrasFontes), 2, ",", "."); ?></b></td>
+                    <td align="center"><b>
+                        <?php if ($this->projeto->vlTotalAutorizado > 0): ?>
+                            <?= "<a 
+                                href='#' 
+                                onclick=\"carregaDados('" . $this->url(
+                                array(
+                                    'module' => 'default',
+                                    'controller' => 'consultardadosprojeto',
+                                    'action' => 'planilha-orcamentaria-aprovada'
+                                )) . "?idPronac=" . $this->idPronac . "','conteudo'); 
+                                    return false\" 
+                                title=\"Ir para Planilha or&ccedil;ament&aacute;ria\"> 
+                                <font color=\"#0000FF\">" . @number_format(($this->projeto->vlTotalAutorizado), 2, ",", ".") . "</font>
+                            </a>"; ?>
+                        <?php else : ?>
+                            <?= @number_format(($this->projeto->vlTotalAutorizado), 2, ",", "."); ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="tabela">
+                <tr class="destacar">
+                    <td align="center" colspan="3"><b>Adequado à realidade de execução pelo proponente</b></td>
+                </tr>
+                <tr class="destacar">
+                    <td align="center"><b>Adequado (G)</b></td>
+                    <td align="center"><b>Outras fontes (H)</b></td>
+                    <td align="center"><b>Total Adequado (I=G+H)</b></td>
                 </tr>
                 <tr>
                     <td align="center"><b>
-                            <?php if ($this->projeto->vlAprovado > 0): ?>
+                            <?php if ($this->projeto->vlAdequadoIncentivo > 0): ?>
                                 <?= "<a 
                                     href='#' 
                                     onclick=\"carregaDados('" . $this->url(
@@ -276,18 +321,89 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                                     )) . "?idPronac=" . $this->idPronac . "','conteudo'); 
                                         return false\" 
                                     title=\"Ir para Planilha or&ccedil;ament&aacute;ria\"> 
-                                    <font color=\"#0000FF\">" . @number_format(($this->projeto->vlAprovado), 2, ",", ".") . "</font>
+                                    <font color=\"#0000FF\">" . @number_format(($this->projeto->vlAdequadoIncentivo), 2, ",", ".") . "</font>
                                 </a>"; ?>
                             <?php else : ?>
-                                <?= @number_format(($this->projeto->vlAprovado), 2, ",", "."); ?>
+                                <?= @number_format(($this->projeto->vlAdequadoIncentivo), 2, ",", "."); ?>
                             <?php endif; ?>
                         </b>
                     </td>
-                    <td align="center"><b><?= @number_format(($this->projeto->vlProjeto), 2, ",", "."); ?></b></td>
-                    <td align="center"><b><?= @number_format(($this->projeto->vlAdequadoAExecucao), 2, ",", "."); ?></b>
+                    <td align="center">
+                        <b><?= @number_format(($this->projeto->vlAdequadoOutrasFontes), 2, ",", "."); ?></b></td>
+                    <td align="center"><b><?= @number_format(($this->projeto->vlTotalAdequado), 2, ",", "."); ?></b>
                     </td>
-                    <td align="center"><b><?= @number_format(($this->projeto->vlHomologado), 2, ",", "."); ?></b></td>
-                    <td align="center"><b><?= @number_format(($this->projeto->vlAExecutar), 2, ",", "."); ?></b></td>
+                </tr>
+            </table>
+
+            <table class="tabela">
+                <tr class="destacar">
+                    <td align="center" colspan="3"><b>Homologado para execu&ccedil;&atilde;o</b></td>
+                </tr>
+                <tr class="destacar">
+                    <td align="center"><b>Homologado (J)</b></td>
+                    <td align="center"><b>Outras fontes (K)</b></td>
+                    <td align="center"><b>Total Homologado (L=J+K)</b></td>
+                </tr>
+                <tr>
+                    <td align="center"><b>
+                            <?php if ($this->projeto->vlHomologadoIncentivo > 0): ?>
+                                <?= "<a 
+                                    href='#' 
+                                    onclick=\"carregaDados('" . $this->url(
+                                    array(
+                                        'module' => 'default',
+                                        'controller' => 'consultardadosprojeto',
+                                        'action' => 'planilha-orcamentaria-aprovada'
+                                    )) . "?idPronac=" . $this->idPronac . "','conteudo'); 
+                                        return false\" 
+                                    title=\"Ir para Planilha or&ccedil;ament&aacute;ria\"> 
+                                    <font color=\"#0000FF\">" . @number_format(($this->projeto->vlHomologadoIncentivo), 2, ",", ".") . "</font>
+                                </a>"; ?>
+                            <?php else : ?>
+                                <?= @number_format(($this->projeto->vlHomologadoIncentivo), 2, ",", "."); ?>
+                            <?php endif; ?>
+                        </b>
+                    </td>
+                    <td align="center">
+                        <b><?= @number_format(($this->projeto->vlHomologadoOutrasFontes), 2, ",", "."); ?></b></td>
+                    <td align="center"><b><?= @number_format(($this->projeto->vlTotalHomologado), 2, ",", "."); ?></b>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="tabela">
+                <tr class="destacar">
+                    <td align="center" colspan="3"><b>Readequa&ccedil;&atilde;o na execu&ccedil;&atilde;o</b></td>
+                </tr>
+                <tr class="destacar">
+                    <td align="center"><b>Readequado (M)</b></td>
+                    <td align="center"><b>Outras fontes (N)</b></td>
+                    <td align="center"><b>Total Readequado (O=M+N)</b></td>
+                </tr>
+                <tr>
+                    <td align="center"><b>
+                            <?php if ($this->projeto->vlReadequadoIncentivo > 0): ?>
+                                <?= "<a 
+                                    href='#' 
+                                    onclick=\"carregaDados('" . $this->url(
+                                    array(
+                                        'module' => 'default',
+                                        'controller' => 'consultardadosprojeto',
+                                        'action' => 'planilha-orcamentaria-aprovada'
+                                    )) . "?idPronac=" . $this->idPronac . "','conteudo'); 
+                                        return false\" 
+                                    title=\"Ir para Planilha or&ccedil;ament&aacute;ria\"> 
+                                    <font color=\"#0000FF\">" . @number_format(($this->projeto->vlReadequadoIncentivo), 2, ",", ".") . "</font>
+                                </a>"; ?>
+                            <?php else : ?>
+                                <?= @number_format(($this->projeto->vlReadequadoIncentivo), 2, ",", "."); ?>
+                            <?php endif; ?>
+                        </b>
+                    </td>
+                    <td align="center">
+                        <b><?= @number_format(($this->projeto->vlReadequadoOutrasFontes), 2, ",", "."); ?></b></td>
+                    <td align="center"><b><?= @number_format(($this->projeto->vlTotalReadequado), 2, ",", "."); ?></b>
+                    </td>
                 </tr>
             </table>
 
@@ -296,11 +412,11 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                     <td align="center" colspan="5"><b>Capta&ccedil;&atilde;o de recursos</b></td>
                 </tr>
                 <tr class="destacar">
-                    <td align="center"><b>Captado(I)</b></td>
-                    <td align="center"><b>Transferido(J)</b></td>
-                    <td align="center"><b>Recebido(K)</b></td>
-                    <td align="center"><b>Saldo a captar(L)</b></td>
-                    <td align="center"><b>% Captado(M)</b></td>
+                    <td align="center"><b>Captado(P)</b></td>
+                    <td align="center"><b>Transferido(Q)</b></td>
+                    <td align="center"><b>Recebido(R)</b></td>
+                    <td align="center"><b>Saldo a captar(S)</b></td>
+                    <td align="center"><b>% Captado(T)</b></td>
                 </tr>
                 <tr>
                     <td align="center">
@@ -323,7 +439,7 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                         <b><?= @number_format($this->projeto->vlSaldoACaptar, 2, ",", "."); ?></b>
                     </td>
                     <td align="center">
-                        <b><?= (double) $this->projeto->PercentualCaptado; ?></b>
+                        <b><?= (double)$this->projeto->PercentualCaptado; ?></b>
                     </td>
                 </tr>
             </table>
@@ -358,7 +474,7 @@ $urlPronac = (isset($this->idPronac)) ? "?idPronac=" . Seguranca::encrypt($this-
                         <b><?= @number_format($this->projeto->vlAComprovar, 2, ",", "."); ?></b>
                     </td>
                     <td align="center">
-                        <b><?=  (double) $this->projeto->PercentualComprovado; ?></b>
+                        <b><?= (double) $this->projeto->PercentualComprovado; ?></b>
                     </td>
                 </tr>
             </table>

@@ -432,8 +432,9 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
         return $db->fetchAll($sqlFinal);
     }
 
-    public function obterProjetoIncentivoCompleto($idPronac = null, $where = [])
+    public function obterProjetoIncentivoCompleto($idPronac, $where = [])
     {
+
         $sql = $this->select();
         $sql->setIntegrityCheck(false);
         $sql->from(
@@ -441,71 +442,70 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
             [
                 'a.idPronac',
                 new Zend_Db_Expr('a.AnoProjeto+a.Sequencial as Pronac'),
-                new Zend_Db_Expr('sac.dbo.fnNomeDoProponente(a.idPronac) as Proponente'),
                 'a.NomeProjeto',
                 'a.CgcCpf AS CgcCPf',
+                new Zend_Db_Expr('sac.dbo.fnNomeDoProponente(a.idPronac) as Proponente'),
                 'a.UfProjeto',
                 'a.Mecanismo as idMecanismo',
-                new Zend_Db_Expr("ISNULL(h.Descricao, 'N&atilde;o Informado') as PlanoExecucaoImediata"),
+                'a.DtSituacao',
+                new Zend_Db_Expr("sac.dbo.fnFormataProcesso(a.idPronac) as Processo"),
                 new Zend_Db_Expr("sac.dbo.fnInicioCaptacao(a.AnoProjeto, a.Sequencial) as DtInicioCaptacao"),
                 new Zend_Db_Expr("sac.dbo.fnFimCaptacao(a.AnoProjeto, a.Sequencial) as DtFimCaptacao"),
                 new Zend_Db_Expr("a.DtInicioExecucao as DtInicioExecucao"),
                 new Zend_Db_Expr("a.DtFimExecucao as DtFimExecucao"),
-                new Zend_Db_Expr("sac.dbo.fnFormataProcesso(a.idPronac) as Processo"),
                 new Zend_Db_Expr("sac.dbo.fnTipoAprovacaoVigente(a.idPronac) as TipoPortariaVigente"),
                 new Zend_Db_Expr("sac.dbo.fnNrPortariaVigente(a.idPronac) as NrPortariaVigente"),
                 new Zend_Db_Expr("CONVERT(varchar(10), sac.dbo.fnDtPublicacaoPortariaVigente(a.idPronac), 103) as DtPublicacaoPortariaVigente"),
-                new Zend_Db_Expr("CONVERT(varchar(10), j.DtLiberacao, 103) as DtLiberacaoDaConta"),
                 new Zend_Db_Expr("CAST(a.ResumoProjeto AS TEXT) AS ResumoProjeto"),
                 new Zend_Db_Expr("CAST(a.ProvidenciaTomada AS TEXT) AS ProvidenciaTomada"),
-                new Zend_Db_Expr("CONVERT(varchar(10), DtSituacao, 103) as DtSituacao"),
                 new Zend_Db_Expr("tabelas.dbo.fnEstruturaOrgao(a.Orgao, 0) as LocalizacaoAtual"),
-                new Zend_Db_Expr("CONVERT(varchar(10), Data, 103) as DtArquivamento"),
-                new Zend_Db_Expr("sac.dbo.fnVlSolicitadoOriginal(a.idPronac) as vlSolicitadoOriginal"),
-                new Zend_Db_Expr("sac.dbo.fnVlOutrasFontes(a.idPronac) as vlOutrasFontes"),
-                new Zend_Db_Expr("sac.dbo.fnValorDaProposta(a.idProjeto) as vlProposta"),
-                new Zend_Db_Expr("sac.dbo.fnVlAprovadoOriginal(a.idPronac) as vlAprovado"),
-                new Zend_Db_Expr("(sac.dbo.fnVlAprovadoOriginal(a.idPronac) + sac.dbo.fnVlOutrasFontes(a.idPronac)) as vlProjeto"),
-                new Zend_Db_Expr("sac.dbo.fnSolicitadoNaProposta(a.idProjeto)  AS vlAdequadoAExecucao"),
-                new Zend_Db_Expr("sac.dbo.fnTotalAprovadoProjeto(a.AnoProjeto,a.Sequencial) as vlHomologado"),
-                new Zend_Db_Expr("CONVERT(DECIMAL(18, 2), 
-                    (sac.dbo.fnTotalAprovadoProjeto(a.AnoProjeto, a.Sequencial) 
-                    + sac.dbo.fnVlOutrasFontes(a.idPronac))) as vlAExecutar"
-                ),
-                new Zend_Db_Expr("sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto, a.Sequencial) as vlCaptado"),
+                new Zend_Db_Expr("sac.dbo.fnVlSolicitadoOriginal(a.idPronac) AS vlSolicitadoOriginal"),
+                new Zend_Db_Expr("CONVERT(DECIMAL(18,2),sac.dbo.fnValorDaProposta(a.idProjeto) - sac.dbo.fnVlSolicitadoOriginal(a.idPronac)) AS vlOutrasFontesPropostaOriginal"),
+                new Zend_Db_Expr("CONVERT(DECIMAL(18,2),sac.dbo.fnValorDaProposta(a.idProjeto)) AS vlTotalPropostaOriginal"),
+                new Zend_Db_Expr("sac.dbo.fnVlAprovadoOriginal(a.idPronac) AS vlAutorizado"),
+                new Zend_Db_Expr("CONVERT(DECIMAL(18,2),sac.dbo.fnValorDaProposta(a.idProjeto) - sac.dbo.fnVlSolicitadoOriginal(a.idPronac)) AS vlAutorizadoOutrasFontes"),
+                new Zend_Db_Expr("CONVERT(DECIMAL(18,2),sac.dbo.fnValorDaProposta(a.idProjeto))  AS vlTotalAutorizado"),
+                new Zend_Db_Expr("sac.dbo.fnVlAdequadoIncentivo(a.idPronac)  AS vlAdequadoIncentivo"),
+                new Zend_Db_Expr("sac.dbo.fnVlAdequadoOutrasFontes(a.idPronac)  AS vlAdequadoOutrasFontes"),
+                new Zend_Db_Expr("sac.dbo.fnVlTotalAdequado(a.idPronac)  AS vlTotalAdequado"),
+                new Zend_Db_Expr("CONVERT(DECIMAL(18,2),sac.dbo.fnTotalAprovadoProjeto(a.AnoProjeto,a.Sequencial)) AS vlHomologadoIncentivo"),
+                new Zend_Db_Expr("sac.dbo.fnVlHomologadoOutrasFontes(a.idPronac) AS vlHomologadoOutrasFontes"),
+                new Zend_Db_Expr("CONVERT(DECIMAL(18,2),(sac.dbo.fnTotalAprovadoProjeto(a.AnoProjeto,a.Sequencial) + sac.dbo.fnVlOutrasFontes(a.idPronac))) AS vlTotalHomologado"),
+                new Zend_Db_Expr("sac.dbo.fnVlReadequadoIncentivo(a.idPronac) AS vlReadequadoIncentivo"),
+                new Zend_Db_Expr("sac.dbo.fnVlReadequadoOutrasFontes(a.idPronac) AS vlReadequadoOutrasFontes"),
+                new Zend_Db_Expr("sac.dbo.fnVlTotalReadequado(a.idPronac) AS vlTotalReadequado"),
+                new Zend_Db_Expr("sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto,a.Sequencial) as vlCaptado"),
                 new Zend_Db_Expr("sac.dbo.fnVlTransferido(a.idPronac) as vlTransferido"),
                 new Zend_Db_Expr("sac.dbo.fnVlRecebido(a.idPronac) as vlRecebido"),
                 new Zend_Db_Expr("CONVERT(DECIMAL(18,2),
-                    (sac.dbo.fnTotalAprovadoProjeto(a.AnoProjeto, a.Sequencial) 
-                    - (sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto, a.Sequencial) 
+                    (sac.dbo.fnTotalAprovadoProjeto(a.AnoProjeto,a.Sequencial) 
+                    - (sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto,a.Sequencial) 
                     + sac.dbo.fnVlRecebido(a.idPronac) 
-                    - sac.dbo.fnVlTransferido(a.idPronac)))) as vlSaldoACaptar"),
+                    - sac.dbo.fnVlTransferido(a.idPronac)))) as vlSaldoACaptar"
+                ),
                 new Zend_Db_Expr("CONVERT(DECIMAL(18,2),
-                    ((sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto, a.Sequencial) 
+                    ((sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto,a.Sequencial) 
                     + sac.dbo.fnVlRecebido(a.idPronac) 
                     - sac.dbo.fnVlTransferido(a.idPronac)) 
-                    / sac.dbo.fnTotalAprovadoProjeto(a.AnoProjeto, a.Sequencial)) 
-                    * 100) as PercentualCaptado"
+                    / sac.dbo.fnTotalAprovadoProjeto(a.AnoProjeto,a.Sequencial)) * 100) as PercentualCaptado"
                 ),
                 new Zend_Db_Expr("sac.dbo.fnVlComprovadoProjeto(a.idPronac) as vlComprovado"),
                 new Zend_Db_Expr("CONVERT(DECIMAL(18,2),
-                    ((sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto, a.Sequencial) 
+                ((sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto,a.Sequencial) 
                     + sac.dbo.fnVlRecebido(a.idPronac) 
                     - sac.dbo.fnVlComprovadoProjeto(a.idPronac))) ) as vlAComprovar"
                 ),
                 new Zend_Db_Expr("
                     CASE
-                        WHEN sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto, a.Sequencial) > 0
-                        THEN 
-                            CONVERT(DECIMAL(18,2), 
-                                (sac.dbo.fnVlComprovadoProjeto(a.idPronac) 
-                                / (sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto, a.Sequencial) 
-                                + sac.dbo.fnVlRecebido(a.idPronac) 
-                                - sac.dbo.fnVlTransferido(a.idPronac))) * 100
-                            )  
+	                    WHEN sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto,a.Sequencial) > 0 
+	                        THEN CONVERT(DECIMAL(18,2), (
+	                        sac.dbo.fnVlComprovadoProjeto(a.idPronac) 
+	                        / (sac.dbo.fnTotalCaptadoProjeto (a.AnoProjeto,a.Sequencial) 
+	                        + sac.dbo.fnVlRecebido(a.idPronac) 
+	                        - sac.dbo.fnVlTransferido(a.idPronac))) * 100)  
                         ELSE 0 
-                    END as PercentualComprovado"
-                )
+                    END as PercentualComprovado
+                ")
             ], $this->_schema
         );
 
@@ -578,7 +578,9 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
         $sql->joinLeft(
             array('h' => 'Verificacao'),
             "c.stProposta = h.idVerificacao",
-            [],
+            [
+                new Zend_Db_Expr("ISNULL(h.Descricao, 'N&atilde;o Informado') as PlanoExecucaoImediata")
+            ],
             $this->_schema
         );
 
@@ -597,7 +599,8 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
             array('j' => 'Liberacao'),
             "a.AnoProjeto = j.AnoProjeto AND a.Sequencial = j.Sequencial",
             [
-                new Zend_Db_Expr("CASE WHEN j.DtLiberacao IS NOT NULL THEN 'Sim' ELSE 'N&atilde;o' END as ContaBancariaLiberada")
+                new Zend_Db_Expr("CASE WHEN j.DtLiberacao IS NOT NULL THEN 'Sim' ELSE 'N&atilde;o' END as ContaBancariaLiberada"),
+                new Zend_Db_Expr("CONVERT(varchar(10), j.DtLiberacao, 103) as DtLiberacaoDaConta")
             ],
             $this->_schema
         );
@@ -606,19 +609,44 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
             array('k' => 'tbArquivamento'),
             "a.IdPRONAC = k.idPronac AND k.stAcao = 0 AND k.stEstado = 1",
             [
+                'k.data as DtArquivamento',
                 'k.CaixaInicio',
                 'k.CaixaFinal'
             ],
             $this->_schema
         );
 
-        if ($idPronac) {
-            $sql->where(['idPronac = ?', $idPronac]);
-        }
+        $sql->joinLeft(
+            array('l' => 'tbProjetoFase'),
+            "a.IdPRONAC = l.idPronac AND l.stEstado = 1",
+            [
+                'l.dtInicioFase',
+                'l.dtFinalFase'
+            ],
+            $this->_schema
+        );
 
-        foreach ($where as $coluna => $valor) {
-            $sql->where($coluna, $valor);
-        }
+        $sql->joinLeft(
+            array('m' => 'tbNormativos'),
+            "l.idNormativo = m.idNormativo",
+            [
+                'm.nmNormativo AS Normativo',
+                'm.dtPublicacao AS dtPublicacaoNormativo',
+		        'm.dtRevogacao AS dtRevogacaoNormativo',
+            ],
+            $this->_schema
+        );
+
+        $sql->joinLeft(
+            array('n' => 'Verificacao'),
+            "l.idFase = n.idVerificacao",
+            [
+                'n.Descricao AS FaseProjeto'
+            ],
+            $this->_schema
+        );
+
+        $sql->where('a.idPronac = ?', $idPronac);
 
         return $this->fetchRow($sql);
     }

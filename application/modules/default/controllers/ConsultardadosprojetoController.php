@@ -175,7 +175,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
             }
 
             $dbTableProjetos = new Projeto_Model_DbTable_Projetos();
-            $projeto = $dbTableProjetos->obterProjetoIncentivoCompleto(null, ['a.IdPRONAC = ?' => $idPronac]);
+            $projeto = $dbTableProjetos->obterProjetoIncentivoCompleto($idPronac);
             $this->view->projeto = $projeto;
             if (count($projeto) <= 0) {
                 throw new Exception("Nenhum projeto encontrado com o n&uacute;mero de Pronac informado.");
