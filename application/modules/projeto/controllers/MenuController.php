@@ -24,6 +24,7 @@ class Projeto_MenuController extends Projeto_GenericController
     public function obterMenuAction()
     {
         $modelProjeto = new Projeto_Model_Menu();
+        $modelProjeto->setDebug();
         $menu = $modelProjeto->obterMenu($this->idPronac);
         $this->getResponse()->setHttpResponseCode(200);
         $this->_helper->json($menu);

@@ -196,6 +196,9 @@ textarea.materialize-textarea:focus:not([readonly]) + label[data-error] {
     content: "Atual";
 }
 
+span.badge.new:after {
+    content: "";
+}
 
 ins {
     background-color: #c6ffc6;
