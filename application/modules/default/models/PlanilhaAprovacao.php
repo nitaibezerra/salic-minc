@@ -2709,7 +2709,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             e.Sigla AS uf,
             a.idMunicipioDespesa as cdCidade,
             f.Descricao AS Cidade,
-            f.Descricao AS cidade,
+            f.Descricao AS cidade,               
             c.idPlanilhaItens,
             c.Descricao AS Item,
             c.Descricao AS descItem,
@@ -2803,7 +2803,6 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->where('a.IdPRONAC = ?', $idpronac);
         $select->where('a.nrFonteRecurso = 109');
         $select->where('a.stAtivo = ? ', 'S');
- 
 
         if ($uf) {
             $select->where('sigla = ?', $uf);
@@ -2826,7 +2825,161 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         } else if($codigoProduto == 0 && !is_null($codigoProduto)){
             $select->where('d.codigo is null');
         }
+
         $select->order('c.Descricao');
+
+        return $this->fetchAll($select);
+    }
+
+    public function obterItensAprovados($idPronac,
+        $uf = null,
+        $idPlanilhaEtapa = null,
+        $codigoProduto = null,
+        $idMunicipio = null,
+        $idPlanilhaItem = null
+    ){
+        $cols = new Zend_Db_Expr("
+            a.IdPRONAC,
+            i.AnoProjeto+i.Sequencial AS Pronac,
+            i.NomeProjeto,
+            sac.dbo.fnIdentificarIdPlanilhaAprovacao(
+                a.idPronac,
+                a.nrFonteRecurso,
+                a.idProduto,
+                a.idEtapa,
+                a.idUFDespesa,
+                a.idMunicipioDespesa,
+                a.idPlanilhaItem) as idPlanilhaAprovacao,
+            ISNULL(d.Codigo,0) as cdProduto,
+            ISNULL(d.Descricao,'Administra&ccedil;&atilde;o do Projeto') AS Produto,
+            b.tpCusto,
+            b.idPlanilhaEtapa as cdEtapa,
+            b.Descricao AS Etapa,
+            b.nrOrdenacao,
+            a.idUFDespesa AS cdUF,
+            e.Sigla AS Uf,
+            a.idMunicipioDespesa as cdCidade,
+            f.Descricao AS Cidade,
+            c.idPlanilhaItens,
+            c.Descricao AS Item,
+            d.Descricao,
+            CONVERT(DECIMAL(38,2), sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
+                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    a.idMunicipioDespesa,a.idPlanilhaItem)) as vlAprovado,
+            CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item
+                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    a.idMunicipioDespesa,a.idPlanilhaItem)) as vlComprovado,
+            CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
+                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    a.idMunicipioDespesa,a.idPlanilhaItem))  as ComprovacaoValidada,
+            CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
+                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    a.idMunicipioDespesa,a.idPlanilhaItem)) as Total
+                    "
+        );
+
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+
+        $select->from(
+            ['a' => 'tbplanilhaaprovacao'],
+            $cols,
+            'SAC.dbo'
+        );
+
+        $select->join(
+            ['b' => 'tbPlanilhaEtapa'],
+            "(a . idEtapa = b . idPlanilhaEtapa)",
+            [],
+            'SAC.dbo'
+        );
+
+        $select->join(
+            ['c' => 'tbPlanilhaItens'],
+            "(a . idPlanilhaItem = c . idPlanilhaItens)",
+            [],
+            'SAC.dbo'
+        );
+
+        $select->joinLeft(
+            ['d' => 'produto'],
+            "(a . idproduto = d . Codigo)",
+            [],
+            'SAC.dbo'
+        );
+
+        $select->join(
+            ['e' => 'UF'],
+            "(a . idUFDespesa = e . idUF)",
+            [],
+            'AGENTES.dbo'
+        );
+
+        $select->join(
+            ['f' => 'Municipios'],
+            "(a . idMunicipioDespesa = f . idMunicipioIBGE)",
+            [],
+            'AGENTES.dbo'
+        );
+
+//        $select->joinLeft(
+//            ['g' => 'tbComprovantePagamentoxPlanilhaAprovacao'],
+//            "(a . idPlanilhaAprovacao = g . idPlanilhaAprovacao)",
+//            [],
+//            'BDCORPORATIVO.scSAC'
+//        );
+
+//        $select->joinLeft(
+//            ['h' => 'tbComprovantePagamento'],
+//            "(g . idComprovantePagamento = h . idComprovantePagamento)" ,
+//            [],
+//            'BDCORPORATIVO.scSAC'
+//        );
+
+        $select->join(
+            ['i' => 'Projetos'],
+            "(a . IdPRONAC = i . IdPRONAC)" ,
+            [],
+            'sac.dbo'
+        );
+
+        $select->where('a.nrFonteRecurso = 109');
+        $select->where('a.stAtivo = ? ', 'S');
+        $select->where(new Zend_Db_Expr("sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item(
+            a.idPronac,
+            a.nrFonteRecurso,
+            a.idProduto,
+            a.idEtapa,
+            a.idUFDespesa,
+            a.idMunicipioDespesa,
+            a.idPlanilhaItem) > 0")
+        );
+
+        $select->where('a.IdPRONAC = ?', $idPronac);
+
+        if ($uf) {
+            $select->where('e.sigla = ?', $uf);
+        }
+
+        if ($idMunicipio) {
+            $select->where('f.idMunicipioIBGE = ?', $idMunicipio);
+        }
+
+        if ($idPlanilhaEtapa) {
+            $select->where('b.idPlanilhaEtapa = ?', $idPlanilhaEtapa);
+        }
+
+        if ($idPlanilhaItem) {
+            $select->where('c.idPlanilhaItens = ?', $idPlanilhaItem);
+        }
+
+        if ($codigoProduto != 0 && !is_null($codigoProduto)) {
+            $select->where('d.codigo = ?', $codigoProduto);
+        } else if($codigoProduto == 0 && !is_null($codigoProduto)){
+            $select->where('d.codigo is null');
+        }
+
+        $select->order(['Produto DESC', 'e.Sigla', 'f.Descricao', 'b.nrOrdenacao', 'c.Descricao']);
 
         return $this->fetchAll($select);
     }

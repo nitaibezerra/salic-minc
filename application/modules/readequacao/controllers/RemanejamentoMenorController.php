@@ -135,81 +135,91 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             $idPronac = Seguranca::dencrypt($idPronac);
         }
         $idReadequacao = $this->_request->getParam("idReadequacao");
+
+        $tiposEtapa = [];
+        $tiposEtapa['A'] = [1,2];
+        $tiposEtapa['B'] = [3];
+        $tiposEtapa['C'] = [4, 8, 9, 10];
+        $tiposEtapa['D'] = [5];
         
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $PlanilhaAtivaGrupoA = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, array(1, 2))->current();
-        $PlanilhaAtivaGrupoB = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, array(3))->current();
-        $PlanilhaAtivaGrupoC = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, array(4))->current();
-        $PlanilhaAtivaGrupoD = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, array(5))->current();
         
-        //ARRAY PARA BUSCAR VALOR TOTAL DA PLANILHA REMANEJADA
-        $where = [];
-        $where['a.idReadequacao = ?'] = $idReadequacao;
+        $PlanilhaAtivaGrupoA = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, $tiposEtapa['A'])->current();
+        $PlanilhaAtivaGrupoB = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, $tiposEtapa['B'])->current();
+        $PlanilhaAtivaGrupoC = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, $tiposEtapa['C'])->current();
+        $PlanilhaAtivaGrupoD = $tbPlanilhaAprovacao->valorTotalPlanilhaAtivaNaoExcluidosPorEtapa($idPronac, $tiposEtapa['D'])->current();        
+
+
+        $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $readequacaoAtiva = $Readequacao_Model_DbTable_TbReadequacao->buscar(
+            ['idReadequacao = ?' => $idReadequacao]
+        );
+            
+        if (count($readequacaoAtiva) > 0) {
+            $where['a.idReadequacao = ?'] = $idReadequacao;
+        } elseif (count($readequacaoAtiva) == 0) {
+            $where['a.stAtivo = ?'] = 'S';
+        }
         
-        //PLANILHA ATIVA - GRUPO A
-        $where['a.idEtapa in (?)'] = array(1,2);
+        $PlanilhaRemanejada = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
+        
+        $where['a.idEtapa in (?)'] = $tiposEtapa['A'];
         $PlanilhaRemanejadaGrupoA = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
-
-        //PLANILHA ATIVA - GRUPO B
-        $where['a.idEtapa in (?)'] = array(3);
+        
+        $where['a.idEtapa in (?)'] = $tiposEtapa['B'];
         $PlanilhaRemanejadaGrupoB = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
-
-        //PLANILHA ATIVA - GRUPO C
-        $where['a.idEtapa in (?)'] = array(4);
+        
+        $where['a.idEtapa in (?)'] = $tiposEtapa['C'];
         $PlanilhaRemanejadaGrupoC = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
-
-        //PLANILHA ATIVA - GRUPO D
-        $where['a.idEtapa in (?)'] = array(5);
+        
+        $where['a.idEtapa in (?)'] = $tiposEtapa['D'];
         $PlanilhaRemanejadaGrupoD = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
-
-        //Os grupos est�o relacionados na tabela SAC.dbo.tbPlanilhaEtapa
+        
         $valorTotalGrupoA = 0;
         $valorTotalGrupoB = 0;
         $valorTotalGrupoC = 0;
         $valorTotalGrupoD = 0;
-
-        $valorTotalGrupoA = $PlanilhaAtivaGrupoA->Total-$PlanilhaRemanejadaGrupoA->Total;
-        $valorTotalGrupoB = $PlanilhaAtivaGrupoB->Total-$PlanilhaRemanejadaGrupoB->Total;
-        $valorTotalGrupoC = $PlanilhaAtivaGrupoC->Total-$PlanilhaRemanejadaGrupoC->Total;
-        $valorTotalGrupoD = $PlanilhaAtivaGrupoD->Total-$PlanilhaRemanejadaGrupoD->Total;
-
-        // caso haja saldo positivo nos grupos B, C ou D, remaneja saldo para grupo A
-        if (!empty($PlanilhaRemanejadaGrupoB->Total) && $valorTotalGrupoB > 0) {
-            $PlanilhaRemanejadaGrupoA->Total += $valorTotalGrupoB; // adiciona saldo de B a A
-            $valorTotalGrupoA += $valorTotalGrupoB;                // adiciona ao total de A
-            $PlanilhaRemanejadaGrupoB->Total += $valorTotalGrupoB; // zera saldo de B
+        
+        if ($PlanilhaRemanejadaGrupoA->Total > 0) {
+            $valorTotalGrupoA = $PlanilhaAtivaGrupoA->Total-$PlanilhaRemanejadaGrupoA->Total;
         }
-        if (!empty($PlanilhaRemanejadaGrupoC->Total) && $valorTotalGrupoC > 0) {
-            $PlanilhaRemanejadaGrupoA->Total += $valorTotalGrupoC;
-            $valorTotalGrupoA += $valorTotalGrupoC;
-            $PlanilhaRemanejadaGrupoC->Total += $valorTotalGrupoC;
+        if ($PlanilhaRemanejadaGrupoB->Total > 0) {
+            $valorTotalGrupoB = $PlanilhaAtivaGrupoB->Total-$PlanilhaRemanejadaGrupoB->Total;
         }
-        if (!empty($PlanilhaRemanejadaGrupoD->Total) && $valorTotalGrupoD > 0) {
-            $PlanilhaRemanejadaGrupoA->Total += $valorTotalGrupoD;
-            $valorTotalGrupoA += $valorTotalGrupoD;
-            $PlanilhaRemanejadaGrupoD->Total += $valorTotalGrupoD;
+        if ($PlanilhaRemanejadaGrupoC->Total > 0) {
+            $valorTotalGrupoC = $PlanilhaAtivaGrupoC->Total-$PlanilhaRemanejadaGrupoC->Total;
+        }
+        if ($PlanilhaRemanejadaGrupoD->Total > 0) {
+            $valorTotalGrupoD = $PlanilhaAtivaGrupoD->Total-$PlanilhaRemanejadaGrupoD->Total;
         }
         
+        $valorTotalGrupoASoma = 0;
+            
+        $dadosPlanilha = array();
+        $dadosPlanilha['dadosPlanilhaAtivaA'] = $PlanilhaAtivaGrupoA->Total;
+        $dadosPlanilha['dadosPlanilhaRemanejadaA'] = $PlanilhaRemanejadaGrupoA->Total;
+
+        if (!empty($PlanilhaRemanejadaGrupoB->Total)) {
+            $valorTotalGrupoASoma += $valorTotalGrupoB;
+        }
+        if (!empty($PlanilhaRemanejadaGrupoC->Total)) {
+            $valorTotalGrupoASoma += $valorTotalGrupoC;
+        }
+
+        if (!empty($PlanilhaRemanejadaGrupoD->Total)) {
+            $valorTotalGrupoASoma += $valorTotalGrupoD;
+        }        
+        
+        $valorTotalGrupoASoma = round($valorTotalGrupoASoma, 2) + round($valorTotalGrupoA, 2);
+
         $erros = 0;
-        
-        if (!empty($PlanilhaRemanejadaGrupoA->Total) && $PlanilhaAtivaGrupoA->Total != $PlanilhaRemanejadaGrupoA->Total) {
-            if ($valorTotalGrupoA != 0) {
-                $erros++;
-            }
-        }
-        
-        if (!empty($PlanilhaRemanejadaGrupoB->Total) && $PlanilhaAtivaGrupoB->Total != $PlanilhaRemanejadaGrupoB->Total) {
-            $erros++;
+        if ($valorTotalGrupoASoma == 0) {
+        } elseif ($valorTotalGrupoASoma < 0) {
+            $erros ++;
+        } else {
+            $erros ++;
         }
 
-        if (!empty($PlanilhaRemanejadaGrupoC->Total) && $PlanilhaAtivaGrupoC->Total != $PlanilhaRemanejadaGrupoC->Total) {
-            $erros++;
-        }
-
-        if (!empty($PlanilhaRemanejadaGrupoD->Total) && $PlanilhaAtivaGrupoD->Total != $PlanilhaRemanejadaGrupoD->Total) {
-            $erros++;
-        }
-        
         $id = Seguranca::encrypt($idPronac);
         if ($erros > 0) {
             parent::message("<b>A T E N &Ccedil; &Atilde; O !!!</b> Para finalizar a opera&ccedil;&atilde;o de remanejamento os valores da coluna 'Valor da Planilha Remanejada' devem ser iguais a R$0,00 (zero real).", "readequacao/remanejamento-menor?idPronac=$id", "ERROR");
@@ -285,9 +295,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             
             $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
             $readequacaoAtiva = $Readequacao_Model_DbTable_TbReadequacao->buscar(
-                array(
-                    'idReadequacao = ?' => $idReadequacao
-                )
+                ['idReadequacao = ?' => $idReadequacao]
             );
             
             //ARRAY PARA BUSCAR VALOR TOTAL DA PLANILHA REMANEJADA
@@ -339,7 +347,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             $dadosPlanilha = array();
             $dadosPlanilha['dadosPlanilhaAtivaA'] = $PlanilhaAtivaGrupoA->Total;
             $dadosPlanilha['dadosPlanilhaRemanejadaA'] = $PlanilhaRemanejadaGrupoA->Total;
-
+            
             if ($PlanilhaAtivaGrupoA->Total == $PlanilhaRemanejadaGrupoA->Total) {
                 $dadosPlanilha['GrupoA'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoA, 2, ',', '.')).'</span>';
             } elseif ($PlanilhaAtivaGrupoA->Total < $PlanilhaRemanejadaGrupoA->Total) {
@@ -352,6 +360,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 $dadosPlanilha['GrupoB'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoB, 2, ',', '.')).'</span>';
             } elseif ($PlanilhaAtivaGrupoB->Total < $PlanilhaRemanejadaGrupoB->Total) {
                 $dadosPlanilha['GrupoB'] = utf8_encode('<span class="red bold">R$ '.number_format($valorTotalGrupoB, 2, ',', '.')).'</span>';
+                $valorTotalGrupoASoma += $valorTotalGrupoB;
             } elseif (!empty($PlanilhaRemanejadaGrupoB->Total)) {
                 $dadosPlanilha['GrupoB'] = utf8_encode('<span class="blue bold">R$ '.number_format($valorTotalGrupoB, 2, ',', '.')).'</span>';
                 $valorTotalGrupoASoma += $valorTotalGrupoB;
@@ -361,6 +370,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 $dadosPlanilha['GrupoC'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoC, 2, ',', '.')).'</span>';
             } elseif ($PlanilhaAtivaGrupoC->Total < $PlanilhaRemanejadaGrupoC->Total) {
                 $dadosPlanilha['GrupoC'] = utf8_encode('<span class="red bold">R$ '.number_format($valorTotalGrupoC, 2, ',', '.')).'</span>';
+                $valorTotalGrupoASoma += $valorTotalGrupoC;
             } elseif (!empty($PlanilhaRemanejadaGrupoC->Total)) {
                 $dadosPlanilha['GrupoC'] = utf8_encode('<span class="blue bold">R$ '.number_format($valorTotalGrupoC, 2, ',', '.')).'</span>';
                 $valorTotalGrupoASoma += $valorTotalGrupoC;
@@ -370,6 +380,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
                 $dadosPlanilha['GrupoD'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoD, 2, ',', '.')).'</span>';
             } elseif ($PlanilhaAtivaGrupoD->Total < $PlanilhaRemanejadaGrupoD->Total) {
                 $dadosPlanilha['GrupoD'] = utf8_encode('<span class="red bold">R$ '.number_format($valorTotalGrupoD, 2, ',', '.')).'</span>';
+                $valorTotalGrupoASoma += $valorTotalGrupoD;
             } elseif (!empty($PlanilhaRemanejadaGrupoC->Total)) {
                 $dadosPlanilha['GrupoD'] = utf8_encode('<span class="blue bold">R$ '.number_format($valorTotalGrupoD, 2, ',', '.')).'</span>';
                 $valorTotalGrupoASoma += $valorTotalGrupoD;
@@ -453,7 +464,7 @@ class Readequacao_RemanejamentoMenorController extends MinC_Controller_Action_Ab
             $PlanilhaRemanejada->Total = 0;
             $statusPlanilha = 'neutro';
         }
-
+        
         $this->montaTela(
             'remanejamento-menor/carregar-valor-entre-planilhas.phtml',
             array(

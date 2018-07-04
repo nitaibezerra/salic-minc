@@ -40,21 +40,24 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
 
         /*todo*/
         $planilhaAprovacao = new PlanilhaAprovacao();
-        $valoresItem = $planilhaAprovacao->planilhaAprovada(
+        $valoresItem = $planilhaAprovacao->obterItensAprovados(
             $idPronac,
             $uf,
             $cdetapa,
             $cdproduto,
             $cdcidade,
-            null,
             $idPlanilhaItens
-        );
-        $this->view->valores = $valoresItem->current();
+        )->current();
+
+        $this->view->valores = $valoresItem;
         /*todos*/
 
-        $produto = $produtoModel->find($itemPlanilhaAprovacao->idProduto)->current();
-        $etapa = $etapaModel->find($itemPlanilhaAprovacao->idEtapa)->current();
-        $item = $itemModel->find($itemPlanilhaAprovacao->idPlanilhaItem)->current();
+        $produto = $valoresItem->Produto;
+        $etapa = $valoresItem->Etapa;
+        $item = $valoresItem->Item;
+//        $produto = $produtoModel->find($itemPlanilhaAprovacao->idProduto)->current();
+//        $etapa = $etapaModel->find($itemPlanilhaAprovacao->idEtapa)->current();
+//        $item = $itemModel->find($itemPlanilhaAprovacao->idPlanilhaItem)->current();
 
         $fornecedorModel = new FornecedorModel();
         $fornecedor = $fornecedorModel->pesquisarFornecedorItem($idPlanilhaAprovacao);
@@ -493,13 +496,44 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
 
         $comprovante->preencher($this->getRequest()->getPost()['comprovante']);
 
-            /* $request->getParam('tpFormaDePagamento'), */
-            /* str_replace(',', '.', str_replace('.', '', $request->getParam('vlComprovado'))), */
-            /* $request->getParam('nrDocumentoDePagamento'), */
         $data = [];
         try {
             $id = $comprovante->cadastrar();
             $data = ['success' => true, 'idComprovantePagamento' => $id];
+        } catch (Exception $e) {
+            $this->view->message = $e->getMessage();
+            echo $e->getMessage();die;
+        }
+        $this->_helper->json($data);
+    }
+
+    public function atualizarAction()
+    {
+        $comprovante = new PrestacaoContas_Model_ComprovantePagamento();
+
+        $comprovante->preencher($this->getRequest()->getPost()['comprovante']);
+
+        $data = [];
+        try {
+            $id = $comprovante->atualizar();
+            $data = ['success' => true, 'idComprovantePagamento' => $id];
+        } catch (Exception $e) {
+            $this->view->message = $e->getMessage();
+            echo $e->getMessage();die;
+        }
+        $this->_helper->json($data);
+    }
+
+    public function excluirAction()
+    {
+        $comprovante = new PrestacaoContas_Model_ComprovantePagamento();
+
+        $comprovante->idComprovantePagamento = $this->getRequest()->getPost()['comprovante']['idComprovantePagamento'];
+
+        $data = [];
+        try {
+            $comprovante->excluir();
+            $data = ['success' => true];
         } catch (Exception $e) {
             $this->view->message = $e->getMessage();
             echo $e->getMessage();die;

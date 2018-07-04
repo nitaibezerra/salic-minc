@@ -50,24 +50,27 @@
         <div id="divExcluirComprovantes" class="sumir"></div>
         <div id="msgAlerta" class="sumir"></div>
 
-        <div class="col s10">
+        <div class="col s12">
             <?php if (!$this->vrSituacao) : ?>
-                <div class="row" id="breadcrumb">
-                    <div class="col s12">
+                <div id="breadcrumb">
+<!--                    <div class="col s12">-->
                         <ul>
                             <li class="first"><a
-                                    href="<?php echo $this->url(array('controller' => 'principalproponente', 'action' => ''), null, true); ?>"
+                                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'principalproponente', 'action' => ''), null, true); ?>"
                                     title="Ir para p&aacute;gina inicial" onclick="carregandoModal();">In&iacute;cio</a>
                             </li>
                             <li class="second"><a
-                                    href="<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => '')) . '?idPronac=' . Seguranca::encrypt($this->idpronac); ?>"
+                                    href="<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index', 'idPronac' => Seguranca::encrypt($this->idpronac)));  ?>"
                                     title="Ir para In&iacute;cio">Consultar dados do Projeto</a></li>
-                            <li>Comprovar Execu&ccedil;&atilde;o Financeira</li>
-                            <li><a href="<?php echo $pagamentoHref; ?>" title="Pagamento" onclick="carregandoModal();">Pagamento</a>
+                            <li>
+                                <a
+                                    href="<?php echo $this->url(array('module' => 'prestacao-contas', 'controller' => 'pagamento', 'action' => 'index')) . '?idPronac=' . Seguranca::encrypt($this->idpronac); ?>"
+                                    title="Ir para Comprova&ccedil;&atilde;o Financeira">Comprova&ccedil;&atilde;o Financeira</a>
+                                </li>
                             </li>
                             <li class="last">Comprovar Pagamento</li>
                         </ul>
-                    </div>
+<!--                    </div>-->
                 </div>
             <?php endif; ?>
 
@@ -76,16 +79,16 @@
                     <h5>
                         Comprovar Pagamento
                         <?php if ($this->idComprovantePagamento): ?>
-                            - editando item
+                            - Editando item
                         <?php else: ?>
-                            - cadastrar item
+                            - Cadastrar item
                         <?php endif; ?>
                     </h5>
                 </div>
-                <div class="col s4 align-right">
+                <div class="col s4">
                     <?php if (!$this->vrSituacao || !$this->pagCompRecusado) : ?>
-                        <span class="voltar"><a class="btn" href="<?php echo $voltarHref; ?>"
-                                                title="Ir para p&aacute;gina anterior">
+                        <span class="voltar right">
+                            <a class="btn small" href="<?php echo $voltarHref; ?>" title="Ir para p&aacute;gina anterior">
                     <i class="material-icons left">arrow_back</i>Voltar</a>
                 </span>
                     <?php endif; ?>
@@ -122,7 +125,7 @@
                       <div class="card ">
                         <div class="card-content">
                             <table id="tabelaItem" class="bordered">
-                                <caption>Vincular Item de Custo</caption>
+                                <caption><b>Vincular Item de Custo</b></caption>
                                 <thead>
                                     <tr>
                                         <th class="">Produto</th>
@@ -134,9 +137,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><?php echo $this->produto->Sintese; ?></td>
-                                        <td><?php echo $this->etapa->Descricao; ?></td>
-                                        <td><?php echo $this->item->Descricao; ?></td>
+                                        <td><?php echo $this->produto; ?></td>
+                                        <td><?php echo $this->etapa; ?></td>
+                                        <td><?php echo $this->item; ?></td>
                                         <td>
                                             <?php echo $this->currency($this->valores->vlAprovado ? $this->valores->vlAprovado : '0'); ?>
                                         </td>
@@ -148,17 +151,22 @@
                             </table>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col s12">
+<!--                    <div class="row">-->
+<!--                        <div class="col s12">-->
                             <?php if (!$this->vrSituacao) : ?>
                                 <?php echo $this->partial('partials/tabelaItens.phtml', 'prestacao-contas', $this) ?>
                             <?php endif; ?>
+<!--                        </div>-->
+<!--                    </div>-->
+
+                        <div id="botaoMostrarFormulario" class="card" <?= (!$this->idComprovantePagamento) ? '' : 'style="display: none"';?>>
+                            <div class="card-content center-align">
+                                <a href="javascript:void(0)" class="btn btn-secondary" onclick="mostrarFormulario();">Inserir novo comprovante</a>
+                            </div>
                         </div>
-                    </div>
 
-                      <div class="card ">
+                      <div id="formularioContainer" class="card" <?= ($this->idComprovantePagamento) ? '' : 'style="display: none"';?>>
                         <div class="card-content">
-
                                 <div id="tabelaComprovante">
                                     <fieldset>
                                         <legend>Identifica&ccedil;&atilde;o do Contratado</legend>
@@ -347,12 +355,15 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="input-field col s12">
-                                                    <p>Ocorr&ecirc;ncia do T&eacute;cnico</p>
-                                                    <p><?php echo $this->JustificativaTecnico; ?></p>
+
+                                            <?php if($this->JustificativaTecnico) : ?>
+                                                <div class="row">
+                                                    <div class="input-field col s12">
+                                                        <p>Ocorr&ecirc;ncia do T&eacute;cnico</p>
+                                                        <p><?php echo $this->JustificativaTecnico; ?></p>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            <?php endif; ?>
                                         </fieldset>
                                     </div>
 
@@ -469,39 +480,40 @@
                                     </div>
                                 </div>
                             </div>
+
+                              <table id="tableItensCusto" class="tabela linhaMaior1 sumir">
+                                  <tr>
+                                      <td class="">Contrato</td>
+                                      <td class="">Produto</td>
+                                      <td class="">Etapa</td>
+                                      <td class="">Item</td>
+                                      <td class="">Valor do Item</td>
+                                      <td class="">Desvincular</td>
+                                  </tr>
+                              </table>
+
+                              <div class="row">
+                                  <div class="col s12 center-align">
+                                      <?php if (!$this->vrSituacao || !$this->pagCompRecusado) : ?>
+                                          <a class="btn" href="<?php echo $voltarHref; ?>" id="btnVoltar"><i
+                                                  class="material-icons left">arrow_back</i>voltar</a>
+                                      <?php endif; ?>
+                                      <?php if ($this->idComprovantePagamento): ?>
+                                          <button type="submit" name="frComprovarPagamentoSubmit"
+                                                  id="frComprovarPagamentoSubmit" value="" class="btn">salvar
+                                          </button>
+                                          <button type="button" name="incluirNovo" id="incluirNovo" value="" class="btn">novo
+                                          </button>
+                                      <?php else: ?>
+                                          <button type="submit" name="frComprovarPagamentoSubmit"
+                                                  id="frComprovarPagamentoSubmit" value="" class="btn">
+                                              <i class="material-icons left ">add</i>incluir
+                                          </button>
+                                      <?php endif; ?>
+                                  </div>
+                              </div>
+                              </br>
                         </div>
-
-                                <table id="tableItensCusto" class="tabela linhaMaior1 sumir">
-                                    <tr>
-                                        <td class="">Contrato</td>
-                                        <td class="">Produto</td>
-                                        <td class="">Etapa</td>
-                                        <td class="">Item</td>
-                                        <td class="">Valor do Item</td>
-                                        <td class="">Desvincular</td>
-                                    </tr>
-                                </table>
-
-                                <div class="row">
-                                    <div class="col s12 center-align">
-                                        <?php if (!$this->vrSituacao || !$this->pagCompRecusado) : ?>
-                                            <a class="btn" href="<?php echo $voltarHref; ?>" id="btnVoltar"><i
-                                                    class="material-icons left">arrow_back</i>voltar</a>
-                                        <?php endif; ?>
-                                        <?php if ($this->idComprovantePagamento): ?>
-                                            <button type="submit" name="frComprovarPagamentoSubmit"
-                                                    id="frComprovarPagamentoSubmit" value="" class="btn">salvar
-                                            </button>
-                                            <button type="button" name="incluirNovo" id="incluirNovo" value="" class="btn">novo
-                                            </button>
-                                        <?php else: ?>
-                                            <button type="submit" name="frComprovarPagamentoSubmit"
-                                                    id="frComprovarPagamentoSubmit" value="" class="btn">
-                                                <i class="material-icons left ">add</i>incluir
-                                            </button>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
                         </form>
                     </div>
                 </div>
@@ -559,4 +571,4 @@
         });
     <?php endif; ?>
 </script>
-<script type="text/javascript" src="/public/scripts/prestacao-contas/comprovacaopagamento.js"></script>
+<script type="text/javascript" src="/public/scripts/prestacao-contas/comprovacaopagamento.js?v=1"></script>
