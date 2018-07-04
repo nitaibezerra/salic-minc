@@ -476,6 +476,21 @@ function outroFornecedorComprovacao(este) {
     $('.ui-dialog-titlebar-close').remove();
 }
 
+function mostrarFormulario() {
+
+    var elmForm = $('#formularioContainer');
+    var elmBotao = $("#botaoMostrarFormulario");
+
+    elmForm.slideToggle('fast');
+
+    if(elmForm.is(":visible")) {
+        elmBotao.hide();
+        $3("html, body").animate({
+            scrollTop: $3(elmForm).offset().top
+        }, 600);
+    }
+}
+
 $(document).ready(function () {
     console.log($3('#tpFornecedorCpf :checked').val());
 

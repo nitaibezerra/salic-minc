@@ -12,7 +12,20 @@ const comprovantes = {
                   <div :class="['collapsible-body lighten-5', badgeCSS(dado.stItemAvaliado)]">
                         <div class="card">
                             <div class="card-content">
-                                <comprovante-table :dados="dado"></comprovante-table>
+                                <template v-if="!formVisivel" >
+                                    <comprovante-table :dados="dado"></comprovante-table>
+                                </template>
+                                <button v-if="!formVisivel" v-on:click="mostrarForm()" class="btn">editar</button>
+                                <button v-if="!formVisivel" type="button" class="btn red white-text" @click.prevent="excluir(dado.idComprovantePagamento, dado.idArquivo)">excluir</button>
+                                <template v-if="formVisivel">
+                                    <sl-comprovar-form
+                                        :dados="dado"
+                                        url="/prestacao-contas/gerenciar/atualizar"
+                                        tipoform="edicao"
+                                        :item="dado.idPlanilhaItem"
+                                    >
+                                    </sl-comprovar-form>
+                                </template>
                             </div>
                         </div>
                   </div>
@@ -21,7 +34,7 @@ const comprovantes = {
         </div>
     `,
     components:{
-        'comprovante-table': comprovanteTable
+        'comprovante-table': comprovanteTable,
     },
     props: [
         'idpronac',
@@ -30,11 +43,21 @@ const comprovantes = {
         'uf',
         'idmunicipio',
         'idplanilhaitem',
-        'etapa'
+        'etapa',
+        'componenteform',
     ],
-    mounted: function() {
-        console.log('teste') ;
+    created() {
+        vue = this;
+        this.$root.$on('comprovante-novo', function(data) {
+            vue.formVisivel = false;
+            vue.dados.push(data);
+        })
 
+        this.$root.$on('comprovante-atualizado', function(data) {
+            vue.formVisivel = false;
+        })
+    },
+    mounted: function() {
         var vue = this;
         url = '/prestacao-contas/comprovante-pagamento';
         $3.ajax({
@@ -87,11 +110,31 @@ const comprovantes = {
                     estado =  'N\xE3o avaliado';
             }
             return estado;
+        },
+        mostrarForm: function() {
+            this.formVisivel = true;
+        },
+        excluir: function(id, idArquivo) {
+            var vue = this;
+            url = '/prestacao-contas/gerenciar/excluir';
+            $3.ajax({
+              type: "POST",
+              url:url,
+              data:{
+                  comprovante: {idComprovantePagamento: id},
+              }
+            })
+            .done(function(data) {
+            })
+            .fail(function(jqXHR) {
+                alert('error');
+            });
         }
     },
     data: function(){
         return {
-            dados:{}
+            dados:{},
+            formVisivel: false
         }
     }
 }
