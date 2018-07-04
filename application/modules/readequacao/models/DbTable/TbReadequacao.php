@@ -37,7 +37,7 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
     const TIPO_READEQUACAO_DEMOCRATIZACAO_ACESSO = 19;
     const TIPO_READEQUACAO_ETAPAS_TRABALHO = 20;
     const TIPO_READEQUACAO_FICHA_TECNICA = 21;
-    const TIPO_READEQUACAO_SALDO_APLICACAO = 23;
+    const TIPO_READEQUACAO_SALDO_APLICACAO = 22;
     const TIPO_READEQUACAO_TRANSFERENCIA_RECURSOS = 23;
     
     const PERCENTUAL_REMANEJAMENTO = 50;
@@ -1533,4 +1533,85 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
         
         return $readequacaoArray;
     }
+
+    /**
+     * Método criar readequação de planilha (orçamentária/saldo aplicação
+     * @access private
+     * @param integer $idPronac
+     * @param integer $idTipoReadequacao
+     * @return Bool
+     */
+    public function criarReadequacaoPlanilha(
+        $idPronac,
+        $idTipoReadequacao
+    )
+    {
+        $auth = Zend_Auth::getInstance();
+        $tblAgente = new Agente_Model_DbTable_Agentes();
+        $rsAgente = $tblAgente->buscar(array('CNPJCPF=?'=>$auth->getIdentity()->Cpf))->current();
+
+        $dados = array();
+        $dados['idPronac'] = $idPronac;
+        $dados['idTipoReadequacao'] = $idTipoReadequacao;
+        $dados['dtSolicitacao'] = new Zend_Db_Expr('GETDATE()');
+        $dados['idSolicitante'] = $rsAgente->idAgente;
+        $dados['dsJustificativa'] = '';
+        $dados['dsSolicitacao'] = '';
+        $dados['idDocumento'] = null;
+        $dados['siEncaminhamento'] = Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE;
+        $dados['stEstado'] = 0;
+
+        $idReadequacao = $this->inserir($dados);
+        
+        if (!$idReadequacao) {
+            throw new Exception("Houve um erro na cria&ccedil;&atilde;o das planilhas");
+        }
+        
+        return $idReadequacao;
+    }
+
+    
+    public function carregarValorEntrePlanilhas($idPronac, $idTipoReadequacao) {
+        $idReadequacao = $this->buscarIdReadequacaoAtiva(
+            $idPronac,
+            $idTipoReadequacao
+        );
+        
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva(
+            $idPronac,
+            [
+                Proposta_Model_Verificacao::INCENTIVO_FISCAL_FEDERAL
+            ]
+        )->current();
+        
+        $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilhaReadequada(
+                            $idPronac,
+                            $idReadequacao,
+                            [
+                                Proposta_Model_Verificacao::INCENTIVO_FISCAL_FEDERAL
+                            ]
+        )->current();
+        
+        $retorno = [];
+        
+        if ($PlanilhaReadequada['Total'] > 0) {
+            if ($PlanilhaAtiva['Total'] == $PlanilhaReadequada['Total']) {
+                $retorno['statusPlanilha'] = 'neutro';
+            } elseif ($PlanilhaAtiva['Total'] > $PlanilhaReadequada['Total']) {
+                $retorno['statusPlanilha'] = 'positivo';
+            } else {
+                $retorno['statusPlanilha'] = 'negativo';
+            }
+        } else {
+            $retorno['PlanilhaAtivaTotal'] = 0;
+            $retorno['PlanilhaReadequadaTotal'] = 0;
+            $retorno['statusPlanilha'] = 'neutro';
+        }
+        
+        $retorno['PlanilhaReadequadaTotal'] = $PlanilhaReadequada['Total'];
+        $retorno['PlanilhaAtivaTotal'] = $PlanilhaAtiva['Total'];
+
+        return $retorno;
+    }    
 }

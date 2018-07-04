@@ -6809,6 +6809,9 @@ class Projetos extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
+    /**
+     * @todo remover apos utilizar nova tela de listar projetos
+     */
     public function listarProjetosConsulta($idResponsavel, $idProponente, $mecanismo)
     {
         $a = $this->select();
@@ -9189,15 +9192,12 @@ class Projetos extends MinC_Db_Table_Abstract
         return $projetos;
     }
 
-    public function verificarPronacDisponivelReceber(
-        $idPronac,
-        $pronacRecebedor
-    )
+    public function verificarPronacDisponivelReceber($idPronac, $pronacRecebedor)
     {
         try {
             $select = $this->select();
             
-            //            $select->where(new Zend_Db_Expr('DtInicioExecucao > GETDATE() AND DtFimExecucao < GETDATE()'));
+            $select->where(new Zend_Db_Expr('DtInicioExecucao > GETDATE() AND DtFimExecucao < GETDATE()'));
             $select->where(new Zend_Db_Expr('(SELECT SAC.DBO.fnNrPortariaAprovacao(AnoProjeto,Sequencial)) IS NOT NULL'));
             $select->where('IdPRONAC != ?', $idPronac);
             $select->where(new Zend_Db_Expr('AnoProjeto + Sequencial = ?'), $pronacRecebedor);

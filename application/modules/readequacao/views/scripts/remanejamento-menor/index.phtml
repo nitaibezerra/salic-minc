@@ -520,8 +520,7 @@ $idReadequacao = 0;
 	       type: 'POST',
 	       data: {
 		   idPronac: <?php echo $this->idPronac; ?>,
-		   idReadequacao: getIdReadequacao(),
-		   idTipoReadequacao: 5,
+		   idReadequacao: getIdReadequacao()
 	       },
 	       
 	       success: function(data) {

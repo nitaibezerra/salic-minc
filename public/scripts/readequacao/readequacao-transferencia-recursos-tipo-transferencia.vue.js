@@ -51,7 +51,6 @@ Vue.component('readequacao-transferencia-recursos-tipo-transferencia', {
     },
     watch: {
 	dsSolicitacao: function(valor) {
-	    console.log(this.$data.disabled);
 	    this.valorSelecionado = valor;
 	}
     }

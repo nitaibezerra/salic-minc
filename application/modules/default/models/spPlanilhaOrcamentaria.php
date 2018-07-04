@@ -49,7 +49,16 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
                 break;
             case 6:
                 if ($params['link'] || $params['view_edicao']) {
-                    $planilhaOrcamentaria = $this->readequacao($idPronac);
+                    $planilhaOrcamentaria = $this->readequacao($idPronac, Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA);
+                } else {
+                    $spVisualizarPlanilhaOrcamentariaPlanilhaOrcamentaria = new spVisualizarPlanilhaOrcamentaria();
+                    $planilhaOrcamentaria = $spVisualizarPlanilhaOrcamentariaPlanilhaOrcamentaria->exec($idPronac);
+                }
+                return $planilhaOrcamentaria;
+                break;
+            case 7:
+                if ($params['link'] || $params['view_edicao']) {
+                    $planilhaOrcamentaria = $this->readequacao($idPronac, Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_SALDO_APLICACAO);
                 } else {
                     $spVisualizarPlanilhaOrcamentariaPlanilhaOrcamentaria = new spVisualizarPlanilhaOrcamentaria();
                     $planilhaOrcamentaria = $spVisualizarPlanilhaOrcamentariaPlanilhaOrcamentaria->exec($idPronac);
@@ -602,7 +611,7 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
         return $db->fetchAll($sql);
     }
 
-    public function readequacao($idPronac)
+    public function readequacao($idPronac, $idTipoReadequacao)
     {
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
@@ -614,12 +623,11 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
             ->where("a.idPronac = ?", $idPronac)
             ->where("a.stAtivo = 'N'")
             ->where("a.tpPlanilha = 'SR'")
-            ->where("b.idTipoReadequacao = 2")
+            ->where("b.idTipoReadequacao = ?", $idTipoReadequacao)
             ->where("b.siEncaminhamento <> 15")
             ->where("b.stEstado = 0")
             ->limit(1)
         ;
-
         $readequacao = $db->fetchAll($sql);
         
         if (!empty($readequacao)) {
@@ -694,7 +702,7 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
                 ->where("k.stAtivo = 'N'")
                 ->where("k.tpPlanilha = 'SR'")
                 ->where(new Zend_Db_Expr("((ROUND((k.qtItem * k.nrOcorrencia * k.vlUnitario),2) <> 0) OR (k.dsJustificativa IS NOT NULL))"))
-                ->where("r.idTipoReadequacao = 2")
+                ->where("r.idTipoReadequacao = ?", $idTipoReadequacao)
                 ->where("r.siEncaminhamento <> 15")
                 ->where("r.stEstado = 0")
                 ->where("a.idPronac = ?", $idPronac)

@@ -397,6 +397,11 @@
                              solicitacao = solicitacao.replace(/\'/g,'&#39;'); // aspa simples
                              data.SolicitacaoDesarquivamento = solicitacao;
 
+                             var avaliacao = data.Avaliacao;
+                             avaliacao = avaliacao.replace(/\"/g,'&#34;'); // aspa dupla
+                             avaliacao = avaliacao.replace(/\n/g,'<br/>');
+                             avaliacao = avaliacao.replace(/\'/g,'&#39;'); // aspa simples
+                             data.Avaliacao = avaliacao;
 
                              return '<button data-target="modal_dados" class=" modal-trigger btn waves-effect waves-dark white black-text small"' +
                                  'data-idpreprojeto="' + data.idpreprojeto + '"' +

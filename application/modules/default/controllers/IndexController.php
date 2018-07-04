@@ -330,6 +330,7 @@ class IndexController extends MinC_Controller_Action_Abstract
         // tipoPlanilha = 4 : Cortes Orcamentarios Aprovados
         // tipoPlanilha = 5 : Remanejamento menor que 20%
         // tipoPlanilha = 6 : Readequacao
+        // tipoPlanilha = 7 : Saldo
         
         $this->montaTela(
             'index/montar-planilha-orcamentaria.phtml',

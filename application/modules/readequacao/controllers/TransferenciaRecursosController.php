@@ -69,6 +69,30 @@ class Readequacao_TransferenciaRecursosController extends Readequacao_GenericCon
     
     public function salvarReadequacaoAction()
     {
+        $dados = $this->getRequest()->getPost();
+
+        try {
+            
+            if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+                throw new Exception("Acesso negado!");
+            }
+            
+            $dados['idTipoReadequacao'] = Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_TRANSFERENCIA_RECURSOS;
+            $dados['stAtendimento'] = 'D';
+            $dados['idDocumento'] = null;
+            
+            $detalhamentoMapper = new Readequacao_Model_TbReadequacaoMapper();
+            $dados = $detalhamentoMapper->salvarDetalhamento($dados);
+
+            $this->_helper->json(array('readequacao' => $dados, 'success' => 'true', 'msg' => 'Readequa&ccedil;&atilde;o salva com sucesso!'));
+        } catch (Exception $e) {
+            $this->getResponse()->setHttpResponseCode(412);
+            $this->_helper->json(array('data' => $dados, 'success' => 'false', 'msg' => $e->getMessage()));
+        }
+    }
+
+    public function salvarReadequacaoActionAntiga()
+    {
         $this->_helper->layout->disableLayout();
 
         $mensagem = '';
@@ -280,6 +304,55 @@ class Readequacao_TransferenciaRecursosController extends Readequacao_GenericCon
                 ]
             );
         }
+    }
+
+    public function excluirReadequacaoAction()
+    {
+        $this->_helper->layout->disableLayout();
+        
+        if ($this->idPerfil != Autenticacao_Model_Grupos::PROPONENTE) {
+            parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
+        }
+        
+        $idPronac = $this->_request->getParam("idPronac");
+        $idReadequacao = $this->_request->getParam('idReadequacao');
+        
+        try {
+            $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+            $dados = $tbReadequacao->buscar(['idReadequacao =?'=>$idReadequacao])->current();
+            
+            if (!empty($dados->idDocumento)) {
+                $tbDocumento = new tbDocumento();
+                $tbDocumento->excluirDocumento($dados->idDocumento);
+            }
+            
+            $TbSolicitacaoTransferenciaRecursos = new Readequacao_Model_DbTable_TbSolicitacaoTransferenciaRecursos();
+            $projetosRecebedores = $TbSolicitacaoTransferenciaRecursos->obterProjetosRecebedores($idReadequacao);
+            
+            if (count($projetosRecebedores) > 0) {
+                foreach($projetosRecebedores as $projeto) {
+                    $TbSolicitacaoTransferenciaRecursos->delete(
+                        ['idSolicitacaoTransferenciaRecursos = ?' => $projeto->idSolicitacao]
+                    );
+                }
+            }
+            
+            $exclusao = $tbReadequacao->delete([
+                'idPronac =?'=> $idPronac,
+                'idReadequacao =?'=> $idReadequacao
+            ]);
+            
+            $this->_helper->json([
+                'success' => 'true',
+                'msg' => 'Readequa&ccedil;&atilde;o exclu&iacute;da com sucesso!'
+            ]);
+        } catch (Exception $e) {
+            $this->getResponse()->setHttpResponseCode(412);
+            $this->_helper->json([
+                'success' => 'false',
+                'msg' => $e->getMessage()
+            ]);
+        }            
     }
     
     public function finalizarSolicitacaoTransferenciaRecursosAction()

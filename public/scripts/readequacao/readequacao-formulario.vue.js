@@ -19,7 +19,7 @@ Vue.component('readequacao-formulario', {
           v-bind:is="componenteDsSolicitacao"
           :ds-solicitacao="readequacao.dsSolicitacao"
           :disabled="disabled"
-          v-on:eventoAtualizarDsSolicitacao="readequacao.dsSolicitacao=$event"
+          v-on:eventoAtualizarDsSolicitacao="atualizarDsSolicitacao($event)"
           ></component>
         <div class="row">
           <div class="col s12">
@@ -93,6 +93,7 @@ Vue.component('readequacao-formulario', {
                 'nomeArquivo': ''
             },
 	    exibirInfo: false,
+	    minCaracteresJustificativa: 10,
             arquivo: {
                 tamanhoMaximo: 500000,
                 tiposAceitos: ['pdf']
@@ -107,8 +108,8 @@ Vue.component('readequacao-formulario', {
         'componenteDsSolicitacao': ''
     },
     mixins: [utils],
-    mounted: function () {
-        if (typeof this.objReadequacao == 'undefined') {
+    created: function () {
+        if (_.isEmpty(this.objReadequacao)) {
             this.obterDadosReadequacao();
         } else {
             this.readequacao = this.objReadequacao;
@@ -116,7 +117,9 @@ Vue.component('readequacao-formulario', {
     },
     watch: {
         objReadequacao: function (value) {
-            this.readequacao = value;
+	    if (typeof value.idReadequacao != 'undefined') {
+		this.readequacao = value;
+	    }
         }
     },
     methods: {
@@ -136,7 +139,7 @@ Vue.component('readequacao-formulario', {
             });
         },
         salvarReadequacao: function () {
-            if (this.readequacao.justificativa.length < 3) {
+            if (this.readequacao.justificativa.length < this.minCaracteresJustificativa) {
                 this.mensagemAlerta("\xC9 obrigat\xF3rio preencher a justificativa da readequa\xE7\xE3o!");
                 this.$refs.readequacaoJustificativa.focus();
                 return;
@@ -204,7 +207,8 @@ Vue.component('readequacao-formulario', {
                 self.mensagemAlerta(response.mensagem);
                 $3('#carregando-arquivo').fadeOut('slow');
             });
-        }, validarDocumento: function (arquivo) {
+        },
+	validarDocumento: function (arquivo) {
             if (!this.arquivo.tiposAceitos.includes(arquivo.name.split(".").pop().toLowerCase())) {
                 this.mensagemAlerta("Extens\xE3o de arquivo inv\xE1lida. Envie arquivos nos tipos: " + this.arquivo.tiposAceitos.join(','));
                 return;
@@ -215,6 +219,10 @@ Vue.component('readequacao-formulario', {
                 return;
             }
             return true;
-        }
+        },
+	atualizarDsSolicitacao: function(valor) {
+	    this.readequacao.dsSolicitacao = valor;
+	    this.$emit('eventoAtualizarReadequacao', this.readequacao);
+	}
     }
 });

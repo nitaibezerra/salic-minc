@@ -1,7 +1,7 @@
 Vue.component('carregando', {
     template: `
-    <div class="center-align card-panel">
-        <h6 class="animated tada" v-html="text"></h6>
+    <div class="center-align padding10">
+        <h6 class="" v-html="text"></h6>
         <div class="preloader-wrapper small active">
             <div class="spinner-layer spinner-green-only">
               <div class="circle-clipper left">

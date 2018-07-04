@@ -237,6 +237,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $avaliacaoFinal = $this->getRequest()->getParam("avaliacaoFinal");
 
 
+
         if ($stEstado !== null) {
             $data['stEstado'] = $stEstado;
         }
@@ -269,8 +270,11 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
 
                 (new Proposta_Model_PreProjetoArquivado)->update($data, $where);
 
-                if ($data['stDecisao'] == 1) {
-                    (new Proposta_Model_DbTable_PreProjeto)->update(['dtArquivamento' => null], $where);
+                if ($data['stDecisao'] == Proposta_Model_PreProjeto::ESTADO_ATIVO) {
+                    (new Proposta_Model_DbTable_PreProjeto)->update([
+                        'dtArquivamento' => null,
+                        'stEstado' => Proposta_Model_PreProjeto::ESTADO_ATIVO
+                    ], $where);
                 }
 
                 $agente = new Proposta_Model_DbTable_PreProjeto();
