@@ -3,7 +3,7 @@
 class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract
 {
     private $idPronac;
-    private $idUsuario = 0;
+    protected $idUsuario = 0;
 
     private function validarPerfis()
     {
