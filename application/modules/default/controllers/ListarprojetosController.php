@@ -7,7 +7,7 @@ class ListarprojetosController extends MinC_Controller_Action_Abstract
     protected $idResponsavel = 0;
     protected $idAgente = 0;
     protected $idUsuario = 0;
-    private $cpfLogado = 0;
+    protected $cpfLogado = 0;
 
     /*     * *
      * Reescreve o metodo init()
