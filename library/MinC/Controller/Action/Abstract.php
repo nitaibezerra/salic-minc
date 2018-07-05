@@ -16,10 +16,9 @@ abstract class MinC_Controller_Action_Abstract extends Zend_Controller_Action
     protected $_url;
     protected $_type;
     protected $_urlPadrao;
-    private $idResponsavel = 0;
-    private $idAgente = 0;
-    private $idUsuario = 0;
-
+    protected $idResponsavel = 0;
+    protected $idAgente = 0;
+    protected $idUsuario = 0;
     protected $moduleName;
 
     /**

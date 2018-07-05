@@ -116,10 +116,9 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
         $idOrgaoDoAssinante,
         $idPerfilDoAssinante,
         $idOrgaoSuperiorDoAssinante,
-        $idTipoDoAtoAdministrativo = null
+        $idTipoDoAtoAdministrativos = []
     ) {
 
-        // d($idOrgaoDoAssinante, $idPerfilDoAssinante, $idOrgaoSuperiorDoAssinante, $idTipoDoAtoAdministrativo);
         $query = $this->select();
         $query->setIntegrityCheck(false);
 
@@ -229,16 +228,17 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
             $this->_schema
         );
 
-        $query->where("Projetos.Orgao = ?", $idOrgaoDoAssinante);
+        $query->where("TbAtoAdministrativo.idOrgaoDoAssinante = ?", $idOrgaoDoAssinante);
         $query->where("tbDocumentoAssinatura.cdSituacao = ?", Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_DISPONIVEL_PARA_ASSINATURA);
         $query->where("tbDocumentoAssinatura.stEstado = ?", Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO);
 
-        if ($idTipoDoAtoAdministrativo) {
-            $query->where("tbDocumentoAssinatura.idTipoDoAtoAdministrativo = ?", $idTipoDoAtoAdministrativo);
+        if ($idTipoDoAtoAdministrativos) {
+            $query->where("tbDocumentoAssinatura.idTipoDoAtoAdministrativo in (?)", $idTipoDoAtoAdministrativos);
         }
 
         $ordenacao[] = 'possuiAssinatura asc';
         $query->order($ordenacao);
+
         return $this->_db->fetchAll($query);
     }
 
@@ -247,13 +247,14 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
         $objModelDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
         $where = array(
             'IdPRONAC = ?' => $idPronac,
-            'idTipoDoAtoAdministrativo = ?' => $idTipoDoAtoAdministrativo,
+            'idTipoDoAtoAdministrativo in (?)' => $idTipoDoAtoAdministrativo,
             'cdSituacao = ?' => Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_DISPONIVEL_PARA_ASSINATURA,
             'stEstado' => Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO
         );
 
         return (count($objModelDocumentoAssinatura->findBy($where)) > 1);
     }
+
 
 
     public function obterDocumentosAssinadosPorProjeto($idPronac)
@@ -312,12 +313,9 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
         $objQuery->where('stEstado = ?', 1);
         
         $result = $this->fetchRow($objQuery);
-        
-        if (!$result || empty($result)) {
-            return false;
-        } else {
-            $result = $result->toArray();
-            return $result['idDocumentoAssinatura'];
+        if ($result) {
+            $resultadoArray = $result->toArray();
+            return $resultadoArray['idDocumentoAssinatura'];
         }
     }    
 }

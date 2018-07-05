@@ -1,15 +1,17 @@
 <?php
 
-class MinC_Assinatura_Autenticacao_Padrao implements MinC_Assinatura_Autenticacao_IAutenticacaoAdapter
+namespace MinC\Assinatura\Autenticacao;
+
+class Padrao implements IAdapter
 {
     /**
-     * @var Autenticacao_Model_DbTable_Usuario $usuario
+     * @var \Autenticacao_Model_DbTable_Usuario $usuario
      */
     private $usuario;
 
     public function __construct($post, $identidadeUsuarioLogado)
     {
-        $this->usuario = new Autenticacao_Model_DbTable_Usuario();
+        $this->usuario = new \Autenticacao_Model_DbTable_Usuario();
         $this->usuario->setUsuIdentificacao($identidadeUsuarioLogado->usu_identificacao);
         $this->usuario->setUsuSenha($post['password']);
     }
@@ -30,7 +32,9 @@ class MinC_Assinatura_Autenticacao_Padrao implements MinC_Assinatura_Autenticaca
      */
     public function obterInformacoesAssinante()
     {
-        $usuariosBuscar = $this->usuario->buscar(array('usu_identificacao = ?' => $this->usuario->getUsuIdentificacao()))->current();
+        $usuariosBuscar = $this->usuario->buscar(
+            ['usu_identificacao = ?' => $this->usuario->getUsuIdentificacao()]
+        )->current();
         return $usuariosBuscar->toArray();
     }
 
@@ -41,7 +45,7 @@ class MinC_Assinatura_Autenticacao_Padrao implements MinC_Assinatura_Autenticaca
      */
     public function obterTemplateAutenticacao()
     {
-        $view = new Zend_View();
+        $view = new \Zend_View();
         $view->setScriptPath(__DIR__ . '/templates');
         return $view->render('padrao.phtml');
     }

@@ -17,7 +17,7 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
 
     const SUPERINTENDENTE_DE_VINCULADA = 153;
     const PRESIDENTE_DE_VINCULADA = 154;
-    const COORDENADOR_DE_PARECERISTA = 93;
+    const COORDENADOR_DE_PARECER = 93;
     const PARECERISTA = 94;
 
     const CONSULTA = 95;
@@ -63,9 +63,11 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
     const COORDENADOR_DO_PRONAC = 137;
     const COORDENADOR_DE_CONVENIO = 142;
 
+
     const PROPONENTE = 1111;
 
     const DIRETOR_DEPARTAMENTO = 148;
+    const SECRETARIO = 149;
     const PRESIDENTE_VINCULADA_SUBSTITUTO = 151;
 
     public function obterPerfisEncaminhamentoAvaliacaoProposta($id_perfil)
