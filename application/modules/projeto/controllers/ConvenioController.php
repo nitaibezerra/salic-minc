@@ -15,11 +15,18 @@ class Projeto_ConvenioController extends Projeto_GenericController
         }
 
         if (empty($this->idPronac)) {
-            throw new Exception("idPronac não informado");
+            throw new Exception("idPronac n&atilde;o informado");
         }
 
         $this->view->idPronac = $this->idPronac;
         $this->view->idPronacHash = Seguranca::encrypt($this->idPronac);
+
+        $this->view->urlMenu = [
+            'module' => 'projeto',
+            'controller' => 'menu',
+            'action' => 'obter-menu-ajax',
+            'idPronac' => $this->view->idPronacHash
+        ];
     }
 
     private function validarPerfis()
@@ -56,26 +63,5 @@ class Projeto_ConvenioController extends Projeto_GenericController
         $dbTableInabilitado = new Inabilitado();
         $proponenteInabilitado = $dbTableInabilitado->BuscarInabilitado($projeto['CNPJ_CPF']);
         $this->view->ProponenteInabilitado = ($proponenteInabilitado->Habilitado == 'I');
-    }
-
-    public function obterMenuAjaxAction() {
-
-        $this->_helper->layout->disableLayout();
-
-        try {
-
-            if (empty($this->idPronac)) {
-                throw new Exception("Pronac &eacute; obrigat&oacute;rio");
-            }
-
-            $modelProjeto = new Projeto_Model_Menu();
-            $menu = $modelProjeto->obterMenu($this->idPronac);
-
-            $this->_helper->json(array('success' => 'true', 'msg' => '', 'data' => $menu));
-        } catch (Exception $e) {
-            $this->getResponse()->setHttpResponseCode(412);
-            $this->_helper->json(array('success' => 'false', 'msg' => $e->getMessage(), 'data' => []));
-        }
-
     }
 }

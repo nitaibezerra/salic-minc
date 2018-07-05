@@ -12,21 +12,32 @@ class Projeto_MenuController extends Projeto_GenericController
             ->addActionContext('obter-menu', 'json')
             ->initContext('json');
 
-        $idPronac = $this->_request->getParam("idPronac"); // pega o id do pronac via get
-        $this->view->idPronac = $idPronac;
+        $this->idPronac = $this->_request->getParam("idPronac"); // pega o id do pronac via get
 
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
+        if (strlen($this->idPronac) > 7) {
+            $this->idPronac = Seguranca::dencrypt($this->idPronac);
         }
-        $this->idPronac = $idPronac;
+        $this->view->idPronac = $this->idPronac;
+        $this->view->idPronacHash = Seguranca::encrypt($this->idPronac);
     }
 
-    public function obterMenuAction()
+    public function obterMenuAjaxAction()
     {
-        $modelProjeto = new Projeto_Model_Menu();
-        $modelProjeto->setDebug();
-        $menu = $modelProjeto->obterMenu($this->idPronac);
-        $this->getResponse()->setHttpResponseCode(200);
-        $this->_helper->json($menu);
+        $this->_helper->layout->disableLayout();
+
+        try {
+
+            if (empty($this->idPronac)) {
+                throw new Exception("Pronac &eacute; obrigat&oacute;rio");
+            }
+
+            $modelProjeto = new Projeto_Model_Menu();
+            $menu = $modelProjeto->obterMenu($this->idPronac);
+
+            $this->_helper->json(array('success' => 'true', 'msg' => '', 'data' => $menu));
+        } catch (Exception $e) {
+            $this->getResponse()->setHttpResponseCode(412);
+            $this->_helper->json(array('success' => 'false', 'msg' => $e->getMessage(), 'data' => []));
+        }
     }
 }

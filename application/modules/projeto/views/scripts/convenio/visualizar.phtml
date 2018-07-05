@@ -1,12 +1,5 @@
 <?php
-$urlMenu = $this->url([
-    'module' => 'projeto',
-    'controller' => 'convenio',
-    'action' => 'obter-menu-ajax',
-    'idPronac' => $this->idPronacHash
-], '', true);
-
-$this->SidebarVue($urlMenu); ?>
+$this->SidebarVue($this->url($this->urlMenu, '', true)); ?>
 
 <div class="container-fluid">
     <?php $this->PageTitle('Dados do Projeto', array(
